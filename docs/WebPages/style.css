@@ -1,0 +1,43 @@
+html,
+body {
+  height: 100%;
+  background-color: #313131;
+}
+
+h1 {
+  color: #ddd
+}
+
+a {
+  color: #4ec1ef
+}
+a:link {
+  text-decoration: none;
+}
+a:visited {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+a:active {
+  text-decoration: underline;
+}
+
+.video-frame {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%); /* for IE 9 */
+  -webkit-transform: translate(-50%, -50%); /* for Safari */
+}
+
+.video-frame video {
+  width: 1024px;
+  height: 600px;
+  border-width: 1px;
+  border-color: #ccc;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}

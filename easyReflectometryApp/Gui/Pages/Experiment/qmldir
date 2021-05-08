@@ -1,0 +1,8 @@
+module Experiment
+
+MainContentPlotView 1.0 MainContentPlotView.qml
+MainContentTableView 1.0 MainContentTableView.qml
+MainContentTextView 1.0 MainContentTextView.qml
+
+SideBarAdvanced 1.0 SideBarAdvanced.qml
+SideBarBasic 1.0 SideBarBasic.qml

@@ -1,0 +1,5 @@
+_name Co2SiO4
+_short_description 'diffraction, powder, 1D'
+_samples 'Co2SiO4'
+_experiments 'D20@ILL'
+_modified '26.04.2021 17:46'

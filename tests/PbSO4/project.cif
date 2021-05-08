@@ -1,0 +1,7 @@
+_name PbSO4
+_location /Users/andrewsazonov/Desktop/PbSO4
+_short_description 'diffraction, powder, 1D'
+_samples 'PbSO4'
+_experiments 'D1A@ILL'
+_calculations 'Not created'
+_modified '25.03.2021 17:30'

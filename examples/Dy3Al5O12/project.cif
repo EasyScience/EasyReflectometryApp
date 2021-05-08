@@ -1,0 +1,5 @@
+_name Dy3Al5O12
+_short_description 'diffraction, powder, 1D'
+_samples 'Dy3Al5O12'
+_experiments 'G41@LLB'
+_modified '26.04.2021 20:07'

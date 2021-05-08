@@ -1,0 +1,5 @@
+_name PbSO4
+_short_description 'diffraction, powder, 1D'
+_samples 'PbSO4'
+_experiments 'D1A@ILL'
+_modified '26.04.2021 12:46'

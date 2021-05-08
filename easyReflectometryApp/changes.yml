@@ -1,0 +1,13 @@
+added:
+  - Implement in-app CIF editor
+  - Add CIF syntax highlighting
+  - Add Bragg peaks info tooltips
+  - Add license page to the installer
+  - Add calculation results to the project
+  - Add more neutron diffraction examples
+fixed:
+  - Fix axes ratio on the structure view
+improved:
+  - Impove redability of the Fitables table
+  - Update project description tab
+  - Rename main and phases to project and samples

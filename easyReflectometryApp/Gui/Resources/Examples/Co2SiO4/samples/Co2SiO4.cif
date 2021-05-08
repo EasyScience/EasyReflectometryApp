@@ -1,0 +1,27 @@
+data_Co2SiO4
+
+_space_group_name_H-M_ref 'P n m a'
+_space_group_IT_coordinate_system_code abc
+
+_cell_length_a     10.28()
+_cell_length_b      6.03()
+_cell_length_c      4.75()
+_cell_angle_alpha  90.0
+_cell_angle_beta   90.0
+_cell_angle_gamma  90.0
+
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_adp_type
+_atom_site_u_iso_or_equiv
+Co1 Co  0.0     0.0     0.0    1.0 Uiso  0.004
+Co2 Co  0.279  0.25    0.985   1.0 Uiso  0.007
+Si  Si  0.094  0.25    0.429   1.0 Uiso  0.005
+O1  O   0.091  0.25    0.771   1.0 Uiso  0.008
+O2  O   0.448  0.25    0.217   1.0 Uiso  0.008
+O3  O   0.164  0.0320  0.280   1.0 Uiso  0.011
