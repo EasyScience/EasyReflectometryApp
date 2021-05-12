@@ -200,7 +200,7 @@ EaComponents.ApplicationWindow {
 
         // Sample page
         EaComponents.ContentPage {
-            defaultInfo: ExGlobals.Constants.proxy.samplesPresent ? "" : qsTr("No Samples Added/Loaded")
+            defaultInfo: ExGlobals.Constants.proxy.samplesPresent ? "" : qsTr("No Items Added/Loaded")
 
             mainContent: EaComponents.MainContent {
                 tabs: [

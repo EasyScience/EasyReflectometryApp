@@ -22,7 +22,8 @@ from easyCore.Fitting.Fitting import Fitter
 from easyCore.Utils.classTools import generatePath
 from easyCore.Utils.UndoRedo import property_stack_deco, FunctionStack
 
-from easyReflectometryLib.sample import Sample
+# from easyReflectometryLib.sample_old import Sample
+from easyReflectometryLib.Sample.material import Material
 from easyReflectometryLib import Phases, Phase, Lattice, Site, SpaceGroup
 from easyReflectometryLib.interface import InterfaceFactory
 from easyReflectometryLib.Elements.Experiments.Experiment import Pars1D
@@ -55,6 +56,9 @@ class PyQmlProxy(QObject):
     structureParametersChanged = Signal()
     structureViewChanged = Signal()
 
+    # Materials
+    materialAdded = Signal()
+    
     phaseAdded = Signal()
     phaseRemoved = Signal()
     phasesAsObjChanged = Signal()
@@ -120,6 +124,7 @@ class PyQmlProxy(QObject):
         # Main
         self._interface = InterfaceFactory()
         self._sample = self._defaultSample()
+        self._materials = [Material.default()]
 
         # Plotting 1D
         self._plotting_1d_proxy = Plotting1dProxy()
@@ -156,6 +161,7 @@ class PyQmlProxy(QObject):
         self.phaseRemoved.connect(self._onPhaseRemoved)
         self.phaseRemoved.connect(self.phasesEnabled)
         #self.phaseRemoved.connect(self.undoRedoChanged)
+        self.materialAdded.connect(self._onMaterialAdded)
 
         self._current_phase_index = 0
         self.currentPhaseChanged.connect(self._onCurrentPhaseChanged)
@@ -186,7 +192,7 @@ class PyQmlProxy(QObject):
 
         self._background_proxy = BackgroundProxy(self)
         self._background_proxy.asObjChanged.connect(self._onParametersChanged)
-        self._background_proxy.asObjChanged.connect(self._sample.set_background)
+        # self._background_proxy.asObjChanged.connect(self._sample.set_background)
         self._background_proxy.asObjChanged.connect(self.calculatedDataChanged)
         self._background_proxy.asXmlChanged.connect(self.updateChartBackground)
 
@@ -198,11 +204,11 @@ class PyQmlProxy(QObject):
         self.simulationParametersChanged.connect(self.undoRedoChanged)
 
         self._fit_results = self._defaultFitResults()
-        self.fitter = Fitter(self._sample, self._interface.fit_func)
+        # self.fitter = Fitter(self._sample, self._interface.fit_func)
         self.fitFinished.connect(self._onFitFinished)
 
         self._current_minimizer_method_index = 0
-        self._current_minimizer_method_name = self.fitter.available_methods()[0]
+        # self._current_minimizer_method_name = self.fitter.available_methods()[0]
         self.currentMinimizerChanged.connect(self._onCurrentMinimizerChanged)
         self.currentMinimizerMethodChanged.connect(self._onCurrentMinimizerMethodChanged)
 
@@ -432,16 +438,17 @@ class PyQmlProxy(QObject):
     ####################################################################################################################
 
     def _defaultSample(self):
-        sample = Sample(parameters=Pars1D.default(), pattern=Pattern1D.default(), interface=self._interface)
-        sample.pattern.zero_shift = 0.0
-        sample.pattern.scale = 100.0
-        sample.parameters.wavelength = 1.912
-        sample.parameters.resolution_u = 0.1447
-        sample.parameters.resolution_v = -0.4252
-        sample.parameters.resolution_w = 0.3864
-        sample.parameters.resolution_x = 0.0
-        sample.parameters.resolution_y = 0.0  # 0.0961
-        return sample
+        # sample = Sample(parameters=Pars1D.default(), pattern=Pattern1D.default(), interface=self._interface)
+        # sample.pattern.zero_shift = 0.0
+        # sample.pattern.scale = 100.0
+        # sample.parameters.wavelength = 1.912
+        # sample.parameters.resolution_u = 0.1447
+        # sample.parameters.resolution_v = -0.4252
+        # sample.parameters.resolution_w = 0.3864
+        # sample.parameters.resolution_x = 0.0
+        # sample.parameters.resolution_y = 0.0  # 0.0961
+        # return sample
+        pass
 
     ####################################################################################################################
     # Phase models (list, xml, cif)
@@ -538,14 +545,14 @@ class PyQmlProxy(QObject):
         #if borg.stack.enabled:
         #    borg.stack.beginMacro('Loaded default phase')
         borg.stack.enabled = False
-        self._sample.phases = self._defaultPhase()
+        self._materials.append(Material.default())
         borg.stack.enabled = True
         #if borg.stack.enabled:
         #    borg.stack.endMacro()
         #    # if len(self._sample.phases) < 2:
         #    #     # We have problems with removing the only phase.....
         #    #     borg.stack.pop()
-        self.phaseAdded.emit()
+        self.materialAdded.emit()
         # self.undoRedoChanged.emit()
         # self.phasesEnabled.emit()
 
@@ -573,6 +580,10 @@ class PyQmlProxy(QObject):
         self.structureParametersChanged.emit()
         self.projectInfoAsJson['samples'] = self._sample.phases[self.currentPhaseIndex].name
         self.projectInfoChanged.emit()
+    
+    def _onMaterialAdded(self):
+        print(self._materials[0].as_dict())
+        print('***** _onMaterialAdded')
 
     def _onPhaseRemoved(self):
         print("***** _onPhaseRemoved")

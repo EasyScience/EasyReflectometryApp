@@ -13,7 +13,7 @@ import Gui.Globals 1.0 as ExGlobals
 EaComponents.TableView {
     //id: phasesTable
 
-    defaultInfoText: qsTr("No Layers Added")
+    defaultInfoText: qsTr("No Model Present")
 
     // Table model
 

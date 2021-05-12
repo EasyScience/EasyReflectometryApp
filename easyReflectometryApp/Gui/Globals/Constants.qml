@@ -30,7 +30,7 @@ QtObject {
 
     readonly property string description:
 `${appName} is a scientific software for
-modelling and analysis of neutron diffraction data.
+modelling and analysis of neutron and x-ray reflecometry data.
 
 ${appName} is build by ESS DMSC in
 Copenhagen, Denmark.`

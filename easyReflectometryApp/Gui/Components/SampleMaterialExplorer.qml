@@ -25,8 +25,8 @@ EaComponents.TableView {
 
         XmlRole { name: "color"; query: "color/string()" }
         XmlRole { name: "label"; query: "label/string()" }
-        XmlRole { name: "sld"; query: "sld/string()" }
-        XmlRole { name: "isld"; query: "isld/string()" }
+        XmlRole { name: "sld"; query: "sld_value/value/number()" }
+        XmlRole { name: "isld"; query: "isld_value/value/number()" }
     }
 
     // Table rows

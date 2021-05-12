@@ -16,6 +16,7 @@ EaComponents.SideBarColumn {
     EaElements.GroupBox {
         title: qsTr("Material editor")
         collapsible: true
+        collapsed: false
         enabled: ExGlobals.Constants.proxy.isFitFinished
 
         ExComponents.SampleMaterialExplorer {}
@@ -79,9 +80,34 @@ EaComponents.SideBarColumn {
             EaElements.SideBarButton {
                 // When an item is selected, this button will be enabled to allow
                 // the selected item to be duplicated
-                enabled: true//When material is selected
+                enabled: true//When item is selected
                 fontIcon: "clone"
                 text: qsTr("Duplicate selected item")
+                onClicked: ExGlobals.Constants.proxy.duplicateSelectedItem()
+            }
+
+        }
+
+        Row {
+            spacing: EaStyle.Sizes.fontPixelSize
+
+            EaElements.SideBarButton {
+                // When an item is selected and it is not at the top, 
+                // this button will be enabled to allow
+                // the selected item to be moved up
+                enabled: true//When item is selected
+                fontIcon: "arrow-up"
+                text: qsTr("Move item up")
+                onClicked: ExGlobals.Constants.proxy.addNewItem()
+            }
+
+            EaElements.SideBarButton {
+                // When an item is selected and it is not at the bottom, 
+                // this button will be enabled to allow
+                // the selected item to be moved down
+                enabled: true//When item is selected
+                fontIcon: "arrow-down"
+                text: qsTr("Move item down")
                 onClicked: ExGlobals.Constants.proxy.duplicateSelectedItem()
             }
 
@@ -151,6 +177,31 @@ EaComponents.SideBarColumn {
                 text: qsTr("Duplicate selected item")
                 onClicked: ExGlobals.Constants.proxy.duplicateSelectedLayer()
             }
+        }
+
+        Row {
+            spacing: EaStyle.Sizes.fontPixelSize
+
+            EaElements.SideBarButton {
+                // When an layer is selected and it is not at the top, 
+                // this button will be enabled to allow
+                // the selected layer to be moved up
+                enabled: true//When item is selected
+                fontIcon: "arrow-up"
+                text: qsTr("Move layer up")
+                onClicked: ExGlobals.Constants.proxy.addNewItem()
+            }
+
+            EaElements.SideBarButton {
+                // When an layer is selected and it is not at the bottom, 
+                // this button will be enabled to allow
+                // the selected layer to be moved down
+                enabled: true//When item is selected
+                fontIcon: "arrow-down"
+                text: qsTr("Move layer down")
+                onClicked: ExGlobals.Constants.proxy.duplicateSelectedItem()
+            }
+
         }
 
         /*Row {
