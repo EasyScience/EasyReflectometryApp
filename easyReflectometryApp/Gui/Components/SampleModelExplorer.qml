@@ -18,12 +18,12 @@ EaComponents.TableView {
     // Table model
 
     model: XmlListModel {
-        property int phaseIndex: ExGlobals.Constants.proxy.currentPhaseIndex + 1
+        property int itemIndex: ExGlobals.Constants.proxy.currentItemIndex + 1
 
         xml: ExGlobals.Constants.proxy.itemsAsXml
         query: "/root/item"
 
-        XmlRole { name: "label"; query: "label/string()" }
+        XmlRole { name: "label"; query: "name/string()" }
         XmlRole { name: "color"; query: "color/string()" }
     }
 
@@ -57,13 +57,13 @@ EaComponents.TableView {
             headerText: "Del." //"\uf2ed"
             fontIcon: "minus-circle"
             ToolTip.text: qsTr("Remove this layer")
-            onClicked: ExGlobals.Constants.proxy.removePhase(model.label)
+            onClicked: ExGlobals.Constants.proxy.removePhase(currentIndex)
         }
 
     }
 
     onCurrentIndexChanged: {
-        ExGlobals.Constants.proxy.currentPhaseIndex = currentIndex
+        ExGlobals.Constants.proxy.currentItemIndex = currentIndex
     }
 
 }

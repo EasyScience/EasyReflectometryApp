@@ -9,6 +9,8 @@ import json
 from typing import Union
 from dicttoxml import dicttoxml
 
+from matplotlib import cm, colors
+
 from PySide2.QtCore import QObject, Slot, Signal, Property
 from PySide2.QtCore import QByteArray, QBuffer, QIODevice
 
@@ -24,6 +26,7 @@ from easyCore.Utils.UndoRedo import property_stack_deco, FunctionStack
 
 # from easyReflectometryLib.sample_old import Sample
 from easyReflectometryLib.Sample.material import Material
+from easyReflectometryLib.Sample.layer import Layer
 from easyReflectometryLib import Phases, Phase, Lattice, Site, SpaceGroup
 from easyReflectometryLib.interface import InterfaceFactory
 from easyReflectometryLib.Elements.Experiments.Experiment import Pars1D
@@ -37,6 +40,9 @@ from easyReflectometryApp.Logic.Proxies.Background import BackgroundProxy
 from easyReflectometryApp.Logic.Proxies.Plotting1d import Plotting1dProxy
 from easyReflectometryApp.Logic.Fitter import Fitter as ThreadedFitter
 
+COLOURMAP = cm.get_cmap('Blues', 100)
+MIN_SLD = -3
+MAX_SLD = 15
 
 class PyQmlProxy(QObject):
     # SIGNALS
@@ -57,13 +63,23 @@ class PyQmlProxy(QObject):
     structureViewChanged = Signal()
 
     # Materials
-    materialAdded = Signal()
+    materialsChanged = Signal()
+    materialsAsObjChanged = Signal()
+    materialsAsXmlChanged = Signal()
+    materialsNameChanged = Signal()
+
+    # Layers
+    layersChanged = Signal()
+    layersAsObjChanged = Signal()
+    layersAsXmlChanged = Signal()
     
+    currentSampleChanged = Signal()
+
     phaseAdded = Signal()
     phaseRemoved = Signal()
-    phasesAsObjChanged = Signal()
-    phasesAsXmlChanged = Signal()
-    phasesAsCifChanged = Signal()
+    # phasesAsObjChanged = Signal()
+    # phasesAsXmlChanged = Signal()
+    # phasesAsCifChanged = Signal()
     currentPhaseChanged = Signal()
     phasesEnabled = Signal()
 
@@ -124,7 +140,10 @@ class PyQmlProxy(QObject):
         # Main
         self._interface = InterfaceFactory()
         self._sample = self._defaultSample()
-        self._materials = [Material.default()]
+
+        # Sample
+        self._materials = []
+        self._layers = []
 
         # Plotting 1D
         self._plotting_1d_proxy = Plotting1dProxy()
@@ -147,22 +166,35 @@ class PyQmlProxy(QObject):
         self.stateChanged.connect(self._onStateChanged)
 
         # Structure
-        self.structureParametersChanged.connect(self._onStructureParametersChanged)
+        # self.structureParametersChanged.connect(self._onStructureParametersChanged)
         self.structureParametersChanged.connect(self._onStructureViewChanged)
         self.structureParametersChanged.connect(self._onCalculatedDataChanged)
         self.structureViewChanged.connect(self._onStructureViewChanged)
 
-        self._phases_as_obj = []
-        self._phases_as_xml = ""
-        self._phases_as_cif = ""
-        self.phaseAdded.connect(self._onPhaseAdded)
-        self.phaseAdded.connect(self.phasesEnabled)
-        #self.phaseAdded.connect(self.undoRedoChanged)
-        self.phaseRemoved.connect(self._onPhaseRemoved)
-        self.phaseRemoved.connect(self.phasesEnabled)
-        #self.phaseRemoved.connect(self.undoRedoChanged)
-        self.materialAdded.connect(self._onMaterialAdded)
+        # Materials
+        self._current_materials_index = 0
+        self._materials_as_obj = []
+        self._materials_as_xml = ""
+        self.materialsChanged.connect(self._onMaterialsChanged)
+        self.currentSampleChanged.connect(self._onCurrentMaterialsChanged)
 
+        # Layers
+        self._current_layers_index = 0
+        self._layers_as_obj = []
+        self._layers_as_xml = ""
+        self.layersChanged.connect(self._onLayersChanged)
+        self.currentSampleChanged.connect(self._onCurrentLayersChanged)
+
+        # self._phases_as_obj = []
+        # self._phases_as_xml = ""
+        # self._phases_as_cif = ""
+        # self.phaseAdded.connect(self._onPhaseAdded)
+        # self.phaseAdded.connect(self.phasesEnabled)
+        # self.phaseAdded.connect(self.undoRedoChanged)
+        # self.phaseRemoved.connect(self._onPhaseRemoved)
+        # self.phaseRemoved.connect(self.phasesEnabled)
+        # self.phaseRemoved.connect(self.undoRedoChanged)
+        
         self._current_phase_index = 0
         self.currentPhaseChanged.connect(self._onCurrentPhaseChanged)
 
@@ -217,10 +249,12 @@ class PyQmlProxy(QObject):
         # Parameters
         self._parameters_as_obj = []
         self._parameters_as_xml = []
+        self.parametersChanged.connect(self._onMaterialsChanged)
+        self.parametersChanged.connect(self._onLayersChanged)
         self.parametersChanged.connect(self._onParametersChanged)
         self.parametersChanged.connect(self._onCalculatedDataChanged)
         self.parametersChanged.connect(self._onStructureViewChanged)
-        self.parametersChanged.connect(self._onStructureParametersChanged)
+        # self.parametersChanged.connect(self._onStructureParametersChanged)
         self.parametersChanged.connect(self._onPatternParametersChanged)
         self.parametersChanged.connect(self._onInstrumentParametersChanged)
         self.parametersChanged.connect(self._background_proxy.onAsObjChanged)
@@ -409,7 +443,7 @@ class PyQmlProxy(QObject):
         return dict(
             name="Example Project",
             # location=os.path.join(os.path.expanduser("~"), "Example Project"),
-            short_description="diffraction, powder, 1D",
+            short_description="reflectometry, 1D",
             samples="Not loaded",
             experiments="Not loaded",
             modified=datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
@@ -454,144 +488,311 @@ class PyQmlProxy(QObject):
     # Phase models (list, xml, cif)
     ####################################################################################################################
 
-    @Property('QVariant', notify=phasesAsObjChanged)
-    def phasesAsObj(self):
-        # print("+ phasesAsObj")
-        return self._phases_as_obj
+    # @Property('QVariant', notify=phasesAsObjChanged)
+    # def phasesAsObj(self):
+    #     # print("+ phasesAsObj")
+    #     return self._phases_as_obj
 
-    @Property(str, notify=phasesAsXmlChanged)
-    def phasesAsXml(self):
-        # print("+ phasesAsXml")
-        return self._phases_as_xml
+    # @Property(str, notify=phasesAsXmlChanged)
+    # def phasesAsXml(self):
+    #     # print("+ phasesAsXml")
+    #     return self._phases_as_xml
 
-    @Property(str, notify=phasesAsCifChanged)
-    def phasesAsCif(self):
-        # print("+ phasesAsCif")
-        return self._phases_as_cif
+     # @Property(str, notify=phasesAsCifChanged)
+    # def phasesAsCif(self):
+    #     # print("+ phasesAsCif")
+    #     return self._phases_as_cif
 
-    @Property(str, notify=phasesAsCifChanged)
-    def phasesAsExtendedCif(self):
-        if len(self._sample.phases) == 0:
-            return
+    # @Property(str, notify=phasesAsCifChanged)
+    # def phasesAsExtendedCif(self):
+    #     if len(self._sample.phases) == 0:
+    #         return
 
-        symm_ops = self._sample.phases[0].spacegroup.symmetry_opts
-        symm_ops_cif_loop = "loop_\n _symmetry_equiv_pos_as_xyz\n"
-        for symm_op in symm_ops:
-            symm_ops_cif_loop += f' {symm_op.as_xyz_string()}\n'
-        return self._phases_as_cif + symm_ops_cif_loop
+    #     symm_ops = self._sample.phases[0].spacegroup.symmetry_opts
+    #     symm_ops_cif_loop = "loop_\n _symmetry_equiv_pos_as_xyz\n"
+    #     for symm_op in symm_ops:
+    #         symm_ops_cif_loop += f' {symm_op.as_xyz_string()}\n'
+    #     return self._phases_as_cif + symm_ops_cif_loop
 
-    @phasesAsCif.setter
+    # @phasesAsCif.setter
+    # @property_stack_deco
+    # def phasesAsCif(self, phases_as_cif):
+    #     print("+ phasesAsCifSetter")
+    #     if self._phases_as_cif == phases_as_cif:
+    #         return
+
+    #     self._sample.phases = Phases.from_cif_str(phases_as_cif)
+    #     #self.structureParametersChanged.emit()
+    #     self.parametersChanged.emit()
+
+    # def _setPhasesAsObj(self):
+    #     start_time = timeit.default_timer()
+    #     self._phases_as_obj = self._sample.phases.as_dict()['data']
+    #     # print("+ _setPhasesAsObj: {0:.3f} s".format(timeit.default_timer() - start_time))
+    #     self.phasesAsObjChanged.emit()
+
+    # def _setPhasesAsXml(self):
+    #     start_time = timeit.default_timer()
+    #     self._phases_as_xml = dicttoxml(self._phases_as_obj, attr_type=True).decode()
+    #     # print("+ _setPhasesAsXml: {0:.3f} s".format(timeit.default_timer() - start_time))
+    #     self.phasesAsXmlChanged.emit()
+
+    # def _setPhasesAsCif(self):
+    #     start_time = timeit.default_timer()
+    #     self._phases_as_cif = str(self._sample.phases.cif)
+    #     # print("+ _setPhasesAsCif: {0:.3f} s".format(timeit.default_timer() - start_time))
+    #     self.phasesAsCifChanged.emit()
+
+    # def _onStructureParametersChanged(self):
+    #     print("***** _onStructureParametersChanged")
+    #     self._setPhasesAsObj()  # 0.025 s
+    #     self._setPhasesAsXml()  # 0.065 s
+    #     self._setPhasesAsCif()  # 0.010 s
+    #     self.stateChanged.emit(True)
+
+    ####################################################################################################################
+    #  Materials
+    ####################################################################################################################
+
+    @Property('QVariant', notify=materialsAsObjChanged)
+    def materialsAsObj(self):
+        return self._materials_as_obj
+
+    @Property(str, notify=materialsAsXmlChanged)
+    def materialsAsXml(self):
+        return self._materials_as_xml
+
+    @materialsAsXml.setter
     @property_stack_deco
-    def phasesAsCif(self, phases_as_cif):
-        print("+ phasesAsCifSetter")
-        if self._phases_as_cif == phases_as_cif:
-            return
-
-        self._sample.phases = Phases.from_cif_str(phases_as_cif)
-        #self.structureParametersChanged.emit()
+    def materialsAsXml(self):
         self.parametersChanged.emit()
 
-    def _setPhasesAsObj(self):
-        start_time = timeit.default_timer()
-        self._phases_as_obj = self._sample.phases.as_dict()['data']
-        # print("+ _setPhasesAsObj: {0:.3f} s".format(timeit.default_timer() - start_time))
-        self.phasesAsObjChanged.emit()
+    def _setMaterialsAsObj(self):
+        self._materials_as_obj = []
+        for i in self._materials:
+            dictionary = i.as_dict()
+            dictionary['color'] = colors.rgb2hex(COLOURMAP((dictionary['sld']['value'] - MIN_SLD) / (MAX_SLD - MIN_SLD)))
+            self._materials_as_obj.append(dictionary)
+        self.materialsAsObjChanged.emit()
 
-    def _setPhasesAsXml(self):
-        start_time = timeit.default_timer()
-        self._phases_as_xml = dicttoxml(self._phases_as_obj, attr_type=True).decode()
-        # print("+ _setPhasesAsXml: {0:.3f} s".format(timeit.default_timer() - start_time))
-        self.phasesAsXmlChanged.emit()
+    def _setMaterialsAsXml(self):
+        self._materials_as_xml = dicttoxml(self._materials_as_obj).decode()
+        self.materialsAsXmlChanged.emit()
 
-    def _setPhasesAsCif(self):
-        start_time = timeit.default_timer()
-        self._phases_as_cif = str(self._sample.phases.cif)
-        # print("+ _setPhasesAsCif: {0:.3f} s".format(timeit.default_timer() - start_time))
-        self.phasesAsCifChanged.emit()
+    def _onMaterialsChanged(self):
+        self._setMaterialsAsObj()  # 0.025 s
+        self._setMaterialsAsXml()  # 0.065 s
+        self._setMaterialsNames()
+        self.stateChanged.emit(True)
 
-    def _onStructureParametersChanged(self):
-        print("***** _onStructureParametersChanged")
-        self._setPhasesAsObj()  # 0.025 s
-        self._setPhasesAsXml()  # 0.065 s
-        self._setPhasesAsCif()  # 0.010 s
+    @Property(list, notify=materialsNameChanged)
+    def materialsName(self):
+        return self._materials_names
+
+    @materialsName.setter
+    @property_stack_deco
+    def materialsName(self):
+        self.parametersChanged.emit()
+        
+    def _setMaterialsNames(self):
+        self._materials_names =  [i.name for i in self._materials]
+        self.materialsNameChanged.emit()
+
+    ####################################################################################################################
+    #  Layers
+    ####################################################################################################################
+
+    @Property('QVariant', notify=layersAsObjChanged)
+    def layersAsObj(self):
+        return self._layers_as_obj
+
+    @Property(str, notify=layersAsXmlChanged)
+    def layersAsXml(self):
+        return self._layers_as_xml
+
+    @layersAsXml.setter
+    @property_stack_deco
+    def layersAsXml(self):
+        self.parametersChanged.emit()
+
+    def _setLayersAsObj(self):
+        self._layers_as_obj = []
+        for i in self._layers:
+            dictionary = i.as_dict()
+            dictionary['materials'] = [i.name for i in self._materials]
+            self._layers_as_obj.append(dictionary)
+        self.layersAsObjChanged.emit()
+
+    def _setLayersAsXml(self):
+        self._layers_as_xml = dicttoxml(self._layers_as_obj).decode()
+        self.layersAsXmlChanged.emit()
+
+    def _onLayersChanged(self):
+        print('**onLayersChanged')
+        self._setLayersAsObj()  # 0.025 s
+        self._setLayersAsXml()  # 0.065 s
+        print(self._layers)
         self.stateChanged.emit(True)
 
     ####################################################################################################################
-    # Phase: Add / Remove
+    # Materials: Add / Remove
     ####################################################################################################################
 
-    @Slot(str)
-    def addSampleFromCif(self, cif_url):
-        cif_path = generalizePath(cif_url)
-        borg.stack.enabled = False
-        self._sample.phases = Phases.from_cif_file(cif_path)
-        borg.stack.enabled = True
-        #if borg.stack.enabled:
-        #    borg.stack.beginMacro(f'Loaded cif: {cif_path}')
-        #try:
-        #    self._sample.phases = Phases.from_cif_file(cif_path)
-        #finally:
-        #    if borg.stack.enabled:
-        #        borg.stack.endMacro()
-        #    # if len(self._sample.phases) < 2:
-        #    #     # We have problems with removing the only phase.....
-        #    #     borg.stack.pop()
-        self.phaseAdded.emit()
-        # self.undoRedoChanged.emit()
-
     @Slot()
-    def addNewMaterial(self):
-        print("+ addNewMaterial")
+    def addNewMaterials(self):
+        print("+ addNewMaterials")
         #if borg.stack.enabled:
         #    borg.stack.beginMacro('Loaded default phase')
         borg.stack.enabled = False
-        self._materials.append(Material.default())
+        self._materials.append(Material.from_pars(2.074, 0.000, name='Si'))
         borg.stack.enabled = True
         #if borg.stack.enabled:
         #    borg.stack.endMacro()
         #    # if len(self._sample.phases) < 2:
         #    #     # We have problems with removing the only phase.....
         #    #     borg.stack.pop()
-        self.materialAdded.emit()
+        self.materialsChanged.emit()
         # self.undoRedoChanged.emit()
         # self.phasesEnabled.emit()
 
-    @Slot(str)
-    def removePhase(self, phase_name: str):
-        if phase_name in self._sample.phases.phase_names:
-            del self._sample.phases[phase_name]
-            self.phaseRemoved.emit()
-
-    def _defaultPhase(self):
-        space_group = SpaceGroup.from_pars('P 42/n c m')
-        cell = Lattice.from_pars(8.56, 8.56, 6.12, 90, 90, 90)
-        atom = Site.from_pars(label='Cl1', specie='Cl', fract_x=0.125, fract_y=0.167, fract_z=0.107)
-        atom.add_adp('Uiso', Uiso=0.0)
-        phase = Phase('Dichlorine', spacegroup=space_group, cell=cell)
-        phase.add_atom(atom)
-        return phase
-
-    def _onPhaseAdded(self):
-        print("***** _onPhaseAdded")
-        if self._interface.current_interface_name != 'CrysPy':
-            self._interface.generate_sample_binding("filename", self._sample)
-        self._sample.phases.name = 'Phases'
-        # self._sample.set_background(self._background_proxy.asObj)
-        self.structureParametersChanged.emit()
-        self.projectInfoAsJson['samples'] = self._sample.phases[self.currentPhaseIndex].name
-        self.projectInfoChanged.emit()
+    @Slot()
+    def duplicateSelectedMaterials(self):
+        print("+ duplicateSelectedMaterials")
+        #if borg.stack.enabled:
+        #    borg.stack.beginMacro('Loaded default phase')
+        borg.stack.enabled = False
+        # This is a fix until deepcopy is worked out
+        # Manual duplication instead of creating a copy
+        to_dup = self._materials[self.currentMaterialsIndex] 
+        self._materials.append(Material.from_pars(to_dup.sld.raw_value, to_dup.isld.raw_value, name=to_dup.name))
+        borg.stack.enabled = True
+        #if borg.stack.enabled:
+        #    borg.stack.endMacro()
+        #    # if len(self._sample.phases) < 2:
+        #    #     # We have problems with removing the only phase.....
+        #    #     borg.stack.pop()
+        self.materialsChanged.emit()
+        # self.undoRedoChanged.emit()
+        # self.phasesEnabled.emit()
     
-    def _onMaterialAdded(self):
-        print(self._materials[0].as_dict())
-        print('***** _onMaterialAdded')
+    @Slot(str)
+    def removeMaterials(self, i: str):
+        """
+        Remove a material from the materials list.
 
-    def _onPhaseRemoved(self):
-        print("***** _onPhaseRemoved")
-        self.structureParametersChanged.emit()
+        :param i: Index of the material
+        :type i: str
+        """
+        del self._materials[int(i)]
+        self.materialsChanged.emit()
 
-    @Property(bool, notify=phasesEnabled)
-    def samplesPresent(self) -> bool:
-        return len(self._sample.phases) > 0
+    ####################################################################################################################
+    # Layers: Add / Remove
+    ####################################################################################################################
+
+    @Slot()
+    def addNewLayers(self):
+        print("+ addNewLayers")
+        #if borg.stack.enabled:
+        #    borg.stack.beginMacro('Loaded default phase')
+        borg.stack.enabled = False
+        self._layers.append(Layer.from_pars(self._materials[0], 10.0, 1.2, name=self._materials[0].name + ' layer'))
+        borg.stack.enabled = True
+        #if borg.stack.enabled:
+        #    borg.stack.endMacro()
+        #    # if len(self._sample.phases) < 2:
+        #    #     # We have problems with removing the only phase.....
+        #    #     borg.stack.pop()
+        self.layersChanged.emit()
+        # self.undoRedoChanged.emit()
+        # self.phasesEnabled.emit()
+
+    @Slot()
+    def duplicateSelectedLayers(self):
+        print("+ duplicateSelectedLayers")
+        #if borg.stack.enabled:
+        #    borg.stack.beginMacro('Loaded default phase')
+        borg.stack.enabled = False
+        # This is a fix until deepcopy is worked out
+        # Manual duplication instead of creating a copy
+        to_dup = self._layers[self.currentLayersIndex] 
+        self._layers.append(Layer.default())#.from_pars(to_dup.sld.raw_value, to_dup.isld.raw_value, name=to_dup.name))
+        borg.stack.enabled = True
+        #if borg.stack.enabled:
+        #    borg.stack.endMacro()
+        #    # if len(self._sample.phases) < 2:
+        #    #     # We have problems with removing the only phase.....
+        #    #     borg.stack.pop()
+        self.layersChanged.emit()
+        # self.undoRedoChanged.emit()
+        # self.phasesEnabled.emit()
+    
+    @Slot(str)
+    def removeLayers(self, i: str):
+        """
+        Remove a layer from the layers list.
+
+        :param i: Index of the layer
+        :type i: str
+        """
+        del self._layers[int(i)]
+        self.layersChanged.emit()
+
+    ####################################################################################################################
+    # Phase: Add / Remove
+    ####################################################################################################################
+
+    # @Slot(str)
+    # def addSampleFromCif(self, cif_url):
+    #     cif_path = generalizePath(cif_url)
+    #     borg.stack.enabled = False
+    #     self._sample.phases = Phases.from_cif_file(cif_path)
+    #     borg.stack.enabled = True
+    #     #if borg.stack.enabled:
+    #     #    borg.stack.beginMacro(f'Loaded cif: {cif_path}')
+    #     #try:
+    #     #    self._sample.phases = Phases.from_cif_file(cif_path)
+    #     #finally:
+    #     #    if borg.stack.enabled:
+    #     #        borg.stack.endMacro()
+    #     #    # if len(self._sample.phases) < 2:
+    #     #    #     # We have problems with removing the only phase.....
+    #     #    #     borg.stack.pop()
+    #     self.phaseAdded.emit()
+    #     # self.undoRedoChanged.emit()
+
+    # @Slot(str)
+    # def removePhase(self, phase_name: str):
+    #     if phase_name in self._sample.phases.phase_names:
+    #         del self._sample.phases[phase_name]
+    #         self.phaseRemoved.emit()
+
+    # def _defaultPhase(self):
+    #     space_group = SpaceGroup.from_pars('P 42/n c m')
+    #     cell = Lattice.from_pars(8.56, 8.56, 6.12, 90, 90, 90)
+    #     atom = Site.from_pars(label='Cl1', specie='Cl', fract_x=0.125, fract_y=0.167, fract_z=0.107)
+    #     atom.add_adp('Uiso', Uiso=0.0)
+    #     phase = Phase('Dichlorine', spacegroup=space_group, cell=cell)
+    #     phase.add_atom(atom)
+    #     return phase
+
+    # def _onPhaseAdded(self):
+    #     print("***** _onPhaseAdded")
+    #     if self._interface.current_interface_name != 'CrysPy':
+    #         self._interface.generate_sample_binding("filename", self._sample)
+    #     self._sample.phases.name = 'Phases'
+    #     # self._sample.set_background(self._background_proxy.asObj)
+    #     self.structureParametersChanged.emit()
+    #     self.projectInfoAsJson['samples'] = self._sample.phases[self.currentPhaseIndex].name
+    #     self.projectInfoChanged.emit()
+
+    # def _onPhaseRemoved(self):
+    #     print("***** _onPhaseRemoved")
+    #     self.structureParametersChanged.emit()
+
+    # @Property(bool, notify=phasesEnabled)
+    # def samplesPresent(self) -> bool:
+    #     return len(self._sample.phases) > 0
 
     ####################################################################################################################
     # Phase: Symmetry
@@ -740,6 +941,140 @@ class PyQmlProxy(QObject):
         del self._sample.phases[self.currentPhaseIndex].atoms[atom_label]
         self._sample._updateInterface()
         self.structureParametersChanged.emit()
+
+    ####################################################################################################################
+    # Current Materials
+    ####################################################################################################################
+
+    @Property(int, notify=currentSampleChanged)
+    def currentMaterialsIndex(self):
+        return self._current_materials_index
+
+    @currentMaterialsIndex.setter
+    def currentMaterialsIndex(self, new_index: int):
+        if self._current_materials_index == new_index or new_index == -1:
+            return
+        self._current_materials_index = new_index
+        self.materialsChanged.emit()
+
+    def _onCurrentMaterialsChanged(self):
+        self.materialsChanged.emit()
+
+    @Slot(str)
+    def setCurrentMaterialsName(self, name):
+        """
+        Sets the name of the currently selected material.
+
+        :param sld: New name
+        :type sld: str
+        """
+        if self._materials[self.currentMaterialsIndex].name == name:
+            return
+
+        self._materials[self.currentMaterialsIndex].name = name
+        self.materialsChanged.emit()
+        # self.projectInfoAsJson['samples'] = name
+        # self.projectInfoChanged.emit()
+
+    @Slot(str)
+    def setCurrentMaterialsSld(self, sld):
+        """
+        Sets the SLD of the currently selected material.
+
+        :param sld: New SLD value
+        :type sld: float
+        """
+        if self._materials[self.currentMaterialsIndex].sld == sld:
+            return
+
+        self._materials[self.currentMaterialsIndex].sld = sld
+        self.materialsChanged.emit()
+        # self.projectInfoAsJson['samples'] = name
+        # self.projectInfoChanged.emit()
+    
+    @Slot(str)
+    def setCurrentMaterialsISld(self, isld):
+        """
+        Sets the iSLD of the currently selected material.
+
+        :param sld: New iSLD value
+        :type sld: float
+        """
+        if self._materials[self.currentMaterialsIndex].isld == isld:
+            return
+
+        self._materials[self.currentMaterialsIndex].isld = isld
+        self.materialsChanged.emit()
+        # self.projectInfoAsJson['samples'] = name
+        # self.projectInfoChanged.emit()
+
+    ####################################################################################################################
+    # Current Layers
+    ####################################################################################################################
+ 
+    @Property(int, notify=currentSampleChanged)
+    def currentLayersIndex(self):
+        return self._current_layers_index
+
+    @currentLayersIndex.setter
+    def currentLayersIndex(self, new_index: int):
+        if self._current_layers_index == new_index or new_index == -1:
+            return
+        self._current_layers_index = new_index
+        self.layersChanged.emit()
+
+    def _onCurrentLayersChanged(self):
+        self.layersChanged.emit()
+
+    @Slot(str)
+    def setCurrentLayersMaterial(self, current_index):
+        """
+        Sets the material of the currently selected layer.
+
+        :param current_index: Material index
+        :type sld: str
+        """
+        material = self._materials[int(current_index)]
+        if self._layers[self.currentLayersIndex].material == material:
+            return
+
+        self._layers[self.currentLayersIndex].material = material
+        self.layersChanged.emit()
+        # self.projectInfoAsJson['samples'] = name
+        # self.projectInfoChanged.emit()
+
+    @Slot(str)
+    def setCurrentLayersThickness(self, thickness):
+        """
+        Sets the thickness of the currently selected layer.
+
+        :param sld: New thickness value
+        :type sld: float
+        """
+        if self._layers[self.currentLayersIndex].thickness == thickness:
+            return
+
+        self._layers[self.currentLayersIndex].thickness = thickness
+        self.layersChanged.emit()
+        # self.projectInfoAsJson['samples'] = name
+        # self.projectInfoChanged.emit()
+    
+    @Slot(str)
+    def setCurrentLayersRoughness(self, roughness):
+        """
+        Sets the roughness of the currently selected layer.
+
+        :param sld: New roughness value
+        :type sld: float
+        """
+        if self._layers[self.currentLayersIndex].roughness == roughness:
+            return
+
+        self._layers[self.currentLayersIndex].roughness = roughness
+        self.layersChanged.emit()
+        # self.projectInfoAsJson['samples'] = name
+        # self.projectInfoChanged.emit()
+
 
     ####################################################################################################################
     # Current phase

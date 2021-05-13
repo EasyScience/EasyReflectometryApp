@@ -30,17 +30,17 @@ EaComponents.SideBarColumn {
                 enabled: true
                 fontIcon: "plus-circle"
                 text: qsTr("Add a new material")
-                onClicked: ExGlobals.Constants.proxy.addNewMaterial()
+                onClicked: ExGlobals.Constants.proxy.addNewMaterials()
             }
 
             EaElements.SideBarButton {
                 // This button should only be enabled when some material in the material editor table
                 // has been selected. If a material is selected and this button is clicked, the material
                 //should be deleted.
-                enabled: true //When material is selected
+                enabled: ExGlobals.Constants.proxy.hasMaterials() //When material is selected
                 fontIcon: "clone"
                 text: qsTr("Duplicate selected material")
-                onClicked: ExGlobals.Constants.proxy.duplicateSelectedMaterial()
+                onClicked: ExGlobals.Constants.proxy.duplicateSelectedMaterials()
             }
         }
 
@@ -74,7 +74,7 @@ EaComponents.SideBarColumn {
                 enabled: true
                 fontIcon: "plus-circle"
                 text: qsTr("Add a new item")
-                onClicked: ExGlobals.Constants.proxy.addNewItem()
+                onClicked: ExGlobals.Constants.proxy.addNewItems()
             }
 
             EaElements.SideBarButton {
@@ -83,7 +83,7 @@ EaComponents.SideBarColumn {
                 enabled: true//When item is selected
                 fontIcon: "clone"
                 text: qsTr("Duplicate selected item")
-                onClicked: ExGlobals.Constants.proxy.duplicateSelectedItem()
+                onClicked: ExGlobals.Constants.proxy.duplicateSelectedItems()
             }
 
         }
@@ -98,7 +98,7 @@ EaComponents.SideBarColumn {
                 enabled: true//When item is selected
                 fontIcon: "arrow-up"
                 text: qsTr("Move item up")
-                onClicked: ExGlobals.Constants.proxy.addNewItem()
+                onClicked: ExGlobals.Constants.proxy.moveSelectedItemsUp()
             }
 
             EaElements.SideBarButton {
@@ -108,7 +108,7 @@ EaComponents.SideBarColumn {
                 enabled: true//When item is selected
                 fontIcon: "arrow-down"
                 text: qsTr("Move item down")
-                onClicked: ExGlobals.Constants.proxy.duplicateSelectedItem()
+                onClicked: ExGlobals.Constants.proxy.moveSelectedItemsDown()
             }
 
         }
@@ -132,7 +132,7 @@ EaComponents.SideBarColumn {
         // When an item in the above table is selected, this box will become enabled.
         // Allowing different parameters and layers to be defined for the item.
         id: layersGroup
-        title: qsTr("Layer editor")
+        title: qsTr("Multi-layer editor")
         enabled: true //When a layer is selected
         collapsible: false
         Row {
@@ -166,7 +166,7 @@ EaComponents.SideBarColumn {
                 enabled: true
                 fontIcon: "plus-circle"
                 text: qsTr("Add a material layer")
-                onClicked: ExGlobals.Constants.proxy.addNewLayer()
+                onClicked: ExGlobals.Constants.proxy.addNewLayers()
             }
 
             EaElements.SideBarButton {
@@ -175,7 +175,7 @@ EaComponents.SideBarColumn {
                 enabled: true//when item is selected
                 fontIcon: "clone"
                 text: qsTr("Duplicate selected item")
-                onClicked: ExGlobals.Constants.proxy.duplicateSelectedLayer()
+                onClicked: ExGlobals.Constants.proxy.duplicateSelectedLayers()
             }
         }
 

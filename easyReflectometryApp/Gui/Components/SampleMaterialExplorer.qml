@@ -18,15 +18,15 @@ EaComponents.TableView {
     // Table model
 
     model: XmlListModel {
-        property int phaseIndex: ExGlobals.Constants.proxy.currentPhaseIndex + 1
+        property int materialsIndex: ExGlobals.Constants.proxy.currentMaterialsIndex + 1
 
         xml: ExGlobals.Constants.proxy.materialsAsXml
         query: "/root/item"
 
         XmlRole { name: "color"; query: "color/string()" }
-        XmlRole { name: "label"; query: "label/string()" }
-        XmlRole { name: "sld"; query: "sld_value/value/number()" }
-        XmlRole { name: "isld"; query: "isld_value/value/number()" }
+        XmlRole { name: "label"; query: "name/string()" }
+        XmlRole { name: "sld"; query: "sld/value/number()" }
+        XmlRole { name: "isld"; query: "isld/value/number()" }
     }
 
     // Table rows
@@ -43,7 +43,7 @@ EaComponents.TableView {
             width: EaStyle.Sizes.fontPixelSize * 12.5
             headerText: "Name"
             text: model.label
-            onEditingFinished: ExGlobals.Constants.proxy.setCurrentMaterialName(text)
+            onEditingFinished: ExGlobals.Constants.proxy.setCurrentMaterialsName(text)
         }
 
         EaComponents.TableViewTextInput {
@@ -51,7 +51,7 @@ EaComponents.TableView {
             width: EaStyle.Sizes.fontPixelSize * 8.5
             headerText: "SLD/10<sup>-6</sup> Å<sup>-2</sup>"
             text: model.sld
-            onEditingFinished: ExGlobals.Constants.proxy.setCurrentMaterialSld(text)
+            onEditingFinished: ExGlobals.Constants.proxy.setCurrentMaterialsSld(text)
         }
 
         EaComponents.TableViewTextInput {
@@ -59,7 +59,7 @@ EaComponents.TableView {
             width: EaStyle.Sizes.fontPixelSize * 8.5
             headerText: "<i>i</i> SLD/10<sup>-6</sup> Å<sup>-2</sup>"
             text: model.isld
-            onEditingFinished: ExGlobals.Constants.proxy.setCurrentMaterialISld(text)
+            onEditingFinished: ExGlobals.Constants.proxy.setCurrentMaterialsISld(text)
         }
 
         EaComponents.TableViewButton {
@@ -67,13 +67,13 @@ EaComponents.TableView {
             headerText: "Del." //"\uf2ed"
             fontIcon: "minus-circle"
             ToolTip.text: qsTr("Remove this material")
-            onClicked: ExGlobals.Constants.proxy.removePhase(model.label)
+            onClicked: ExGlobals.Constants.proxy.removeMaterials(currentIndex)
         }
 
     }
 
     onCurrentIndexChanged: {
-        ExGlobals.Constants.proxy.currentPhaseIndex = currentIndex
+        ExGlobals.Constants.proxy.currentMaterialsIndex = currentIndex
     }
 
 }

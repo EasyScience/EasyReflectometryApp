@@ -113,9 +113,9 @@ EaComponents.ApplicationWindow {
         // Sample tab
         EaElements.AppBarTabButton {
             enabled: ExGlobals.Variables.samplePageEnabled
-            fontIcon: "gem"
+            fontIcon: "layer-group"
             text: qsTr("Sample")
-            ToolTip.text: qsTr("Sample model description page")
+            ToolTip.text: qsTr("Sample description page")
             Component.onCompleted: ExGlobals.Variables.sampleTabButton = this
         },
 

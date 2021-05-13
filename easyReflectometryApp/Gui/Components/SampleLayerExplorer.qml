@@ -18,15 +18,14 @@ EaComponents.TableView {
     // Table model
 
     model: XmlListModel {
-        property int phaseIndex: ExGlobals.Constants.proxy.currentPhaseIndex + 1
+        property int layersIndex: ExGlobals.Constants.proxy.currentLayersIndex + 1
 
         xml: ExGlobals.Constants.proxy.layersAsXml
         query: "/root/item"
 
-        XmlRole { name: "material"; query: "material/string()" }
-        XmlRole { name: "thick"; query: "thick/string()" }
-        XmlRole { name: "rough"; query: "rough/string()" }
-        XmlRole { name: "color"; query: "color/string()" }
+        XmlRole { name: "thick"; query: "thickness/value/number()" }
+        XmlRole { name: "rough"; query: "roughness/value/number()" }
+        XmlRole { name: "materials"; query: "materials/item/string()" }
     }
 
     // Table rows
@@ -42,46 +41,40 @@ EaComponents.TableView {
 
         EaComponents.TableViewComboBox{
             horizontalAlignment: Text.AlignLeft
-            width: EaStyle.Sizes.fontPixelSize * 8.5
+            width: EaStyle.Sizes.fontPixelSize * 9.8
             headerText: "Material"
-            model: ["a", "b", "c"]
-            onAccepted: ExGlobals.Constants.proxy.setCurrentLayerMaterial()
+            model: ExGlobals.Constants.proxy.materialsName
+            onActivated: ExGlobals.Constants.proxy.setCurrentLayersMaterial(currentIndex)
         }
 
         EaComponents.TableViewTextInput {
             horizontalAlignment: Text.AlignHCenter
-            width: EaStyle.Sizes.fontPixelSize * 9.0
+            width: EaStyle.Sizes.fontPixelSize * 10.0
             headerText: "Thickness/Å"
             text: model.thick
-            onEditingFinished: ExGlobals.Constants.proxy.setCurrentLayerThickness(text)
+            onEditingFinished: ExGlobals.Constants.proxy.setCurrentLayersThickness(text)
         }
 
         EaComponents.TableViewTextInput {
             horizontalAlignment: Text.AlignHCenter
-            width: EaStyle.Sizes.fontPixelSize * 9.0
+            width: EaStyle.Sizes.fontPixelSize * 10.0
             headerText: "Upper Roughness/Å"
             text: model.rough
-            onEditingFinished: ExGlobals.Constants.proxy.setCurrentLayerRoughness(text)
+            onEditingFinished: ExGlobals.Constants.proxy.setCurrentLayersRoughness(text)
         } 
-
-        EaComponents.TableViewLabel {
-            headerText: "Color"
-            //backgroundColor: model.color ? model.color : "transparent"
-            backgroundColor: model.color
-        }
 
         EaComponents.TableViewButton {
             id: deleteRowColumn
             headerText: "Del." //"\uf2ed"
             fontIcon: "minus-circle"
             ToolTip.text: qsTr("Remove this item")
-            onClicked: ExGlobals.Constants.proxy.removeLayer(model.label)
+            onClicked: ExGlobals.Constants.proxy.removeLayers(currentIndex)
         }
 
     }
 
     onCurrentIndexChanged: {
-        ExGlobals.Constants.proxy.currentPhaseIndex = currentIndex
+        ExGlobals.Constants.proxy.currentLayersIndex = currentIndex
     }
 
 }
