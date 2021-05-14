@@ -18,7 +18,7 @@ EaComponents.TableView {
     // Table model
 
     model: XmlListModel {
-        property int itemIndex: ExGlobals.Constants.proxy.currentItemIndex + 1
+        property int itemsIndex: ExGlobals.Constants.proxy.currentItemsIndex + 1
 
         xml: ExGlobals.Constants.proxy.itemsAsXml
         query: "/root/item"
@@ -40,16 +40,18 @@ EaComponents.TableView {
 
         EaComponents.TableViewTextInput {
             horizontalAlignment: Text.AlignLeft
-            width: EaStyle.Sizes.fontPixelSize * 27.5
+            width: EaStyle.Sizes.fontPixelSize * 20.5
             headerText: "Label"
             text: model.label
-            onEditingFinished: ExGlobals.Constants.proxy.setCurrentPhaseName(text)
+            onEditingFinished: ExGlobals.Constants.proxy.setCurrentItemsName(text)
         }
 
-        EaComponents.TableViewLabel {
-            headerText: "Color"
-            //backgroundColor: model.color ? model.color : "transparent"
-            backgroundColor: model.color
+        EaComponents.TableViewComboBox{
+            horizontalAlignment: Text.AlignLeft
+            width: EaStyle.Sizes.fontPixelSize * 9.8
+            headerText: "Type"
+            model: ["Multi-layer"]
+            //onActivated: ExGlobals.Constants.proxy.setCurrentLayersMaterial(currentIndex)
         }
 
         EaComponents.TableViewButton {
@@ -57,13 +59,13 @@ EaComponents.TableView {
             headerText: "Del." //"\uf2ed"
             fontIcon: "minus-circle"
             ToolTip.text: qsTr("Remove this layer")
-            onClicked: ExGlobals.Constants.proxy.removePhase(currentIndex)
+            onClicked: ExGlobals.Constants.proxy.removeItems(currentIndex)
         }
 
     }
 
     onCurrentIndexChanged: {
-        ExGlobals.Constants.proxy.currentItemIndex = currentIndex
+        ExGlobals.Constants.proxy.currentItemsIndex = currentIndex
     }
 
 }

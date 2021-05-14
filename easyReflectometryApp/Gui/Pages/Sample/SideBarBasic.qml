@@ -152,7 +152,7 @@ EaComponents.SideBarColumn {
                 from: 1
                 to: 9999
                 value: 1
-                //onValueModified: editParameterValue(ExGlobals.Constants.proxy.patternParametersAsObj.zero_shift["@id"], text)
+                onValueModified: ExGlobals.Constants.proxy.setRepetitionsChanged(value)
             }
         }
 
@@ -189,7 +189,7 @@ EaComponents.SideBarColumn {
                 enabled: true//When item is selected
                 fontIcon: "arrow-up"
                 text: qsTr("Move layer up")
-                onClicked: ExGlobals.Constants.proxy.addNewItem()
+                onClicked: ExGlobals.Constants.proxy.moveSelectedLayersUp()
             }
 
             EaElements.SideBarButton {
@@ -199,7 +199,7 @@ EaComponents.SideBarColumn {
                 enabled: true//When item is selected
                 fontIcon: "arrow-down"
                 text: qsTr("Move layer down")
-                onClicked: ExGlobals.Constants.proxy.duplicateSelectedItem()
+                onClicked: ExGlobals.Constants.proxy.moveSelectedLayersDown()
             }
 
         }
