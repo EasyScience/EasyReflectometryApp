@@ -156,6 +156,7 @@ class PyQmlProxy(QObject):
 
         # Materials
         self._current_materials_index = 0
+        self._current_materials_len = 0
         self._materials_as_obj = []
         self._materials_as_xml = ""
         self.materialsChanged.connect(self._onMaterialsChanged)
@@ -501,6 +502,10 @@ class PyQmlProxy(QObject):
             dictionary['layers'] = [j.as_dict() for j in i.layers]
             dictionary['repetitions'] = i.repetitions.as_dict()
             self._items_as_obj.append(dictionary)
+        if len(self._items) > 0:
+            self._items_as_obj[0]['layers'][0]['thickness']['value'] = np.nan
+            self._items_as_obj[0]['layers'][0]['roughness']['value'] = np.nan
+            self._items_as_obj[-1]['layers'][-1]['thickness']['value'] = np.nan
         self.itemsAsObjChanged.emit()
 
     def _setItemsAsXml(self):
@@ -512,8 +517,6 @@ class PyQmlProxy(QObject):
         self._setItemsAsXml()  # 0.065 s
         for i in self._items:
             print(i)
-            for j in i.layers:
-                print(j)
         self.stateChanged.emit(True)
 
     ####################################################################################################################
@@ -551,8 +554,14 @@ class PyQmlProxy(QObject):
         :param i: Index of the material
         :type i: str
         """
-        del self._materials[int(i)]
-        self.materialsChanged.emit()
+        if len(self._materials) == 1:
+            self._materials = []
+            self._items = []
+            self.materialsChanged.emit()
+            self.itemsChanged.emit()
+        else:
+            del self._materials[int(i)]
+            self.materialsChanged.emit()
 
     ####################################################################################################################
     # Items: Add / Remove
@@ -564,7 +573,11 @@ class PyQmlProxy(QObject):
         #if borg.stack.enabled:
         #    borg.stack.beginMacro('Loaded default item')
         borg.stack.enabled = False
-        self._items.append(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, 'multi-layer'))
+        try: 
+            self._items.append(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, 'multi-layer'))
+        except IndexError:
+            self.addNewMaterials()
+            self._items.append(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, 'multi-layer'))
         borg.stack.enabled = True
         self.itemsChanged.emit()
 
@@ -634,7 +647,10 @@ class PyQmlProxy(QObject):
         #if borg.stack.enabled:
         #    borg.stack.beginMacro('Loaded default layer')
         borg.stack.enabled = False
-        self._items[self.currentItemsIndex].layers.append(Layer.from_pars(self._materials[0], 10.0, 1.2, name='easyLayer'))
+        try:
+            self._items[self.currentItemsIndex].layers.append(Layer.from_pars(self._materials[0], 10.0, 1.2, name='easyLayer'))
+        except IndexError:
+            self.addNewItems()
         borg.stack.enabled = True
         self.itemsChanged.emit()
 
@@ -709,7 +725,10 @@ class PyQmlProxy(QObject):
         :param i: Index of the layer
         :type i: str
         """
-        del self._items[self.currentItemsIndex].layers[int(i)]
+        if len(self._items[self.currentItemsIndex].layers) == 1:
+            self._items = []
+        else:
+            del self._items[self.currentItemsIndex].layers[int(i)]
         self.itemsChanged.emit()
 
     ####################################################################################################################

@@ -109,7 +109,6 @@ EaComponents.SideBarColumn {
                     Component.onCompleted: {
                         currentIndex = indexOfValue(itemsModel.type)
                     }
-                    //onActivated: ExGlobals.Constants.proxy.setCurrentLayersMaterial(currentIndex)
                 }
 
                 EaComponents.TableViewButton {
@@ -267,7 +266,7 @@ EaComponents.SideBarColumn {
                     horizontalAlignment: Text.AlignHCenter
                     width: EaStyle.Sizes.fontPixelSize * 10.0
                     headerText: "Thickness/Å"
-                    text: layersModel.thick
+                    text: (isNaN(layersModel.thick)) ? '--' : layersModel.thick
                     onEditingFinished: ExGlobals.Constants.proxy.setCurrentLayersThickness(text)
                 }
 
@@ -275,7 +274,7 @@ EaComponents.SideBarColumn {
                     horizontalAlignment: Text.AlignHCenter
                     width: EaStyle.Sizes.fontPixelSize * 10.0
                     headerText: "Upper Roughness/Å"
-                    text: layersModel.rough
+                    text: (isNaN(layersModel.rough)) ? '--' : layersModel.rough
                     onEditingFinished: ExGlobals.Constants.proxy.setCurrentLayersRoughness(text)
                 } 
 
