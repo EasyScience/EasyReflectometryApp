@@ -10,6 +10,7 @@ import easyAppGui.Logic 1.0 as EaLogic
 
 import Gui.Globals 1.0 as ExGlobals
 
+
 EaComponents.TableView {
     //id: phasesTable
 

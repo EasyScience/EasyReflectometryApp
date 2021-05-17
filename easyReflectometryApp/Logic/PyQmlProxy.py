@@ -819,10 +819,7 @@ class PyQmlProxy(QObject):
     @Property(int, notify=currentSampleChanged)
     def currentItemsRepetitions(self):
         print('**currentItemsRepetitions')
-        try: 
-            return int(self._items[self.currentItemsIndex].repetitions.raw_value)
-        except IndexError:
-            return -1
+        return self._items[self.currentItemsIndex].repetitions.raw_value
 
     @currentItemsRepetitions.setter
     def currentItemsRepetitions(self, new_repetitions: int):
@@ -830,6 +827,7 @@ class PyQmlProxy(QObject):
         if self._items[self.currentItemsIndex].repetitions.raw_value == new_repetitions or new_repetitions == -1:
             return
         self._items[self.currentItemsIndex].repetitions = new_repetitions
+        print([i for i in self._items])
         self.itemsChanged.emit()
         self.layersChanged.emit()
 
