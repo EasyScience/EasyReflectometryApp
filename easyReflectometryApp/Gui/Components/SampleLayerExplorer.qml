@@ -12,8 +12,6 @@ import Gui.Globals 1.0 as ExGlobals
 
 
 EaComponents.TableView {
-    //id: phasesTable
-
     defaultInfoText: qsTr("No Layers Added")
 
     // Table model
@@ -32,6 +30,7 @@ EaComponents.TableView {
     // Table rows
 
     delegate: EaComponents.TableViewDelegate {
+        property var layersModel: model
 
         EaComponents.TableViewLabel {
             width: EaStyle.Sizes.fontPixelSize * 2.3
@@ -44,8 +43,10 @@ EaComponents.TableView {
             width: EaStyle.Sizes.fontPixelSize * 9.8
             headerText: "Material"
             onActivated: ExGlobals.Constants.proxy.setCurrentLayersMaterial(currentIndex)
-            currentIndex: indexOfValue(model.materialid)
             model: ExGlobals.Constants.proxy.materialsName
+            Component.onCompleted: {
+                currentIndex = indexOfValue(layersModel.materialid)
+            }
         }
 
         EaComponents.TableViewTextInput {
