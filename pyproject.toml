@@ -23,10 +23,10 @@ pyobjc-core = { version = '^7.1', platform = 'darwin' }
 pyobjc-framework-cocoa = { version = '^7.1', platform = 'darwin' }
 # easyScience
 # easyReflectometryLib = { git = 'https://github.com/easyScience/easyReflectometry.git', rev = 'sprint12' }
-easyReflectometryLib = { path = '/Users/andrewmccluskey/software/easyScience/easyReflectometryLib'}
+easyReflectometryLib = { path = '../easyReflectometryLib'}
 easyAppLogic = { git = 'https://github.com/easyScience/easyAppLogic.git', rev = 'develop' }
 #easyAppGui = { git = 'https://github.com/easyScience/easyAppGui.git', rev = 'sprint12' }
-easyAppGui = { path = '/Users/andrewmccluskey/software/easyScience/easyAppGui'}
+easyAppGui = { path = '../easyAppGui'}
 
 #[tool.poetry.dev-dependencies]
 # PyInstaller
@@ -41,7 +41,7 @@ requests = '^2.25.1'
 dephell_licenses = '^0.1.7'
 ffmpeg-python = '^0.2.0'
 mss = '^6.1.0'
-opencv-python = '^4.5.1'
+opencv-python = '4.5.1.48'
 #googletrans = "3.1.0a0"
 google-trans-new = "^1.1.9"
 gTTS = '^2.2.2'

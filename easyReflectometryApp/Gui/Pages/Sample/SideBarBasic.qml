@@ -1,6 +1,7 @@
 import QtQuick 2.14
 import QtQuick.Controls 2.14
 import QtQuick.Dialogs 1.3 as Dialogs1
+import QtQuick.XmlListModel 2.13
 
 import easyAppGui.Globals 1.0 as EaGlobals
 import easyAppGui.Style 1.0 as EaStyle
@@ -64,7 +65,68 @@ EaComponents.SideBarColumn {
         collapsible: false
         enabled: true
 
-        ExComponents.SampleModelExplorer {}
+        EaComponents.TableView {
+            id: itemsTable
+
+            defaultInfoText: qsTr("No Model Present")
+
+            // Table model
+
+            model: XmlListModel {
+                property int itemsIndex: ExGlobals.Constants.proxy.currentItemsIndex + 1
+
+                xml: ExGlobals.Constants.proxy.itemsAsXml
+                query: "/root/item"
+
+                XmlRole { name: "label"; query: "name/string()" }
+                XmlRole { name: "type"; query: "type/string()" }
+            }
+
+            // Table rows
+
+            delegate: EaComponents.TableViewDelegate {
+                property var itemsModel: model
+
+                EaComponents.TableViewLabel {
+                    width: EaStyle.Sizes.fontPixelSize * 2.5
+                    headerText: "No."
+                    text: model.index + 1
+                }
+
+                EaComponents.TableViewTextInput {
+                    horizontalAlignment: Text.AlignLeft
+                    width: EaStyle.Sizes.fontPixelSize * 20.5
+                    headerText: "Label"
+                    text: itemsModel.label
+                    onEditingFinished: ExGlobals.Constants.proxy.setCurrentItemsName(text)
+                }
+
+                EaComponents.TableViewComboBox{
+                    horizontalAlignment: Text.AlignLeft
+                    width: EaStyle.Sizes.fontPixelSize * 9.8
+                    headerText: "Type"
+                    model: ["Multi-layer"]
+                    Component.onCompleted: {
+                        currentIndex = indexOfValue(itemsModel.type)
+                    }
+                    //onActivated: ExGlobals.Constants.proxy.setCurrentLayersMaterial(currentIndex)
+                }
+
+                EaComponents.TableViewButton {
+                    id: deleteRowColumn
+                    headerText: "Del." //"\uf2ed"
+                    fontIcon: "minus-circle"
+                    ToolTip.text: qsTr("Remove this layer")
+                    onClicked: ExGlobals.Constants.proxy.removeItems(itemsTable.currentIndex)
+                }
+
+            }
+
+            onCurrentIndexChanged: {
+                ExGlobals.Constants.proxy.currentItemsIndex = itemsTable.currentIndex
+            }
+
+        }
 
         Row {
             spacing: EaStyle.Sizes.fontPixelSize
@@ -155,7 +217,78 @@ EaComponents.SideBarColumn {
             }
         }
 
-        ExComponents.SampleLayerExplorer {}
+        EaComponents.TableView {
+            id: layersTable
+            defaultInfoText: qsTr("No Layers Added")
+
+            // Table model
+
+            model: XmlListModel {
+                property int layersIndex: ExGlobals.Constants.proxy.currentLayersIndex + 1
+
+                xml: ExGlobals.Constants.proxy.itemsAsXml
+                query: `/root/item[${itemsTable.currentIndex + 1}]/layers/item`
+
+                XmlRole { name: "thick"; query: "thickness/value/number()" }
+                XmlRole { name: "rough"; query: "roughness/value/number()" }
+                XmlRole { name: "materialid"; query: "material/name/string()"}
+            }
+
+            // Table rows
+
+            delegate: EaComponents.TableViewDelegate {
+                property var layersModel: model
+
+                EaComponents.TableViewLabel {
+                    width: EaStyle.Sizes.fontPixelSize * 2.3
+                    headerText: "No."
+                    text: model.index + 1
+                }
+
+                EaComponents.TableViewComboBox{
+                    horizontalAlignment: Text.AlignLeft
+                    width: EaStyle.Sizes.fontPixelSize * 9.8
+                    headerText: "Material"
+                    onActivated: {
+                        ExGlobals.Constants.proxy.setCurrentLayersMaterial(currentIndex)
+                    }
+                    model: ExGlobals.Constants.proxy.materialsName
+                    Component.onCompleted: {
+                        currentIndex = indexOfValue(layersModel.materialid)
+                    }
+                }
+
+                EaComponents.TableViewTextInput {
+                    horizontalAlignment: Text.AlignHCenter
+                    width: EaStyle.Sizes.fontPixelSize * 10.0
+                    headerText: "Thickness/Å"
+                    text: layersModel.thick
+                    onEditingFinished: ExGlobals.Constants.proxy.setCurrentLayersThickness(text)
+                }
+
+                EaComponents.TableViewTextInput {
+                    horizontalAlignment: Text.AlignHCenter
+                    width: EaStyle.Sizes.fontPixelSize * 10.0
+                    headerText: "Upper Roughness/Å"
+                    text: layersModel.rough
+                    onEditingFinished: ExGlobals.Constants.proxy.setCurrentLayersRoughness(text)
+                } 
+
+                EaComponents.TableViewButton {
+                    id: deleteRowColumn
+                    headerText: "Del." //"\uf2ed"
+                    fontIcon: "minus-circle"
+                    ToolTip.text: qsTr("Remove this item")
+                    onClicked: ExGlobals.Constants.proxy.removeLayers(layersTable.currentIndex)
+                }
+
+            }
+
+            onCurrentIndexChanged: {
+                ExGlobals.Constants.proxy.currentLayersIndex = layersTable.currentIndex
+            }
+
+        }
 
         Row {
             spacing: EaStyle.Sizes.fontPixelSize
