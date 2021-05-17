@@ -124,6 +124,7 @@ EaComponents.SideBarColumn {
 
             onCurrentIndexChanged: {
                 ExGlobals.Constants.proxy.currentItemsIndex = itemsTable.currentIndex
+                repsSpinBox.value = ExGlobals.Constants.proxy.currentItemsRepetitions
             }
 
         }
@@ -198,6 +199,7 @@ EaComponents.SideBarColumn {
         enabled: true //When a layer is selected
         collapsible: false
         Row {
+
             spacing: EaStyle.Sizes.fontPixelSize * 0.5
 
             // This integer defines how many repetitions of the layer structure should be
@@ -209,11 +211,14 @@ EaComponents.SideBarColumn {
                 text: qsTr("Number of repetitions:")
             }
             EaElements.SpinBox {
+                id: repsSpinBox
                 editable: true
                 from: 1
                 to: 9999
-                value: ExGlobals.Constants.proxy.currentItemsRepetitions
-                onValueChanged: ExGlobals.Constants.proxy.currentItemsRepetitions = value
+                value: ExGlobals.Constants.proxy.currentItemsRepetitions 
+                onValueChanged: {
+                    ExGlobals.Constants.proxy.currentItemsRepetitions = value
+                }
             }
         }
 
