@@ -658,9 +658,21 @@ class PyQmlProxy(QObject):
         #    borg.stack.beginMacro('Loaded default layer')
         borg.stack.enabled = False
         old_index = self.currentLayersIndex
+        new_layers = []
+        item = self._items[self.currentItemsIndex]
+        layers = item.layers
+        # This convoluted approach is necessary as currently the BaseCollection does not allow
+        # insertion or popping. In future, this could be replaced with the approach for 
+        # moving items around
         if old_index != 0:
-            layers = self._items[self.currentItemsIndex].layers
-            layers.insert(old_index - 1, layers.pop(old_index))
+            for i, l in enumerate(layers):
+                if i == old_index - 1:
+                    new_layers.append(layers[old_index])
+                elif i == old_index:
+                    new_layers.append(layers[old_index-1])
+                else:
+                    new_layers.append(l)
+            self._items[self.currentItemsIndex] = Item.from_pars(new_layers, item.repetitions.raw_value, name=item.name)
             borg.stack.enabled = True
             self.itemsChanged.emit()
 
@@ -670,13 +682,25 @@ class PyQmlProxy(QObject):
         #if borg.stack.enabled:
         #    borg.stack.beginMacro('Loaded default layer')
         borg.stack.enabled = False
-        old_index = self.currentItemsIndex
+        old_index = self.currentLayersIndex
+        new_layers = []
+        item = self._items[self.currentItemsIndex]
+        layers = item.layers
+        # This convoluted approach is necessary as currently the BaseCollection does not allow
+        # insertion or popping. In future, this could be replaced with the approach for 
+        # moving items around
         if old_index != len(self._items):
-            layers = self._items[self.currentItemsIndex].layers
-            layers.insert(old_index + 1, layers.pop(old_index))
+            for i, l in enumerate(layers):
+                if i == old_index:
+                    new_layers.append(layers[old_index+1])
+                elif i == old_index + 1:
+                    new_layers.append(layers[old_index])
+                else:
+                    new_layers.append(l)
+            self._items[self.currentItemsIndex] = Item.from_pars(new_layers, item.repetitions.raw_value, name=item.name)
             borg.stack.enabled = True
             self.itemsChanged.emit()
-    
+            
     @Slot(str)
     def removeLayers(self, i: str):
         """
