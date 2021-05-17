@@ -24,7 +24,6 @@ from easyCore.Fitting.Fitting import Fitter
 from easyCore.Utils.classTools import generatePath
 from easyCore.Utils.UndoRedo import property_stack_deco, FunctionStack
 
-# from easyReflectometryLib.sample_old import Sample
 from easyReflectometryLib.Sample.material import Material
 from easyReflectometryLib.Sample.layer import Layer
 from easyReflectometryLib.Sample.item import Item
@@ -59,10 +58,6 @@ class PyQmlProxy(QObject):
     parametersAsXmlChanged = Signal()
     parametersFilterCriteriaChanged = Signal()
 
-    # Structure
-    structureParametersChanged = Signal()
-    structureViewChanged = Signal()
-
     # Materials
     materialsChanged = Signal()
     materialsAsObjChanged = Signal()
@@ -81,14 +76,6 @@ class PyQmlProxy(QObject):
     itemsNameChanged = Signal()
     
     currentSampleChanged = Signal()
-
-    phaseAdded = Signal()
-    phaseRemoved = Signal()
-    # phasesAsObjChanged = Signal()
-    # phasesAsXmlChanged = Signal()
-    # phasesAsCifChanged = Signal()
-    currentPhaseChanged = Signal()
-    phasesEnabled = Signal()
 
     # Experiment
     patternParametersChanged = Signal()
@@ -172,12 +159,6 @@ class PyQmlProxy(QObject):
         self._state_changed = False
         self.stateChanged.connect(self._onStateChanged)
 
-        # Structure
-        # self.structureParametersChanged.connect(self._onStructureParametersChanged)
-        self.structureParametersChanged.connect(self._onStructureViewChanged)
-        self.structureParametersChanged.connect(self._onCalculatedDataChanged)
-        self.structureViewChanged.connect(self._onStructureViewChanged)
-
         # Materials
         self._current_materials_index = 0
         self._materials_as_obj = []
@@ -194,23 +175,11 @@ class PyQmlProxy(QObject):
 
         # Items
         self._current_items_index = 0
+        self._current_items_repetitions = 1
         self._items_as_obj = []
         self._items_as_xml = ""
         self.itemsChanged.connect(self._onItemsChanged)
         self.currentSampleChanged.connect(self._onCurrentItemsChanged)
-
-        # self._phases_as_obj = []
-        # self._phases_as_xml = ""
-        # self._phases_as_cif = ""
-        # self.phaseAdded.connect(self._onPhaseAdded)
-        # self.phaseAdded.connect(self.phasesEnabled)
-        # self.phaseAdded.connect(self.undoRedoChanged)
-        # self.phaseRemoved.connect(self._onPhaseRemoved)
-        # self.phaseRemoved.connect(self.phasesEnabled)
-        # self.phaseRemoved.connect(self.undoRedoChanged)
-        
-        self._current_phase_index = 0
-        self.currentPhaseChanged.connect(self._onCurrentPhaseChanged)
 
         # Experiment and calculated data
         self._data = self._defaultData()
@@ -268,8 +237,6 @@ class PyQmlProxy(QObject):
         self.parametersChanged.connect(self._onLayersChanged)
         self.parametersChanged.connect(self._onParametersChanged)
         self.parametersChanged.connect(self._onCalculatedDataChanged)
-        self.parametersChanged.connect(self._onStructureViewChanged)
-        # self.parametersChanged.connect(self._onStructureParametersChanged)
         self.parametersChanged.connect(self._onPatternParametersChanged)
         self.parametersChanged.connect(self._onInstrumentParametersChanged)
         self.parametersChanged.connect(self._background_proxy.onAsObjChanged)
@@ -346,33 +313,6 @@ class PyQmlProxy(QObject):
 
     def onCurrent3dPlottingLibChanged(self):
         pass
-
-    # Structure view
-
-    def _onStructureViewChanged(self):
-        print("***** _onStructureViewChanged")
-
-    @Property(bool, notify=structureViewChanged)
-    def showBonds(self):
-        return self._show_bonds
-
-    @showBonds.setter
-    def showBonds(self, show_bonds: bool):
-        if self._show_bonds == show_bonds:
-            return
-        self._show_bonds = show_bonds
-        self.structureViewChanged.emit()
-
-    @Property(float, notify=structureViewChanged)
-    def bondsMaxDistance(self):
-        return self._bonds_max_distance
-
-    @bondsMaxDistance.setter
-    def bondsMaxDistance(self, max_distance: float):
-        if self._bonds_max_distance == max_distance:
-            return
-        self._bonds_max_distance = max_distance
-        self.structureViewChanged.emit()
 
     # Charts for report
 
@@ -500,72 +440,6 @@ class PyQmlProxy(QObject):
         pass
 
     ####################################################################################################################
-    # Phase models (list, xml, cif)
-    ####################################################################################################################
-
-    # @Property('QVariant', notify=phasesAsObjChanged)
-    # def phasesAsObj(self):
-    #     # print("+ phasesAsObj")
-    #     return self._phases_as_obj
-
-    # @Property(str, notify=phasesAsXmlChanged)
-    # def phasesAsXml(self):
-    #     # print("+ phasesAsXml")
-    #     return self._phases_as_xml
-
-     # @Property(str, notify=phasesAsCifChanged)
-    # def phasesAsCif(self):
-    #     # print("+ phasesAsCif")
-    #     return self._phases_as_cif
-
-    # @Property(str, notify=phasesAsCifChanged)
-    # def phasesAsExtendedCif(self):
-    #     if len(self._sample.phases) == 0:
-    #         return
-
-    #     symm_ops = self._sample.phases[0].spacegroup.symmetry_opts
-    #     symm_ops_cif_loop = "loop_\n _symmetry_equiv_pos_as_xyz\n"
-    #     for symm_op in symm_ops:
-    #         symm_ops_cif_loop += f' {symm_op.as_xyz_string()}\n'
-    #     return self._phases_as_cif + symm_ops_cif_loop
-
-    # @phasesAsCif.setter
-    # @property_stack_deco
-    # def phasesAsCif(self, phases_as_cif):
-    #     print("+ phasesAsCifSetter")
-    #     if self._phases_as_cif == phases_as_cif:
-    #         return
-
-    #     self._sample.phases = Phases.from_cif_str(phases_as_cif)
-    #     #self.structureParametersChanged.emit()
-    #     self.parametersChanged.emit()
-
-    # def _setPhasesAsObj(self):
-    #     start_time = timeit.default_timer()
-    #     self._phases_as_obj = self._sample.phases.as_dict()['data']
-    #     # print("+ _setPhasesAsObj: {0:.3f} s".format(timeit.default_timer() - start_time))
-    #     self.phasesAsObjChanged.emit()
-
-    # def _setPhasesAsXml(self):
-    #     start_time = timeit.default_timer()
-    #     self._phases_as_xml = dicttoxml(self._phases_as_obj, attr_type=True).decode()
-    #     # print("+ _setPhasesAsXml: {0:.3f} s".format(timeit.default_timer() - start_time))
-    #     self.phasesAsXmlChanged.emit()
-
-    # def _setPhasesAsCif(self):
-    #     start_time = timeit.default_timer()
-    #     self._phases_as_cif = str(self._sample.phases.cif)
-    #     # print("+ _setPhasesAsCif: {0:.3f} s".format(timeit.default_timer() - start_time))
-    #     self.phasesAsCifChanged.emit()
-
-    # def _onStructureParametersChanged(self):
-    #     print("***** _onStructureParametersChanged")
-    #     self._setPhasesAsObj()  # 0.025 s
-    #     self._setPhasesAsXml()  # 0.065 s
-    #     self._setPhasesAsCif()  # 0.010 s
-    #     self.stateChanged.emit(True)
-
-    ####################################################################################################################
     #  Materials
     ####################################################################################################################
 
@@ -645,7 +519,6 @@ class PyQmlProxy(QObject):
     def _onItemsChanged(self):
         self._setItemsAsObj()  # 0.025 s
         self._setItemsAsXml()  # 0.065 s
-        print(self._items)
         self.stateChanged.emit(True)
 
     ####################################################################################################################
@@ -669,7 +542,6 @@ class PyQmlProxy(QObject):
         self._layers_as_obj = []
         for i in self._items[self.currentItemsIndex].layers:
             dictionary = i.as_dict()
-            dictionary['materials'] = [i.name for i in self._materials]
             self._layers_as_obj.append(dictionary)
         self.layersAsObjChanged.emit()
 
@@ -679,8 +551,10 @@ class PyQmlProxy(QObject):
 
     def _onLayersChanged(self):
         print('**onLayersChanged')
-        self._setLayersAsObj()  # 0.025 s
-        self._setLayersAsXml()  # 0.065 s
+        self._setLayersAsObj() 
+        self._setLayersAsXml() 
+        print(self._items[0]) 
+        print(self._items[0].layers[0])
         self.stateChanged.emit(True)
 
     ####################################################################################################################
@@ -691,38 +565,24 @@ class PyQmlProxy(QObject):
     def addNewMaterials(self):
         print("+ addNewMaterials")
         #if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default phase')
+        #    borg.stack.beginMacro('Loaded default material')
         borg.stack.enabled = False
-        self._materials.append(Material.from_pars(2.074, 0.000, name='Si'))
+        self._materials.append(Material.from_pars(2.074, 0.000, name=f'Si'))
         borg.stack.enabled = True
-        #if borg.stack.enabled:
-        #    borg.stack.endMacro()
-        #    # if len(self._sample.phases) < 2:
-        #    #     # We have problems with removing the only phase.....
-        #    #     borg.stack.pop()
         self.materialsChanged.emit()
-        # self.undoRedoChanged.emit()
-        # self.phasesEnabled.emit()
 
     @Slot()
     def duplicateSelectedMaterials(self):
         print("+ duplicateSelectedMaterials")
         #if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default phase')
+        #    borg.stack.beginMacro('Loaded default material')
         borg.stack.enabled = False
         # This is a fix until deepcopy is worked out
         # Manual duplication instead of creating a copy
         to_dup = self._materials[self.currentMaterialsIndex] 
         self._materials.append(Material.from_pars(to_dup.sld.raw_value, to_dup.isld.raw_value, name=to_dup.name))
         borg.stack.enabled = True
-        #if borg.stack.enabled:
-        #    borg.stack.endMacro()
-        #    # if len(self._sample.phases) < 2:
-        #    #     # We have problems with removing the only phase.....
-        #    #     borg.stack.pop()
         self.materialsChanged.emit()
-        # self.undoRedoChanged.emit()
-        # self.phasesEnabled.emit()
     
     @Slot(str)
     def removeMaterials(self, i: str):
@@ -743,46 +603,35 @@ class PyQmlProxy(QObject):
     def addNewItems(self):
         print("+ addNewItems")
         #if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default phase')
+        #    borg.stack.beginMacro('Loaded default item')
         borg.stack.enabled = False
         self._items.append(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, 'multi-layer'))
         borg.stack.enabled = True
-        #if borg.stack.enabled:
-        #    borg.stack.endMacro()
-        #    # if len(self._sample.phases) < 2:
-        #    #     # We have problems with removing the only phase.....
-        #    #     borg.stack.pop()
         self.itemsChanged.emit()
         self.layersChanged.emit()
-        # self.undoRedoChanged.emit()
-        # self.phasesEnabled.emit()
 
     @Slot()
     def duplicateSelectedItems(self):
         print("+ duplicateSelectedItems")
         #if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default phase')
+        #    borg.stack.beginMacro('Loaded default item')
         borg.stack.enabled = False
         # This is a fix until deepcopy is worked out
         # Manual duplication instead of creating a copy
-        to_dup = self._items[self.currentItemsIndex] 
-        self._items.append(Item.from_pars(to_dup.layers, to_dup.repetitions.raw_value, name=to_dup.name))
+        to_dup = self._items[self.currentItemsIndex]
+        to_dup_layers = []
+        for i in to_dup.layers:
+            to_dup_layers.append(Layer.from_pars(i.material, i.thickness.raw_value, i.roughness.raw_value, name=i.name))
+        self._items.append(Item.from_pars(to_dup_layers, to_dup.repetitions.raw_value, name=to_dup.name))
         borg.stack.enabled = True
-        #if borg.stack.enabled:
-        #    borg.stack.endMacro()
-        #    # if len(self._sample.phases) < 2:
-        #    #     # We have problems with removing the only phase.....
-        #    #     borg.stack.pop()
         self.itemsChanged.emit()
         self.layersChanged.emit()
-        # self.undoRedoChanged.emit()
-        # self.phasesEnabled.emit()
 
     @Slot()
     def moveSelectedItemsUp(self):
         print("+ moveSelectedItemsUp")
         #if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default phase')
+        #    borg.stack.beginMacro('Loaded default item')
         borg.stack.enabled = False
         # This is a fix until deepcopy is worked out
         # Manual duplication instead of creating a copy
@@ -790,21 +639,13 @@ class PyQmlProxy(QObject):
         if old_index != 0:
             self._items.insert(old_index - 1, self._items.pop(old_index))
             borg.stack.enabled = True
-            #if borg.stack.enabled:
-            #    borg.stack.endMacro()
-            #    # if len(self._sample.phases) < 2:
-            #    #     # We have problems with removing the only phase.....
-            #    #     borg.stack.pop()
             self.itemsChanged.emit()
             self.layersChanged.emit()
-            # self.undoRedoChanged.emit()
-            # self.phasesEnabled.emit()
-
     @Slot()
     def moveSelectedItemsDown(self):
         print("+ moveSelectedItemsDown")
         #if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default phase')
+        #    borg.stack.beginMacro('Loaded default item')
         borg.stack.enabled = False
         # This is a fix until deepcopy is worked out
         # Manual duplication instead of creating a copy
@@ -812,15 +653,8 @@ class PyQmlProxy(QObject):
         if old_index != len(self._items):
             self._items.insert(old_index + 1, self._items.pop(old_index))
             borg.stack.enabled = True
-            #if borg.stack.enabled:
-            #    borg.stack.endMacro()
-            #    # if len(self._sample.phases) < 2:
-            #    #     # We have problems with removing the only phase.....
-            #    #     borg.stack.pop()
             self.itemsChanged.emit()
             self.layersChanged.emit()
-            # self.undoRedoChanged.emit()
-            # self.phasesEnabled.emit()
     
     @Slot(str)
     def removeItems(self, i: str):
@@ -843,80 +677,52 @@ class PyQmlProxy(QObject):
     def addNewLayers(self):
         print("+ addNewLayers")
         #if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default phase')
+        #    borg.stack.beginMacro('Loaded default layer')
         borg.stack.enabled = False
         self._items[self.currentItemsIndex].layers.append(Layer.from_pars(self._materials[0], 10.0, 1.2, name=self._materials[0].name + ' layer'))
         borg.stack.enabled = True
-        #if borg.stack.enabled:
-        #    borg.stack.endMacro()
-        #    # if len(self._sample.phases) < 2:
-        #    #     # We have problems with removing the only phase.....
-        #    #     borg.stack.pop()
         self.layersChanged.emit()
-        # self.undoRedoChanged.emit()
-        # self.phasesEnabled.emit()
 
     @Slot()
     def duplicateSelectedLayers(self):
         print("+ duplicateSelectedLayers")
         #if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default phase')
+        #    borg.stack.beginMacro('Duplicated layer')
         borg.stack.enabled = False
         # This is a fix until deepcopy is worked out
         # Manual duplication instead of creating a copy
-        #to_dup = self._layers[self.currentLayersIndex] 
-        self._items[self.currentItemsIndex].layers.append(Layer.default())#.from_pars(to_dup.sld.raw_value, to_dup.isld.raw_value, name=to_dup.name))
+        to_dup = self._items[self.currentItemsIndex].layers[self.currentLayersIndex]
+        self._items[self.currentItemsIndex].layers.append(Layer.from_pars(to_dup.material, to_dup.thickness.raw_value, to_dup.roughness.raw_value, name=to_dup.name))
         borg.stack.enabled = True
-        #if borg.stack.enabled:
-        #    borg.stack.endMacro()
-        #    # if len(self._sample.phases) < 2:
-        #    #     # We have problems with removing the only phase.....
-        #    #     borg.stack.pop()
         self.layersChanged.emit()
-        # self.undoRedoChanged.emit()
-        # self.phasesEnabled.emit()
 
     @Slot()
     def moveSelectedLayersUp(self):
         print("+ moveSelectedLayersUp")
         #if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default phase')
+        #    borg.stack.beginMacro('Loaded default layer')
         borg.stack.enabled = False
         old_index = self.currentLayersIndex
         if old_index != 0:
             layers = self._items[self.currentItemsIndex].layers
             layers.insert(old_index - 1, layers.pop(old_index))
             borg.stack.enabled = True
-            #if borg.stack.enabled:
-            #    borg.stack.endMacro()
-            #    # if len(self._sample.phases) < 2:
-            #    #     # We have problems with removing the only phase.....
-            #    #     borg.stack.pop()
             self.itemsChanged.emit()
             self.layersChanged.emit()
-            # self.undoRedoChanged.emit()
-            # self.phasesEnabled.emit()
 
     @Slot()
     def moveSelectedLayersDown(self):
         print("+ moveSelectedLayersDown")
         #if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default phase')
+        #    borg.stack.beginMacro('Loaded default layer')
         borg.stack.enabled = False
         old_index = self.currentItemsIndex
         if old_index != len(self._items):
             layers = self._items[self.currentItemsIndex].layers
             layers.insert(old_index + 1, layers.pop(old_index))
             borg.stack.enabled = True
-            #if borg.stack.enabled:
-            #    borg.stack.endMacro()
-            #    # if len(self._sample.phases) < 2:
-            #    #     # We have problems with removing the only phase.....
-            #    #     borg.stack.pop()
             self.itemsChanged.emit()
             self.layersChanged.emit()
-            # self.undoRedoChanged.emit()
-            # self.phasesEnabled.emit()
     
     @Slot(str)
     def removeLayers(self, i: str):
@@ -928,210 +734,6 @@ class PyQmlProxy(QObject):
         """
         del self._items[self.currentItemsIndex].layers[int(i)]
         self.layersChanged.emit()
-
-    ####################################################################################################################
-    # Phase: Add / Remove
-    ####################################################################################################################
-
-    # @Slot(str)
-    # def addSampleFromCif(self, cif_url):
-    #     cif_path = generalizePath(cif_url)
-    #     borg.stack.enabled = False
-    #     self._sample.phases = Phases.from_cif_file(cif_path)
-    #     borg.stack.enabled = True
-    #     #if borg.stack.enabled:
-    #     #    borg.stack.beginMacro(f'Loaded cif: {cif_path}')
-    #     #try:
-    #     #    self._sample.phases = Phases.from_cif_file(cif_path)
-    #     #finally:
-    #     #    if borg.stack.enabled:
-    #     #        borg.stack.endMacro()
-    #     #    # if len(self._sample.phases) < 2:
-    #     #    #     # We have problems with removing the only phase.....
-    #     #    #     borg.stack.pop()
-    #     self.phaseAdded.emit()
-    #     # self.undoRedoChanged.emit()
-
-    # @Slot(str)
-    # def removePhase(self, phase_name: str):
-    #     if phase_name in self._sample.phases.phase_names:
-    #         del self._sample.phases[phase_name]
-    #         self.phaseRemoved.emit()
-
-    # def _defaultPhase(self):
-    #     space_group = SpaceGroup.from_pars('P 42/n c m')
-    #     cell = Lattice.from_pars(8.56, 8.56, 6.12, 90, 90, 90)
-    #     atom = Site.from_pars(label='Cl1', specie='Cl', fract_x=0.125, fract_y=0.167, fract_z=0.107)
-    #     atom.add_adp('Uiso', Uiso=0.0)
-    #     phase = Phase('Dichlorine', spacegroup=space_group, cell=cell)
-    #     phase.add_atom(atom)
-    #     return phase
-
-    # def _onPhaseAdded(self):
-    #     print("***** _onPhaseAdded")
-    #     if self._interface.current_interface_name != 'CrysPy':
-    #         self._interface.generate_sample_binding("filename", self._sample)
-    #     self._sample.phases.name = 'Phases'
-    #     # self._sample.set_background(self._background_proxy.asObj)
-    #     self.structureParametersChanged.emit()
-    #     self.projectInfoAsJson['samples'] = self._sample.phases[self.currentPhaseIndex].name
-    #     self.projectInfoChanged.emit()
-
-    # def _onPhaseRemoved(self):
-    #     print("***** _onPhaseRemoved")
-    #     self.structureParametersChanged.emit()
-
-    # @Property(bool, notify=phasesEnabled)
-    # def samplesPresent(self) -> bool:
-    #     return len(self._sample.phases) > 0
-
-    ####################################################################################################################
-    # Phase: Symmetry
-    ####################################################################################################################
-
-    # Crystal system
-
-    @Property('QVariant', notify=structureParametersChanged)
-    def crystalSystemList(self):
-        systems = [system.capitalize() for system in SpacegroupInfo.get_all_systems()]
-        return systems
-
-    @Property(str, notify=structureParametersChanged)
-    def currentCrystalSystem(self):
-        phases = self._sample.phases
-        if not phases:
-            return ''
-
-        current_system = phases[self.currentPhaseIndex].spacegroup.crystal_system
-        current_system = current_system.capitalize()
-        return current_system
-
-    @currentCrystalSystem.setter
-    def currentCrystalSystem(self, new_system: str):
-        new_system = new_system.lower()
-        space_group_numbers = SpacegroupInfo.get_ints_from_system(new_system)
-        top_space_group_number = space_group_numbers[0]
-        top_space_group_name = SpacegroupInfo.get_symbol_from_int_number(top_space_group_number)
-        self._setCurrentSpaceGroup(top_space_group_name)
-
-    # Space group number and name
-
-    @Property('QVariant', notify=structureParametersChanged)
-    def formattedSpaceGroupList(self):
-        def format_display(num):
-            name = SpacegroupInfo.get_symbol_from_int_number(num)
-            return f"<font color='#999'>{num}</font> {name}"
-
-        space_group_numbers = self._spaceGroupNumbers()
-        display_list = [format_display(num) for num in space_group_numbers]
-        return display_list
-
-    @Property(int, notify=structureParametersChanged)
-    def currentSpaceGroup(self):
-        def space_group_index(number, numbers):
-            if number in numbers:
-                return numbers.index(number)
-            return 0
-
-        phases = self._sample.phases
-        if not phases:
-            return -1
-
-        space_group_numbers = self._spaceGroupNumbers()
-        current_number = self._currentSpaceGroupNumber()
-        current_idx = space_group_index(current_number, space_group_numbers)
-        return current_idx
-
-    @currentSpaceGroup.setter
-    def currentSpaceGroup(self, new_idx: int):
-        space_group_numbers = self._spaceGroupNumbers()
-        space_group_number = space_group_numbers[new_idx]
-        space_group_name = SpacegroupInfo.get_symbol_from_int_number(space_group_number)
-        self._setCurrentSpaceGroup(space_group_name)
-
-    def _spaceGroupNumbers(self):
-        current_system = self.currentCrystalSystem.lower()
-        numbers = SpacegroupInfo.get_ints_from_system(current_system)
-        return numbers
-
-    def _currentSpaceGroupNumber(self):
-        phases = self._sample.phases
-        current_number = phases[self.currentPhaseIndex].spacegroup.int_number
-        return current_number
-
-    # Space group setting
-
-    @Property('QVariant', notify=structureParametersChanged)
-    def formattedSpaceGroupSettingList(self):
-        def format_display(num, name):
-            return f"<font color='#999'>{num}</font> {name}"
-
-        raw_list = self._spaceGroupSettingList()
-        formatted_list = [format_display(i + 1, name) for i, name in enumerate(raw_list)]
-        return formatted_list
-
-    @Property(int, notify=structureParametersChanged)
-    def currentSpaceGroupSetting(self):
-        phases = self._sample.phases
-        if not phases:
-            return 0
-
-        settings = self._spaceGroupSettingList()
-        current_setting = phases[self.currentPhaseIndex].spacegroup.space_group_HM_name.raw_value
-        current_number = settings.index(current_setting)
-        return current_number
-
-    @currentSpaceGroupSetting.setter
-    def currentSpaceGroupSetting(self, new_number: int):
-        settings = self._spaceGroupSettingList()
-        name = settings[new_number]
-        self._setCurrentSpaceGroup(name)
-
-    def _spaceGroupSettingList(self):
-        phases = self._sample.phases
-        if not phases:
-            return []
-
-        current_number = self._currentSpaceGroupNumber()
-        settings = SpacegroupInfo.get_compatible_HM_from_int(current_number)
-        return settings
-
-    # Common
-
-    def _setCurrentSpaceGroup(self, new_name: str):
-        phases = self._sample.phases
-        if phases[self.currentPhaseIndex].spacegroup.space_group_HM_name == new_name:
-            return
-
-        phases[self.currentPhaseIndex].spacegroup.space_group_HM_name = new_name
-        self.structureParametersChanged.emit()
-
-    ####################################################################################################################
-    # Phase: Atoms
-    ####################################################################################################################
-
-    @Slot()
-    def addDefaultAtom(self):
-        try:
-            index = len(self._sample.phases[0].atoms.atom_labels) + 1
-            label = f'Label{index}'
-            atom = Site.from_pars(label=label,
-                                  specie='O',
-                                  fract_x=0.05,
-                                  fract_y=0.05,
-                                  fract_z=0.05)
-            atom.add_adp('Uiso', Uiso=0.0)
-            self._sample.phases[self.currentPhaseIndex].add_atom(atom)
-            self._sample._updateInterface()
-            self.structureParametersChanged.emit()
-        except AttributeError:
-            print("Error: failed to add atom")
-
-    @Slot(str)
-    def removeAtom(self, atom_label: str):
-        del self._sample.phases[self.currentPhaseIndex].atoms[atom_label]
-        self._sample._updateInterface()
-        self.structureParametersChanged.emit()
 
     ####################################################################################################################
     # Current Materials
@@ -1198,7 +800,7 @@ class PyQmlProxy(QObject):
         self.materialsChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
-
+        
     ####################################################################################################################
     # Current Items
     ####################################################################################################################
@@ -1236,6 +838,24 @@ class PyQmlProxy(QObject):
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
 
+    @Slot(int)
+    def setCurrentItemsRepetitions(self, repetitions):
+        """
+        Sets the repetitions of the currently selected item.
+
+        :param sld: New repetitions value
+        :type sld: float
+        """
+        if self._items[self.currentItemsIndex].repetitions == repetitions:
+            return
+
+        self._items[self.currentItemsIndex].repetitions = repetitions
+        self.itemsChanged.emit()   
+        self.layersChanged.emit()
+        # self.projectInfoAsJson['samples'] = name
+        # self.projectInfoChanged.emit()
+
+
     ####################################################################################################################
     # Current Layers
     ####################################################################################################################
@@ -1262,11 +882,14 @@ class PyQmlProxy(QObject):
         :param current_index: Material index
         :type sld: str
         """
+        print('***setCurrentLayersMaterial')
+        print(self._items[0].layers[0])
         material = self._materials[int(current_index)]
         if self._items[self.currentItemsIndex].layers[self.currentLayersIndex].material == material:
             return
 
         self._items[self.currentItemsIndex].layers[self.currentLayersIndex].material = material
+        print(self._items[self.currentItemsIndex].layers)
         self.layersChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
@@ -1302,36 +925,6 @@ class PyQmlProxy(QObject):
         self.layersChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()  
-
-    ####################################################################################################################
-    # Current phase
-    ####################################################################################################################
-
-    @Property(int, notify=currentPhaseChanged)
-    def currentPhaseIndex(self):
-        return self._current_phase_index
-
-    @currentPhaseIndex.setter
-    def currentPhaseIndex(self, new_index: int):
-        if self._current_phase_index == new_index or new_index == -1:
-            return
-
-        self._current_phase_index = new_index
-        self.currentPhaseChanged.emit()
-
-    def _onCurrentPhaseChanged(self):
-        print("***** _onCurrentPhaseChanged")
-        self.structureViewChanged.emit()
-
-    @Slot(str)
-    def setCurrentPhaseName(self, name):
-        if self._sample.phases[self.currentPhaseIndex].name == name:
-            return
-
-        self._sample.phases[self.currentPhaseIndex].name = name
-        self.parametersChanged.emit()
-        self.projectInfoAsJson['samples'] = name
-        self.projectInfoChanged.emit()
 
     @Slot(str)
     def setCurrentExperimentDatasetName(self, name):
@@ -2220,10 +1813,6 @@ class PyQmlProxy(QObject):
         self._sample._updateInterface()
 
         # send signal to tell the proxy we changed phases
-        self.phasesEnabled.emit()
-        #self.undoRedoChanged.emit()
-        self.phasesAsObjChanged.emit()
-        self.structureParametersChanged.emit()
         self._background_proxy.onAsObjChanged()
 
         # experiment

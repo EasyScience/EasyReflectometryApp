@@ -37,7 +37,7 @@ EaComponents.SideBarColumn {
                 // This button should only be enabled when some material in the material editor table
                 // has been selected. If a material is selected and this button is clicked, the material
                 //should be deleted.
-                enabled: ExGlobals.Constants.proxy.hasMaterials() //When material is selected
+                enabled: true //When material is selected
                 fontIcon: "clone"
                 text: qsTr("Duplicate selected material")
                 onClicked: ExGlobals.Constants.proxy.duplicateSelectedMaterials()
@@ -152,7 +152,7 @@ EaComponents.SideBarColumn {
                 from: 1
                 to: 9999
                 value: 1
-                onValueModified: ExGlobals.Constants.proxy.setRepetitionsChanged(value)
+                onValueModified: ExGlobals.Constants.proxy.setCurrentItemsRepetitions(value)
             }
         }
 

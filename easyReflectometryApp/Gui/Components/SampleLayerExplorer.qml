@@ -25,13 +25,12 @@ EaComponents.TableView {
 
         XmlRole { name: "thick"; query: "thickness/value/number()" }
         XmlRole { name: "rough"; query: "roughness/value/number()" }
-        XmlRole { name: "materials"; query: "materials/item/string()" }
+        XmlRole { name: "materialid"; query: "material/name/string()"}
     }
 
     // Table rows
 
     delegate: EaComponents.TableViewDelegate {
-        //property string modelColor: model.color ? model.color : "transparent"
 
         EaComponents.TableViewLabel {
             width: EaStyle.Sizes.fontPixelSize * 2.3
@@ -43,8 +42,9 @@ EaComponents.TableView {
             horizontalAlignment: Text.AlignLeft
             width: EaStyle.Sizes.fontPixelSize * 9.8
             headerText: "Material"
-            model: ExGlobals.Constants.proxy.materialsName
             onActivated: ExGlobals.Constants.proxy.setCurrentLayersMaterial(currentIndex)
+            currentIndex: indexOfValue(model.materialid)
+            model: ExGlobals.Constants.proxy.materialsName
         }
 
         EaComponents.TableViewTextInput {
