@@ -20,8 +20,6 @@ CloseDialog 1.0 CloseDialog.qml
 ProjectExamples 1.0 ProjectExamples.qml
 
 SampleMaterialExplorer 1.0 SampleMaterialExplorer.qml
-SampleModelExplorer 1.0 SampleModelExplorer.qml
-SampleLayerExplorer 1.0 SampleLayerExplorer.qml
 SampleSymmetry 1.0 SampleSymmetry.qml
 SampleCell 1.0 SampleCell.qml
 SampleAtoms 1.0 SampleAtoms.qml
