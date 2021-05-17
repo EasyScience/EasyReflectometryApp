@@ -59,13 +59,12 @@ class PyQmlProxy(QObject):
     parametersFilterCriteriaChanged = Signal()
 
     # Materials
-    materialsChanged = Signal()
     materialsAsObjChanged = Signal()
     materialsAsXmlChanged = Signal()
     materialsNameChanged = Signal()
 
     # Items
-    itemsChanged = Signal()
+    sampleChanged = Signal()
     itemsAsObjChanged = Signal()
     itemsAsXmlChanged = Signal()
     itemsNameChanged = Signal()
@@ -159,7 +158,7 @@ class PyQmlProxy(QObject):
         self._current_materials_len = 0
         self._materials_as_obj = []
         self._materials_as_xml = ""
-        self.materialsChanged.connect(self._onMaterialsChanged)
+        self.sampleChanged.connect(self._onMaterialsChanged)
         self.currentSampleChanged.connect(self._onCurrentMaterialsChanged)
 
         # Layers
@@ -169,7 +168,7 @@ class PyQmlProxy(QObject):
         self._current_items_index = 0
         self._items_as_obj = []
         self._items_as_xml = ""
-        self.itemsChanged.connect(self._onItemsChanged)
+        self.sampleChanged.connect(self._onItemsChanged)
         self.currentSampleChanged.connect(self._onCurrentItemsChanged)
 
         # Experiment and calculated data
@@ -529,9 +528,9 @@ class PyQmlProxy(QObject):
         #if borg.stack.enabled:
         #    borg.stack.beginMacro('Loaded default material')
         borg.stack.enabled = False
-        self._materials.append(Material.from_pars(2.074, 0.000, name=f'Si'))
+        self._materials.append(Material.from_pars(2.074, 0.000, name=f'Material {len(self._materials)+1}'))
         borg.stack.enabled = True
-        self.materialsChanged.emit()
+        self.sampleChanged.emit()
 
     @Slot()
     def duplicateSelectedMaterials(self):
@@ -544,8 +543,8 @@ class PyQmlProxy(QObject):
         to_dup = self._materials[self.currentMaterialsIndex] 
         self._materials.append(Material.from_pars(to_dup.sld.raw_value, to_dup.isld.raw_value, name=to_dup.name))
         borg.stack.enabled = True
-        self.materialsChanged.emit()
-    
+        self.sampleChanged.emit()
+
     @Slot(str)
     def removeMaterials(self, i: str):
         """
@@ -557,11 +556,11 @@ class PyQmlProxy(QObject):
         if len(self._materials) == 1:
             self._materials = []
             self._items = []
-            self.materialsChanged.emit()
-            self.itemsChanged.emit()
+            self.sampleChanged.emit()
         else:
             del self._materials[int(i)]
-            self.materialsChanged.emit()
+            self.sampleChanged.emit()
+
 
     ####################################################################################################################
     # Items: Add / Remove
@@ -574,12 +573,12 @@ class PyQmlProxy(QObject):
         #    borg.stack.beginMacro('Loaded default item')
         borg.stack.enabled = False
         try: 
-            self._items.append(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, 'multi-layer'))
+            self._items.append(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, f'Multi-layer {len(self._items)+1}'))
         except IndexError:
             self.addNewMaterials()
-            self._items.append(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, 'multi-layer'))
+            self._items.append(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, f'Multi-layer {len(self._items)+1}'))
         borg.stack.enabled = True
-        self.itemsChanged.emit()
+        self.sampleChanged.emit()
 
     @Slot()
     def duplicateSelectedItems(self):
@@ -595,7 +594,7 @@ class PyQmlProxy(QObject):
             to_dup_layers.append(Layer.from_pars(i.material, i.thickness.raw_value, i.roughness.raw_value, name=i.name))
         self._items.append(Item.from_pars(to_dup_layers, to_dup.repetitions.raw_value, name=to_dup.name))
         borg.stack.enabled = True
-        self.itemsChanged.emit()
+        self.sampleChanged.emit()
 
     @Slot()
     def moveSelectedItemsUp(self):
@@ -609,7 +608,7 @@ class PyQmlProxy(QObject):
         if old_index != 0:
             self._items.insert(old_index - 1, self._items.pop(old_index))
             borg.stack.enabled = True
-            self.itemsChanged.emit()
+            self.sampleChanged.emit()
     
     @Slot()
     def moveSelectedItemsDown(self):
@@ -623,7 +622,7 @@ class PyQmlProxy(QObject):
         if old_index != len(self._items):
             self._items.insert(old_index + 1, self._items.pop(old_index))
             borg.stack.enabled = True
-            self.itemsChanged.emit()
+            self.sampleChanged.emit()
     
     @Slot(str)
     def removeItems(self, i: str):
@@ -634,7 +633,7 @@ class PyQmlProxy(QObject):
         :type i: str
         """
         del self._items[int(i)]
-        self.itemsChanged.emit()
+        self.sampleChanged.emit()
 
 
     ####################################################################################################################
@@ -648,11 +647,11 @@ class PyQmlProxy(QObject):
         #    borg.stack.beginMacro('Loaded default layer')
         borg.stack.enabled = False
         try:
-            self._items[self.currentItemsIndex].layers.append(Layer.from_pars(self._materials[0], 10.0, 1.2, name='easyLayer'))
+            self._items[self.currentItemsIndex].layers.append(Layer.from_pars(self._materials[0], 10.0, 1.2, name=f'Layer {len(self._items[self.currentItemsIndex].layers)}'))
         except IndexError:
             self.addNewItems()
         borg.stack.enabled = True
-        self.itemsChanged.emit()
+        self.sampleChanged.emit()
 
     @Slot()
     def duplicateSelectedLayers(self):
@@ -665,7 +664,7 @@ class PyQmlProxy(QObject):
         to_dup = self._items[self.currentItemsIndex].layers[self.currentLayersIndex]
         self._items[self.currentItemsIndex].layers.append(Layer.from_pars(to_dup.material, to_dup.thickness.raw_value, to_dup.roughness.raw_value, name=to_dup.name))
         borg.stack.enabled = True
-        self.itemsChanged.emit()
+        self.sampleChanged.emit()
 
     @Slot()
     def moveSelectedLayersUp(self):
@@ -690,7 +689,7 @@ class PyQmlProxy(QObject):
                     new_layers.append(l)
             self._items[self.currentItemsIndex] = Item.from_pars(new_layers, item.repetitions.raw_value, name=item.name)
             borg.stack.enabled = True
-            self.itemsChanged.emit()
+            self.sampleChanged.emit()
 
     @Slot()
     def moveSelectedLayersDown(self):
@@ -715,7 +714,7 @@ class PyQmlProxy(QObject):
                     new_layers.append(l)
             self._items[self.currentItemsIndex] = Item.from_pars(new_layers, item.repetitions.raw_value, name=item.name)
             borg.stack.enabled = True
-            self.itemsChanged.emit()
+            self.sampleChanged.emit()
             
     @Slot(str)
     def removeLayers(self, i: str):
@@ -729,7 +728,7 @@ class PyQmlProxy(QObject):
             self._items = []
         else:
             del self._items[self.currentItemsIndex].layers[int(i)]
-        self.itemsChanged.emit()
+        self.sampleChanged.emit()
 
     ####################################################################################################################
     # Current Materials
@@ -744,10 +743,10 @@ class PyQmlProxy(QObject):
         if self._current_materials_index == new_index or new_index == -1:
             return
         self._current_materials_index = new_index
-        self.materialsChanged.emit()
+        self.sampleChanged.emit()
 
     def _onCurrentMaterialsChanged(self):
-        self.materialsChanged.emit()
+        self.sampleChanged.emit()
 
     @Slot(str)
     def setCurrentMaterialsName(self, name):
@@ -761,7 +760,7 @@ class PyQmlProxy(QObject):
             return
 
         self._materials[self.currentMaterialsIndex].name = name
-        self.materialsChanged.emit()
+        self.sampleChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
 
@@ -777,7 +776,7 @@ class PyQmlProxy(QObject):
             return
 
         self._materials[self.currentMaterialsIndex].sld = sld
-        self.materialsChanged.emit()
+        self.sampleChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
     
@@ -793,7 +792,7 @@ class PyQmlProxy(QObject):
             return
 
         self._materials[self.currentMaterialsIndex].isld = isld
-        self.materialsChanged.emit()
+        self.sampleChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
         
@@ -812,7 +811,7 @@ class PyQmlProxy(QObject):
         if self._current_items_index == new_index or new_index == -1:
             return
         self._current_items_index = new_index
-        self.itemsChanged.emit()
+        self.sampleChanged.emit()
 
     @Property(int, notify=currentSampleChanged)
     def currentItemsRepetitions(self):
@@ -826,10 +825,10 @@ class PyQmlProxy(QObject):
             return
         self._items[self.currentItemsIndex].repetitions = new_repetitions
         print([i for i in self._items])
-        self.itemsChanged.emit()
+        self.sampleChanged.emit()
 
     def _onCurrentItemsChanged(self):
-        self.itemsChanged.emit()
+        self.sampleChanged.emit()
 
     @Slot(str)
     def setCurrentItemsName(self, name):
@@ -843,7 +842,7 @@ class PyQmlProxy(QObject):
             return
 
         self._items[self.currentItemsIndex].name = name
-        self.itemsChanged.emit()
+        self.sampleChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
 
@@ -860,7 +859,7 @@ class PyQmlProxy(QObject):
         if self._current_layers_index == new_index or new_index == -1:
             return
         self._current_layers_index = new_index
-        self.itemsChanged.emit()
+        self.sampleChanged.emit()
 
     @Slot(str)
     def setCurrentLayersMaterial(self, current_index):
@@ -876,7 +875,7 @@ class PyQmlProxy(QObject):
             return
 
         self._items[self.currentItemsIndex].layers[self.currentLayersIndex].material = material
-        self.itemsChanged.emit()
+        self.sampleChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
 
@@ -892,7 +891,7 @@ class PyQmlProxy(QObject):
             return
 
         self._items[self.currentItemsIndex].layers[self.currentLayersIndex].thickness = thickness
-        self.itemsChanged.emit()
+        self.sampleChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
     
@@ -908,7 +907,7 @@ class PyQmlProxy(QObject):
             return
 
         self._items[self.currentItemsIndex].layers[self.currentLayersIndex].roughness = roughness
-        self.itemsChanged.emit()
+        self.sampleChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()  
 
