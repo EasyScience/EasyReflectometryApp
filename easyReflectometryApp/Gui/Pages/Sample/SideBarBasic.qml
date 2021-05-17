@@ -217,9 +217,7 @@ EaComponents.SideBarColumn {
                 to: 9999
                 value: ExGlobals.Constants.proxy.currentItemsRepetitions 
                 onValueChanged: {
-                    print('reps', ExGlobals.Constants.proxy.currentItemsRepetitions)
                     ExGlobals.Constants.proxy.currentItemsRepetitions = value
-                    print(ExGlobals.Constants.proxy.currentItemsRepetitions)
                 }
             }
         }
