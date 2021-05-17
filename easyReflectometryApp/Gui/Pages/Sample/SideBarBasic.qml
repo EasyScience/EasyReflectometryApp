@@ -147,12 +147,11 @@ EaComponents.SideBarColumn {
                 text: qsTr("Number of repetitions:")
             }
             EaElements.SpinBox {
-                //width: textFieldWidth()
                 editable: true
                 from: 1
                 to: 9999
-                value: 1
-                onValueModified: ExGlobals.Constants.proxy.setCurrentItemsRepetitions(value)
+                value: ExGlobals.Constants.proxy.currentItemsRepetitions
+                onValueChanged: ExGlobals.Constants.proxy.currentItemsRepetitions = value
             }
         }
 

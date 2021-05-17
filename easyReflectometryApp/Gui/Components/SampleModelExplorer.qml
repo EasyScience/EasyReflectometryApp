@@ -11,7 +11,6 @@ import easyAppGui.Logic 1.0 as EaLogic
 import Gui.Globals 1.0 as ExGlobals
 
 EaComponents.TableView {
-    //id: phasesTable
 
     defaultInfoText: qsTr("No Model Present")
 
@@ -24,7 +23,6 @@ EaComponents.TableView {
         query: "/root/item"
 
         XmlRole { name: "label"; query: "name/string()" }
-        XmlRole { name: "color"; query: "color/string()" }
     }
 
     // Table rows

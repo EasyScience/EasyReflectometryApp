@@ -175,7 +175,6 @@ class PyQmlProxy(QObject):
 
         # Items
         self._current_items_index = 0
-        self._current_items_repetitions = 1
         self._items_as_obj = []
         self._items_as_xml = ""
         self.itemsChanged.connect(self._onItemsChanged)
@@ -553,8 +552,6 @@ class PyQmlProxy(QObject):
         print('**onLayersChanged')
         self._setLayersAsObj() 
         self._setLayersAsXml() 
-        print(self._items[0]) 
-        print(self._items[0].layers[0])
         self.stateChanged.emit(True)
 
     ####################################################################################################################
@@ -807,13 +804,32 @@ class PyQmlProxy(QObject):
 
     @Property(int, notify=currentSampleChanged)
     def currentItemsIndex(self):
+        print('**currentItemsIndex')
         return self._current_items_index
 
     @currentItemsIndex.setter
     def currentItemsIndex(self, new_index: int):
+        print('**currentItemsIndexSetter')
         if self._current_items_index == new_index or new_index == -1:
             return
         self._current_items_index = new_index
+        self.itemsChanged.emit()
+        self.layersChanged.emit()
+
+    @Property(int, notify=currentSampleChanged)
+    def currentItemsRepetitions(self):
+        print('**currentItemsRepetitions')
+        try: 
+            return int(self._items[self.currentItemsIndex].repetitions.raw_value)
+        except IndexError:
+            return -1
+
+    @currentItemsRepetitions.setter
+    def currentItemsRepetitions(self, new_repetitions: int):
+        print('**currentItemsRepetitionsSetter')
+        if self._items[self.currentItemsIndex].repetitions.raw_value == new_repetitions or new_repetitions == -1:
+            return
+        self._items[self.currentItemsIndex].repetitions = new_repetitions
         self.itemsChanged.emit()
         self.layersChanged.emit()
 
@@ -837,24 +853,6 @@ class PyQmlProxy(QObject):
         self.layersChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
-
-    @Slot(int)
-    def setCurrentItemsRepetitions(self, repetitions):
-        """
-        Sets the repetitions of the currently selected item.
-
-        :param sld: New repetitions value
-        :type sld: float
-        """
-        if self._items[self.currentItemsIndex].repetitions == repetitions:
-            return
-
-        self._items[self.currentItemsIndex].repetitions = repetitions
-        self.itemsChanged.emit()   
-        self.layersChanged.emit()
-        # self.projectInfoAsJson['samples'] = name
-        # self.projectInfoChanged.emit()
-
 
     ####################################################################################################################
     # Current Layers
@@ -883,13 +881,11 @@ class PyQmlProxy(QObject):
         :type sld: str
         """
         print('***setCurrentLayersMaterial')
-        print(self._items[0].layers[0])
         material = self._materials[int(current_index)]
         if self._items[self.currentItemsIndex].layers[self.currentLayersIndex].material == material:
             return
 
         self._items[self.currentItemsIndex].layers[self.currentLayersIndex].material = material
-        print(self._items[self.currentItemsIndex].layers)
         self.layersChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
