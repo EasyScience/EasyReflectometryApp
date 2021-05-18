@@ -72,13 +72,13 @@ EaComponents.SideBarColumn {
         }
     }
 
-    EaElements.GroupBox {
+    /*EaElements.GroupBox {
         title: qsTr("Examples")
         last: true
         collapsible: false
 
         ExComponents.ProjectExamples {}
-    }
+    }*/
 
 }
 
