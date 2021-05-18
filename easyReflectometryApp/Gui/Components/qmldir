@@ -26,6 +26,8 @@ SampleAdps 1.0 SampleAdps.qml
 
 ExperimentDataExplorer 1.0 ExperimentDataExplorer.qml
 ExperimentAssociatedPhases 1.0 ExperimentAssociatedPhases.qml
+ExperimentResolutionSetup 1.0 ExperimentResolutionSetup.qml
+ExperimentBackgroundSetup 1.0 ExperimentBackgroundSetup.qml
 ExperimentSimulationSetup 1.0 ExperimentSimulationSetup.qml
 ExperimentInstrumentSetup 1.0 ExperimentInstrumentSetup.qml
 ExperimentPeakProfileG 1.0 ExperimentPeakProfileG.qml

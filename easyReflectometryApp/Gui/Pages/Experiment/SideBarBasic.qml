@@ -159,13 +159,13 @@ EaComponents.SideBarColumn {
         ExComponents.ExperimentSimulationSetup {}
     }
 
-    EaElements.GroupBox {
+    /*EaElements.GroupBox {
         title: qsTr("Instrument setup")
         enabled: ExGlobals.Constants.proxy.experimentLoaded ||
                  ExGlobals.Constants.proxy.experimentSkipped
 
         ExComponents.ExperimentInstrumentSetup {}
-    }
+    }*/
 
     EaElements.GroupBox {
         title: qsTr("Resolution")
@@ -178,37 +178,17 @@ EaComponents.SideBarColumn {
 
                 EaElements.Label {
                     enabled: false
-                    text: qsTr("Profile function")
+                    text: qsTr("Resolution type")
                 }
 
                 EaElements.ComboBox {
                     width: EaStyle.Sizes.sideBarContentWidth
-                    model: ["Pseudo-Voigt"]
-                }
-            }
-
-            Row {
-                spacing: EaStyle.Sizes.tableColumnSpacing * 2
-
-                Column {
-                    EaElements.Label {
-                        enabled: false
-                        text: qsTr("Gaussian instrumental broadening")
-                    }
-
-                    ExComponents.ExperimentPeakProfileG {}
-                }
-
-                Column {
-                    EaElements.Label {
-                        enabled: false
-                        text: qsTr("Lorentzian sample broadening")
-                    }
-
-                    ExComponents.ExperimentPeakProfileL {}
+                    model: ["Constant dq/q"]
                 }
             }
         }
+
+        ExComponents.ExperimentResolutionSetup {}
     }
 
     EaElements.GroupBox {
@@ -222,7 +202,7 @@ EaComponents.SideBarColumn {
 
                 EaElements.Label {
                     enabled: false
-                    text: qsTr("Type")
+                    text: qsTr("Background Type")
                 }
 
                 EaElements.ComboBox {
@@ -230,32 +210,9 @@ EaComponents.SideBarColumn {
                     model: ["Uniform"]
                 }
             }
-
-            Column {
-                EaElements.Label {
-                    enabled: false
-                    text: qsTr("Points")
-                }
-
-                ExComponents.ExperimentBackground {}
-            }
         }
 
-        Row {
-            spacing: EaStyle.Sizes.fontPixelSize
-
-            EaElements.SideBarButton {
-                fontIcon: "plus-circle"
-                text: qsTr("Append new point")
-                onClicked: ExGlobals.Constants.proxy.backgroundProxy.addPoint()
-            }
-
-            EaElements.SideBarButton {
-                fontIcon: "undo-alt"
-                text: qsTr("Reset to default points")
-                onClicked: ExGlobals.Constants.proxy.backgroundProxy.setDefaultPoints()
-            }
-        }
+        ExComponents.ExperimentBackgroundSetup {}
     }
 
     // Load experimental data file dialog
