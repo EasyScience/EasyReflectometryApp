@@ -323,6 +323,9 @@ EaComponents.SideBarColumn {
                         ExGlobals.Constants.proxy.setCurrentLayersMaterial(currentIndex)
                     }
                     model: ExGlobals.Constants.proxy.materialsName
+                    onModelChanged: {
+                        currentIndex = indexOfValue(layersModel.materialid)
+                    }
                     Component.onCompleted: {
                         currentIndex = indexOfValue(layersModel.materialid)
                     }
