@@ -15,13 +15,13 @@ Row {
     EaComponents.TableViewLabel{
         horizontalAlignment: Text.AlignRight
         width: labelWidth()
-        text: qsTr("2θ-min:")
+        text: qsTr("q-min:")
     }
     EaElements.Parameter {
         id: xMin
         enabled: !ExGlobals.Constants.proxy.experimentLoaded
         width: textFieldWidth()
-        units: "deg"
+        units: "Å<sup>-1</sup>"
         text: EaLogic.Utils.toFixed(ExGlobals.Constants.proxy.simulationParametersAsObj.x_min, 3)
         onEditingFinished: updateParameters()
     }
@@ -30,13 +30,13 @@ Row {
     EaComponents.TableViewLabel{
         horizontalAlignment: Text.AlignRight
         width: labelWidth()
-        text: qsTr("2θ-max:")
+        text: qsTr("q-max:")
     }
     EaElements.Parameter {
         id: xMax
         enabled: !ExGlobals.Constants.proxy.experimentLoaded
         width: textFieldWidth()
-        units: "deg"
+        units: "Å<sup>-1</sup>"
         text: EaLogic.Utils.toFixed(ExGlobals.Constants.proxy.simulationParametersAsObj.x_max, 3)
         onEditingFinished: updateParameters()
     }
@@ -45,13 +45,13 @@ Row {
     EaComponents.TableViewLabel{
         horizontalAlignment: Text.AlignRight
         width: labelWidth()
-        text: qsTr("2θ-step:")
+        text: qsTr("q-step:")
     }
     EaElements.Parameter {
         id: xStep
         enabled: !ExGlobals.Constants.proxy.experimentLoaded
         width: textFieldWidth()
-        units: "deg"
+        units: "Å<sup>-1</sup>"
         text: EaLogic.Utils.toFixed(ExGlobals.Constants.proxy.simulationParametersAsObj.x_step, 3)
         onEditingFinished: updateParameters()
     }
