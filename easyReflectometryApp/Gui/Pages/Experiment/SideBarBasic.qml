@@ -101,7 +101,7 @@ EaComponents.SideBarColumn {
                 }
             }
 
-            Row {
+            /*Row {
                 spacing: EaStyle.Sizes.fontPixelSize
 
                 Column {
@@ -145,7 +145,7 @@ EaComponents.SideBarColumn {
                         model: ["Powder"]
                     }
                 }
-            }
+            }*/
         }
     }
 
@@ -168,7 +168,7 @@ EaComponents.SideBarColumn {
     }
 
     EaElements.GroupBox {
-        title: qsTr("Peak profile")
+        title: qsTr("Resolution")
         enabled: ExGlobals.Constants.proxy.experimentLoaded ||
                  ExGlobals.Constants.proxy.experimentSkipped
 
@@ -227,7 +227,7 @@ EaComponents.SideBarColumn {
 
                 EaElements.ComboBox {
                     width: EaStyle.Sizes.sideBarContentWidth
-                    model: ["Point background"]
+                    model: ["Uniform"]
                 }
             }
 
@@ -258,24 +258,14 @@ EaComponents.SideBarColumn {
         }
     }
 
-    EaElements.GroupBox {
-        title: qsTr("Associated phases")
-        last: true
-        enabled: ExGlobals.Constants.proxy.experimentLoaded
-
-        ExComponents.ExperimentAssociatedPhases {}
-
-        Component.onCompleted: ExGlobals.Variables.associatedPhasesGroup = this
-    }
-
     // Load experimental data file dialog
 
     Dialogs1.FileDialog{
         id: loadExperimentDataFileDialog
 
-        nameFilters: [ qsTr("Data files") + " (*.xye *.xys *.xy)" ]
+        nameFilters: [ qsTr("Data files") + " (*.dat *.txt *.ort)" ]
 
-        onAccepted: ExGlobals.Constants.proxy.addExperimentDataFromXye(fileUrl)
+        onAccepted: ExGlobals.Constants.proxy.addExperimentDataFromOrt(fileUrl)
     }
 
 }
