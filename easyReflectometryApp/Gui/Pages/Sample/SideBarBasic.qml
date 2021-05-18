@@ -77,13 +77,13 @@ EaComponents.SideBarColumn {
                     headerText: "Del." //"\uf2ed"
                     fontIcon: "minus-circle"
                     ToolTip.text: qsTr("Remove this material")
-                    onClicked: ExGlobals.Constants.proxy.removeMaterials(currentIndex)
+                    onClicked: ExGlobals.Constants.proxy.removeMaterials(materialsTable.currentIndex)
                 }
 
             }
 
             onCurrentIndexChanged: {
-                ExGlobals.Constants.proxy.currentMaterialsIndex = currentIndex
+                ExGlobals.Constants.proxy.currentMaterialsIndex = materialsTable.currentIndex
             }
 
         }
