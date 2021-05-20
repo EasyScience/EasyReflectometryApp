@@ -448,7 +448,7 @@ class Plotting1dProxy(QObject):
     # Static methods
 
     @staticmethod
-    def around(a, decimals=2):
+    def around(a, decimals=10):
         rounded = np.around(a, decimals=decimals)
         if isinstance(rounded, (int, float)):
             return rounded.item()
@@ -457,11 +457,11 @@ class Plotting1dProxy(QObject):
 
     @staticmethod
     def aroundX(a):
-        return Plotting1dProxy.around(a, decimals=2)
+        return Plotting1dProxy.around(a, decimals=10)
 
     @staticmethod
     def aroundY(a):
-        return Plotting1dProxy.around(a, decimals=2)
+        return Plotting1dProxy.around(a, decimals=10)
 
     @staticmethod
     def aroundHkl(a):

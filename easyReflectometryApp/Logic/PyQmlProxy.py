@@ -135,7 +135,6 @@ class PyQmlProxy(QObject):
         self._model.remove_item(0)
         self._model.remove_item(0)
         self._defaultModel()
-        self._items = []
 
         # Plotting 1D
         self._plotting_1d_proxy = Plotting1dProxy()
@@ -164,8 +163,6 @@ class PyQmlProxy(QObject):
 
         # Items
         self._current_items_index = 1
-        self._items_as_obj = []
-        self._items_as_xml = ""
         self.sampleChanged.connect(self._onItemsChanged)
         self.currentSampleChanged.connect(self._onCurrentItemsChanged)
 
@@ -544,7 +541,6 @@ class PyQmlProxy(QObject):
         """
         if len(self._materials) == 1:
             self._materials = []
-            self._items = []
             self.sampleChanged.emit()
         else:
             del self._materials[int(i)]
@@ -562,10 +558,10 @@ class PyQmlProxy(QObject):
         #    borg.stack.beginMacro('Loaded default item')
         borg.stack.enabled = False
         try:
-            self._model.add_item(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, f'Multi-layer {len(self._items)+1}'))
+            self._model.add_item(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, f'Multi-layer {len(self._model.structure)+1}'))
         except IndexError:
             self.addNewMaterials()
-            self._model.add_item(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, f'Multi-layer {len(self._items)+1}'))
+            self._model.add_item(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, f'Multi-layer {len(self._model.structure)+1}'))
         borg.stack.enabled = True
         self.sampleChanged.emit()
 
@@ -877,6 +873,7 @@ class PyQmlProxy(QObject):
 
         self._model.structure[self.currentItemsIndex].layers[self.currentLayersIndex].thickness = thickness
         self.sampleChanged.emit()
+        self.calculatedDataChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
     
@@ -888,10 +885,10 @@ class PyQmlProxy(QObject):
         :param sld: New roughness value
         :type sld: float
         """
-        if self._items[self.currentItemsIndex].layers[self.currentLayersIndex].roughness == roughness:
+        if self._model.structure[self.currentItemsIndex].layers[self.currentLayersIndex].roughness == roughness:
             return
 
-        self._items[self.currentItemsIndex].layers[self.currentLayersIndex].roughness = roughness
+        self._model.structure[self.currentItemsIndex].layers[self.currentLayersIndex].roughness = roughness
         self.sampleChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()  
@@ -1248,7 +1245,7 @@ class PyQmlProxy(QObject):
         if not self.experimentLoaded and not self.experimentSkipped:
             return
 
-        self._sample.output_index = self.currentPhaseIndex
+        # self._sample.output_index = self.currentPhaseIndex
 
         #  THIS IS WHERE WE WOULD LOOK UP CURRENT EXP INDEX
         sim = self._data.simulations[0]
@@ -1264,11 +1261,11 @@ class PyQmlProxy(QObject):
             num_points = int((x_max - x_min) / x_step + 1)
             sim.x = np.linspace(x_min, x_max, num_points)
 
-        sim.y = self._interface.fit_func(sim.x)  # CrysPy: 0.5 s, CrysFML: 0.005 s, GSAS-II: 0.25 s
-        hkl = self._interface.get_hkl()
+        sim.y = np.log(self._interface.fit_func(sim.x))  # CrysPy: 0.5 s, CrysFML: 0.005 s, GSAS-II: 0.25 s
+        sld_profile = self._interface.sld_profile()
 
         self._plotting_1d_proxy.setCalculatedData(sim.x, sim.y)
-        self._plotting_1d_proxy.setBraggData(hkl['ttheta'], hkl['h'], hkl['k'], hkl['l'])
+        # self._plotting_1d_proxy.setBraggData(sld_profile['ttheta'], sld_profile['h'], sld_profile['k'], sld_profile['l'])
 
         print("+ _updateCalculatedData: {0:.3f} s".format(timeit.default_timer() - start_time))
 
@@ -1305,7 +1302,7 @@ class PyQmlProxy(QObject):
         start_time = timeit.default_timer()
         self._parameters_as_obj.clear()
 
-        par_ids, par_paths = generatePath(self._items, True)
+        par_ids, par_paths = generatePath(self._model, True)
         for par_index, par_path in enumerate(par_paths):
             par_id = par_ids[par_index]
             par = borg.map.get_item_by_key(par_id)

@@ -266,7 +266,6 @@ EaComponents.SideBarColumn {
         enabled: (itemsTable.model.count > 0) ? true : false //When a layer is selected
         collapsible: false
         Row {
-
             spacing: EaStyle.Sizes.fontPixelSize * 0.5
 
             // This integer defines how many repetitions of the layer structure should be
@@ -288,7 +287,6 @@ EaComponents.SideBarColumn {
                 }
             }
         }
-
         EaComponents.TableView {
             id: layersTable
             defaultInfoText: qsTr("No Layers Added")
