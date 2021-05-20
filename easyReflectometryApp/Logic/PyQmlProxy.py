@@ -1261,7 +1261,7 @@ class PyQmlProxy(QObject):
             num_points = int((x_max - x_min) / x_step + 1)
             sim.x = np.linspace(x_min, x_max, num_points)
 
-        sim.y = np.log(self._interface.fit_func(sim.x))  # CrysPy: 0.5 s, CrysFML: 0.005 s, GSAS-II: 0.25 s
+        sim.y = self._interface.fit_func(sim.x)  # CrysPy: 0.5 s, CrysFML: 0.005 s, GSAS-II: 0.25 s
         sld_profile = self._interface.sld_profile()
 
         self._plotting_1d_proxy.setCalculatedData(sim.x, sim.y)
