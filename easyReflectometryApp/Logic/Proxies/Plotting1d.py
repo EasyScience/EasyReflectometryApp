@@ -413,10 +413,10 @@ class Plotting1dProxy(QObject):
         self._difference_median_y = Plotting1dProxy.arrayMedian(self._difference_yarray)
 
     def _yAxisMin(self, min_y, max_y):
-        return min_y - self._y_axis_range_extension * max_y
+        return min_y #- self._y_axis_range_extension * max_y
 
     def _yAxisMax(self, max_y):
-        return max_y + self._y_axis_range_extension * max_y
+        return max_y #+ self._y_axis_range_extension * max_y
 
     def _setExperimentPlotRanges(self):
         self._experiment_plot_ranges_obj = {
