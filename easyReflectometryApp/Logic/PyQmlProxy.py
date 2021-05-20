@@ -194,13 +194,14 @@ class PyQmlProxy(QObject):
         self._background_proxy.asObjChanged.connect(self._onParametersChanged)
         # self._background_proxy.asObjChanged.connect(self._sample.set_background)
         self._background_proxy.asObjChanged.connect(self.calculatedDataChanged)
-        self._background_proxy.asXmlChanged.connect(self.updateChartBackground)
+        # self._background_proxy.asXmlChanged.connect(self.updateChartBackground)
 
         # Analysis
         self.calculatedDataChanged.connect(self._onCalculatedDataChanged)
 
         self._simulation_parameters_as_obj = self._defaultSimulationParameters()
         self.simulationParametersChanged.connect(self._onSimulationParametersChanged)
+        self.sampleChanged.connect(self._onSimulationParametersChanged)
         self.simulationParametersChanged.connect(self.undoRedoChanged)
 
         self._fit_results = self._defaultFitResults()
@@ -400,9 +401,9 @@ class PyQmlProxy(QObject):
             Material.from_pars(2.074, 0., name='Si')
         ]
         layers = [
-            Layer.from_pars(self._materials[0], 0.0, 0.0, name='VacuumLayer'),
-            Layer.from_pars(self._materials[1], 100.0, 3.0, name='D2OLayer'),
-            Layer.from_pars(self._materials[2], 0.0, 1.2, name='SiLayer'),
+            Layer.from_pars(self._materials[0], 0.0, 0.0, name='Vacuum Layer'),
+            Layer.from_pars(self._materials[1], 100.0, 3.0, name='D2O Layer'),
+            Layer.from_pars(self._materials[2], 0.0, 1.2, name='Si Layer'),
         ]
         items = [
             Item.from_pars(layers[0], 1, name='Superphase'),
@@ -446,6 +447,9 @@ class PyQmlProxy(QObject):
         self.materialsAsXmlChanged.emit()
 
     def _onMaterialsChanged(self):
+        for i in self._model.structure:
+            for j in i.layers:
+                j.name = j.material.name + ' Layer'
         self._setMaterialsAsObj()  # 0.025 s
         self._setMaterialsAsXml()  # 0.065 s
         self._setMaterialsNames()
@@ -500,6 +504,9 @@ class PyQmlProxy(QObject):
         self.modelAsXmlChanged.emit()
 
     def _onItemsChanged(self):
+        for i in self._model.structure:
+            for j in i.layers:
+                j.name = j.material.name + ' Layer'
         self._setModelAsObj()  # 0.025 s
         self._setModelAsXml()  # 0.065 s
         self.stateChanged.emit(True)
@@ -514,7 +521,7 @@ class PyQmlProxy(QObject):
         #if borg.stack.enabled:
         #    borg.stack.beginMacro('Loaded default material')
         borg.stack.enabled = False
-        self._materials.append(Material.from_pars(2.074, 0.000, name=f'Material {len(self._materials)+1}'))
+        self._materials.append(Material.from_pars(2.074, 0.000, name=f'Material {len(self._materials)+1}', interface=self._interface))
         borg.stack.enabled = True
         self.sampleChanged.emit()
 
@@ -873,7 +880,6 @@ class PyQmlProxy(QObject):
 
         self._model.structure[self.currentItemsIndex].layers[self.currentLayersIndex].thickness = thickness
         self.sampleChanged.emit()
-        self.calculatedDataChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
     
@@ -922,7 +928,7 @@ class PyQmlProxy(QObject):
             DataSet1D(
                 name='NPD data',
                 x=x_data, y=np.zeros_like(x_data),
-                x_label='2theta (deg)', y_label='Intensity',
+                x_label='q (1/angstrom)', y_label='Reflectivity',
                 data_type='experiment'
             )
         )
@@ -930,7 +936,7 @@ class PyQmlProxy(QObject):
             DataSet1D(
                 name='{:s} engine'.format(self._interface.current_interface_name),
                 x=x_data, y=np.zeros_like(x_data),
-                x_label='2theta (deg)', y_label='Intensity',
+                x_label='q (1/angstrom)', y_label='Reflectivity',
                 data_type='simulation'
             )
         )
@@ -938,7 +944,7 @@ class PyQmlProxy(QObject):
             DataSet1D(
                 name='Difference',
                 x=x_data, y=np.zeros_like(x_data),
-                x_label='2theta (deg)', y_label='Difference',
+                x_label='q (1/angstrom)', y_label='Difference',
                 data_type='simulation'
             )
         )
@@ -1056,8 +1062,8 @@ class PyQmlProxy(QObject):
 
     def _onExperimentDataAdded(self):
         print("***** _onExperimentDataAdded")
-        self._plotting_1d_proxy.setMeasuredData(self._experiment_data.x, self._experiment_data.y,
-                                                self._experiment_data.e)
+        self._plotting_1d_proxy.setMeasuredData(self._experiment_data.x, np.log(self._experiment_data.y),
+                                                self._experiment_data.ye)
         self._experiment_parameters = self._experimentDataParameters(self._experiment_data)
         self.simulationParametersAsObj = json.dumps(self._experiment_parameters)
         # if len(self._sample.pattern.backgrounds) == 0:
@@ -1208,26 +1214,26 @@ class PyQmlProxy(QObject):
         self._setInstrumentParametersAsObj()
         self._setInstrumentParametersAsXml()
 
-    ####################################################################################################################
-    # Background
-    ####################################################################################################################
+    # ####################################################################################################################
+    # # Background
+    # ####################################################################################################################
 
-    @property
-    def _background_obj(self):
-        # bgs = self._sample.pattern.backgrounds
-        # itm = None
-        # if len(bgs) > 0:
-        #     itm = bgs[0]
-        # return itm
-        pass
+    # @property
+    # def _background_obj(self):
+    #     # bgs = self._sample.pattern.backgrounds
+    #     # itm = None
+    #     # if len(bgs) > 0:
+    #     #     itm = bgs[0]
+    #     # return itm
+    #     pass
 
-    @Property('QVariant', notify=dummySignal)
-    def backgroundProxy(self):
-        return self._background_proxy
+    # @Property('QVariant', notify=dummySignal)
+    # def backgroundProxy(self):
+    #     return self._background_proxy
 
-    def updateChartBackground(self):
-        self._plotting_1d_proxy.setBackgroundData(self._background_proxy.asObj.x_sorted_points,
-                                                  self._background_proxy.asObj.y_sorted_points)
+    # def updateChartBackground(self):
+    #     self._plotting_1d_proxy.setBackgroundData(self._background_proxy.asObj.x_sorted_points,
+    #                                               self._background_proxy.asObj.y_sorted_points)
 
     ####################################################################################################################
     ####################################################################################################################
@@ -1306,6 +1312,8 @@ class PyQmlProxy(QObject):
         for par_index, par_path in enumerate(par_paths):
             par_id = par_ids[par_index]
             par = borg.map.get_item_by_key(par_id)
+            if par_path[-11:] == 'repetitions' and par.raw_value == 1:
+                continue
 
             if not par.enabled:
                 continue
@@ -1313,15 +1321,31 @@ class PyQmlProxy(QObject):
             if self._parameters_filter_criteria.lower() not in par_path.lower():
                 continue
 
+            label = par_path
+            if par_path[-3:] == 'sld':
+                label = (' ').join(par_path.split('.')[-2:])
+                label = label[:-3] + 'SLD'
+            elif par_path[-9:] == 'thickness':
+                label = (' ').join(par_path.split('.')[-2:])
+                label = label[:-9] + 'Thickness'
+            elif par_path[-9:] == 'roughness':
+                label = (' ').join(par_path.split('.')[-2:])
+                label = label[:-9] + 'Upper Roughness'
+            elif par_path[-11:] == 'repetitions':
+                label = (' ').join(par_path.split('.')[-2:])
+                label = label[:-11] + 'Repetitions'
+            elif par_path == 'scale':
+                label = 'instrument.scale'
             self._parameters_as_obj.append({
                 "id":     str(par_id),
                 "number": par_index + 1,
-                "label":  par_path,
+                "label":  label,
                 "value":  par.raw_value,
                 "unit":   '{:~P}'.format(par.unit),
                 "error":  float(par.error),
                 "fit":    int(not par.fixed)
             })
+            print(par_path)
 
         print("+ _setParametersAsObj: {0:.3f} s".format(timeit.default_timer() - start_time))
         self.parametersAsObjChanged.emit()
@@ -1518,7 +1542,7 @@ class PyQmlProxy(QObject):
 
         x = exp_data.x
         y = exp_data.y
-        weights = 1 / exp_data.e
+        weights = 1 / exp_data.ye
         method = self._current_minimizer_method_name
 
         res = self.fitter.fit(x, y, weights=weights, method=method)
@@ -1721,14 +1745,16 @@ class PyQmlProxy(QObject):
         projectPath = self.currentProjectPath
         project_save_filepath = os.path.join(projectPath, 'project.json')
         descr = {
-            'sample': self._sample.as_dict(skip=['interface'])
+            'model': self._model.as_dict(skip=['interface']),
+            'materials': self._materials.as_dict(skip=['interface'])
         }
 
         if self._data.experiments:
             experiments_x = self._data.experiments[0].x
             experiments_y = self._data.experiments[0].y
-            experiments_e = self._data.experiments[0].e
-            descr['experiments'] = [experiments_x, experiments_y, experiments_e]
+            experiments_ye = self._data.experiments[0].ye
+            experiments_xe = self._data.experiments[0].xe
+            descr['experiments'] = [experiments_x, experiments_y, experiments_ye, experiments_xe]
 
         descr['experiment_skipped'] = self._experiment_skipped
         descr['project_info'] = self._project_info

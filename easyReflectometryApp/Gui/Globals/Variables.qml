@@ -121,7 +121,7 @@ QtObject {
 
     // Analysis tab settings
     property bool showLegend: false
-    property bool iconifiedNames: true
+    property bool iconifiedNames: false//true
 
     // Plotting
     property var bokehStructureChart

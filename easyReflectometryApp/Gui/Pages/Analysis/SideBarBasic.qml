@@ -68,7 +68,7 @@ EaComponents.SideBarColumn {
 
                     model: [
                         { value: "", text: qsTr("All types") },
-                        { value: "phases.", text: formatFilterText("gem", "", "Phases") },
+                        { value: "structure.", text: formatFilterText("gem", "", "Sample") },
                         { value: "instrument.", text: formatFilterText("microscope", "", "Instrument") },
                         { value: ".lattice.", text: formatFilterText("gem", "cube", "Cell") },
                         { value: ".atoms.", text: formatFilterText("gem", "atom", "Atoms") },
