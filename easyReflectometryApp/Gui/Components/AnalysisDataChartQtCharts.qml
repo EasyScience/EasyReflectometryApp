@@ -8,19 +8,16 @@ EaCharts.BaseQtCharts {
     measuredData: ExGlobals.Constants.proxy.plotting1d.qtchartsMeasuredDataObj
     calculatedData: ExGlobals.Constants.proxy.plotting1d.qtchartsCalculatedDataObj
     differenceData: ExGlobals.Constants.proxy.plotting1d.qtchartsDifferenceDataObj
-    braggData: ExGlobals.Constants.proxy.plotting1d.qtchartsBraggDataObj
-    backgroundData: ExGlobals.Constants.proxy.plotting1d.qtchartsBackgroundDataObj
 
     plotRanges: ExGlobals.Constants.proxy.plotting1d.analysisPlotRangesObj
 
-    xAxisTitle: "2θ (deg)"
+    xAxisTitle: "q (Å-1)"
     yMainAxisTitle: {
-        let title = 'Icalc'
-        if (hasMeasuredData) title = 'Imeas, Icalc'
-        if (hasBackgroundData) title += ', Ibkg'
+        let title = 'R(q)calc'
+        if (hasMeasuredData) title = 'R(q)meas, R(q)calc'
         return title
     }
-    yDifferenceAxisTitle: "Imeas - Icalc"
+    yDifferenceAxisTitle: "R(q)meas - R(q)calc"
 
     Component.onCompleted: ExGlobals.Variables.analysisChart = this
 }

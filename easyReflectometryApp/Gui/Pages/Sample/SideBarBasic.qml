@@ -127,6 +127,7 @@ EaComponents.SideBarColumn {
     }
 
     EaElements.GroupBox {
+        id: itemsGroup
         title: qsTr("Model editor")
         collapsible: false
         enabled: true
@@ -141,7 +142,7 @@ EaComponents.SideBarColumn {
             model: XmlListModel {
                 property int itemsIndex: ExGlobals.Constants.proxy.currentItemsIndex + 1
 
-                xml: ExGlobals.Constants.proxy.itemsAsXml
+                xml: ExGlobals.Constants.proxy.modelAsXml
                 query: "/root/item"
 
                 XmlRole { name: "label"; query: "name/string()" }
@@ -168,10 +169,11 @@ EaComponents.SideBarColumn {
                 }
 
                 EaComponents.TableViewComboBox{
+                    id: layersType
                     horizontalAlignment: Text.AlignLeft
                     width: EaStyle.Sizes.fontPixelSize * 9.8
                     headerText: "Type"
-                    model: ["Multi-layer"]
+                    model: ["Layer", "Multi-layer"]
                     Component.onCompleted: {
                         currentIndex = indexOfValue(itemsModel.type)
                     }
@@ -223,7 +225,7 @@ EaComponents.SideBarColumn {
                 // When an item is selected and it is not at the top, 
                 // this button will be enabled to allow
                 // the selected item to be moved up
-                enabled: (itemsTable.model.count > 0 && itemsTable.currentIndex != 0) ? true : false//When item is selected
+                enabled: false//(itemsTable.model.count > 0 && itemsTable.currentIndex != 0) ? true : false//When item is selected
                 fontIcon: "arrow-up"
                 text: qsTr("Move item up")
                 onClicked: ExGlobals.Constants.proxy.moveSelectedItemsUp()
@@ -233,7 +235,7 @@ EaComponents.SideBarColumn {
                 // When an item is selected and it is not at the bottom, 
                 // this button will be enabled to allow
                 // the selected item to be moved down
-                enabled: (itemsTable.model.count > 0 && itemsTable.currentIndex + 1 != itemsTable.model.count) ? true : false//When item is selected
+                enabled: false//(itemsTable.model.count > 0 && itemsTable.currentIndex + 1 != itemsTable.model.count) ? true : false//When item is selected
                 fontIcon: "arrow-down"
                 text: qsTr("Move item down")
                 onClicked: ExGlobals.Constants.proxy.moveSelectedItemsDown()
@@ -296,7 +298,7 @@ EaComponents.SideBarColumn {
             model: XmlListModel {
                 property int layersIndex: ExGlobals.Constants.proxy.currentLayersIndex + 1
 
-                xml: ExGlobals.Constants.proxy.itemsAsXml
+                xml: ExGlobals.Constants.proxy.modelAsXml
                 query: `/root/item[${itemsTable.currentIndex + 1}]/layers/item`
 
                 XmlRole { name: "thick"; query: "thickness/value/number()" }
@@ -387,14 +389,14 @@ EaComponents.SideBarColumn {
             spacing: EaStyle.Sizes.fontPixelSize
 
             EaElements.SideBarButton {
-                enabled: (layersTable.model.count > 0 && layersTable.currentIndex != 0) ? true : false//When item is selected
+                enabled: false//(layersTable.model.count > 0 && layersTable.currentIndex != 0) ? true : false//When item is selected
                 fontIcon: "arrow-up"
                 text: qsTr("Move layer up")
                 onClicked: ExGlobals.Constants.proxy.moveSelectedLayersUp()
             }
 
             EaElements.SideBarButton {
-                enabled: (layersTable.model.count > 0 && layersTable.currentIndex + 1 != layersTable.model.count) ? true : false
+                enabled: false//(layersTable.model.count > 0 && layersTable.currentIndex + 1 != layersTable.model.count) ? true : false
                 fontIcon: "arrow-down"
                 text: qsTr("Move layer down")
                 onClicked: ExGlobals.Constants.proxy.moveSelectedLayersDown()
@@ -419,9 +421,9 @@ EaComponents.SideBarColumn {
 
     // Open phase CIF file dialog
 
-    Dialogs1.FileDialog{
-        id: loadPhaseFileDialog
-        nameFilters: [ "CIF files (*.cif)"]
-        onAccepted: ExGlobals.Constants.proxy.addSampleFromCif(fileUrl)
-    }
+    // Dialogs1.FileDialog{
+    //     id: loadPhaseFileDialog
+    //     nameFilters: [ "CIF files (*.cif)"]
+    //     onAccepted: ExGlobals.Constants.proxy.addSampleFromCif(fileUrl)
+    // }
 }
