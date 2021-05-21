@@ -1062,7 +1062,7 @@ class PyQmlProxy(QObject):
 
     def _onExperimentDataAdded(self):
         print("***** _onExperimentDataAdded")
-        self._plotting_1d_proxy.setMeasuredData(self._experiment_data.x, np.log(self._experiment_data.y),
+        self._plotting_1d_proxy.setMeasuredData(self._experiment_data.x, self._experiment_data.y,
                                                 self._experiment_data.ye)
         self._experiment_parameters = self._experimentDataParameters(self._experiment_data)
         self.simulationParametersAsObj = json.dumps(self._experiment_parameters)
