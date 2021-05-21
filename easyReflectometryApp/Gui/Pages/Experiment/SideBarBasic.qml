@@ -172,6 +172,7 @@ EaComponents.SideBarColumn {
         enabled: ExGlobals.Constants.proxy.experimentLoaded ||
                  ExGlobals.Constants.proxy.experimentSkipped
 
+        /*
         Column {
             Column {
                 spacing: EaStyle.Sizes.fontPixelSize * -0.5
@@ -187,15 +188,18 @@ EaComponents.SideBarColumn {
                 }
             }
         }
+        */
 
         ExComponents.ExperimentResolutionSetup {}
     }
 
     EaElements.GroupBox {
         title: qsTr("Background")
+        last: true
         enabled: ExGlobals.Constants.proxy.experimentLoaded ||
                  ExGlobals.Constants.proxy.experimentSkipped
 
+        /*
         Column {
             Column {
                 spacing: EaStyle.Sizes.fontPixelSize * -0.5
@@ -211,6 +215,7 @@ EaComponents.SideBarColumn {
                 }
             }
         }
+        */
 
         ExComponents.ExperimentBackgroundSetup {}
     }

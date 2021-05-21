@@ -15,6 +15,7 @@ EaComponents.SideBarColumn {
     EaElements.GroupBox {
         title: qsTr("Get started")
         collapsible: false
+        last: true
 
         Grid {
             columns: 2

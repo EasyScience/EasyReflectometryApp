@@ -11,16 +11,26 @@ import Gui.Globals 1.0 as ExGlobals
 Row {
     spacing: EaStyle.Sizes.fontPixelSize * 0.5
 
-    // Min
+    EaComponents.TableViewLabel {
+        horizontalAlignment: Text.AlignRight
+        width: elementWidth()
+        text: qsTr("Resolution type:")
+    }
+    EaElements.ComboBox {
+        width: elementWidth()
+        model: ["Constant dq/q"]
+    }
+
     EaComponents.TableViewLabel{
         horizontalAlignment: Text.AlignRight
-        width: labelWidth()
+        width: elementWidth()
         text: qsTr("dq/q:")
     }
     EaElements.Parameter {
         id: xMin
         enabled: !ExGlobals.Constants.proxy.experimentLoaded
-        width: textFieldWidth()
+        width: elementWidth()
+        anchors.verticalCenter: parent.verticalCenter
         units: ""
         text: EaLogic.Utils.toFixed(ExGlobals.Constants.proxy.simulationParametersAsObj.x_min, 3)
         onEditingFinished: updateParameters()
@@ -28,12 +38,8 @@ Row {
 
     // Logic
 
-    function labelWidth() {
-        return (EaStyle.Sizes.sideBarContentWidth - spacing * 5 - textFieldWidth() * 3) / 3
-    }
-
-    function textFieldWidth() {
-        return EaStyle.Sizes.fontPixelSize * 7.0
+    function elementWidth() {
+        return (EaStyle.Sizes.sideBarContentWidth - spacing * 4) / 4
     }
 
     function updateParameters() {

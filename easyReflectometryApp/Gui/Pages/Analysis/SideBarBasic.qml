@@ -34,7 +34,7 @@ EaComponents.SideBarColumn {
                 EaElements.TextField {
                     id: filterCriteriaField
 
-                    width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 3
+                    width: EaStyle.Sizes.sideBarContentWidth //(EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 3
 
                     placeholderText: qsTr("Filter parameters")
 
@@ -47,6 +47,8 @@ EaComponents.SideBarColumn {
             }
 
             Column {
+                visible: false
+
                 EaElements.Label {
                     visible: false
                     enabled: false
@@ -85,6 +87,8 @@ EaComponents.SideBarColumn {
             }
 
             Column {
+                visible: false
+
                 EaElements.Label {
                     visible: false
                     enabled: false
