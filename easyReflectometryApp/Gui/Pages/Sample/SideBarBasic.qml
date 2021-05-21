@@ -14,6 +14,8 @@ import Gui.Components 1.0 as ExComponents
 
 EaComponents.SideBarColumn {
 
+    property string currentItemsType: 'Layer'
+
     EaElements.GroupBox {
         title: qsTr("Material editor")
         collapsible: true
@@ -174,6 +176,10 @@ EaComponents.SideBarColumn {
                     width: EaStyle.Sizes.fontPixelSize * 9.8
                     headerText: "Type"
                     model: ["Layer", "Multi-layer"]
+                    onActivated: {
+                        ExGlobals.Constants.proxy.currentItemsType = currentValue
+                        currentItemsType = ExGlobals.Constants.proxy.currentItemsType
+                    }
                     Component.onCompleted: {
                         currentIndex = indexOfValue(itemsModel.type)
                     }
@@ -191,6 +197,7 @@ EaComponents.SideBarColumn {
 
             onCurrentIndexChanged: {
                 ExGlobals.Constants.proxy.currentItemsIndex = itemsTable.currentIndex
+                currentItemsType = ExGlobals.Constants.proxy.currentItemsType
                 repsSpinBox.value = ExGlobals.Constants.proxy.currentItemsRepetitions
             }
 
@@ -262,10 +269,11 @@ EaComponents.SideBarColumn {
         // When an item in the above table is selected, this box will become enabled.
         // Allowing different parameters and layers to be defined for the item.
         id: layersGroup
-        title: qsTr("Multi-layer editor")
+        title: qsTr(currentItemsType + " editor")
         enabled: (itemsTable.model.count > 0) ? true : false //When a layer is selected
         collapsible: false
         Row {
+            visible: (currentItemsType == 'Multi-layer') ? true : false
             spacing: EaStyle.Sizes.fontPixelSize * 0.5
 
             // This integer defines how many repetitions of the layer structure should be

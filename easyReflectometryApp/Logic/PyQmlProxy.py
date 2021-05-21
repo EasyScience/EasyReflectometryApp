@@ -489,11 +489,14 @@ class PyQmlProxy(QObject):
         self._model_as_obj = []
         for i in self._model.structure:
             dictionary = {'name': i.name}
-            dictionary['type'] = 'Multi-layer'
+            dictionary['type'] =  i.type
             dictionary['layers'] = [j.as_dict(skip=['interface']) for j in i.layers]
             dictionary['repetitions'] = i.repetitions.as_dict(skip=['interface'])
             self._model_as_obj.append(dictionary)
         if len(self._model.structure) > 0:
+            self._model.structure[0].layers[0].thickness.enabled = False
+            self._model.structure[0].layers[0].roughness.enabled = False
+            self._model.structure[-1].layers[-1].thickness.enabled = False
             self._model_as_obj[0]['layers'][0]['thickness']['value'] = np.nan
             self._model_as_obj[0]['layers'][0]['roughness']['value'] = np.nan
             self._model_as_obj[-1]['layers'][-1]['thickness']['value'] = np.nan
@@ -507,6 +510,7 @@ class PyQmlProxy(QObject):
         for i in self._model.structure:
             for j in i.layers:
                 j.name = j.material.name + ' Layer'
+            print(i.name, i.type, 'type changing')
         self._setModelAsObj()  # 0.025 s
         self._setModelAsXml()  # 0.065 s
         self.stateChanged.emit(True)
@@ -565,10 +569,10 @@ class PyQmlProxy(QObject):
         #    borg.stack.beginMacro('Loaded default item')
         borg.stack.enabled = False
         try:
-            self._model.add_item(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, f'Multi-layer {len(self._model.structure)+1}'))
+            self._model.add_item(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, f'Multi-layer {len(self._model.structure)+1}', 'Layer'))
         except IndexError:
             self.addNewMaterials()
-            self._model.add_item(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, f'Multi-layer {len(self._model.structure)+1}'))
+            self._model.add_item(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, f'Multi-layer {len(self._model.structure)+1}', 'Layer'))
         borg.stack.enabled = True
         self.sampleChanged.emit()
 
@@ -584,7 +588,7 @@ class PyQmlProxy(QObject):
         to_dup_layers = []
         for i in to_dup.layers:
             to_dup_layers.append(Layer.from_pars(i.material, i.thickness.raw_value, i.roughness.raw_value, name=i.name, interface=self._interface))
-        self._model.add_item(Item.from_pars(to_dup_layers, to_dup.repetitions.raw_value, name=to_dup.name))
+        self._model.add_item(Item.from_pars(to_dup_layers, to_dup.repetitions.raw_value, name=to_dup.name, type=to_dup.type))
         borg.stack.enabled = True
         self.sampleChanged.emit()
 
@@ -814,6 +818,20 @@ class PyQmlProxy(QObject):
             return
         self._model.structure[self.currentItemsIndex].repetitions = new_repetitions
         self.sampleChanged.emit()
+
+    @Property(str, notify=currentSampleChanged)
+    def currentItemsType(self):
+        print('**currentItemsType')
+        return self._model.structure[self.currentItemsIndex].type
+
+    @currentItemsType.setter
+    def currentItemsType(self, type: str):
+        print('**ccurrentItemsTypeSetter')
+        if self._model.structure[self.currentItemsIndex].type == type or type == -1:
+            return
+        self._model.structure[self.currentItemsIndex].type = type
+        self.sampleChanged.emit()
+
 
     def _onCurrentItemsChanged(self):
         self.sampleChanged.emit()
@@ -1062,7 +1080,7 @@ class PyQmlProxy(QObject):
 
     def _onExperimentDataAdded(self):
         print("***** _onExperimentDataAdded")
-        self._plotting_1d_proxy.setMeasuredData(self._experiment_data.x, np.log(self._experiment_data.y),
+        self._plotting_1d_proxy.setMeasuredData(self._experiment_data.x, self._experiment_data.y,
                                                 self._experiment_data.ye)
         self._experiment_parameters = self._experimentDataParameters(self._experiment_data)
         self.simulationParametersAsObj = json.dumps(self._experiment_parameters)
@@ -1322,6 +1340,7 @@ class PyQmlProxy(QObject):
                 continue
 
             label = par_path
+            unit = '{:~P}'.format(par.unit)
             if par_path[-3:] == 'sld':
                 label = (' ').join(par_path.split('.')[-2:])
                 label = label[:-3] + 'SLD'
@@ -1335,13 +1354,18 @@ class PyQmlProxy(QObject):
                 label = (' ').join(par_path.split('.')[-2:])
                 label = label[:-11] + 'Repetitions'
             elif par_path == 'scale':
-                label = 'instrument.scale'
+                label = 'Instrumental Scaling'
+            elif par_path == 'background':
+                label = 'Instrumental Background'
+            elif par_path == 'resolution':
+                label = 'Resolution (dq/q)'
+                unit = '%'
             self._parameters_as_obj.append({
                 "id":     str(par_id),
                 "number": par_index + 1,
                 "label":  label,
                 "value":  par.raw_value,
-                "unit":   '{:~P}'.format(par.unit),
+                "unit":   unit,
                 "error":  float(par.error),
                 "fit":    int(not par.fixed)
             })
