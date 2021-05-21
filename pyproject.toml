@@ -25,8 +25,8 @@ pyobjc-framework-cocoa = { version = '^7.1', platform = 'darwin' }
 # easyReflectometryLib = { git = 'https://github.com/easyScience/easyReflectometry.git', rev = 'sprint12' }
 easyReflectometryLib = { path = '../easyReflectometryLib'}
 easyAppLogic = { git = 'https://github.com/easyScience/easyAppLogic.git', rev = 'develop' }
-#easyAppGui = { git = 'https://github.com/easyScience/easyAppGui.git', rev = 'sprint12' }
-easyAppGui = { path = '../easyAppGui'}
+easyAppGui = { git = 'https://github.com/easyScience/easyAppGui.git', rev = 'easyreflectometry' }
+#easyAppGui = { path = '../easyAppGui'}
 
 #[tool.poetry.dev-dependencies]
 # PyInstaller
