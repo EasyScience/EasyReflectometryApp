@@ -135,14 +135,17 @@ Item {
                 spacing: EaStyle.Sizes.fontPixelSize
 
                 EaElements.Button {
+                    enabled: false
                     text: qsTr("Tutorial") + " 1: " + qsTr("App interface")
                     onClicked: appInterfaceTutorialTimer.start()
                 }
                 EaElements.Button {
+                    enabled: false
                     text: qsTr("Tutorial") + " 2: " + qsTr("Data simulation")
                     onClicked: dataSimulationTutorialTimer.start()
                 }
                 EaElements.Button {
+                    enabled: false
                     text: qsTr("Tutorial") + " 3: " + qsTr("Data fitting")
                     onClicked: dataFittingTutorialTimer.start()
                 }

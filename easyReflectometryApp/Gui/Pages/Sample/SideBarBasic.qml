@@ -201,6 +201,8 @@ EaComponents.SideBarColumn {
                 repsSpinBox.value = ExGlobals.Constants.proxy.currentItemsRepetitions
             }
 
+            onModelChanged: currentIndex = 0
+
         }
 
         Row {
@@ -274,6 +276,7 @@ EaComponents.SideBarColumn {
         title: qsTr(currentItemsType + " editor")
         enabled: (itemsTable.model.count > 0) ? true : false //When a layer is selected
         collapsible: false
+        last: true
         Row {
             visible: (currentItemsType == 'Multi-layer') ? true : false
             spacing: EaStyle.Sizes.fontPixelSize * 0.5

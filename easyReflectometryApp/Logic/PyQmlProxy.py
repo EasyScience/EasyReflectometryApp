@@ -2018,14 +2018,16 @@ class PyQmlProxy(QObject):
 
     @Slot()
     def resetState(self):
-        self._project_info = self._defaultProjectInfo()
-        self.projectCreated = False
-        self.projectInfoChanged.emit()
-        self.project_save_filepath = ""
-        self.removeExperiment()
-        self.removePhase(self._sample.phases[self.currentPhaseIndex].name)
-        self.resetUndoRedoStack()
-        self.stateChanged.emit(False)
+        pass
+        # Need to be reimplemented for easyReflectometry
+        #self._project_info = self._defaultProjectInfo()
+        #self.projectCreated = False
+        #self.projectInfoChanged.emit()
+        #self.project_save_filepath = ""
+        #self.removeExperiment()
+        #self.removePhase(self._sample.phases[self.currentPhaseIndex].name)
+        #self.resetUndoRedoStack()
+        #self.stateChanged.emit(False)
 
 
 def createFile(path, content):
