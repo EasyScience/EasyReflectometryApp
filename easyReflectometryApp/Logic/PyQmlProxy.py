@@ -1320,7 +1320,7 @@ class PyQmlProxy(QObject):
         sld_profile = self._interface.sld_profile()
 
         self._plotting_1d_proxy.setCalculatedData(sim.x, sim.y)
-        # self._plotting_1d_proxy.setBraggData(sld_profile['ttheta'], sld_profile['h'], sld_profile['k'], sld_profile['l'])
+        self._plotting_1d_proxy.setSldData(sld_profile[0], sld_profile[1])
 
         print("+ _updateCalculatedData: {0:.3f} s".format(timeit.default_timer() - start_time))
 

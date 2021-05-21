@@ -8,17 +8,18 @@ import Gui.Globals 1.0 as ExGlobals
 EaCharts.BaseBokeh {
     measuredData: ExGlobals.Constants.proxy.plotting1d.bokehMeasuredDataObj
     calculatedData: ExGlobals.Constants.proxy.plotting1d.bokehCalculatedDataObj
-    differenceData: ExGlobals.Constants.proxy.plotting1d.bokehDifferenceDataObj
+    sldData: ExGlobals.Constants.proxy.plotting1d.bokehSldDataObj
 
     plotRanges: ExGlobals.Constants.proxy.plotting1d.analysisPlotRangesObj
 
-    xAxisTitle: "q (Å⁻¹)"
+    xMainAxisTitle: "q (Å⁻¹)"
     yMainAxisTitle: {
         let title = 'R(q)calc'
         if (hasMeasuredData) title = 'R(q)meas, R(q)calc'
         return title
     }
-    yDifferenceAxisTitle: "R(q)meas - R(q)calc"
+    xSldAxisTitle: "SLD x axis title"
+    ySldAxisTitle: "SLD y axis title"
 
     Component.onCompleted: ExGlobals.Variables.analysisChart = this
 }
