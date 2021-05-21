@@ -186,7 +186,7 @@ class PyQmlProxy(QObject):
         self.experimentDataRemoved.connect(self._onExperimentDataRemoved)
 
         self._experiment_loaded = False
-        self._experiment_skipped = False
+        self._experiment_skipped = True#False
         self.experimentLoadedChanged.connect(self._onExperimentLoadedChanged)
         self.experimentSkippedChanged.connect(self._onExperimentSkippedChanged)
 
@@ -1369,7 +1369,6 @@ class PyQmlProxy(QObject):
                 "error":  float(par.error),
                 "fit":    int(not par.fixed)
             })
-            print(par_path)
 
         print("+ _setParametersAsObj: {0:.3f} s".format(timeit.default_timer() - start_time))
         self.parametersAsObjChanged.emit()

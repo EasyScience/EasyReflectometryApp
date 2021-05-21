@@ -200,25 +200,15 @@ EaComponents.ApplicationWindow {
 
         // Sample page
         EaComponents.ContentPage {
-            defaultInfo: ExGlobals.Constants.proxy.samplesPresent ? "" : qsTr("No Items Added/Loaded")
+            //defaultInfo: ExGlobals.Constants.proxy.samplesPresent ? "" : qsTr("No Items Added/Loaded")
 
             mainContent: EaComponents.MainContent {
                 tabs: [
-                    EaElements.TabButton { text: qsTr("Structure view") },
-                    EaElements.TabButton {
-                        /*
-                        text: typeof ExGlobals.Constants.proxy.phasesAsObj[ExGlobals.Constants.proxy.currentPhaseIndex] !== 'undefined' && ExGlobals.Constants.proxy.phasesAsObj.length > 0
-                              ? ExGlobals.Constants.proxy.phasesAsObj[ExGlobals.Constants.proxy.currentPhaseIndex].name + '.cif'
-                              : 'Unknown'
-                              */
-                        text: qsTr("Text View") + " (CIF)"
-                        Component.onCompleted: ExGlobals.Variables.phaseCifTab = this
-                    }
+                    EaElements.TabButton { text: qsTr("Model view") }
                 ]
 
                 items: [
-                    ExSamplePage.MainContentStructureView {},
-                    ExSamplePage.MainContentTextView {}
+                    ExSamplePage.MainContentModelView {}
                 ]
 
                 Component.onCompleted: ExGlobals.Variables.samplePageMainContent = this
