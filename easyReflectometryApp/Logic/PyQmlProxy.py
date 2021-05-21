@@ -26,6 +26,7 @@ from easyCore.Utils.UndoRedo import property_stack_deco, FunctionStack
 
 from easyReflectometryLib.Sample.material import Material
 from easyReflectometryLib.Sample.layer import Layer
+from easyReflectometryLib.Sample.layers import Layers
 from easyReflectometryLib.Sample.item import Item
 from easyReflectometryLib.Sample.structure import Structure
 from easyReflectometryLib.Experiment.model import Model
@@ -405,10 +406,15 @@ class PyQmlProxy(QObject):
             Layer.from_pars(self._materials[1], 100.0, 3.0, name='D2O Layer'),
             Layer.from_pars(self._materials[2], 0.0, 1.2, name='Si Layer'),
         ]
+        layerss = [
+            Layers.from_pars(layers[0], name='Vacuum Layer'),
+            Layers.from_pars(layers[1], name='D2O Layer'),
+            Layers.from_pars(layers[2], name='Si Layer')
+        ]
         items = [
-            Item.from_pars(layers[0], 1, name='Superphase'),
-            Item.from_pars(layers[1], 1, name='Layer'),
-            Item.from_pars(layers[2], 1, name='Subphase')
+            Item.from_pars(layerss[0], 1, name='Superphase'),
+            Item.from_pars(layerss[1], 1, name='D2O Layer'),
+            Item.from_pars(layerss[2], 1, name='Subphase')
         ]
         for i in items:
             self._model.structure.append(i)
@@ -510,7 +516,6 @@ class PyQmlProxy(QObject):
         for i in self._model.structure:
             for j in i.layers:
                 j.name = j.material.name + ' Layer'
-            print(i.name, i.type, 'type changing')
         self._setModelAsObj()  # 0.025 s
         self._setModelAsXml()  # 0.065 s
         self.stateChanged.emit(True)
@@ -569,10 +574,10 @@ class PyQmlProxy(QObject):
         #    borg.stack.beginMacro('Loaded default item')
         borg.stack.enabled = False
         try:
-            self._model.add_item(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, f'Multi-layer {len(self._model.structure)+1}', 'Layer'))
+            self._model.add_item(Item.from_pars(Layers.from_pars(Layer.from_pars(self._materials[0], 10., 1.2)), 1, f'Multi-layer {len(self._model.structure)+1}', 'Layer'))
         except IndexError:
             self.addNewMaterials()
-            self._model.add_item(Item.from_pars(Layer.from_pars(self._materials[0], 10., 1.2), 1, f'Multi-layer {len(self._model.structure)+1}', 'Layer'))
+            self._model.add_item(Item.from_pars(Layers.from_pars(Layer.from_pars(self._materials[0], 10., 1.2)), 1, f'Multi-layer {len(self._model.structure)+1}', 'Layer'))
         borg.stack.enabled = True
         self.sampleChanged.emit()
 
@@ -588,7 +593,7 @@ class PyQmlProxy(QObject):
         to_dup_layers = []
         for i in to_dup.layers:
             to_dup_layers.append(Layer.from_pars(i.material, i.thickness.raw_value, i.roughness.raw_value, name=i.name, interface=self._interface))
-        self._model.add_item(Item.from_pars(to_dup_layers, to_dup.repetitions.raw_value, name=to_dup.name, type=to_dup.type))
+        self._model.add_item(Item.from_pars(*to_dup_layers, to_dup.repetitions.raw_value, name=to_dup.name, type=to_dup.type))
         borg.stack.enabled = True
         self.sampleChanged.emit()
 
@@ -665,12 +670,10 @@ class PyQmlProxy(QObject):
         print("+ addNewLayers")
         #if borg.stack.enabled:
         #    borg.stack.beginMacro('Loaded default layer')
-        borg.stack.enabled = False
         try:
             self._model.structure[self.currentItemsIndex].add_layer(Layer.from_pars(self._materials[0], 10.0, 1.2, name=f'Layer {len(self._model.structure[self.currentItemsIndex].layers)}'))
         except IndexError:
             self.addNewItems()
-        borg.stack.enabled = True
         self.sampleChanged.emit()
 
     @Slot()
@@ -678,12 +681,10 @@ class PyQmlProxy(QObject):
         print("+ duplicateSelectedLayers")
         #if borg.stack.enabled:
         #    borg.stack.beginMacro('Duplicated layer')
-        borg.stack.enabled = False
         # This is a fix until deepcopy is worked out
         # Manual duplication instead of creating a copy
         to_dup = self._model.structure[self.currentItemsIndex].layers[self.currentLayersIndex]
         self._model.structure[self.currentItemsIndex].add_layer(Layer.from_pars(to_dup.material, to_dup.thickness.raw_value, to_dup.roughness.raw_value, name=to_dup.name))
-        borg.stack.enabled = True
         self.sampleChanged.emit()
 
     @Slot()
@@ -1799,7 +1800,7 @@ class PyQmlProxy(QObject):
         project_save_filepath = os.path.join(projectPath, 'project.json')
         descr = {
             'model': self._model.as_dict(skip=['interface']),
-            'materials': self._materials.as_dict(skip=['interface'])
+            'materials': [i.as_dict() for i in self._materials]
         }
 
         if self._data.experiments:
