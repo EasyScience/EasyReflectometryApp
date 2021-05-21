@@ -146,7 +146,7 @@ Item {
     property string headScripts: {
         const list = [
                   EaLogic.Plotting.bokehHeadScripts(),
-                  ExGlobals.Variables.bokehStructureChart.headScript
+                  //ExGlobals.Variables.bokehStructureChart.headScript
               ]
         return list.join('\n')
     }
@@ -462,17 +462,17 @@ Item {
     }
 
     property string projectSection: {
-        if (!hasPhases)
-            return ''
+        //if (!hasPhases)
+        //    return ''
         const projectDescription = ExGlobals.Constants.proxy.projectInfoAsJson.short_description
-        const phaseName = ExGlobals.Constants.proxy.phasesAsObj[0].name
+        //const phaseName = ExGlobals.Constants.proxy.phasesAsObj[0].name
         const datasetName = ExGlobals.Constants.proxy.experimentDataAsObj[0].name
         const modifiedDate = ExGlobals.Constants.proxy.projectInfoAsJson.modified
         const list = [
                 `<h1>${ExGlobals.Constants.proxy.projectInfoAsJson.name}</h1>`,
                 '<p>',
                 `<b>Short description:</b> ${projectDescription}<br>`,
-                `<b>Structural phases:</b> ${phaseName}<br>`,
+                //`<b>Structural phases:</b> ${phaseName}<br>`,
                 `<b>Experimental data:</b> ${datasetName}<br>`,
                 `<b>Modified:</b> ${modifiedDate}<br>`,
                 '</p>'
@@ -485,7 +485,7 @@ Item {
                   '<h2>Software</h2>',
                   '<div id="softwareSection">',
                   `<b>Analysis:</b> <a href="${ExGlobals.Constants.appUrl}">${ExGlobals.Constants.appName} v${ExGlobals.Constants.appVersion}</a><br>`,
-                  `<b>Structure chart:</b> <a href="${ExGlobals.Variables.bokehStructureChart.info.url}"> ChemDoodle Web Components v${ExGlobals.Variables.bokehStructureChart.info.version}</a><br>`,
+                  //`<b>Structure chart:</b> <a href="${ExGlobals.Variables.bokehStructureChart.info.url}"> ChemDoodle Web Components v${ExGlobals.Variables.bokehStructureChart.info.version}</a><br>`,
                   `<b>Data chart:</b> <a href="${dataChartLibUrl}"> BokehJS v${dataChartLibVersion}</a><br>`,
                   `<b>Calculation engine:</b> <a href="">${ExGlobals.Constants.proxy.statusModelAsObj.calculation}</a><br>`,
                   isFitting ? `<b>Minimization:</b> <a href="">${ExGlobals.Constants.proxy.statusModelAsObj.minimization}</a><br>` : '',
