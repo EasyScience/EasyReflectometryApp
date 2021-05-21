@@ -27,6 +27,7 @@ class Plotting1dProxy(QObject):
     bokehCalculatedDataObjChanged = Signal()
     bokehDifferenceDataObjChanged = Signal()
     bokehBackgroundDataObjChanged = Signal()
+    bokehSldDataObjChanged = Signal()
 
     qtchartsMeasuredDataObjChanged = Signal()
     qtchartsCalculatedDataObjChanged = Signal()
@@ -68,6 +69,9 @@ class Plotting1dProxy(QObject):
         self._calculated_xarray = np.empty(0)
         self._calculated_yarray = np.empty(0)
 
+        self._sld_xarray = np.empty(0)
+        self._sld_yarray = np.empty(0)
+
         self._difference_yarray = np.empty(0)
         self._difference_yarray_upper = np.empty(0)
         self._difference_yarray_lower = np.empty(0)
@@ -84,6 +88,7 @@ class Plotting1dProxy(QObject):
         self._bokeh_calculated_data_obj = {}
         self._bokeh_difference_data_obj = {}
         self._bokeh_background_data_obj = {}
+        self._bokeh_sld_data_obj = {}
 
         self._qtcharts_measured_data_obj = {}
         self._qtcharts_calculated_data_obj = {}
@@ -101,6 +106,7 @@ class Plotting1dProxy(QObject):
         self._bokeh_calculated_data_obj = {}
         self._bokeh_difference_data_obj = {}
         self._bokeh_background_data_obj = {}
+        self._bokeh_sld_data_obj = {}
 
         self._qtcharts_measured_data_obj = {}
         self._qtcharts_calculated_data_obj = {}
@@ -116,6 +122,7 @@ class Plotting1dProxy(QObject):
         self.bokehCalculatedDataObjChanged.emit()
         self.bokehDifferenceDataObjChanged.emit()
         self.bokehBackgroundDataObjChanged.emit()
+        self.bokehSldDataObjChanged.emit()
 
         self.qtchartsMeasuredDataObjChanged.emit()
         self.qtchartsCalculatedDataObjChanged.emit()
@@ -165,6 +172,10 @@ class Plotting1dProxy(QObject):
     @Property('QVariant', notify=bokehBackgroundDataObjChanged)
     def bokehBackgroundDataObj(self):
         return self._bokeh_background_data_obj
+
+    @Property('QVariant', notify=bokehSldDataObjChanged)
+    def bokehSldDataObj(self):
+        return self._bokeh_sld_data_obj
 
     @Property('QVariant', notify=qtchartsMeasuredDataObjChanged)
     def qtchartsMeasuredDataObj(self):
@@ -244,6 +255,15 @@ class Plotting1dProxy(QObject):
                 print("AAAAAAAAA")
                 self._setQtChartsBackgroundDataObj()
 
+    def setSldData(self, xarray, yarray):
+        self._setSldDataArrays(xarray, yarray)
+        #self._setCalculatedDataRanges()
+        #self._setAnalysisPlotRanges()
+        self._setBokehSldDataObj()
+        if self.currentLib == 'qtcharts':
+            pass
+            #self._setQtChartsCalculatedDataObj()
+
     def onCurrentLibChanged(self):
         if self.currentLib == 'qtcharts':
             self._setQtChartsCalculatedDataObj()
@@ -267,6 +287,10 @@ class Plotting1dProxy(QObject):
     def _setCalculatedDataArrays(self, xarray, yarray):
         self._calculated_xarray = xarray
         self._calculated_yarray = yarray
+
+    def _setSldDataArrays(self, xarray, yarray):
+        self._sld_xarray = xarray
+        self._sld_yarray = yarray
 
     def _setDifferenceDataArrays(self):
         self._difference_yarray = np.subtract(self._measured_yarray, self._calculated_yarray)
@@ -293,6 +317,13 @@ class Plotting1dProxy(QObject):
             'y': Plotting1dProxy.aroundY(self._calculated_yarray)
         }
         self.bokehCalculatedDataObjChanged.emit()
+
+    def _setBokehSldDataObj(self):
+        self._bokeh_sld_data_obj = {
+            'x': Plotting1dProxy.aroundX(self._sld_xarray),
+            'y': Plotting1dProxy.aroundY(self._sld_yarray)
+        }
+        self.bokehSldDataObjChanged.emit()
 
     def _setBokehDifferenceDataObj(self):
         self._bokeh_difference_data_obj = {
