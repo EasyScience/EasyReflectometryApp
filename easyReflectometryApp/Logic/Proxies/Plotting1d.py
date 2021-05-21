@@ -26,13 +26,11 @@ class Plotting1dProxy(QObject):
     bokehMeasuredDataObjChanged = Signal()
     bokehCalculatedDataObjChanged = Signal()
     bokehDifferenceDataObjChanged = Signal()
-    bokehBraggDataObjChanged = Signal()
     bokehBackgroundDataObjChanged = Signal()
 
     qtchartsMeasuredDataObjChanged = Signal()
     qtchartsCalculatedDataObjChanged = Signal()
     qtchartsDifferenceDataObjChanged = Signal()
-    qtchartsBraggDataObjChanged = Signal()
     qtchartsBackgroundDataObjChanged = Signal()
 
     def __init__(self, parent=None):
@@ -74,12 +72,6 @@ class Plotting1dProxy(QObject):
         self._difference_yarray_upper = np.empty(0)
         self._difference_yarray_lower = np.empty(0)
 
-        self._bragg_xarray = np.empty(0)
-        self._bragg_yarray = np.empty(0)
-        self._bragg_harray = np.empty(0)
-        self._bragg_karray = np.empty(0)
-        self._bragg_larray = np.empty(0)
-
         self._background_xarray = np.empty(0)
         self._background_yarray = np.empty(0)
 
@@ -91,13 +83,11 @@ class Plotting1dProxy(QObject):
         self._bokeh_measured_data_obj = {}
         self._bokeh_calculated_data_obj = {}
         self._bokeh_difference_data_obj = {}
-        self._bokeh_bragg_data_obj = {}
         self._bokeh_background_data_obj = {}
 
         self._qtcharts_measured_data_obj = {}
         self._qtcharts_calculated_data_obj = {}
         self._qtcharts_difference_data_obj = {}
-        self._qtcharts_bragg_data_obj = {}
         self._qtcharts_background_data_obj = {}
 
     def clearFrontendState(self):
@@ -110,13 +100,11 @@ class Plotting1dProxy(QObject):
         self._bokeh_measured_data_obj = {}
         self._bokeh_calculated_data_obj = {}
         self._bokeh_difference_data_obj = {}
-        self._bokeh_bragg_data_obj = {}
         self._bokeh_background_data_obj = {}
 
         self._qtcharts_measured_data_obj = {}
         self._qtcharts_calculated_data_obj = {}
         self._qtcharts_difference_data_obj = {}
-        self._qtcharts_bragg_data_obj = {}
         self._qtcharts_background_data_obj = {}
 
         # Ranges
@@ -127,13 +115,11 @@ class Plotting1dProxy(QObject):
         self.bokehMeasuredDataObjChanged.emit()
         self.bokehCalculatedDataObjChanged.emit()
         self.bokehDifferenceDataObjChanged.emit()
-        self.bokehBraggDataObjChanged.emit()
         self.bokehBackgroundDataObjChanged.emit()
 
         self.qtchartsMeasuredDataObjChanged.emit()
         self.qtchartsCalculatedDataObjChanged.emit()
         self.qtchartsDifferenceDataObjChanged.emit()
-        self.qtchartsBraggDataObjChanged.emit()
         self.qtchartsBackgroundDataObjChanged.emit()
 
     # Public: QML frontend
@@ -176,10 +162,6 @@ class Plotting1dProxy(QObject):
     def bokehDifferenceDataObj(self):
         return self._bokeh_difference_data_obj
 
-    @Property('QVariant', notify=bokehBraggDataObjChanged)
-    def bokehBraggDataObj(self):
-        return self._bokeh_bragg_data_obj
-
     @Property('QVariant', notify=bokehBackgroundDataObjChanged)
     def bokehBackgroundDataObj(self):
         return self._bokeh_background_data_obj
@@ -195,10 +177,6 @@ class Plotting1dProxy(QObject):
     @Property('QVariant', notify=qtchartsDifferenceDataObjChanged)
     def qtchartsDifferenceDataObj(self):
         return self._qtcharts_difference_data_obj
-
-    @Property('QVariant', notify=qtchartsBraggDataObjChanged)
-    def qtchartsBraggDataObj(self):
-        return self._qtcharts_bragg_data_obj
 
     @Property('QVariant', notify=qtchartsBackgroundDataObjChanged)
     def qtchartsBackgroundDataObj(self):
@@ -258,12 +236,6 @@ class Plotting1dProxy(QObject):
             if self.currentLib == 'qtcharts':
                 self._setQtChartsDifferenceDataObj()
 
-    def setBraggData(self, xarray, harray, karray, larray):
-        self._setBraggDataArrays(xarray, harray, karray, larray)
-        self._setBokehBraggDataObj()
-        if self.currentLib == 'qtcharts':
-            self._setQtChartsBraggDataObj()
-
     def setBackgroundData(self, xarray, yarray):
         self._setBackgroundDataArrays(xarray, yarray)
         if self._background_xarray.size:
@@ -275,7 +247,6 @@ class Plotting1dProxy(QObject):
     def onCurrentLibChanged(self):
         if self.currentLib == 'qtcharts':
             self._setQtChartsCalculatedDataObj()
-            self._setQtChartsBraggDataObj()
             self._setQtChartsBackgroundDataObj()
             if self._measured_xarray.size:
                 self._setQtChartsMeasuredDataObj()
@@ -301,13 +272,6 @@ class Plotting1dProxy(QObject):
         self._difference_yarray = np.subtract(self._measured_yarray, self._calculated_yarray)
         self._difference_yarray_upper = np.add(self._difference_yarray, self._measured_syarray)
         self._difference_yarray_lower = np.subtract(self._difference_yarray, self._measured_syarray)
-
-    def _setBraggDataArrays(self, xarray, harray, karray, larray):
-        self._bragg_xarray = xarray
-        self._bragg_yarray = np.zeros(self._bragg_xarray.size)
-        self._bragg_harray = harray
-        self._bragg_karray = karray
-        self._bragg_larray = larray
 
     def _setBackgroundDataArrays(self, xarray, yarray):
         self._background_xarray = xarray
@@ -339,16 +303,6 @@ class Plotting1dProxy(QObject):
         }
         self.bokehDifferenceDataObjChanged.emit()
 
-    def _setBokehBraggDataObj(self):
-        self._bokeh_bragg_data_obj = {
-            'x': Plotting1dProxy.aroundX(self._bragg_xarray),
-            'y': Plotting1dProxy.aroundY(self._bragg_yarray),
-            'h': Plotting1dProxy.aroundHkl(self._bragg_harray),
-            'k': Plotting1dProxy.aroundHkl(self._bragg_karray),
-            'l': Plotting1dProxy.aroundHkl(self._bragg_larray)
-        }
-        self.bokehBraggDataObjChanged.emit()
-
     def _setBokehBackgroundDataObj(self):
         self._bokeh_background_data_obj = {
             'x': Plotting1dProxy.aroundX(self._background_xarray),
@@ -377,15 +331,6 @@ class Plotting1dProxy(QObject):
             'xy_lower': Plotting1dProxy.arraysToPoints(self._measured_xarray, self._difference_yarray_lower)
         }
         self.qtchartsDifferenceDataObjChanged.emit()
-
-    def _setQtChartsBraggDataObj(self):
-        self._qtcharts_bragg_data_obj = {
-            'xy': Plotting1dProxy.arraysToPoints(self._bragg_xarray, self._bragg_yarray),
-            'h': Plotting1dProxy.aroundHkl(self._bragg_harray),
-            'k': Plotting1dProxy.aroundHkl(self._bragg_karray),
-            'l': Plotting1dProxy.aroundHkl(self._bragg_larray)
-        }
-        self.qtchartsBraggDataObjChanged.emit()
 
     def _setQtChartsBackgroundDataObj(self):
         self._qtcharts_background_data_obj = {

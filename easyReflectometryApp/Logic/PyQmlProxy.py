@@ -500,9 +500,9 @@ class PyQmlProxy(QObject):
             dictionary['repetitions'] = i.repetitions.as_dict(skip=['interface'])
             self._model_as_obj.append(dictionary)
         if len(self._model.structure) > 0:
-            self._model.structure[0].layers[0].thickness.enabled = False
-            self._model.structure[0].layers[0].roughness.enabled = False
-            self._model.structure[-1].layers[-1].thickness.enabled = False
+            # self._model.structure[0].layers[0].thickness.enabled = False
+            # self._model.structure[0].layers[0].roughness.enabled = False
+            # self._model.structure[-1].layers[-1].thickness.enabled = False
             self._model_as_obj[0]['layers'][0]['thickness']['value'] = np.nan
             self._model_as_obj[0]['layers'][0]['roughness']['value'] = np.nan
             self._model_as_obj[-1]['layers'][-1]['thickness']['value'] = np.nan
@@ -518,6 +518,7 @@ class PyQmlProxy(QObject):
                 j.name = j.material.name + ' Layer'
         self._setModelAsObj()  # 0.025 s
         self._setModelAsXml()  # 0.065 s
+        print(self._model.structure)
         self.stateChanged.emit(True)
 
     ####################################################################################################################
@@ -1800,9 +1801,9 @@ class PyQmlProxy(QObject):
         project_save_filepath = os.path.join(projectPath, 'project.json')
         descr = {
             'model': self._model.as_dict(skip=['interface']),
-            'materials': [i.as_dict() for i in self._materials]
+            'materials': []
         }
-
+        
         if self._data.experiments:
             experiments_x = self._data.experiments[0].x
             experiments_y = self._data.experiments[0].y
