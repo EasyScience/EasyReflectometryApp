@@ -186,7 +186,7 @@ class PyQmlProxy(QObject):
         self.experimentDataRemoved.connect(self._onExperimentDataRemoved)
 
         self._experiment_loaded = False
-        self._experiment_skipped = True#False
+        self._experiment_skipped = False
         self.experimentLoadedChanged.connect(self._onExperimentLoadedChanged)
         self.experimentSkippedChanged.connect(self._onExperimentSkippedChanged)
 
@@ -598,25 +598,49 @@ class PyQmlProxy(QObject):
         #if borg.stack.enabled:
         #    borg.stack.beginMacro('Loaded default item')
         borg.stack.enabled = False
-        # This is a fix until deepcopy is worked out
-        # Manual duplication instead of creating a copy
+        # This convoluted approach is necessary as currently the BaseCollection does not allow
+        # insertion or popping. In future, this could be replaced with the approach for 
+        # moving items around
         old_index = self.currentItemsIndex
+        new_items_list = []
         if old_index != 0:
-            self._items.insert(old_index - 1, self._items.pop(old_index))
+            for i, item in enumerate(self._model.structure):
+                if i == old_index - 1:
+                    new_items_list.append(self._model.structure[old_index])
+                elif i == old_index:
+                    new_items_list.append(self._model.structure[old_index-1])
+                else:
+                    new_items_list.append(item)
+            while len(self._model.structure) != 0:
+                self._model.remove_item(0)
+            for i in range(len(new_items_list)):
+                self._model.add_item(new_items_list[i])
             borg.stack.enabled = True
             self.sampleChanged.emit()
-    
+
     @Slot()
     def moveSelectedItemsDown(self):
         print("+ moveSelectedItemsDown")
         #if borg.stack.enabled:
         #    borg.stack.beginMacro('Loaded default item')
         borg.stack.enabled = False
-        # This is a fix until deepcopy is worked out
-        # Manual duplication instead of creating a copy
+        # This convoluted approach is necessary as currently the BaseCollection does not allow
+        # insertion or popping. In future, this could be replaced with the approach for 
+        # moving items around
         old_index = self.currentItemsIndex
-        if old_index != len(self._items):
-            self._items.insert(old_index + 1, self._items.pop(old_index))
+        new_items_list = []
+        if old_index != len(self._model.structure):
+            for i, item in enumerate(self._model.structure):
+                if i == old_index:
+                    new_items_list.append(self._model.structure[old_index + 1])
+                elif i == old_index + 1:
+                    new_items_list.append(self._model.structure[old_index])
+                else:
+                    new_items_list.append(item)
+            while len(self._model.structure) != 0:
+                self._model.remove_item(0)
+            for i in range(len(new_items_list)):
+                self._model.add_item(new_items_list[i])
             borg.stack.enabled = True
             self.sampleChanged.emit()
     
@@ -669,8 +693,8 @@ class PyQmlProxy(QObject):
         #    borg.stack.beginMacro('Loaded default layer')
         borg.stack.enabled = False
         old_index = self.currentLayersIndex
-        new_layers = []
-        item = self._items[self.currentItemsIndex]
+        new_layers_list = []
+        item = self._model.structure[self.currentItemsIndex]
         layers = item.layers
         # This convoluted approach is necessary as currently the BaseCollection does not allow
         # insertion or popping. In future, this could be replaced with the approach for 
@@ -678,12 +702,15 @@ class PyQmlProxy(QObject):
         if old_index != 0:
             for i, l in enumerate(layers):
                 if i == old_index - 1:
-                    new_layers.append(layers[old_index])
+                    new_layers_list.append(layers[old_index])
                 elif i == old_index:
-                    new_layers.append(layers[old_index-1])
+                    new_layers_list.append(layers[old_index-1])
                 else:
-                    new_layers.append(l)
-            self._items[self.currentItemsIndex] = Item.from_pars(new_layers, item.repetitions.raw_value, name=item.name)
+                    new_layers_list.append(l)
+            while len(layers) != 0:
+                item.remove_layer(0)
+            for i in range(len(new_layers_list)):
+                item.add_layer(new_layers_list[i])
             borg.stack.enabled = True
             self.sampleChanged.emit()
 
@@ -694,21 +721,24 @@ class PyQmlProxy(QObject):
         #    borg.stack.beginMacro('Loaded default layer')
         borg.stack.enabled = False
         old_index = self.currentLayersIndex
-        new_layers = []
-        item = self._items[self.currentItemsIndex]
+        new_layers_list = []
+        item = self._model.structure[self.currentItemsIndex]
         layers = item.layers
         # This convoluted approach is necessary as currently the BaseCollection does not allow
         # insertion or popping. In future, this could be replaced with the approach for 
         # moving items around
-        if old_index != len(self._items):
+        if old_index != len(layers):
             for i, l in enumerate(layers):
                 if i == old_index:
-                    new_layers.append(layers[old_index+1])
+                    new_layers_list.append(layers[old_index + 1])
                 elif i == old_index + 1:
-                    new_layers.append(layers[old_index])
+                    new_layers_list.append(layers[old_index])
                 else:
-                    new_layers.append(l)
-            self._items[self.currentItemsIndex] = Item.from_pars(new_layers, item.repetitions.raw_value, name=item.name)
+                    new_layers_list.append(l)
+            while len(layers) != 0:
+                item.remove_layer(0)
+            for i in range(len(new_layers_list)):
+                item.add_layer(new_layers_list[i])
             borg.stack.enabled = True
             self.sampleChanged.emit()
             

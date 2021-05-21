@@ -232,7 +232,7 @@ EaComponents.SideBarColumn {
                 // When an item is selected and it is not at the top, 
                 // this button will be enabled to allow
                 // the selected item to be moved up
-                enabled: false//(itemsTable.model.count > 0 && itemsTable.currentIndex != 0) ? true : false//When item is selected
+                enabled: (itemsTable.model.count > 0 && itemsTable.currentIndex != 0) ? true : false//When item is selected
                 fontIcon: "arrow-up"
                 text: qsTr("Move item up")
                 onClicked: ExGlobals.Constants.proxy.moveSelectedItemsUp()
@@ -242,10 +242,12 @@ EaComponents.SideBarColumn {
                 // When an item is selected and it is not at the bottom, 
                 // this button will be enabled to allow
                 // the selected item to be moved down
-                enabled: false//(itemsTable.model.count > 0 && itemsTable.currentIndex + 1 != itemsTable.model.count) ? true : false//When item is selected
+                enabled: (itemsTable.model.count > 0 && itemsTable.currentIndex + 1 != itemsTable.model.count) ? true : false//When item is selected
                 fontIcon: "arrow-down"
                 text: qsTr("Move item down")
-                onClicked: ExGlobals.Constants.proxy.moveSelectedItemsDown()
+                onClicked: {
+                    ExGlobals.Constants.proxy.moveSelectedItemsDown()
+                }
             }
 
         }
@@ -395,14 +397,14 @@ EaComponents.SideBarColumn {
             spacing: EaStyle.Sizes.fontPixelSize
 
             EaElements.SideBarButton {
-                enabled: false//(layersTable.model.count > 0 && layersTable.currentIndex != 0) ? true : false//When item is selected
+                enabled: (layersTable.model.count > 0 && layersTable.currentIndex != 0) ? true : false//When item is selected
                 fontIcon: "arrow-up"
                 text: qsTr("Move layer up")
                 onClicked: ExGlobals.Constants.proxy.moveSelectedLayersUp()
             }
 
             EaElements.SideBarButton {
-                enabled: false//(layersTable.model.count > 0 && layersTable.currentIndex + 1 != layersTable.model.count) ? true : false
+                enabled: (layersTable.model.count > 0 && layersTable.currentIndex + 1 != layersTable.model.count) ? true : false
                 fontIcon: "arrow-down"
                 text: qsTr("Move layer down")
                 onClicked: ExGlobals.Constants.proxy.moveSelectedLayersDown()
