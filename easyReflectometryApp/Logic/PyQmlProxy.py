@@ -186,7 +186,7 @@ class PyQmlProxy(QObject):
         self.experimentDataRemoved.connect(self._onExperimentDataRemoved)
 
         self._experiment_loaded = False
-        self._experiment_skipped = False
+        self._experiment_skipped = True
         self.experimentLoadedChanged.connect(self._onExperimentLoadedChanged)
         self.experimentSkippedChanged.connect(self._onExperimentSkippedChanged)
 
@@ -608,7 +608,7 @@ class PyQmlProxy(QObject):
                 if i == old_index - 1:
                     new_items_list.append(self._model.structure[old_index])
                 elif i == old_index:
-                    new_items_list.append(self._model.structure[old_index-1])
+                    new_items_list.append(self._model.structure[old_index - 1])
                 else:
                     new_items_list.append(item)
             while len(self._model.structure) != 0:
@@ -704,7 +704,7 @@ class PyQmlProxy(QObject):
                 if i == old_index - 1:
                     new_layers_list.append(layers[old_index])
                 elif i == old_index:
-                    new_layers_list.append(layers[old_index-1])
+                    new_layers_list.append(layers[old_index - 1])
                 else:
                     new_layers_list.append(l)
             while len(layers) != 0:

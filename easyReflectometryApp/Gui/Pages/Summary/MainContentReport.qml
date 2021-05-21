@@ -382,15 +382,13 @@ Item {
                 hasMeasured: ExGlobals.Variables.analysisChart.hasMeasuredData,
                 hasCalculated: ExGlobals.Variables.analysisChart.hasCalculatedData,
                 hasDifference: ExGlobals.Variables.analysisChart.hasDifferenceData,
-                hasBragg: ExGlobals.Variables.analysisChart.hasBraggData,
                 hasBackground: ExGlobals.Variables.analysisChart.hasBackgroundData,
                 hasPlotRanges: ExGlobals.Variables.analysisChart.hasPlotRangesData
             },
             // specs
             {
                 chartWidth: dataChartWidth, //dataChartWidth,
-                mainChartHeight: ExGlobals.Variables.analysisChart.mainChartHeight * 0.84,
-                braggChartHeight: ExGlobals.Variables.analysisChart.braggChartHeight,
+                mainChartHeight: ExGlobals.Variables.analysisChart.mainChartHeight * 0.65,
                 differenceChartHeight: ExGlobals.Variables.analysisChart.differenceChartHeight * 0.84,
                 xAxisChartHeight: ExGlobals.Variables.analysisChart.xAxisChartHeight,
 
