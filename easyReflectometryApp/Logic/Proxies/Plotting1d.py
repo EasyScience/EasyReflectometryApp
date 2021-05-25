@@ -21,6 +21,7 @@ class Plotting1dProxy(QObject):
     # Ranges
     experimentPlotRangesObjChanged = Signal()
     analysisPlotRangesObjChanged = Signal()
+    sldPlotRangesObjChanged = Signal()
 
     # Data containers
     bokehMeasuredDataObjChanged = Signal()
@@ -53,6 +54,11 @@ class Plotting1dProxy(QObject):
         self._calculated_min_y = 999999
         self._calculated_max_y = -999999
 
+        self._sld_min_x = 999999
+        self._sld_max_x = -999999
+        self._sld_min_y = 999999
+        self._sld_max_y = -999999
+
         self._difference_min_y = 0
         self._difference_max_y = 1
         self._difference_median_y = 0.5
@@ -82,6 +88,7 @@ class Plotting1dProxy(QObject):
         # Ranges for GUI
         self._experiment_plot_ranges_obj = {}
         self._analysis_plot_ranges_obj = {}
+        self._sld_plot_ranges_obj = {}
 
         # Data containers for GUI
         self._bokeh_measured_data_obj = {}
@@ -100,6 +107,7 @@ class Plotting1dProxy(QObject):
         # Ranges for GUI
         self._experiment_plot_ranges_obj = {}
         self._analysis_plot_ranges_obj = {}
+        self._sld_plot_ranges_obj = {}
 
         # Data containers for GUI
         self._bokeh_measured_data_obj = {}
@@ -116,6 +124,7 @@ class Plotting1dProxy(QObject):
         # Ranges
         self.experimentPlotRangesObjChanged.emit()
         self.analysisPlotRangesObjChanged.emit()
+        self.sldPlotRangesObjChanged.emit()
 
         # Data containers
         self.bokehMeasuredDataObjChanged.emit()
@@ -155,6 +164,10 @@ class Plotting1dProxy(QObject):
     @Property('QVariant', notify=analysisPlotRangesObjChanged)
     def analysisPlotRangesObj(self):
         return self._analysis_plot_ranges_obj
+
+    @Property('QVariant', notify=sldPlotRangesObjChanged)
+    def sldPlotRangesObj(self):
+        return self._sld_plot_ranges_obj
 
     # Data containers for GUI
     @Property('QVariant', notify=bokehMeasuredDataObjChanged)
@@ -237,6 +250,7 @@ class Plotting1dProxy(QObject):
         self._setCalculatedDataArrays(xarray, yarray)
         self._setCalculatedDataRanges()
         self._setAnalysisPlotRanges()
+        self._setSldPlotRanges()
         self._setBokehCalculatedDataObj()
         if self.currentLib == 'qtcharts':
             self._setQtChartsCalculatedDataObj()
@@ -257,8 +271,7 @@ class Plotting1dProxy(QObject):
 
     def setSldData(self, xarray, yarray):
         self._setSldDataArrays(xarray, yarray)
-        #self._setCalculatedDataRanges()
-        #self._setAnalysisPlotRanges()
+        self._setSldDataRanges()
         self._setBokehSldDataObj()
         if self.currentLib == 'qtcharts':
             pass
@@ -383,6 +396,12 @@ class Plotting1dProxy(QObject):
         self._calculated_min_y = Plotting1dProxy.arrayMin(self._calculated_yarray)
         self._calculated_max_y = Plotting1dProxy.arrayMax(self._calculated_yarray)
 
+    def _setSldDataRanges(self):
+        self._sld_min_x = Plotting1dProxy.arrayMin(self._sld_xarray)
+        self._sld_max_x = Plotting1dProxy.arrayMax(self._sld_xarray)
+        self._sld_min_y = Plotting1dProxy.arrayMin(self._sld_yarray)
+        self._sld_max_y = Plotting1dProxy.arrayMax(self._sld_yarray)
+
     def _setDifferenceDataRanges(self):
         self._difference_min_y = Plotting1dProxy.arrayMin(self._difference_yarray_lower)
         self._difference_max_y = Plotting1dProxy.arrayMax(self._difference_yarray_upper)
@@ -420,6 +439,15 @@ class Plotting1dProxy(QObject):
             'max_y': Plotting1dProxy.aroundY(self._yAxisMax(max_y))
         }
         self.analysisPlotRangesObjChanged.emit()
+
+    def _setSldPlotRanges(self):
+        self._sld_plot_ranges_obj = {
+            'min_x': Plotting1dProxy.aroundX(self._sld_min_x),
+            'max_x': Plotting1dProxy.aroundX(self._sld_max_x),
+            'min_y': Plotting1dProxy.aroundY(self._sld_min_y),
+            'max_y': Plotting1dProxy.aroundY(self._sld_max_y)
+        }
+        self.sldPlotRangesObjChanged.emit()
 
     # Static methods
 

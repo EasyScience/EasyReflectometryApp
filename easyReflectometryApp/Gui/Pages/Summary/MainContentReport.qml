@@ -374,27 +374,28 @@ Item {
             {
                 measured: ExGlobals.Constants.proxy.plotting1d.bokehMeasuredDataObj,
                 calculated: ExGlobals.Constants.proxy.plotting1d.bokehCalculatedDataObj,
-                difference: ExGlobals.Constants.proxy.plotting1d.bokehDifferenceDataObj,
-                bragg: ExGlobals.Constants.proxy.plotting1d.bokehBraggDataObj,
-                background: ExGlobals.Constants.proxy.plotting1d.bokehBackgroundDataObj,
-                ranges: ExGlobals.Variables.analysisChart.plotRanges,
+                sld: ExGlobals.Constants.proxy.plotting1d.bokehSldDataObj,
+                ranges: ExGlobals.Constants.proxy.plotting1d.analysisPlotRangesObj,
+                sldRanges: ExGlobals.Constants.proxy.plotting1d.sldPlotRangesObj,
 
                 hasMeasured: ExGlobals.Variables.analysisChart.hasMeasuredData,
                 hasCalculated: ExGlobals.Variables.analysisChart.hasCalculatedData,
-                hasDifference: ExGlobals.Variables.analysisChart.hasDifferenceData,
-                hasBackground: ExGlobals.Variables.analysisChart.hasBackgroundData,
-                hasPlotRanges: ExGlobals.Variables.analysisChart.hasPlotRangesData
+                hasSld: ExGlobals.Variables.analysisChart.hasSldData,
+                hasPlotRanges: ExGlobals.Variables.analysisChart.hasPlotRangesData,
+                hasSldPlotRanges: ExGlobals.Variables.analysisChart.sldPlotRangesObj
             },
             // specs
             {
-                chartWidth: dataChartWidth, //dataChartWidth,
-                mainChartHeight: ExGlobals.Variables.analysisChart.mainChartHeight * 0.65,
-                differenceChartHeight: ExGlobals.Variables.analysisChart.differenceChartHeight * 0.84,
-                xAxisChartHeight: ExGlobals.Variables.analysisChart.xAxisChartHeight,
+                chartWidth: dataChartWidth,
+                mainChartHeight: dataChartWidth -
+                                 ExGlobals.Variables.analysisChart.chartToolButtonsHeight -
+                                 ExGlobals.Variables.analysisChart.sldChartHeight * 0.8,
+                sldChartHeight: ExGlobals.Variables.analysisChart.sldChartHeight * 0.8,
 
-                xAxisTitle: ExGlobals.Variables.analysisChart.xAxisTitle,
+                xMainAxisTitle: ExGlobals.Variables.analysisChart.xMainAxisTitle,
                 yMainAxisTitle: ExGlobals.Variables.analysisChart.yMainAxisTitle,
-                yDifferenceAxisTitle: ExGlobals.Variables.analysisChart.yDifferenceAxisTitle,
+                xSldAxisTitle: ExGlobals.Variables.analysisChart.xSldAxisTitle,
+                ySldAxisTitle: ExGlobals.Variables.analysisChart.ySldAxisTitle,
 
                 chartBackgroundColor: ExGlobals.Variables.analysisChart.chartBackgroundColor,
                 chartForegroundColor: ExGlobals.Variables.analysisChart.chartForegroundColor,
@@ -404,15 +405,11 @@ Item {
                 measuredLineColor: ExGlobals.Variables.analysisChart.measuredLineColor,
                 measuredAreaColor: ExGlobals.Variables.analysisChart.measuredAreaColor,
                 calculatedLineColor: ExGlobals.Variables.analysisChart.calculatedLineColor,
-                braggTicksColor: ExGlobals.Variables.analysisChart.braggTicksColor,
-                backgroundLineColor: ExGlobals.Variables.analysisChart.backgroundLineColor,
-                differenceLineColor: ExGlobals.Variables.analysisChart.differenceLineColor,
-                differenceAreaColor: ExGlobals.Variables.analysisChart.differenceAreaColor,
+                sldLineColor: ExGlobals.Variables.analysisChart.sldLineColor,
 
                 measuredLineWidth: ExGlobals.Variables.analysisChart.measuredLineWidth,
                 calculatedLineWidth: ExGlobals.Variables.analysisChart.calculatedLineWidth,
-                differenceLineWidth: ExGlobals.Variables.analysisChart.differenceLineWidth,
-                backgroundLineWidth: ExGlobals.Variables.analysisChart.backgroundLineWidth,
+                sldLineWidth: ExGlobals.Variables.analysisChart.sldLineWidth,
 
                 fontPixelSize: ExGlobals.Variables.analysisChart.fontPixelSize,
 
