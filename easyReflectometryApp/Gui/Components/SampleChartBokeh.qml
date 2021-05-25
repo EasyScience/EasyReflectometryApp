@@ -17,8 +17,8 @@ EaCharts.BaseBokeh {
         if (hasMeasuredData) title = 'R(q)meas, R(q)calc'
         return title
     }
-    xSldAxisTitle: "SLD x axis title"
-    ySldAxisTitle: "SLD y axis title"
+    xSldAxisTitle: "z (Å)"
+    ySldAxisTitle: "SLD (10⁻⁶Å⁻²)"
 
     Component.onCompleted: ExGlobals.Variables.analysisChart = this
 }
