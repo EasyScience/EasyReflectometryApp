@@ -53,7 +53,6 @@ EaComponents.ApplicationWindow {
 
         EaElements.ToolButton {
             enabled: ExGlobals.Constants.proxy.projectCreated ||
-                     ExGlobals.Constants.proxy.samplesPresent ||
                      ExGlobals.Constants.proxy.experimentSkipped ||
                      ExGlobals.Constants.proxy.experimentLoaded
             fontIcon: "backspace"
@@ -123,7 +122,7 @@ EaComponents.ApplicationWindow {
         // Experiment tab
         EaElements.AppBarTabButton {
             id: experimentTabButton
-            enabled: ExGlobals.Constants.proxy.samplesPresent
+            enabled: ExGlobals.Variables.samplePageEnabled
             fontIcon: "microscope"
             text: qsTr("Experiment")
             ToolTip.text: qsTr("Experimental settings and data page")
@@ -133,7 +132,7 @@ EaComponents.ApplicationWindow {
         // Analysis tab
         EaElements.AppBarTabButton {
             id: analysisTabButton
-            enabled: ExGlobals.Constants.proxy.samplesPresent &&
+            enabled: ExGlobals.Variables.samplePageEnabled &&
                      (ExGlobals.Constants.proxy.experimentSkipped ||
                       ExGlobals.Constants.proxy.experimentLoaded)
             fontIcon: "calculator"
@@ -145,7 +144,7 @@ EaComponents.ApplicationWindow {
         // Summary tab
         EaElements.AppBarTabButton {
             id: summaryTabButton
-            enabled: ExGlobals.Constants.proxy.samplesPresent &&
+            enabled: ExGlobals.Variables.samplePageEnabled &&
                      (ExGlobals.Constants.proxy.experimentSkipped ||
                       ExGlobals.Constants.proxy.experimentLoaded)
             fontIcon: "clipboard-list"
@@ -201,8 +200,6 @@ EaComponents.ApplicationWindow {
 
         // Sample page
         EaComponents.ContentPage {
-            //defaultInfo: ExGlobals.Constants.proxy.samplesPresent ? "" : qsTr("No Items Added/Loaded")
-
             mainContent: EaComponents.MainContent {
                 tabs: [
                     EaElements.TabButton { text: qsTr("Model view") }

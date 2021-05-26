@@ -25,21 +25,18 @@ from easyCore.Utils.classTools import generatePath
 from easyCore.Utils.UndoRedo import property_stack_deco, FunctionStack
 
 from easyReflectometryLib.Sample.material import Material
+from easyReflectometryLib.Sample.materials import Materials
 from easyReflectometryLib.Sample.layer import Layer
 from easyReflectometryLib.Sample.layers import Layers
 from easyReflectometryLib.Sample.item import Item
 from easyReflectometryLib.Sample.structure import Structure
 from easyReflectometryLib.Experiment.model import Model
-from easyReflectometryLib import Phases, Phase, Lattice, Site, SpaceGroup
 from easyReflectometryLib.interface import InterfaceFactory
-from easyReflectometryLib.Elements.Experiments.Experiment import Pars1D
-from easyReflectometryLib.Elements.Experiments.Pattern import Pattern1D
 
 from easyAppLogic.Utils.Utils import generalizePath
 
 from easyReflectometryApp.Logic.DataStore import DataSet1D, DataStore
 
-from easyReflectometryApp.Logic.Proxies.Background import BackgroundProxy
 from easyReflectometryApp.Logic.Proxies.Plotting1d import Plotting1dProxy
 from easyReflectometryApp.Logic.Fitter import Fitter as ThreadedFitter
 
@@ -95,6 +92,9 @@ class PyQmlProxy(QObject):
     calculatedDataUpdated = Signal()
 
     simulationParametersChanged = Signal()
+    backgroundChanged = Signal()
+    resolutionChanged = Signal()
+    qRangeChanged = Signal()
 
     fitFinished = Signal()
     fitFinishedNotify = Signal()
@@ -171,13 +171,6 @@ class PyQmlProxy(QObject):
         self._data = self._defaultData()
 
         # Experiment
-        self._pattern_parameters_as_obj = self._defaultPatternParameters()
-        self.patternParametersChanged.connect(self._onPatternParametersChanged)
-
-        self._instrument_parameters_as_obj = self._defaultInstrumentParameters()
-        self._instrument_parameters_as_xml = ""
-        self.instrumentParametersChanged.connect(self._onInstrumentParametersChanged)
-
         self._experiment_parameters = None
         self._experiment_data = None
         self._experiment_data_as_xml = ""
@@ -187,23 +180,26 @@ class PyQmlProxy(QObject):
         self.experimentDataRemoved.connect(self._onExperimentDataRemoved)
 
         self._experiment_loaded = False
-        self._experiment_skipped = True
+        self._experiment_skipped = False
         self.experimentLoadedChanged.connect(self._onExperimentLoadedChanged)
         self.experimentSkippedChanged.connect(self._onExperimentSkippedChanged)
-
-        self._background_proxy = BackgroundProxy(self)
-        self._background_proxy.asObjChanged.connect(self._onParametersChanged)
-        # self._background_proxy.asObjChanged.connect(self._sample.set_background)
-        self._background_proxy.asObjChanged.connect(self.calculatedDataChanged)
-        # self._background_proxy.asXmlChanged.connect(self.updateChartBackground)
 
         # Analysis
         self.calculatedDataChanged.connect(self._onCalculatedDataChanged)
 
-        self._simulation_parameters_as_obj = self._defaultSimulationParameters()
+        # self._simulation_parameters_as_obj = self._defaultSimulationParameters()
+        self._background_as_obj = self._defaultBackground()
+        self._q_range_as_obj = self._defaultQRange()
+        self._resolution_as_obj = self._defaultResolution()
         self.simulationParametersChanged.connect(self._onSimulationParametersChanged)
+        self.backgroundChanged.connect(self._onSimulationParametersChanged)
+        self.qRangeChanged.connect(self._onSimulationParametersChanged)
+        self.resolutionChanged.connect(self._onSimulationParametersChanged)
         self.sampleChanged.connect(self._onSimulationParametersChanged)
         self.simulationParametersChanged.connect(self.undoRedoChanged)
+        self.backgroundChanged.connect(self.undoRedoChanged)
+        self.qRangeChanged.connect(self.undoRedoChanged)
+        self.resolutionChanged.connect(self.undoRedoChanged)
 
         self._fit_results = self._defaultFitResults()
         self.fitter = Fitter(self._model, self._interface.fit_func)
@@ -223,9 +219,6 @@ class PyQmlProxy(QObject):
         self.parametersChanged.connect(self._onItemsChanged)
         self.parametersChanged.connect(self._onParametersChanged)
         self.parametersChanged.connect(self._onCalculatedDataChanged)
-        self.parametersChanged.connect(self._onPatternParametersChanged)
-        self.parametersChanged.connect(self._onInstrumentParametersChanged)
-        self.parametersChanged.connect(self._background_proxy.onAsObjChanged)
         self.parametersChanged.connect(self.undoRedoChanged)
 
         self._parameters_filter_criteria = ""
@@ -1007,9 +1000,9 @@ class PyQmlProxy(QObject):
     ####################################################################################################################
 
     def _defaultData(self):
-        x_min = self._defaultSimulationParameters()['x_min']
-        x_max = self._defaultSimulationParameters()['x_max']
-        x_step = self._defaultSimulationParameters()['x_step']
+        x_min = 0.001 #self._defaultSimulationParameters()['x_min']
+        x_max = 0.3 #self._defaultSimulationParameters()['x_max']
+        x_step = 0.002 #self._defaultSimulationParameters()['x_step']
         num_points = int((x_max - x_min) / x_step + 1)
         x_data = np.linspace(x_min, x_max, num_points)
 
@@ -1078,60 +1071,13 @@ class PyQmlProxy(QObject):
         self.experimentSkipped = False
         self.experimentDataAdded.emit()
 
-        #def outer1(obj):
-        #    def inner():
-        #        obj._experiment_data = self._loadExperimentData(file_url)
-        #        obj.experimentLoaded = True
-        #        obj.experimentSkipped = False
-        #        #obj.undoRedoChanged.emit()
-        #        obj.experimentDataAdded.emit()
-        #
-        #    return inner
-        #
-        #def outer2(obj):
-        #    def inner():
-        #        #obj.experiments.clear()
-        #        obj.experimentLoaded = False
-        #        obj.experimentSkipped = True
-        #        #obj.undoRedoChanged.emit()
-        #        obj.experimentDataRemoved.emit()
-        #
-        #    return inner
-        #
-        #borg.stack.push(FunctionStack(self, outer1(self), outer2(self)))
-
     @Slot()
     def removeExperiment(self):
         print("+ removeExperiment")
-
         self.experiments.clear()
         self.experimentLoaded = False
         self.experimentSkipped = False
         self.experimentDataRemoved.emit()
-
-        #def outer1(obj):
-        #    def inner():
-        #        #obj.experiments.clear()
-        #        obj.experimentDataRemoved.emit()
-        #        obj.experimentLoaded = False
-        #        obj.experimentSkipped = False
-        #        #obj.undoRedoChanged.emit()
-        #
-        #    return inner
-        #
-        #def outer2(obj):
-        #    data = self._experiment_data
-        #
-        #    def inner():
-        #        obj._experiment_data = data
-        #        obj.experimentDataAdded.emit()
-        #        obj.experimentLoaded = True
-        #        obj.experimentSkipped = False
-        #        #obj.undoRedoChanged.emit()
-        #
-        #    return inner
-        #
-        #borg.stack.push(FunctionStack(self, outer1(self), outer2(self)))
 
     def _loadExperimentData(self, file_url):
         print("+ _loadExperimentData")
@@ -1157,8 +1103,6 @@ class PyQmlProxy(QObject):
                                                 self._experiment_data.ye)
         self._experiment_parameters = self._experimentDataParameters(self._experiment_data)
         self.simulationParametersAsObj = json.dumps(self._experiment_parameters)
-        # if len(self._sample.pattern.backgrounds) == 0:
-        #     self.backgroundProxy.initializeContainer()
 
         self.experimentDataChanged.emit()
         self.projectInfoAsJson['experiments'] = self._data.experiments[0].name
@@ -1213,118 +1157,65 @@ class PyQmlProxy(QObject):
             self.calculatedDataChanged.emit()
 
     ####################################################################################################################
-    # Simulation parameters
+    # Instrument parameters
     ####################################################################################################################
 
-    @Property('QVariant', notify=simulationParametersChanged)
-    def simulationParametersAsObj(self):
-        return self._simulation_parameters_as_obj
+    @Property('QVariant', notify=backgroundChanged)
+    def backgroundAsObj(self):
+        return self._background_as_obj
 
-    @simulationParametersAsObj.setter
-    def simulationParametersAsObj(self, json_str):
-        if self._simulation_parameters_as_obj == json.loads(json_str):
-            return
+    @backgroundAsObj.setter
+    def backgroundAsObj(self, json_str):
+        if self._background_as_obj == json.loads(json_str):
+            return 
 
-        self._simulation_parameters_as_obj = json.loads(json_str)
+        self._background_as_obj = json.loads(json_str)
         self.simulationParametersChanged.emit()
 
-    def _defaultSimulationParameters(self):
+    def _defaultBackground(self):
         return {
-            "x_min":  0.001,
-            "x_max":  0.300,
-            "x_step": 0.002
+            'bkg': 0e0
+        }
+    
+    @Property('QVariant', notify=qRangeChanged)
+    def qRangeAsObj(self):
+        return self._q_range_as_obj
+    
+    @qRangeAsObj.setter
+    def qRangeAsObj(self, json_str):
+        if self._q_range_as_obj == json.loads(json_str):
+            return
+
+        self._q_range_as_obj = json.loads(json_str)
+        self.simulationParametersChanged.emit()
+
+    def _defaultQRange(self):
+        return {
+            'x_min': 0.001,
+            'x_max': 0.3,
+            'x_step': 0.002
+        }
+
+    @Property('QVariant', notify=resolutionChanged)
+    def resolutionAsObj(self):
+        return self._resolution_as_obj
+
+    @resolutionAsObj.setter
+    def resolutionAsObj(self, json_str):
+        if self._resolution_as_obj == json.loads(json_str):
+            return 
+
+        self._resolution_as_obj = json.loads(json_str)
+        self.simulationParametersChanged.emit()
+
+    def _defaultResolution(self):
+        return {
+            'res': 0.0
         }
 
     def _onSimulationParametersChanged(self):
         print("***** _onSimulationParametersChanged")
         self.calculatedDataChanged.emit()
-
-    ####################################################################################################################
-    # Pattern parameters (scale, zero_shift, backgrounds)
-    ####################################################################################################################
-
-    @Property('QVariant', notify=patternParametersAsObjChanged)
-    def patternParametersAsObj(self):
-        return self._pattern_parameters_as_obj
-
-    def _defaultPatternParameters(self):
-        return {
-            "scale":      1.0,
-            "zero_shift": 0.0
-        }
-
-    def _setPatternParametersAsObj(self):
-        start_time = timeit.default_timer()
-        # parameters = self._sample.pattern.as_dict()
-        # self._pattern_parameters_as_obj = parameters
-        print("+ _setPatternParametersAsObj: {0:.3f} s".format(timeit.default_timer() - start_time))
-        self.patternParametersAsObjChanged.emit()
-
-    def _onPatternParametersChanged(self):
-        print("***** _onPatternParametersChanged")
-        self._setPatternParametersAsObj()
-
-    ####################################################################################################################
-    # Instrument parameters (wavelength, resolution_u, ..., resolution_y)
-    ####################################################################################################################
-
-    @Property('QVariant', notify=instrumentParametersAsObjChanged)
-    def instrumentParametersAsObj(self):
-        return self._instrument_parameters_as_obj
-
-    @Property(str, notify=instrumentParametersAsXmlChanged)
-    def instrumentParametersAsXml(self):
-        return self._instrument_parameters_as_xml
-
-    def _defaultInstrumentParameters(self):
-        return {
-            "wavelength":   1.0,
-            "resolution_u": 0.01,
-            "resolution_v": -0.01,
-            "resolution_w": 0.01,
-            "resolution_x": 0.0,
-            "resolution_y": 0.0
-        }
-
-    def _setInstrumentParametersAsObj(self):
-        start_time = timeit.default_timer()
-        # parameters = self._sample.parameters.as_dict()
-        # self._instrument_parameters_as_obj = parameters
-        print("+ _setInstrumentParametersAsObj: {0:.3f} s".format(timeit.default_timer() - start_time))
-        self.instrumentParametersAsObjChanged.emit()
-
-    def _setInstrumentParametersAsXml(self):
-        start_time = timeit.default_timer()
-        parameters = [self._instrument_parameters_as_obj]
-        self._instrument_parameters_as_xml = dicttoxml(parameters, attr_type=True).decode()
-        print("+ _setInstrumentParametersAsXml: {0:.3f} s".format(timeit.default_timer() - start_time))
-        self.instrumentParametersAsXmlChanged.emit()
-
-    def _onInstrumentParametersChanged(self):
-        print("***** _onInstrumentParametersChanged")
-        self._setInstrumentParametersAsObj()
-        self._setInstrumentParametersAsXml()
-
-    # ####################################################################################################################
-    # # Background
-    # ####################################################################################################################
-
-    # @property
-    # def _background_obj(self):
-    #     # bgs = self._sample.pattern.backgrounds
-    #     # itm = None
-    #     # if len(bgs) > 0:
-    #     #     itm = bgs[0]
-    #     # return itm
-    #     pass
-
-    # @Property('QVariant', notify=dummySignal)
-    # def backgroundProxy(self):
-    #     return self._background_proxy
-
-    # def updateChartBackground(self):
-    #     self._plotting_1d_proxy.setBackgroundData(self._background_proxy.asObj.x_sorted_points,
-    #                                               self._background_proxy.asObj.y_sorted_points)
 
     ####################################################################################################################
     ####################################################################################################################
@@ -1339,26 +1230,29 @@ class PyQmlProxy(QObject):
     def _updateCalculatedData(self):
         start_time = timeit.default_timer()
 
-        if not self.experimentLoaded and not self.experimentSkipped:
-            return
+        # if not self.experimentLoaded:# and not self.experimentSkipped:
+        #     return
 
         # self._sample.output_index = self.currentPhaseIndex
 
         #  THIS IS WHERE WE WOULD LOOK UP CURRENT EXP INDEX
         sim = self._data.simulations[0]
 
+        # elif self.experimentSkipped:
+        x_min = float(self._q_range_as_obj['x_min'])
+        x_max = float(self._q_range_as_obj['x_max'])
+        x_step = float(self._q_range_as_obj['x_step'])
+        num_points = int((x_max - x_min) / x_step + 1)
+        sim.x = np.linspace(x_min, x_max, num_points)
+
+        self._model.background = self._background_as_obj['bkg']
+        self._model.resolution = self._resolution_as_obj['res']
+
         if self.experimentLoaded:
             exp = self._data.experiments[0]
             sim.x = exp.x
 
-        elif self.experimentSkipped:
-            x_min = float(self._simulation_parameters_as_obj['x_min'])
-            x_max = float(self._simulation_parameters_as_obj['x_max'])
-            x_step = float(self._simulation_parameters_as_obj['x_step'])
-            num_points = int((x_max - x_min) / x_step + 1)
-            sim.x = np.linspace(x_min, x_max, num_points)
-
-        sim.y = self._interface.fit_func(sim.x)  # CrysPy: 0.5 s, CrysFML: 0.005 s, GSAS-II: 0.25 s
+        sim.y = self._interface.fit_func(sim.x) 
         sld_profile = self._interface.sld_profile()
 
         self._plotting_1d_proxy.setCalculatedData(sim.x, sim.y)
@@ -1840,9 +1734,17 @@ class PyQmlProxy(QObject):
         """
         projectPath = self.currentProjectPath
         project_save_filepath = os.path.join(projectPath, 'project.json')
+        materials_in_model = []
+        for i in self._model.structure:
+            for j in i.layers:
+                materials_in_model.append(j.material)
+        materials_not_in_model = []
+        for i in self._materials:
+            if i not in materials_in_model:
+                materials_not_in_model.append(i)
         descr = {
             'model': self._model.as_dict(skip=['interface']),
-            'materials': []
+            'materials_not_in_model': Materials(*materials_not_in_model).as_dict(skip=['interface'])
         }
         
         if self._data.experiments:
@@ -1898,19 +1800,23 @@ class PyQmlProxy(QObject):
             if old_interface_name != interface_name:
                 self._interface.switch(interface_name)
 
-        self._sample = Sample.from_dict(descr['sample'])
-        self._sample.interface = self._interface
-        self._sample._updateInterface()
-
-        # send signal to tell the proxy we changed phases
-        self._background_proxy.onAsObjChanged()
+        self._materials = []
+        self._model = Model.from_dict(descr['model'])
+        for i in self._model.structure:
+            for j in i.layers:
+                self._materials.append(j.material)
+        for i in Materials.from_dict(descr['materials_not_in_model']):
+            self._materials.append(i)
+        self._model.interface = self._interface
+        self.sampleChanged.emit()
 
         # experiment
         if 'experiments' in descr:
             self.experimentLoaded = True
             self._data.experiments[0].x = np.array(descr['experiments'][0])
             self._data.experiments[0].y = np.array(descr['experiments'][1])
-            self._data.experiments[0].e = np.array(descr['experiments'][2])
+            self._data.experiments[0].ye = np.array(descr['experiments'][2])
+            self._data.experiments[0].xe = np.array(descr['experiments'][3])
             self._experiment_data = self._data.experiments[0]
             self.experiments = [{'name': descr['project_info']['experiments']}]
             self.setCurrentExperimentDatasetName(descr['project_info']['experiments'])
@@ -1941,7 +1847,7 @@ class PyQmlProxy(QObject):
             new_method_index = self.minimizerMethodNames.index(new_method)
             self.currentMinimizerMethodIndex = new_method_index
 
-        self.fitter.fit_object = self._sample
+        self.fitter.fit_object = self._model
 
         self.resetUndoRedoStack()
 

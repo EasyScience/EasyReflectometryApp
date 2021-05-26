@@ -100,52 +100,6 @@ EaComponents.SideBarColumn {
                     }
                 }
             }
-
-            /*Row {
-                spacing: EaStyle.Sizes.fontPixelSize
-
-                Column {
-                    spacing: EaStyle.Sizes.fontPixelSize * -0.5
-
-                    EaElements.Label {
-                        enabled: false
-                        text: qsTr("Radiation")
-                    }
-
-                    EaElements.ComboBox {
-                        width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2 ) / 3
-                        model: ["Neutron"]
-                    }
-                }
-
-                Column {
-                    spacing: EaStyle.Sizes.fontPixelSize * -0.5
-
-                    EaElements.Label {
-                        enabled: false
-                        text: qsTr("Mode")
-                    }
-
-                    EaElements.ComboBox {
-                        width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2 ) / 3
-                        model: ["Constant wavelength"]
-                    }
-                }
-
-                Column {
-                    spacing: EaStyle.Sizes.fontPixelSize * -0.5
-
-                    EaElements.Label {
-                        enabled: false
-                        text: qsTr("Method")
-                    }
-
-                    EaElements.ComboBox {
-                        width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2 ) / 3
-                        model: ["Powder"]
-                    }
-                }
-            }*/
         }
     }
 

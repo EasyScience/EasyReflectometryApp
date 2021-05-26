@@ -27,12 +27,12 @@ Row {
         text: qsTr("dq/q:")
     }
     EaElements.Parameter {
-        id: xMin
+        id: res
         enabled: !ExGlobals.Constants.proxy.experimentLoaded
         width: elementWidth()
         anchors.verticalCenter: parent.verticalCenter
-        units: ""
-        text: EaLogic.Utils.toFixed(ExGlobals.Constants.proxy.simulationParametersAsObj.x_min, 3)
+        units: "%"
+        text: EaLogic.Utils.toFixed(ExGlobals.Constants.proxy.resolutionAsObj.res, 3)
         onEditingFinished: updateParameters()
     }
 
@@ -44,10 +44,8 @@ Row {
 
     function updateParameters() {
         const json = {
-            "x_min": parseFloat(xMin.text),
-            "x_max": parseFloat(xMax.text),
-            "x_step": parseFloat(xStep.text)
+            "res": parseFloat(res.text),
         }
-        ExGlobals.Constants.proxy.simulationParametersAsObj = JSON.stringify(json)
+        ExGlobals.Constants.proxy.resolutionAsObj = JSON.stringify(json)
     }
 }
