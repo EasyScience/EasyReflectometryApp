@@ -15,13 +15,18 @@ jobs:
         os: [macos-10.15, ubuntu-20.04, windows-2019]
 
     steps:
-      - name: Check-out repository
-        uses: actions/checkout@v2
-
       - name: Cancel previous workflow runs
         uses: n1hility/cancel-previous-runs@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check-out repository
+        uses: actions/checkout@v2
+
+      - name: Set up access to private repos
+        uses: webfactory/ssh-agent@v0.5.2
+        with:
+          ssh-private-key: ${{ secrets.GH_WEBFACTORY_KEY }}
 
       - name: Set up non-Python dependences (Linux)
         if: runner.os == 'Linux'
@@ -63,7 +68,7 @@ jobs:
           echo "DOWNLOAD_PATH=$(python utils.py --get ci.project.subdirs.download)" >> $GITHUB_ENV
           echo "QTIFW_PATH=$(python utils.py --get ci.qtifw.setup.installation_path.${{ runner.os }})" >> $GITHUB_ENV
           echo "PYTHON_PACKAGES_PATH=$(python utils.py --get ci.cache.python_packages_path)" >> $GITHUB_ENV
-          echo "GIT_INSTALL_URL=git+$GITHUB_SERVER_URL/$GITHUB_REPOSITORY@${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
+          echo "GIT_INSTALL_URL=git+ssh://git@github.com/$GITHUB_REPOSITORY@${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
 
       - name: Cache dependencies
         if: False  # disable caching

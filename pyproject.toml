@@ -22,7 +22,7 @@ python = '^3.7, <3.8'
 pyobjc-core = { version = '^7.1', platform = 'darwin' }
 pyobjc-framework-cocoa = { version = '^7.1', platform = 'darwin' }
 # easyScience
-#easyReflectometryLib = { git = 'https://github.com/easyScience/easyReflectometryLib.git', rev = 'develop' }
+easyReflectometryLib = { git = 'ssh://git@github.com/easyScience/easyReflectometryLib.git', rev = 'develop' }
 easyAppLogic = { git = 'https://github.com/easyScience/easyAppLogic.git', rev = 'develop' }
 easyAppGui = { git = 'https://github.com/easyScience/easyAppGui.git', rev = 'easyreflectometry' }
 #easyReflectometryLib = { path = '../easyReflectometryLib'}
