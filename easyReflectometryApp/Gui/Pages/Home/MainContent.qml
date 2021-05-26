@@ -135,7 +135,7 @@ Item {
                 spacing: EaStyle.Sizes.fontPixelSize
 
                 EaElements.Button {
-                    enabled: false
+                    //enabled: false
                     text: qsTr("Tutorial") + " 1: " + qsTr("App interface")
                     onClicked: appInterfaceTutorialTimer.start()
                 }

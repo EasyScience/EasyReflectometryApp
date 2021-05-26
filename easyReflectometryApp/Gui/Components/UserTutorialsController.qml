@@ -119,6 +119,12 @@ EaElements.RemoteController {
         print("* run app interface tutorial")
 
         beforeRunTutorial()
+
+        // General
+        rc.mouseClick(ExGlobals.Variables.preferencesButton)
+        rc.mouseClick(ExGlobals.Variables.enableUserGuidesCheckBox)
+        rc.mouseClick(ExGlobals.Variables.preferencesOkButton)
+
         afterRunTutorial()
     }
 
