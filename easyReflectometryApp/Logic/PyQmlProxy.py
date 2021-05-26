@@ -25,7 +25,7 @@ from easyCore.Utils.classTools import generatePath
 from easyCore.Utils.UndoRedo import property_stack_deco, FunctionStack
 
 from easyReflectometryLib.Sample.material import Material
-from easyReflectometryLib.Sample.materials import Materials
+#from easyReflectometryLib.Sample.materials import Materials
 from easyReflectometryLib.Sample.layer import Layer
 from easyReflectometryLib.Sample.layers import Layers
 from easyReflectometryLib.Sample.item import Item
