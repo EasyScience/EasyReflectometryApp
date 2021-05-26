@@ -5,7 +5,7 @@ import os, sys
 import importlib
 import glob
 import PySide2, shiboken2
-import cryspy
+import refnx
 import easyCore, easyReflectometryLib, easyAppGui, easyAppLogic
 import Functions, Config
 from PyInstaller.__main__ import run as pyInstallerMain
@@ -30,7 +30,7 @@ def addedData():
     lib = CONFIG['ci']['pyinstaller']['libs'][CONFIG.os]
     data = [{'from': CONFIG.package_name, 'to': CONFIG.package_name},
             {'from': importlib.import_module(lib).__path__[0], 'to': lib},
-            {'from': cryspy.__path__[0], 'to': 'cryspy'},
+            {'from': refnx.__path__[0], 'to': 'refnx'},
             {'from': easyCore.__path__[0], 'to': 'easyCore'},
             {'from': easyReflectometryLib.__path__[0], 'to': 'easyReflectometryLib'},
             {'from': easyAppLogic.__path__[0], 'to': 'easyAppLogic'},
