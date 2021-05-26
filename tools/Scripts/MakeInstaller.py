@@ -382,7 +382,7 @@ if __name__ == "__main__":
     downloadQtInstallerFramework()
     osDependentPreparation()
     installQtInstallerFramework()
-    prepareSignedMaintenanceTool()
+    #prepareSignedMaintenanceTool()
     createInstallerSourceDir()
     createOnlineRepository()
     createInstaller()
