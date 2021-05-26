@@ -85,8 +85,8 @@ jobs:
         #if: steps.cache.outputs.cache-hit != 'true'
         run: pip install ${{ env.GIT_INSTALL_URL }}
 
-      - name: Relink CrysFML from default Python dylib
-        run: python ${{ env.SCRIPTS_PATH }}/RelinkCrysfml.py
+      #- name: Relink CrysFML from default Python dylib
+      #  run: python ${{ env.SCRIPTS_PATH }}/RelinkCrysfml.py
 
       - name: Create freezed python app bundle
         run: python ${{ env.SCRIPTS_PATH }}/FreezeApp.py

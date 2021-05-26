@@ -36,9 +36,10 @@ EaElements.RemoteController {
         interval: 1000
         onTriggered: {
             startScreenRecording()
-            runDataFittingTutorial()
+            runAppInterfaceTutorial()
+            //runDataFittingTutorial()
             //runDataSimulationTutorial()
-            //stopScreenRecording()
+            stopScreenRecording()
         }
     }
 
@@ -115,6 +116,13 @@ EaElements.RemoteController {
     // Tutorials
 
     function runAppInterfaceTutorial() {
+        print("* run app interface tutorial")
+
+        beforeRunTutorial()
+        afterRunTutorial()
+    }
+
+    function runAppInterfaceTutorial_original() {
         print("* run app interface tutorial")
 
         beforeRunTutorial()
