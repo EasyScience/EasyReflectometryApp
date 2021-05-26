@@ -48,6 +48,7 @@ def main():
 
     main_qml_path = QUrl.fromLocalFile(os.path.join(package_path, 'Gui', 'main.qml'))
     gui_path = str(QUrl.fromLocalFile(package_path).toString())
+    app_icon_path = os.path.join(package_path, 'Gui', 'Resources', 'Logo', 'App.png')
     easyAppGui_path = os.path.join(easyAppGui.__path__[0], '..')
 
     home_path = pathlib.Path.home()
@@ -66,6 +67,7 @@ def main():
     app.setApplicationVersion(CONFIG['tool']['poetry']['version'])
     app.setOrganizationName(CONFIG['tool']['poetry']['name'])
     app.setOrganizationDomain(CONFIG['tool']['poetry']['name'])
+    app.setWindowIcon(QIcon(app_icon_path))
 
     # QML application engine
     engine = QQmlApplicationEngine()
