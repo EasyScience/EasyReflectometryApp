@@ -94,8 +94,8 @@ jobs:
       - name: Create offline and online app installers from freezed app bundle
         run: python ${{ env.SCRIPTS_PATH }}/MakeInstaller.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
 
-      #- name: Sign the installer
-      #  run: python ${{ env.SCRIPTS_PATH }}/Signatures.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
+      - name: Sign the installer
+        run: python ${{ env.SCRIPTS_PATH }}/Signatures.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
 
       - name: Set up screen recording dependencies (macOS)
         if: runner.os == 'macOS'
