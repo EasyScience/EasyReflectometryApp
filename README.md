@@ -33,7 +33,7 @@ Current main features of **easyReflectometry**:
 
 Planned improvements / new functionality for **easyReflectometry**:
 
-- The addition of the [bornagain](https://www.bornagainproject.org) and [refl1d](https://refl1d.readthedocs.io/en/latest/) reflectometry packages
+- The addition of the [bornagain](https://www.bornagainproject.org) and [refl1d](https://refl1d.readthedocs.io/en/latest/) reflectometry packages for reflectometry calculation
 - Ability to corefine multiple contrasts of reflectometry data
 - Expansion of the flexible _item_ type to include chemical consistent models
 - Support for polarised reflectometry measurements
