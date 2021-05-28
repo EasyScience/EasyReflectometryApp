@@ -41,7 +41,6 @@ build
 # Misc
 ..*
 *.log
-*.zip
 temp.cif
 temp.prm
 settings.ini*
