@@ -7,7 +7,7 @@ import argparse
 # PySide
 from PySide2.QtCore import QUrl
 from PySide2.QtWidgets import QApplication
-from PySide2.QtGui import Qt
+from PySide2.QtGui import Qt, QIcon
 from PySide2.QtQml import QQmlApplicationEngine, qmlRegisterType
 from PySide2.QtWebEngine import QtWebEngine
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView  # to call hook-PySide2.QtWebEngineWidgets.py
