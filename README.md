@@ -2,54 +2,52 @@
 
 <img height="80"><img src="./resources/images/er_logo.svg" height="65">
 
-**easyReflectometry** is a scientific software for modelling and analysis of diffraction data. Currently, **easyReflectometry** covers classical 1D unpolarized neutron powder diffraction data collected at constant wavelength.
+**easyReflectometry** is a scientific software for modelling and analysis of reflectometry data. Currently, **easyReflectometry** covers single contrast measurements of layered structures.
 
 ![easyReflectometry Screenshot](./resources/images/er_analysis_dark.png) 
 
 ## What is easyReflectometry for?
 
-**easyReflectometry** allows simulation of diffraction patterns based on a structural model and refinement of its parameters. For refinement, the program uses a number of fitting engines (minimizers).
+**easyReflectometry** allows simulation of reflectometry profiles based on layered structures and the refinements of the structural parameters. For refinement, the program uses a number of fitting engines (minimizers).
 
-**easyReflectometry** is similar to crystallographic programs like FullProf, Jana, GSAS, ShelX, etc. Unlike these programs **easyReflectometry** is based on _external_ crystallographic libraries such as [CrysPy](https://github.com/ikibalin/cryspy), [CrysFML](https://code.ill.fr/scientific-software/crysfml) and [GSAS-II](https://subversion.xray.aps.anl.gov/trac/pyGSAS). This allows **easyReflectometry** to cover different functionality aspects within a single, intuitive and user-friendly graphical interface. These libraries are included with the installation so there is no need to download and compile any additional components.
+**easyReflectometry** offers a graphical user interface for the analysis of reflectometry data, build on _external_ reflectometry packages such as [refnx](https://github.com/refnx/refnx). 
+This allows **easyReflectometry** to cover different functionality aspects within a signle, intuitive, and user-friendly interface.  
+The reflectomety packages are included with the installation so there is no need to download andn compile any additional components. 
 
 ## Main features
 
 **easyReflectometry** is open source (currently [GPL v3](LICENSE.md)) and cross-platform, with support for Windows, macOS and Linux (Ubuntu).
 
-The intuitive tabbed interface allows for a clear and defined data modelling and analysis workflow. There are also built-in step-by-step user guides and video tutorials for new users.
+The intuitive tabbed interface allows for a clear and defined data modelling and analysis workflow. 
+There are also built-in step-by-step user guides and video tutorials for new users.
 
 Current main features of **easyReflectometry**:
 
-- Support for constant-wavelength 1D unpolarized neutron powder diffraction data.
-- Structure refinement (yet unstable) using [CrysPy](https://github.com/ikibalin/cryspy), [CrysFML](https://code.ill.fr/scientific-software/crysfml) and [GSAS-II](https://subversion.xray.aps.anl.gov/trac/pyGSAS).
-- Simulations of diffraction pattern using aforementioned libraries.
-- Multiple minimization engines: [lmfit](https://lmfit.github.io/lmfit-py), [bumps](https://github.com/bumps/bumps) and [DFO-LS](https://github.com/numericalalgorithmsgroup/dfols).
-- Crystal structure visualizer and builder.
-- Diffraction pattern viewer, including Bragg peaks and difference curve.
-- Live update of calculations on parameters change.
-- Input files are in [CIF (Crystallographic Information File)](https://www.iucr.org/resources/cif) format.
+- Support for the analysis of a single contrast of reflectometry data
+- Creation of materials to be used in structure from scattering length density
+- The ability to define repeating multi-layers of materials and refine these structures using [refnx](https://github.com/refnx/refnx). 
+- Multiple minimization engines: [lmfit](https://lmfit.github.io/lmfit-py), [bumps](https://github.com/bumps/bumps) and [DFO-LS](https://github.com/numericalalgorithmsgroup/dfols) (including the differential evolution method).
 - Interactive HTML and standard PDF report generation.
-- Undo/redo for both parameter changes and fitting.
+- Undo/redo for both parameter changes and fitting 
+- Saving and loading of projects
 
 Planned improvements / new functionality for **easyReflectometry**:
 
-- Improved refinement.
-- Parameter constraints during refinement.
-- Loading and simulation of Time-of-Flight data.
-- Support for polarized neutron data.
-- Magnetic structure refinement.
-- Pair distribution function.
-- X-ray data analysis.
+- The addition of the [bornagain]() and [refl1d]() reflectometry packages
+- Ability to corefine multiple contrasts of reflectometry data
+- Expansion of the flexible _item_ type to include chemical consistent models
+- Support for polarised reflectometry measurements
+- Reading of q-dependent resolution from a file
 
 ## Getting Started
 
 ### Downloading
 
-Download the official **easyReflectometry installer v0.8.0-beta** for your operating system:
+Download the official **easyReflectometry installer v0.0.1-develop** for your operating system:
 
-- [Windows 10 and above, 32-bit](https://github.com/easyScience/easyReflectometryApp/releases/download/v0.8.0-beta.1/easyReflectometry_Windows_x86-32_v0.8.0-beta.1.zip)
-- [macOS 10.15 and above, 64-bit](https://github.com/easyScience/easyReflectometryApp/releases/download/v0.8.0-beta.1/easyReflectometry_macOS_x86-64_v0.8.0-beta.1.zip)
-- [Ubuntu 20.04 and above, 64-bit](https://github.com/easyScience/easyReflectometryApp/releases/download/v0.8.0-beta.1/easyReflectometry_Linux_x86-64_v0.8.0-beta.1.zip)
+- [Windows 10 and above, 32-bit](https://github.com/easyScience/easyReflectometryApp/releases/download/develop/easyReflectometry_Windows_x86-32_v0.0.1_develop.zip)
+- [macOS 10.15 and above, 64-bit](https://github.com/easyScience/easyReflectometryApp/releases/download/develop/easyReflectometry_macOS_x86-64_v0.0.1_develop.zip)
+- [Ubuntu 20.04 and above, 64-bit](https://github.com/easyScience/easyReflectometryApp/releases/download/develop/easyReflectometry_Linux_x86-64_v0.0.1_develop.zip)
 
 ### Installing
 
@@ -64,7 +62,7 @@ Run **MaintenanceTool** from the **easyReflectometry** installation directory, s
 
 ## Get in touch
 
-For general questions or comments, please contact us at [support@easyReflectometry.org](mailto:support@easyReflectometry.org).
+<!---For general questions or comments, please contact us at [support@easyReflectometry.org](mailto:support@easyReflectometry.org).--->
 
 For bug reports and feature requests, please use [Issue Tracker](https://github.com/easyScience/easyReflectometryApp/issues) instead.
 
