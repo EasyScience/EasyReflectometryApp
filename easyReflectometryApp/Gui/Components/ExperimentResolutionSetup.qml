@@ -28,7 +28,7 @@ Row {
     }
     EaElements.Parameter {
         id: res
-        enabled: !ExGlobals.Constants.proxy.experimentLoaded
+        enabled: true
         width: elementWidth()
         anchors.verticalCenter: parent.verticalCenter
         units: "%"

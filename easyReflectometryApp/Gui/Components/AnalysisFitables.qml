@@ -73,20 +73,14 @@ EaComponents.TableView {
             horizontalAlignment: Text.AlignRight
             width: EaStyle.Sizes.fontPixelSize * 4
             headerText: "Value"
-            text: model.value.toFixed(4)
-            onEditingFinished: editParameterValue(model.id, text)
-
-            Component.onCompleted: {
-                if (model.label.endsWith('.resolution_u')) {
-                    ExGlobals.Variables.fitResolutionUValue = this
-                } else if (model.label.endsWith('.resolution_v')) {
-                    ExGlobals.Variables.fitResolutionVValue = this
-                } else if (model.label.endsWith('.resolution_w')) {
-                    ExGlobals.Variables.fitResolutionWValue = this
-                } else if (model.label.endsWith('.resolution_y')) {
-                    ExGlobals.Variables.fitResolutionYValue = this
+            text: {
+                if (model.label.endsWith('Background')) {
+                    model.value.toExponential(3)
+                } else {
+                    model.value.toFixed(4)
                 }
             }
+            onEditingFinished: editParameterValue(model.id, text)
         }
 
         EaComponents.TableViewLabel {

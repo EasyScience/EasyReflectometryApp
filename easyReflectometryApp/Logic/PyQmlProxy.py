@@ -187,7 +187,6 @@ class PyQmlProxy(QObject):
         # Analysis
         self.calculatedDataChanged.connect(self._onCalculatedDataChanged)
 
-        # self._simulation_parameters_as_obj = self._defaultSimulationParameters()
         self._background_as_obj = self._defaultBackground()
         self._q_range_as_obj = self._defaultQRange()
         self._resolution_as_obj = self._defaultResolution()
@@ -217,6 +216,7 @@ class PyQmlProxy(QObject):
         self._parameters_as_xml = []
         self.parametersChanged.connect(self._onMaterialsChanged)
         self.parametersChanged.connect(self._onItemsChanged)
+        self.parametersChanged.connect(self._onSimulationParametersChanged)
         self.parametersChanged.connect(self._onParametersChanged)
         self.parametersChanged.connect(self._onCalculatedDataChanged)
         self.parametersChanged.connect(self.undoRedoChanged)
@@ -1090,19 +1090,24 @@ class PyQmlProxy(QObject):
         x_min = data.x[0]
         x_max = data.x[-1]
         x_step = (x_max - x_min) / (len(data.x) - 1)
-        parameters = {
+        bkg = np.min(data.y)
+        q_range_parameters = {
             "x_min":  x_min,
             "x_max":  x_max,
-            "x_step": x_step
+            "x_step": x_step,
         }
-        return parameters
+        bkg_parameters = {
+            'bkg': bkg
+        }
+        return q_range_parameters, bkg_parameters
 
     def _onExperimentDataAdded(self):
         print("***** _onExperimentDataAdded")
         self._plotting_1d_proxy.setMeasuredData(self._experiment_data.x, self._experiment_data.y,
                                                 self._experiment_data.ye)
         self._experiment_parameters = self._experimentDataParameters(self._experiment_data)
-        self.simulationParametersAsObj = json.dumps(self._experiment_parameters)
+        self.qRangeAsObj = json.dumps(self._experiment_parameters[0])
+        self.backgroundAsObj = json.dumps(self._experiment_parameters[1])
 
         self.experimentDataChanged.emit()
         self.projectInfoAsJson['experiments'] = self._data.experiments[0].name
@@ -1170,7 +1175,9 @@ class PyQmlProxy(QObject):
             return 
 
         self._background_as_obj = json.loads(json_str)
+        self._model.background = float(self._background_as_obj['bkg'])
         self.simulationParametersChanged.emit()
+        self.parametersChanged.emit()
 
     def _defaultBackground(self):
         return {
@@ -1206,7 +1213,9 @@ class PyQmlProxy(QObject):
             return 
 
         self._resolution_as_obj = json.loads(json_str)
+        self._model.resolution = float(self._resolution_as_obj['res'])
         self.simulationParametersChanged.emit()
+        self.parametersChanged.emit()
 
     def _defaultResolution(self):
         return {
@@ -1244,9 +1253,6 @@ class PyQmlProxy(QObject):
         x_step = float(self._q_range_as_obj['x_step'])
         num_points = int((x_max - x_min) / x_step + 1)
         sim.x = np.linspace(x_min, x_max, num_points)
-
-        self._model.background = self._background_as_obj['bkg']
-        self._model.resolution = self._resolution_as_obj['res']
 
         if self.experimentLoaded:
             exp = self._data.experiments[0]
