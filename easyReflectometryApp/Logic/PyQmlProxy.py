@@ -1504,7 +1504,7 @@ class PyQmlProxy(QObject):
             return
 
         new_name = self.calculatorNames[new_index]
-        self._interface.switch(new_name)
+        self._model.switch_interface(new_name)
         self.currentCalculatorChanged.emit()
 
     def _onCurrentCalculatorChanged(self):
@@ -1512,7 +1512,6 @@ class PyQmlProxy(QObject):
         data = self._data.simulations
         data = data[0]  # THIS IS WHERE WE WOULD LOOK UP CURRENT EXP INDEX
         data.name = f'{self._interface.current_interface_name} engine'
-        self._sample._updateInterface()
         self.calculatedDataChanged.emit()
 
     ####################################################################################################################
