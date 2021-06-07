@@ -896,6 +896,8 @@ class PyQmlProxy(QObject):
         if self._model.structure[self.currentItemsIndex].type == type or type == -1:
             return
         self._model.structure[self.currentItemsIndex].type = type
+        if self._model.structure[self.currentItemsIndex].type == 'Multi-layer':
+            self._model.structure[self.currentItemsIndex].repetitions = 1
         self.sampleChanged.emit()
 
 

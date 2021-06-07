@@ -14,7 +14,7 @@ import Gui.Components 1.0 as ExComponents
 
 EaComponents.SideBarColumn {
 
-    property string currentItemsType: 'Layer'
+    property string currentItemsType: 'Multi-layer'
 
     EaElements.GroupBox {
         title: qsTr("Material editor")
@@ -164,7 +164,7 @@ EaComponents.SideBarColumn {
 
                 EaComponents.TableViewTextInput {
                     horizontalAlignment: Text.AlignLeft
-                    width: EaStyle.Sizes.fontPixelSize * 20.5
+                    width: EaStyle.Sizes.fontPixelSize * 16.5
                     headerText: "Label"
                     text: itemsModel.label
                     onEditingFinished: ExGlobals.Constants.proxy.setCurrentItemsName(text)
@@ -173,9 +173,9 @@ EaComponents.SideBarColumn {
                 EaComponents.TableViewComboBox{
                     id: layersType
                     horizontalAlignment: Text.AlignLeft
-                    width: EaStyle.Sizes.fontPixelSize * 9.8
+                    width: EaStyle.Sizes.fontPixelSize * 13.8
                     headerText: "Type"
-                    model: ["Layer", "Multi-layer"]
+                    model: ["Multi-layer", "Repeating Multi-layer"]
                     onActivated: {
                         ExGlobals.Constants.proxy.currentItemsType = currentValue
                         currentItemsType = ExGlobals.Constants.proxy.currentItemsType
@@ -278,7 +278,7 @@ EaComponents.SideBarColumn {
         collapsible: false
         last: true
         Row {
-            visible: (currentItemsType == 'Multi-layer') ? true : false
+            visible: (currentItemsType == 'Repeating Multi-layer') ? true : false
             spacing: EaStyle.Sizes.fontPixelSize * 0.5
 
             // This integer defines how many repetitions of the layer structure should be
