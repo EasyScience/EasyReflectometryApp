@@ -10,7 +10,7 @@
 
 **easyReflectometry** allows simulation of reflectometry profiles based on layered structures and the refinements of the structural parameters. For refinement, the program uses a number of fitting engines (minimizers).
 
-**easyReflectometry** offers a graphical user interface for the analysis of reflectometry data, build on _external_ reflectometry packages such as [refnx](https://refnx.readthedocs.io/en/latest/). 
+**easyReflectometry** offers a graphical user interface for the analysis of reflectometry data, built on _external_ reflectometry packages such as [refnx](https://refnx.readthedocs.io/en/latest/) and [bornagain](https://www.bornagainproject.org). 
 This allows **easyReflectometry** to cover different functionality aspects within a signle, intuitive, and user-friendly interface.  
 The reflectomety packages are included with the installation so there is no need to download andn compile any additional components. 
 
@@ -33,7 +33,7 @@ Current main features of **easyReflectometry**:
 
 Planned improvements / new functionality for **easyReflectometry**:
 
-- The addition of the [bornagain](https://www.bornagainproject.org) and [refl1d](https://refl1d.readthedocs.io/en/latest/) reflectometry packages for reflectometry calculation
+- The addition of the [refl1d](https://refl1d.readthedocs.io/en/latest/) reflectometry package for reflectometry calculation
 - Ability to corefine multiple contrasts of reflectometry data
 - Expansion of the flexible _item_ type to include chemical consistent models
 - Support for polarised reflectometry measurements
