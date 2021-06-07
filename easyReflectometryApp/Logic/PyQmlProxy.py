@@ -567,10 +567,11 @@ class PyQmlProxy(QObject):
         self._model.structure[0].layers[0].roughness.enabled = True
         self._model.structure[-1].layers[-1].thickness.enabled = True
         try:
-            self._model.add_item(Item.from_pars(Layers.from_pars(Layer.from_pars(self._materials[0], 10., 1.2)), 1, f'Multi-layer {len(self._model.structure)+1}', 'Layer'))
+            self._model.add_item(Item.from_pars(Layers.from_pars(Layer.from_pars(self._materials[0], 10., 1.2)), 1, f'Multi-layer {len(self._model.structure)+1}', 'Multi-layer'))
         except IndexError:
             self.addNewMaterials()
-            self._model.add_item(Item.from_pars(Layers.from_pars(Layer.from_pars(self._materials[0], 10., 1.2)), 1, f'Multi-layer {len(self._model.structure)+1}', 'Layer'))
+            self._model.add_item(Item.from_pars(Layers.from_pars(Layer.from_pars(
+                self._materials[0], 10., 1.2)), 1, f'Multi-layer {len(self._model.structure)+1}', 'Multi-layer'))
         self._model.structure[0].layers[0].thickness.enabled = False
         self._model.structure[0].layers[0].roughness.enabled = False
         self._model.structure[-1].layers[-1].thickness.enabled = False
