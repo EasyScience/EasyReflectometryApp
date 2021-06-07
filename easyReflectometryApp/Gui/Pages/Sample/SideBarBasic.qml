@@ -62,7 +62,7 @@ EaComponents.SideBarColumn {
                     horizontalAlignment: Text.AlignHCenter
                     width: EaStyle.Sizes.fontPixelSize * 8.5
                     headerText: "SLD/10<sup>-6</sup> Å<sup>-2</sup>"
-                    text: model.sld
+                    text: model.sld.toFixed(3)
                     onEditingFinished: ExGlobals.Constants.proxy.setCurrentMaterialsSld(text)
                 }
 
@@ -70,7 +70,7 @@ EaComponents.SideBarColumn {
                     horizontalAlignment: Text.AlignHCenter
                     width: EaStyle.Sizes.fontPixelSize * 8.5
                     headerText: "<i>i</i> SLD/10<sup>-6</sup> Å<sup>-2</sup>"
-                    text: model.isld
+                    text: model.isld.toFixed(3)
                     onEditingFinished: ExGlobals.Constants.proxy.setCurrentMaterialsISld(text)
                 }
 
@@ -348,7 +348,7 @@ EaComponents.SideBarColumn {
                     horizontalAlignment: Text.AlignHCenter
                     width: EaStyle.Sizes.fontPixelSize * 10.0
                     headerText: "Thickness/Å"
-                    text: (isNaN(layersModel.thick)) ? '--' : layersModel.thick
+                    text: (isNaN(layersModel.thick)) ? '--' : layersModel.thick.toFixed(2)
                     onEditingFinished: ExGlobals.Constants.proxy.setCurrentLayersThickness(text)
                 }
 
@@ -356,7 +356,7 @@ EaComponents.SideBarColumn {
                     horizontalAlignment: Text.AlignHCenter
                     width: EaStyle.Sizes.fontPixelSize * 10.0
                     headerText: "Upper Roughness/Å"
-                    text: (isNaN(layersModel.rough)) ? '--' : layersModel.rough
+                    text: (isNaN(layersModel.rough)) ? '--' : layersModel.rough.toFixed(2)
                     onEditingFinished: ExGlobals.Constants.proxy.setCurrentLayersRoughness(text)
                 } 
 
