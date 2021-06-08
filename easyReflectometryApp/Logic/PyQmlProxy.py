@@ -1086,7 +1086,10 @@ class PyQmlProxy(QObject):
         print("+ _loadExperimentData")
         file_path = generalizePath(file_url)
         data = self._data.experiments[0]
-        data.x, data.y, data.ye, data.xe = np.loadtxt(file_path, unpack=True)
+        try:
+            data.x, data.y, data.ye, data.xe = np.loadtxt(file_path, unpack=True)
+        except ValueError:
+            data.x, data.y, data.ye = np.loadtxt(file_path, unpack=True)
         return data
 
     def _experimentDataParameters(self, data):
