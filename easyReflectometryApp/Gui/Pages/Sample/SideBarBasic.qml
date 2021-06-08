@@ -131,6 +131,9 @@ EaComponents.SideBarColumn {
     EaElements.GroupBox {
         id: itemsGroup
         title: qsTr("Model editor")
+        ToolTip.text: qsTr("The radiation is incident first on the top layer")
+        ToolTip.visible: hovered
+        ToolTip.delay: 500
         collapsible: false
         enabled: true
 
