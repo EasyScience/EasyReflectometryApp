@@ -53,6 +53,13 @@ easyReflectometry = 'easyReflectometryApp.main:main'
 
 # CUSTOM CONFIG
 
+[release]
+date_for_qtifw = '2021-06-08' # YYYY-MM-DD, e.g. 2021-05-30
+tag_template = 'v{VERSION}'
+title_template = 'Version {VERSION} ({DATE})'
+description_file = 'RELEASE.md'
+changelog_file = 'CHANGELOG.md'
+
 [ci.project]
 license_file = 'LICENSE.md' # how to combine this with tool.poetry.license???
 
