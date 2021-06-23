@@ -6,7 +6,7 @@ import datetime
 import re
 import timeit
 import json
-from typing import Union
+from typing import ItemsView, Union
 from dicttoxml import dicttoxml
 
 from matplotlib import cm, colors
@@ -28,7 +28,7 @@ from easyReflectometryLib.Sample.material import Material
 from easyReflectometryLib.Sample.materials import Materials
 from easyReflectometryLib.Sample.layer import Layer
 from easyReflectometryLib.Sample.layers import Layers
-from easyReflectometryLib.Sample.item import Item
+from easyReflectometryLib.Sample.item import MultiLayer, RepeatingMultiLayer
 from easyReflectometryLib.Sample.structure import Structure
 from easyReflectometryLib.Experiment.model import Model
 from easyReflectometryLib.interface import InterfaceFactory
@@ -43,6 +43,11 @@ from easyReflectometryApp.Logic.Fitter import Fitter as ThreadedFitter
 COLOURMAP = cm.get_cmap('Blues', 100)
 MIN_SLD = -3
 MAX_SLD = 15
+
+ITEM_LOOKUP = {
+                'Multi-layer': MultiLayer,
+                'Repeating Multi-layer': RepeatingMultiLayer
+              }
 
 class PyQmlProxy(QObject):
     # SIGNALS
@@ -405,9 +410,9 @@ class PyQmlProxy(QObject):
             Layers.from_pars(layers[2], name='Si Layer')
         ]
         items = [
-            Item.from_pars(layerss[0], 1, name='Superphase'),
-            Item.from_pars(layerss[1], 1, name='D2O Layer'),
-            Item.from_pars(layerss[2], 1, name='Subphase')
+            MultiLayer.from_pars(layerss[0], name='Superphase'),
+            MultiLayer.from_pars(layerss[1], name='D2O Layer'),
+            MultiLayer.from_pars(layerss[2], name='Subphase')
         ]
         for i in items:
             self._model.structure.append(i)
@@ -493,7 +498,8 @@ class PyQmlProxy(QObject):
             dictionary = {'name': i.name}
             dictionary['type'] =  i.type
             dictionary['layers'] = [j.as_dict(skip=['interface']) for j in i.layers]
-            dictionary['repetitions'] = i.repetitions.as_dict(skip=['interface'])
+            if 'repetitions' in dictionary.keys():
+                dictionary['repetitions'] = i.repetitions.as_dict(skip=['interface'])
             self._model_as_obj.append(dictionary)
         if len(self._model.structure) > 0: 
             self._model_as_obj[0]['layers'][0]['thickness']['value'] = np.nan
@@ -567,11 +573,11 @@ class PyQmlProxy(QObject):
         self._model.structure[0].layers[0].roughness.enabled = True
         self._model.structure[-1].layers[-1].thickness.enabled = True
         try:
-            self._model.add_item(Item.from_pars(Layers.from_pars(Layer.from_pars(self._materials[0], 10., 1.2)), 1, f'Multi-layer {len(self._model.structure)+1}', 'Multi-layer'))
+            self._model.add_item(MultiLayer.from_pars(Layers.from_pars(Layer.from_pars(self._materials[0], 10., 1.2)), f'Multi-layer {len(self._model.structure)+1}'))
         except IndexError:
             self.addNewMaterials()
-            self._model.add_item(Item.from_pars(Layers.from_pars(Layer.from_pars(
-                self._materials[0], 10., 1.2)), 1, f'Multi-layer {len(self._model.structure)+1}', 'Multi-layer'))
+            self._model.add_item(MultiLayer.from_pars(Layers.from_pars(Layer.from_pars(
+                self._materials[0], 10., 1.2)), f'Multi-layer {len(self._model.structure)+1}'))
         self._model.structure[0].layers[0].thickness.enabled = False
         self._model.structure[0].layers[0].roughness.enabled = False
         self._model.structure[-1].layers[-1].thickness.enabled = False
@@ -589,7 +595,8 @@ class PyQmlProxy(QObject):
         to_dup_layers = []
         for i in to_dup.layers:
             to_dup_layers.append(Layer.from_pars(i.material, i.thickness.raw_value, i.roughness.raw_value, name=i.name, interface=self._interface))
-        self._model.add_item(Item.from_pars(*to_dup_layers, to_dup.repetitions.raw_value, name=to_dup.name, type=to_dup.type))
+        self._model.add_item(MultiLayer.from_pars(
+            *to_dup_layers, to_dup.repetitions.raw_value, name=to_dup.name, type=to_dup.type))
         self._model.structure[0].layers[0].thickness.enabled = False
         self._model.structure[0].layers[0].roughness.enabled = False
         self._model.structure[-1].layers[-1].thickness.enabled = False
@@ -896,9 +903,10 @@ class PyQmlProxy(QObject):
         print('**ccurrentItemsTypeSetter')
         if self._model.structure[self.currentItemsIndex].type == type or type == -1:
             return
-        self._model.structure[self.currentItemsIndex].type = type
-        if self._model.structure[self.currentItemsIndex].type == 'Multi-layer':
-            self._model.structure[self.currentItemsIndex].repetitions = 1
+        if type == 'Multi-layer':
+            self._model.structure[self.currentItemsIndex] = ITEM_LOOKUP[type].from_pars(Layers.from_pars(Layer.from_pars(self._materials[0], 10., 1.2)), f'Multi-layer {len(self._model.structure)+1}')
+        elif type == 'Repeating Multi-layer':
+            self._model.structure[self.currentItemsIndex] = ITEM_LOOKUP[type].from_pars(Layers.from_pars(Layer.from_pars(self._materials[0], 10., 1.2)), 1, f'Repeating Multi-layer {len(self._model.structure)+1}')
         self.sampleChanged.emit()
 
 
@@ -1511,6 +1519,7 @@ class PyQmlProxy(QObject):
 
         new_name = self.calculatorNames[new_index]
         self._model.switch_interface(new_name)
+        self.fitter.initialize(self._model, self._interface.fit_func)
         self.currentCalculatorChanged.emit()
 
     def _onCurrentCalculatorChanged(self):
@@ -1518,6 +1527,7 @@ class PyQmlProxy(QObject):
         data = self._data.simulations
         data = data[0]  # THIS IS WHERE WE WOULD LOOK UP CURRENT EXP INDEX
         data.name = f'{self._interface.current_interface_name} engine'
+        print(data.name)
         self.calculatedDataChanged.emit()
 
     ####################################################################################################################
@@ -1762,8 +1772,11 @@ class PyQmlProxy(QObject):
             experiments_x = self._data.experiments[0].x
             experiments_y = self._data.experiments[0].y
             experiments_ye = self._data.experiments[0].ye
-            experiments_xe = self._data.experiments[0].xe
-            descr['experiments'] = [experiments_x, experiments_y, experiments_ye, experiments_xe]
+            if self._data.experiments[0].xe is not None:
+                experiments_xe = self._data.experiments[0].xe
+                descr['experiments'] = [experiments_x, experiments_y, experiments_ye, experiments_xe]
+            else:
+                descr['experiments'] = [experiments_x, experiments_y, experiments_ye]
 
         descr['experiment_skipped'] = self._experiment_skipped
         descr['project_info'] = self._project_info
@@ -1827,7 +1840,10 @@ class PyQmlProxy(QObject):
             self._data.experiments[0].x = np.array(descr['experiments'][0])
             self._data.experiments[0].y = np.array(descr['experiments'][1])
             self._data.experiments[0].ye = np.array(descr['experiments'][2])
-            self._data.experiments[0].xe = np.array(descr['experiments'][3])
+            if len(descr['experiments'] == 4):
+                self._data.experiments[0].xe = np.array(descr['experiments'][3])
+            else:
+                self._data.experiments[0].xe = None
             self._experiment_data = self._data.experiments[0]
             self.experiments = [{'name': descr['project_info']['experiments']}]
             self.setCurrentExperimentDatasetName(descr['project_info']['experiments'])
