@@ -1511,6 +1511,7 @@ class PyQmlProxy(QObject):
 
         new_name = self.calculatorNames[new_index]
         self._model.switch_interface(new_name)
+        self.fitter.initialize(self._model, self._interface.fit_func)
         self.currentCalculatorChanged.emit()
 
     def _onCurrentCalculatorChanged(self):
