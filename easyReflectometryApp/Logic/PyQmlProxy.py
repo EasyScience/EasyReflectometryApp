@@ -909,21 +909,34 @@ class PyQmlProxy(QObject):
             return
         current_layers = self._model.structure[self.currentItemsIndex].layers
         current_name = self._model.structure[self.currentItemsIndex].name
-        print('BEFORE')
-        print(self._model.structure[self.currentItemsIndex])
-        print(self._model.structure[self.currentItemsIndex].interface)
-        print(self._model.structure[self.currentItemsIndex].interface(
-        ).calculator.storage['item'].keys())
+        target_position = self.currentItemsIndex
+        self._model.remove_item(self.currentItemsIndex)
         if type == 'Multi-layer':
-            self._model.add_item(ITEM_LOOKUP[type].from_pars(current_layers, current_name))
-            self._model.remove_item(self.currentItemsIndex)
+            self._model.add_item(ITEM_LOOKUP[type].from_pars(
+                current_layers, current_name))
         elif type == 'Repeating Multi-layer':
-            self._model.change_item_to_repeating_multi_layer(self.currentItemsIndex)
-        print('AFTER')
-        print(self._model.structure[self.currentItemsIndex])
-        print(self._model.structure[self.currentItemsIndex].interface)
-        print(
-            self._model.structure[self.currentItemsIndex].interface().calculator.storage['item'].keys())
+            self._model.add_item(ITEM_LOOKUP[type].from_pars(
+                current_layers, 1, current_name))
+        if target_position != len(self._model.structure) - 1:
+            new_items_list = []
+            self._model.structure[0].layers[0].thickness.enabled = True
+            self._model.structure[0].layers[0].roughness.enabled = True
+            self._model.structure[-1].layers[-1].thickness.enabled = True
+            for i, item in enumerate(self._model.structure):
+                if i == target_position:
+                    new_items_list.append(self._model.structure[len(self._model.structure) - 1])
+                elif i == len(self._model.structure) - 1:
+                    new_items_list.append(self._model.structure[target_position])
+                else:
+                    new_items_list.append(item)
+            while len(self._model.structure) != 0:
+                self._model.remove_item(0)
+            for i in range(len(new_items_list)):
+                self._model.add_item(new_items_list[i])
+            borg.stack.enabled = True
+            self._model.structure[0].layers[0].thickness.enabled = False
+            self._model.structure[0].layers[0].roughness.enabled = False
+            self._model.structure[-1].layers[-1].thickness.enabled = False
         self.sampleChanged.emit()
 
     def _onCurrentItemsChanged(self):
