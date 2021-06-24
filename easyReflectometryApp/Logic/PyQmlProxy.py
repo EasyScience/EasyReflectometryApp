@@ -596,7 +596,7 @@ class PyQmlProxy(QObject):
         for i in to_dup.layers:
             to_dup_layers.append(Layer.from_pars(i.material, i.thickness.raw_value, i.roughness.raw_value, name=i.name, interface=self._interface))
         self._model.add_item(MultiLayer.from_pars(
-            *to_dup_layers, to_dup.repetitions.raw_value, name=to_dup.name, type=to_dup.type))
+            *to_dup_layers, to_dup.repetitions.raw_value, name=to_dup.name))
         self._model.structure[0].layers[0].thickness.enabled = False
         self._model.structure[0].layers[0].roughness.enabled = False
         self._model.structure[-1].layers[-1].thickness.enabled = False
@@ -883,11 +883,15 @@ class PyQmlProxy(QObject):
     @Property(int, notify=currentSampleChanged)
     def currentItemsRepetitions(self):
         print('**currentItemsRepetitions')
+        if self._model.structure[self.currentItemsIndex].type != 'Repeating Multi-layer':
+            return 1
         return self._model.structure[self.currentItemsIndex].repetitions.raw_value
 
     @currentItemsRepetitions.setter
     def currentItemsRepetitions(self, new_repetitions: int):
         print('**currentItemsRepetitionsSetter')
+        if self._model.structure[self.currentItemsIndex].type != 'Repeating Multi-layer':
+            return
         if self._model.structure[self.currentItemsIndex].repetitions.raw_value == new_repetitions or new_repetitions == -1:
             return
         self._model.structure[self.currentItemsIndex].repetitions = new_repetitions
@@ -903,12 +907,24 @@ class PyQmlProxy(QObject):
         print('**ccurrentItemsTypeSetter')
         if self._model.structure[self.currentItemsIndex].type == type or type == -1:
             return
+        current_layers = self._model.structure[self.currentItemsIndex].layers
+        current_name = self._model.structure[self.currentItemsIndex].name
+        print('BEFORE')
+        print(self._model.structure[self.currentItemsIndex])
+        print(self._model.structure[self.currentItemsIndex].interface)
+        print(self._model.structure[self.currentItemsIndex].interface(
+        ).calculator.storage['item'].keys())
         if type == 'Multi-layer':
-            self._model.structure[self.currentItemsIndex] = ITEM_LOOKUP[type].from_pars(Layers.from_pars(Layer.from_pars(self._materials[0], 10., 1.2)), f'Multi-layer {len(self._model.structure)+1}')
+            self._model.add_item(ITEM_LOOKUP[type].from_pars(current_layers, current_name))
+            self._model.remove_item(self.currentItemsIndex)
         elif type == 'Repeating Multi-layer':
-            self._model.structure[self.currentItemsIndex] = ITEM_LOOKUP[type].from_pars(Layers.from_pars(Layer.from_pars(self._materials[0], 10., 1.2)), 1, f'Repeating Multi-layer {len(self._model.structure)+1}')
+            self._model.change_item_to_repeating_multi_layer(self.currentItemsIndex)
+        print('AFTER')
+        print(self._model.structure[self.currentItemsIndex])
+        print(self._model.structure[self.currentItemsIndex].interface)
+        print(
+            self._model.structure[self.currentItemsIndex].interface().calculator.storage['item'].keys())
         self.sampleChanged.emit()
-
 
     def _onCurrentItemsChanged(self):
         self.sampleChanged.emit()
