@@ -6,7 +6,7 @@ import datetime
 import re
 import timeit
 import json
-from typing import ItemsView, Union
+from typing import Union
 from dicttoxml import dicttoxml
 
 from matplotlib import cm, colors
