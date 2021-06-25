@@ -5,7 +5,7 @@ import os, sys
 import importlib
 import glob
 import PySide2, shiboken2
-import refnx
+import refnx, refl1d
 import easyCore, easyReflectometryLib, easyAppGui, easyAppLogic
 import Functions, Config
 from PyInstaller.__main__ import run as pyInstallerMain
@@ -31,6 +31,7 @@ def addedData():
     data = [{'from': CONFIG.package_name, 'to': CONFIG.package_name},
             {'from': importlib.import_module(lib).__path__[0], 'to': lib},
             {'from': refnx.__path__[0], 'to': 'refnx'},
+            {'from': refl1d.__path__[0], 'to': 'refl1d'},
             {'from': easyCore.__path__[0], 'to': 'easyCore'},
             {'from': easyReflectometryLib.__path__[0], 'to': 'easyReflectometryLib'},
             {'from': easyAppLogic.__path__[0], 'to': 'easyAppLogic'},
