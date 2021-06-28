@@ -1,23 +1,26 @@
 import QtQuick 2.13
 
+import easyAppGui.Style 1.0 as EaStyle
 import easyAppGui.Charts 1.0 as EaCharts
 
 import Gui.Globals 1.0 as ExGlobals
 
-EaCharts.BaseQtCharts {
-    measuredData: ExGlobals.Constants.proxy.plotting1d.qtchartsMeasuredDataObj
-    calculatedData: ExGlobals.Constants.proxy.plotting1d.qtchartsCalculatedDataObj
-    differenceData: ExGlobals.Constants.proxy.plotting1d.qtchartsDifferenceDataObj
+EaCharts.BaseBokeh {
+    calculatedData: ExGlobals.Constants.proxy.plotting1d.bokehCalculatedDataObj
+    sldData: ExGlobals.Constants.proxy.plotting1d.bokehSldDataObj
 
     plotRanges: ExGlobals.Constants.proxy.plotting1d.analysisPlotRangesObj
+    sldPlotRanges: ExGlobals.Constants.proxy.plotting1d.sldPlotRangesObj
 
-    xAxisTitle: "q (Å-1)"
+    xMainAxisTitle: "q (Å⁻¹)"
     yMainAxisTitle: {
         let title = 'R(q)calc'
         if (hasMeasuredData) title = 'R(q)meas, R(q)calc'
         return title
     }
-    yDifferenceAxisTitle: "R(q)meas - R(q)calc"
+    xSldAxisTitle: "z (Å)"
+    ySldAxisTitle: "SLD (10⁻⁶Å⁻²)"
 
     Component.onCompleted: ExGlobals.Variables.analysisChart = this
 }
+

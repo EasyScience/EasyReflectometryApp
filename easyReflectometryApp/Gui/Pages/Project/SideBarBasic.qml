@@ -15,6 +15,7 @@ EaComponents.SideBarColumn {
     EaElements.GroupBox {
         title: qsTr("Get started")
         collapsible: false
+        last: true
 
         Grid {
             columns: 2
@@ -72,13 +73,13 @@ EaComponents.SideBarColumn {
         }
     }
 
-    EaElements.GroupBox {
+    /*EaElements.GroupBox {
         title: qsTr("Examples")
         last: true
         collapsible: false
 
         ExComponents.ProjectExamples {}
-    }
+    }*/
 
 }
 

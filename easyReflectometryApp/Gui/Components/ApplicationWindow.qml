@@ -53,7 +53,6 @@ EaComponents.ApplicationWindow {
 
         EaElements.ToolButton {
             enabled: ExGlobals.Constants.proxy.projectCreated ||
-                     ExGlobals.Constants.proxy.samplesPresent ||
                      ExGlobals.Constants.proxy.experimentSkipped ||
                      ExGlobals.Constants.proxy.experimentLoaded
             fontIcon: "backspace"
@@ -81,6 +80,7 @@ EaComponents.ApplicationWindow {
         },
 
         EaElements.ToolButton {
+            enabled: false
             fontIcon: "bug"
             ToolTip.text: qsTr("Report a bug or issue")
             onClicked: Qt.openUrlExternally(`${ExGlobals.Constants.appUrl}/issues`)
@@ -122,7 +122,7 @@ EaComponents.ApplicationWindow {
         // Experiment tab
         EaElements.AppBarTabButton {
             id: experimentTabButton
-            enabled: ExGlobals.Constants.proxy.samplesPresent
+            enabled: ExGlobals.Variables.samplePageEnabled
             fontIcon: "microscope"
             text: qsTr("Experiment")
             ToolTip.text: qsTr("Experimental settings and data page")
@@ -132,7 +132,7 @@ EaComponents.ApplicationWindow {
         // Analysis tab
         EaElements.AppBarTabButton {
             id: analysisTabButton
-            enabled: ExGlobals.Constants.proxy.samplesPresent &&
+            enabled: ExGlobals.Variables.samplePageEnabled &&
                      (ExGlobals.Constants.proxy.experimentSkipped ||
                       ExGlobals.Constants.proxy.experimentLoaded)
             fontIcon: "calculator"
@@ -144,7 +144,7 @@ EaComponents.ApplicationWindow {
         // Summary tab
         EaElements.AppBarTabButton {
             id: summaryTabButton
-            enabled: ExGlobals.Constants.proxy.samplesPresent &&
+            enabled: ExGlobals.Variables.samplePageEnabled &&
                      (ExGlobals.Constants.proxy.experimentSkipped ||
                       ExGlobals.Constants.proxy.experimentLoaded)
             fontIcon: "clipboard-list"
@@ -200,25 +200,13 @@ EaComponents.ApplicationWindow {
 
         // Sample page
         EaComponents.ContentPage {
-            defaultInfo: ExGlobals.Constants.proxy.samplesPresent ? "" : qsTr("No Items Added/Loaded")
-
             mainContent: EaComponents.MainContent {
                 tabs: [
-                    EaElements.TabButton { text: qsTr("Structure view") },
-                    EaElements.TabButton {
-                        /*
-                        text: typeof ExGlobals.Constants.proxy.phasesAsObj[ExGlobals.Constants.proxy.currentPhaseIndex] !== 'undefined' && ExGlobals.Constants.proxy.phasesAsObj.length > 0
-                              ? ExGlobals.Constants.proxy.phasesAsObj[ExGlobals.Constants.proxy.currentPhaseIndex].name + '.cif'
-                              : 'Unknown'
-                              */
-                        text: qsTr("Text View") + " (CIF)"
-                        Component.onCompleted: ExGlobals.Variables.phaseCifTab = this
-                    }
+                    EaElements.TabButton { text: qsTr("Model view") }
                 ]
 
                 items: [
-                    ExSamplePage.MainContentStructureView {},
-                    ExSamplePage.MainContentTextView {}
+                    ExSamplePage.MainContentModelView {}
                 ]
 
                 Component.onCompleted: ExGlobals.Variables.samplePageMainContent = this
@@ -245,7 +233,7 @@ EaComponents.ApplicationWindow {
                 tabs: [
                     EaElements.TabButton { text: qsTr("Plot view") },
                     EaElements.TabButton { enabled: false; text: qsTr("Table view"); Component.onCompleted: ExGlobals.Variables.experimentTableTab = this },
-                    EaElements.TabButton { enabled: false; text: qsTr("Text View") + " (CIF)"; Component.onCompleted: ExGlobals.Variables.experimentCifTab = this }
+                    EaElements.TabButton { enabled: false; text: qsTr("Text View"); Component.onCompleted: ExGlobals.Variables.experimentCifTab = this }
                 ]
 
                 items: [

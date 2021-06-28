@@ -21,18 +21,18 @@ class Plotting1dProxy(QObject):
     # Ranges
     experimentPlotRangesObjChanged = Signal()
     analysisPlotRangesObjChanged = Signal()
+    sldPlotRangesObjChanged = Signal()
 
     # Data containers
     bokehMeasuredDataObjChanged = Signal()
     bokehCalculatedDataObjChanged = Signal()
     bokehDifferenceDataObjChanged = Signal()
-    bokehBraggDataObjChanged = Signal()
     bokehBackgroundDataObjChanged = Signal()
+    bokehSldDataObjChanged = Signal()
 
     qtchartsMeasuredDataObjChanged = Signal()
     qtchartsCalculatedDataObjChanged = Signal()
     qtchartsDifferenceDataObjChanged = Signal()
-    qtchartsBraggDataObjChanged = Signal()
     qtchartsBackgroundDataObjChanged = Signal()
 
     def __init__(self, parent=None):
@@ -54,6 +54,11 @@ class Plotting1dProxy(QObject):
         self._calculated_min_y = 999999
         self._calculated_max_y = -999999
 
+        self._sld_min_x = 999999
+        self._sld_max_x = -999999
+        self._sld_min_y = 999999
+        self._sld_max_y = -999999
+
         self._difference_min_y = 0
         self._difference_max_y = 1
         self._difference_median_y = 0.5
@@ -70,15 +75,12 @@ class Plotting1dProxy(QObject):
         self._calculated_xarray = np.empty(0)
         self._calculated_yarray = np.empty(0)
 
+        self._sld_xarray = np.empty(0)
+        self._sld_yarray = np.empty(0)
+
         self._difference_yarray = np.empty(0)
         self._difference_yarray_upper = np.empty(0)
         self._difference_yarray_lower = np.empty(0)
-
-        self._bragg_xarray = np.empty(0)
-        self._bragg_yarray = np.empty(0)
-        self._bragg_harray = np.empty(0)
-        self._bragg_karray = np.empty(0)
-        self._bragg_larray = np.empty(0)
 
         self._background_xarray = np.empty(0)
         self._background_yarray = np.empty(0)
@@ -86,18 +88,18 @@ class Plotting1dProxy(QObject):
         # Ranges for GUI
         self._experiment_plot_ranges_obj = {}
         self._analysis_plot_ranges_obj = {}
+        self._sld_plot_ranges_obj = {}
 
         # Data containers for GUI
         self._bokeh_measured_data_obj = {}
         self._bokeh_calculated_data_obj = {}
         self._bokeh_difference_data_obj = {}
-        self._bokeh_bragg_data_obj = {}
         self._bokeh_background_data_obj = {}
+        self._bokeh_sld_data_obj = {}
 
         self._qtcharts_measured_data_obj = {}
         self._qtcharts_calculated_data_obj = {}
         self._qtcharts_difference_data_obj = {}
-        self._qtcharts_bragg_data_obj = {}
         self._qtcharts_background_data_obj = {}
 
     def clearFrontendState(self):
@@ -105,35 +107,35 @@ class Plotting1dProxy(QObject):
         # Ranges for GUI
         self._experiment_plot_ranges_obj = {}
         self._analysis_plot_ranges_obj = {}
+        self._sld_plot_ranges_obj = {}
 
         # Data containers for GUI
         self._bokeh_measured_data_obj = {}
         self._bokeh_calculated_data_obj = {}
         self._bokeh_difference_data_obj = {}
-        self._bokeh_bragg_data_obj = {}
         self._bokeh_background_data_obj = {}
+        self._bokeh_sld_data_obj = {}
 
         self._qtcharts_measured_data_obj = {}
         self._qtcharts_calculated_data_obj = {}
         self._qtcharts_difference_data_obj = {}
-        self._qtcharts_bragg_data_obj = {}
         self._qtcharts_background_data_obj = {}
 
         # Ranges
         self.experimentPlotRangesObjChanged.emit()
         self.analysisPlotRangesObjChanged.emit()
+        self.sldPlotRangesObjChanged.emit()
 
         # Data containers
         self.bokehMeasuredDataObjChanged.emit()
         self.bokehCalculatedDataObjChanged.emit()
         self.bokehDifferenceDataObjChanged.emit()
-        self.bokehBraggDataObjChanged.emit()
         self.bokehBackgroundDataObjChanged.emit()
+        self.bokehSldDataObjChanged.emit()
 
         self.qtchartsMeasuredDataObjChanged.emit()
         self.qtchartsCalculatedDataObjChanged.emit()
         self.qtchartsDifferenceDataObjChanged.emit()
-        self.qtchartsBraggDataObjChanged.emit()
         self.qtchartsBackgroundDataObjChanged.emit()
 
     # Public: QML frontend
@@ -163,6 +165,10 @@ class Plotting1dProxy(QObject):
     def analysisPlotRangesObj(self):
         return self._analysis_plot_ranges_obj
 
+    @Property('QVariant', notify=sldPlotRangesObjChanged)
+    def sldPlotRangesObj(self):
+        return self._sld_plot_ranges_obj
+
     # Data containers for GUI
     @Property('QVariant', notify=bokehMeasuredDataObjChanged)
     def bokehMeasuredDataObj(self):
@@ -176,13 +182,13 @@ class Plotting1dProxy(QObject):
     def bokehDifferenceDataObj(self):
         return self._bokeh_difference_data_obj
 
-    @Property('QVariant', notify=bokehBraggDataObjChanged)
-    def bokehBraggDataObj(self):
-        return self._bokeh_bragg_data_obj
-
     @Property('QVariant', notify=bokehBackgroundDataObjChanged)
     def bokehBackgroundDataObj(self):
         return self._bokeh_background_data_obj
+
+    @Property('QVariant', notify=bokehSldDataObjChanged)
+    def bokehSldDataObj(self):
+        return self._bokeh_sld_data_obj
 
     @Property('QVariant', notify=qtchartsMeasuredDataObjChanged)
     def qtchartsMeasuredDataObj(self):
@@ -195,10 +201,6 @@ class Plotting1dProxy(QObject):
     @Property('QVariant', notify=qtchartsDifferenceDataObjChanged)
     def qtchartsDifferenceDataObj(self):
         return self._qtcharts_difference_data_obj
-
-    @Property('QVariant', notify=qtchartsBraggDataObjChanged)
-    def qtchartsBraggDataObj(self):
-        return self._qtcharts_bragg_data_obj
 
     @Property('QVariant', notify=qtchartsBackgroundDataObjChanged)
     def qtchartsBackgroundDataObj(self):
@@ -248,6 +250,7 @@ class Plotting1dProxy(QObject):
         self._setCalculatedDataArrays(xarray, yarray)
         self._setCalculatedDataRanges()
         self._setAnalysisPlotRanges()
+        self._setSldPlotRanges()
         self._setBokehCalculatedDataObj()
         if self.currentLib == 'qtcharts':
             self._setQtChartsCalculatedDataObj()
@@ -258,12 +261,6 @@ class Plotting1dProxy(QObject):
             if self.currentLib == 'qtcharts':
                 self._setQtChartsDifferenceDataObj()
 
-    def setBraggData(self, xarray, harray, karray, larray):
-        self._setBraggDataArrays(xarray, harray, karray, larray)
-        self._setBokehBraggDataObj()
-        if self.currentLib == 'qtcharts':
-            self._setQtChartsBraggDataObj()
-
     def setBackgroundData(self, xarray, yarray):
         self._setBackgroundDataArrays(xarray, yarray)
         if self._background_xarray.size:
@@ -272,10 +269,17 @@ class Plotting1dProxy(QObject):
                 print("AAAAAAAAA")
                 self._setQtChartsBackgroundDataObj()
 
+    def setSldData(self, xarray, yarray):
+        self._setSldDataArrays(xarray, yarray)
+        self._setSldDataRanges()
+        self._setBokehSldDataObj()
+        if self.currentLib == 'qtcharts':
+            pass
+            #self._setQtChartsCalculatedDataObj()
+
     def onCurrentLibChanged(self):
         if self.currentLib == 'qtcharts':
             self._setQtChartsCalculatedDataObj()
-            self._setQtChartsBraggDataObj()
             self._setQtChartsBackgroundDataObj()
             if self._measured_xarray.size:
                 self._setQtChartsMeasuredDataObj()
@@ -297,17 +301,14 @@ class Plotting1dProxy(QObject):
         self._calculated_xarray = xarray
         self._calculated_yarray = yarray
 
+    def _setSldDataArrays(self, xarray, yarray):
+        self._sld_xarray = xarray
+        self._sld_yarray = yarray
+
     def _setDifferenceDataArrays(self):
         self._difference_yarray = np.subtract(self._measured_yarray, self._calculated_yarray)
         self._difference_yarray_upper = np.add(self._difference_yarray, self._measured_syarray)
         self._difference_yarray_lower = np.subtract(self._difference_yarray, self._measured_syarray)
-
-    def _setBraggDataArrays(self, xarray, harray, karray, larray):
-        self._bragg_xarray = xarray
-        self._bragg_yarray = np.zeros(self._bragg_xarray.size)
-        self._bragg_harray = harray
-        self._bragg_karray = karray
-        self._bragg_larray = larray
 
     def _setBackgroundDataArrays(self, xarray, yarray):
         self._background_xarray = xarray
@@ -330,6 +331,13 @@ class Plotting1dProxy(QObject):
         }
         self.bokehCalculatedDataObjChanged.emit()
 
+    def _setBokehSldDataObj(self):
+        self._bokeh_sld_data_obj = {
+            'x': Plotting1dProxy.aroundX(self._sld_xarray),
+            'y': Plotting1dProxy.aroundY(self._sld_yarray)
+        }
+        self.bokehSldDataObjChanged.emit()
+
     def _setBokehDifferenceDataObj(self):
         self._bokeh_difference_data_obj = {
             'x': Plotting1dProxy.aroundY(self._measured_xarray),
@@ -338,16 +346,6 @@ class Plotting1dProxy(QObject):
             'y_lower': Plotting1dProxy.aroundY(self._difference_yarray_lower)
         }
         self.bokehDifferenceDataObjChanged.emit()
-
-    def _setBokehBraggDataObj(self):
-        self._bokeh_bragg_data_obj = {
-            'x': Plotting1dProxy.aroundX(self._bragg_xarray),
-            'y': Plotting1dProxy.aroundY(self._bragg_yarray),
-            'h': Plotting1dProxy.aroundHkl(self._bragg_harray),
-            'k': Plotting1dProxy.aroundHkl(self._bragg_karray),
-            'l': Plotting1dProxy.aroundHkl(self._bragg_larray)
-        }
-        self.bokehBraggDataObjChanged.emit()
 
     def _setBokehBackgroundDataObj(self):
         self._bokeh_background_data_obj = {
@@ -378,15 +376,6 @@ class Plotting1dProxy(QObject):
         }
         self.qtchartsDifferenceDataObjChanged.emit()
 
-    def _setQtChartsBraggDataObj(self):
-        self._qtcharts_bragg_data_obj = {
-            'xy': Plotting1dProxy.arraysToPoints(self._bragg_xarray, self._bragg_yarray),
-            'h': Plotting1dProxy.aroundHkl(self._bragg_harray),
-            'k': Plotting1dProxy.aroundHkl(self._bragg_karray),
-            'l': Plotting1dProxy.aroundHkl(self._bragg_larray)
-        }
-        self.qtchartsBraggDataObjChanged.emit()
-
     def _setQtChartsBackgroundDataObj(self):
         self._qtcharts_background_data_obj = {
             'xy': Plotting1dProxy.arraysToPoints(self._background_xarray, self._background_yarray)
@@ -407,16 +396,22 @@ class Plotting1dProxy(QObject):
         self._calculated_min_y = Plotting1dProxy.arrayMin(self._calculated_yarray)
         self._calculated_max_y = Plotting1dProxy.arrayMax(self._calculated_yarray)
 
+    def _setSldDataRanges(self):
+        self._sld_min_x = Plotting1dProxy.arrayMin(self._sld_xarray)
+        self._sld_max_x = Plotting1dProxy.arrayMax(self._sld_xarray)
+        self._sld_min_y = Plotting1dProxy.arrayMin(self._sld_yarray)
+        self._sld_max_y = Plotting1dProxy.arrayMax(self._sld_yarray)
+
     def _setDifferenceDataRanges(self):
         self._difference_min_y = Plotting1dProxy.arrayMin(self._difference_yarray_lower)
         self._difference_max_y = Plotting1dProxy.arrayMax(self._difference_yarray_upper)
         self._difference_median_y = Plotting1dProxy.arrayMedian(self._difference_yarray)
 
     def _yAxisMin(self, min_y, max_y):
-        return min_y - self._y_axis_range_extension * max_y
+        return min_y #- self._y_axis_range_extension * max_y
 
     def _yAxisMax(self, max_y):
-        return max_y + self._y_axis_range_extension * max_y
+        return max_y #+ self._y_axis_range_extension * max_y
 
     def _setExperimentPlotRanges(self):
         self._experiment_plot_ranges_obj = {
@@ -445,10 +440,19 @@ class Plotting1dProxy(QObject):
         }
         self.analysisPlotRangesObjChanged.emit()
 
+    def _setSldPlotRanges(self):
+        self._sld_plot_ranges_obj = {
+            'min_x': Plotting1dProxy.aroundX(self._sld_min_x),
+            'max_x': Plotting1dProxy.aroundX(self._sld_max_x),
+            'min_y': Plotting1dProxy.aroundY(self._sld_min_y),
+            'max_y': Plotting1dProxy.aroundY(self._sld_max_y)
+        }
+        self.sldPlotRangesObjChanged.emit()
+
     # Static methods
 
     @staticmethod
-    def around(a, decimals=2):
+    def around(a, decimals=10):
         rounded = np.around(a, decimals=decimals)
         if isinstance(rounded, (int, float)):
             return rounded.item()
@@ -457,11 +461,11 @@ class Plotting1dProxy(QObject):
 
     @staticmethod
     def aroundX(a):
-        return Plotting1dProxy.around(a, decimals=2)
+        return Plotting1dProxy.around(a, decimals=10)
 
     @staticmethod
     def aroundY(a):
-        return Plotting1dProxy.around(a, decimals=2)
+        return Plotting1dProxy.around(a, decimals=10)
 
     @staticmethod
     def aroundHkl(a):

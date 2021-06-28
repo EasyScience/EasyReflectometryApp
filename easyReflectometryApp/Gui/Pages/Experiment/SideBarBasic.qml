@@ -100,52 +100,6 @@ EaComponents.SideBarColumn {
                     }
                 }
             }
-
-            Row {
-                spacing: EaStyle.Sizes.fontPixelSize
-
-                Column {
-                    spacing: EaStyle.Sizes.fontPixelSize * -0.5
-
-                    EaElements.Label {
-                        enabled: false
-                        text: qsTr("Radiation")
-                    }
-
-                    EaElements.ComboBox {
-                        width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2 ) / 3
-                        model: ["Neutron"]
-                    }
-                }
-
-                Column {
-                    spacing: EaStyle.Sizes.fontPixelSize * -0.5
-
-                    EaElements.Label {
-                        enabled: false
-                        text: qsTr("Mode")
-                    }
-
-                    EaElements.ComboBox {
-                        width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2 ) / 3
-                        model: ["Constant wavelength"]
-                    }
-                }
-
-                Column {
-                    spacing: EaStyle.Sizes.fontPixelSize * -0.5
-
-                    EaElements.Label {
-                        enabled: false
-                        text: qsTr("Method")
-                    }
-
-                    EaElements.ComboBox {
-                        width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2 ) / 3
-                        model: ["Powder"]
-                    }
-                }
-            }
         }
     }
 
@@ -159,113 +113,65 @@ EaComponents.SideBarColumn {
         ExComponents.ExperimentSimulationSetup {}
     }
 
-    EaElements.GroupBox {
+    /*EaElements.GroupBox {
         title: qsTr("Instrument setup")
         enabled: ExGlobals.Constants.proxy.experimentLoaded ||
                  ExGlobals.Constants.proxy.experimentSkipped
 
         ExComponents.ExperimentInstrumentSetup {}
-    }
+    }*/
 
     EaElements.GroupBox {
-        title: qsTr("Peak profile")
+        title: qsTr("Resolution")
         enabled: ExGlobals.Constants.proxy.experimentLoaded ||
                  ExGlobals.Constants.proxy.experimentSkipped
 
+        /*
         Column {
             Column {
                 spacing: EaStyle.Sizes.fontPixelSize * -0.5
 
                 EaElements.Label {
                     enabled: false
-                    text: qsTr("Profile function")
+                    text: qsTr("Resolution type")
                 }
 
                 EaElements.ComboBox {
                     width: EaStyle.Sizes.sideBarContentWidth
-                    model: ["Pseudo-Voigt"]
-                }
-            }
-
-            Row {
-                spacing: EaStyle.Sizes.tableColumnSpacing * 2
-
-                Column {
-                    EaElements.Label {
-                        enabled: false
-                        text: qsTr("Gaussian instrumental broadening")
-                    }
-
-                    ExComponents.ExperimentPeakProfileG {}
-                }
-
-                Column {
-                    EaElements.Label {
-                        enabled: false
-                        text: qsTr("Lorentzian sample broadening")
-                    }
-
-                    ExComponents.ExperimentPeakProfileL {}
+                    model: ["Constant dq/q"]
                 }
             }
         }
+        */
+
+        ExComponents.ExperimentResolutionSetup {}
     }
 
     EaElements.GroupBox {
         title: qsTr("Background")
+        last: true
         enabled: ExGlobals.Constants.proxy.experimentLoaded ||
                  ExGlobals.Constants.proxy.experimentSkipped
 
+        /*
         Column {
             Column {
                 spacing: EaStyle.Sizes.fontPixelSize * -0.5
 
                 EaElements.Label {
                     enabled: false
-                    text: qsTr("Type")
+                    text: qsTr("Background Type")
                 }
 
                 EaElements.ComboBox {
                     width: EaStyle.Sizes.sideBarContentWidth
-                    model: ["Point background"]
+                    model: ["Uniform"]
                 }
             }
-
-            Column {
-                EaElements.Label {
-                    enabled: false
-                    text: qsTr("Points")
-                }
-
-                ExComponents.ExperimentBackground {}
-            }
         }
+        */
 
-        Row {
-            spacing: EaStyle.Sizes.fontPixelSize
-
-            EaElements.SideBarButton {
-                fontIcon: "plus-circle"
-                text: qsTr("Append new point")
-                onClicked: ExGlobals.Constants.proxy.backgroundProxy.addPoint()
-            }
-
-            EaElements.SideBarButton {
-                fontIcon: "undo-alt"
-                text: qsTr("Reset to default points")
-                onClicked: ExGlobals.Constants.proxy.backgroundProxy.setDefaultPoints()
-            }
-        }
-    }
-
-    EaElements.GroupBox {
-        title: qsTr("Associated phases")
-        last: true
-        enabled: ExGlobals.Constants.proxy.experimentLoaded
-
-        ExComponents.ExperimentAssociatedPhases {}
-
-        Component.onCompleted: ExGlobals.Variables.associatedPhasesGroup = this
+        ExComponents.ExperimentBackgroundSetup {}
     }
 
     // Load experimental data file dialog
@@ -273,9 +179,9 @@ EaComponents.SideBarColumn {
     Dialogs1.FileDialog{
         id: loadExperimentDataFileDialog
 
-        nameFilters: [ qsTr("Data files") + " (*.xye *.xys *.xy)" ]
+        nameFilters: [ qsTr("Data files") + " (*.dat *.txt *.ort)" ]
 
-        onAccepted: ExGlobals.Constants.proxy.addExperimentDataFromXye(fileUrl)
+        onAccepted: ExGlobals.Constants.proxy.addExperimentDataFromOrt(fileUrl)
     }
 
 }

@@ -36,9 +36,10 @@ EaElements.RemoteController {
         interval: 1000
         onTriggered: {
             startScreenRecording()
-            runDataFittingTutorial()
+            runAppInterfaceTutorial()
+            //runDataFittingTutorial()
             //runDataSimulationTutorial()
-            //stopScreenRecording()
+            stopScreenRecording()
         }
     }
 
@@ -115,6 +116,19 @@ EaElements.RemoteController {
     // Tutorials
 
     function runAppInterfaceTutorial() {
+        print("* run app interface tutorial")
+
+        beforeRunTutorial()
+
+        // General
+        rc.mouseClick(ExGlobals.Variables.preferencesButton)
+        rc.mouseClick(ExGlobals.Variables.enableUserGuidesCheckBox)
+        rc.mouseClick(ExGlobals.Variables.preferencesOkButton)
+
+        afterRunTutorial()
+    }
+
+    function runAppInterfaceTutorial_original() {
         print("* run app interface tutorial")
 
         beforeRunTutorial()

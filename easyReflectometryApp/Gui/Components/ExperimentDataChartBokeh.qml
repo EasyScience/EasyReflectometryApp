@@ -8,7 +8,8 @@ EaCharts.BaseBokeh {
     measuredData: ExGlobals.Constants.proxy.plotting1d.bokehMeasuredDataObj
 
     plotRanges: ExGlobals.Constants.proxy.plotting1d.experimentPlotRangesObj
+    sldPlotRanges: ExGlobals.Constants.proxy.plotting1d.sldPlotRangesObj
 
-    xAxisTitle: "2θ (deg)"
-    yMainAxisTitle: "Imeas"
+    xMainAxisTitle: "q (Å⁻¹)"
+    yMainAxisTitle: "R(q)"
 }

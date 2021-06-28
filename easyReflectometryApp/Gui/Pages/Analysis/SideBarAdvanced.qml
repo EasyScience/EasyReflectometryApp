@@ -120,6 +120,7 @@ EaComponents.SideBarColumn {
         //collapsed: false
 
         EaElements.CheckBox {
+            enabled: false
             topPadding: 0
             text: qsTr("Iconified names")
             checked: ExGlobals.Variables.iconifiedNames

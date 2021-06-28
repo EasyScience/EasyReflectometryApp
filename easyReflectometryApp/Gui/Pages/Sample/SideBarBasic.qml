@@ -14,13 +14,81 @@ import Gui.Components 1.0 as ExComponents
 
 EaComponents.SideBarColumn {
 
+    property string currentItemsType: 'Multi-layer'
+
     EaElements.GroupBox {
         title: qsTr("Material editor")
         collapsible: true
         collapsed: false
         enabled: ExGlobals.Constants.proxy.isFitFinished
 
-        ExComponents.SampleMaterialExplorer {}
+        EaComponents.TableView {
+            id: materialsTable
+
+            defaultInfoText: qsTr("No Materials Added/Loaded")
+
+            // Table model
+
+            model: XmlListModel {
+                property int materialsIndex: ExGlobals.Constants.proxy.currentMaterialsIndex + 1
+
+                xml: ExGlobals.Constants.proxy.materialsAsXml
+                query: "/root/item"
+
+                XmlRole { name: "color"; query: "color/string()" }
+                XmlRole { name: "label"; query: "name/string()" }
+                XmlRole { name: "sld"; query: "sld/value/number()" }
+                XmlRole { name: "isld"; query: "isld/value/number()" }
+            }
+
+            // Table rows
+
+            delegate: EaComponents.TableViewDelegate {
+
+                EaComponents.TableViewLabel {
+                    headerText: "Color"
+                    backgroundColor: model.color
+                }
+
+                EaComponents.TableViewTextInput {
+                    horizontalAlignment: Text.AlignLeft
+                    width: EaStyle.Sizes.fontPixelSize * 12.5
+                    headerText: "Name"
+                    text: model.label
+                    onEditingFinished: ExGlobals.Constants.proxy.setCurrentMaterialsName(text)
+                }
+
+                EaComponents.TableViewTextInput {
+                    horizontalAlignment: Text.AlignHCenter
+                    width: EaStyle.Sizes.fontPixelSize * 8.5
+                    headerText: "SLD/10<sup>-6</sup> Å<sup>-2</sup>"
+                    text: model.sld.toFixed(3)
+                    onEditingFinished: ExGlobals.Constants.proxy.setCurrentMaterialsSld(text)
+                }
+
+                EaComponents.TableViewTextInput {
+                    horizontalAlignment: Text.AlignHCenter
+                    width: EaStyle.Sizes.fontPixelSize * 8.5
+                    headerText: "<i>i</i> SLD/10<sup>-6</sup> Å<sup>-2</sup>"
+                    text: model.isld.toFixed(3)
+                    onEditingFinished: ExGlobals.Constants.proxy.setCurrentMaterialsISld(text)
+                }
+
+                EaComponents.TableViewButton {
+                    id: deleteRowColumn
+                    headerText: "Del." //"\uf2ed"
+                    fontIcon: "minus-circle"
+                    ToolTip.text: qsTr("Remove this material")
+                    onClicked: ExGlobals.Constants.proxy.removeMaterials(materialsTable.currentIndex)
+                }
+
+            }
+
+            onCurrentIndexChanged: {
+                ExGlobals.Constants.proxy.currentMaterialsIndex = materialsTable.currentIndex
+            }
+
+        }
 
         Row {
             spacing: EaStyle.Sizes.fontPixelSize
@@ -38,7 +106,7 @@ EaComponents.SideBarColumn {
                 // This button should only be enabled when some material in the material editor table
                 // has been selected. If a material is selected and this button is clicked, the material
                 //should be deleted.
-                enabled: true //When material is selected
+                enabled: (materialsTable.model.count > 0) ? true : false //When material is selected
                 fontIcon: "clone"
                 text: qsTr("Duplicate selected material")
                 onClicked: ExGlobals.Constants.proxy.duplicateSelectedMaterials()
@@ -61,7 +129,11 @@ EaComponents.SideBarColumn {
     }
 
     EaElements.GroupBox {
+        id: itemsGroup
         title: qsTr("Model editor")
+        ToolTip.text: qsTr("The radiation is incident first on the top layer")
+        ToolTip.visible: hovered
+        ToolTip.delay: 500
         collapsible: false
         enabled: true
 
@@ -75,7 +147,7 @@ EaComponents.SideBarColumn {
             model: XmlListModel {
                 property int itemsIndex: ExGlobals.Constants.proxy.currentItemsIndex + 1
 
-                xml: ExGlobals.Constants.proxy.itemsAsXml
+                xml: ExGlobals.Constants.proxy.modelAsXml
                 query: "/root/item"
 
                 XmlRole { name: "label"; query: "name/string()" }
@@ -95,21 +167,25 @@ EaComponents.SideBarColumn {
 
                 EaComponents.TableViewTextInput {
                     horizontalAlignment: Text.AlignLeft
-                    width: EaStyle.Sizes.fontPixelSize * 20.5
+                    width: EaStyle.Sizes.fontPixelSize * 16.5
                     headerText: "Label"
                     text: itemsModel.label
                     onEditingFinished: ExGlobals.Constants.proxy.setCurrentItemsName(text)
                 }
 
                 EaComponents.TableViewComboBox{
+                    id: layersType
                     horizontalAlignment: Text.AlignLeft
-                    width: EaStyle.Sizes.fontPixelSize * 9.8
+                    width: EaStyle.Sizes.fontPixelSize * 13.8
                     headerText: "Type"
-                    model: ["Multi-layer"]
+                    model: ["Multi-layer", "Repeating Multi-layer"]
+                    onActivated: {
+                        ExGlobals.Constants.proxy.currentItemsType = currentValue
+                        currentItemsType = ExGlobals.Constants.proxy.currentItemsType
+                    }
                     Component.onCompleted: {
                         currentIndex = indexOfValue(itemsModel.type)
                     }
-                    //onActivated: ExGlobals.Constants.proxy.setCurrentLayersMaterial(currentIndex)
                 }
 
                 EaComponents.TableViewButton {
@@ -124,8 +200,11 @@ EaComponents.SideBarColumn {
 
             onCurrentIndexChanged: {
                 ExGlobals.Constants.proxy.currentItemsIndex = itemsTable.currentIndex
+                currentItemsType = ExGlobals.Constants.proxy.currentItemsType
                 repsSpinBox.value = ExGlobals.Constants.proxy.currentItemsRepetitions
             }
+
+            onModelChanged: currentIndex = 0
 
         }
 
@@ -143,7 +222,7 @@ EaComponents.SideBarColumn {
             EaElements.SideBarButton {
                 // When an item is selected, this button will be enabled to allow
                 // the selected item to be duplicated
-                enabled: true//When item is selected
+                enabled: (itemsTable.model.count > 0) ? true : false//When item is selected
                 fontIcon: "clone"
                 text: qsTr("Duplicate selected item")
                 onClicked: ExGlobals.Constants.proxy.duplicateSelectedItems()
@@ -158,7 +237,7 @@ EaComponents.SideBarColumn {
                 // When an item is selected and it is not at the top, 
                 // this button will be enabled to allow
                 // the selected item to be moved up
-                enabled: true//When item is selected
+                enabled: (itemsTable.model.count > 0 && itemsTable.currentIndex != 0) ? true : false//When item is selected
                 fontIcon: "arrow-up"
                 text: qsTr("Move item up")
                 onClicked: ExGlobals.Constants.proxy.moveSelectedItemsUp()
@@ -168,10 +247,12 @@ EaComponents.SideBarColumn {
                 // When an item is selected and it is not at the bottom, 
                 // this button will be enabled to allow
                 // the selected item to be moved down
-                enabled: true//When item is selected
+                enabled: (itemsTable.model.count > 0 && itemsTable.currentIndex + 1 != itemsTable.model.count) ? true : false//When item is selected
                 fontIcon: "arrow-down"
                 text: qsTr("Move item down")
-                onClicked: ExGlobals.Constants.proxy.moveSelectedItemsDown()
+                onClicked: {
+                    ExGlobals.Constants.proxy.moveSelectedItemsDown()
+                }
             }
 
         }
@@ -195,11 +276,12 @@ EaComponents.SideBarColumn {
         // When an item in the above table is selected, this box will become enabled.
         // Allowing different parameters and layers to be defined for the item.
         id: layersGroup
-        title: qsTr("Multi-layer editor")
-        enabled: true //When a layer is selected
+        title: qsTr(currentItemsType + " editor")
+        enabled: (itemsTable.model.count > 0) ? true : false //When a layer is selected
         collapsible: false
+        last: true
         Row {
-
+            visible: (currentItemsType == 'Repeating Multi-layer') ? true : false
             spacing: EaStyle.Sizes.fontPixelSize * 0.5
 
             // This integer defines how many repetitions of the layer structure should be
@@ -221,7 +303,6 @@ EaComponents.SideBarColumn {
                 }
             }
         }
-
         EaComponents.TableView {
             id: layersTable
             defaultInfoText: qsTr("No Layers Added")
@@ -231,7 +312,7 @@ EaComponents.SideBarColumn {
             model: XmlListModel {
                 property int layersIndex: ExGlobals.Constants.proxy.currentLayersIndex + 1
 
-                xml: ExGlobals.Constants.proxy.itemsAsXml
+                xml: ExGlobals.Constants.proxy.modelAsXml
                 query: `/root/item[${itemsTable.currentIndex + 1}]/layers/item`
 
                 XmlRole { name: "thick"; query: "thickness/value/number()" }
@@ -258,6 +339,9 @@ EaComponents.SideBarColumn {
                         ExGlobals.Constants.proxy.setCurrentLayersMaterial(currentIndex)
                     }
                     model: ExGlobals.Constants.proxy.materialsName
+                    onModelChanged: {
+                        currentIndex = indexOfValue(layersModel.materialid)
+                    }
                     Component.onCompleted: {
                         currentIndex = indexOfValue(layersModel.materialid)
                     }
@@ -267,7 +351,7 @@ EaComponents.SideBarColumn {
                     horizontalAlignment: Text.AlignHCenter
                     width: EaStyle.Sizes.fontPixelSize * 10.0
                     headerText: "Thickness/Å"
-                    text: layersModel.thick
+                    text: (isNaN(layersModel.thick)) ? '--' : layersModel.thick.toFixed(2)
                     onEditingFinished: ExGlobals.Constants.proxy.setCurrentLayersThickness(text)
                 }
 
@@ -275,7 +359,7 @@ EaComponents.SideBarColumn {
                     horizontalAlignment: Text.AlignHCenter
                     width: EaStyle.Sizes.fontPixelSize * 10.0
                     headerText: "Upper Roughness/Å"
-                    text: layersModel.rough
+                    text: (isNaN(layersModel.rough)) ? '--' : layersModel.rough.toFixed(2)
                     onEditingFinished: ExGlobals.Constants.proxy.setCurrentLayersRoughness(text)
                 } 
 
@@ -299,17 +383,16 @@ EaComponents.SideBarColumn {
             spacing: EaStyle.Sizes.fontPixelSize
 
             EaElements.SideBarButton {
-                // When clicked this button will add a new layer to the layer editor table
                 enabled: true
                 fontIcon: "plus-circle"
                 text: qsTr("Add a material layer")
-                onClicked: ExGlobals.Constants.proxy.addNewLayers()
+                onClicked: {
+                    ExGlobals.Constants.proxy.addNewLayers()
+                }
             }
 
             EaElements.SideBarButton {
-                // When a layer is selected, this button will be enabled to allow
-                // the selected item to be duplicated
-                enabled: true//when item is selected
+                enabled: (layersTable.model.count > 0) ? true : false //when item is selected
                 fontIcon: "clone"
                 text: qsTr("Duplicate selected item")
                 onClicked: ExGlobals.Constants.proxy.duplicateSelectedLayers()
@@ -320,20 +403,14 @@ EaComponents.SideBarColumn {
             spacing: EaStyle.Sizes.fontPixelSize
 
             EaElements.SideBarButton {
-                // When an layer is selected and it is not at the top, 
-                // this button will be enabled to allow
-                // the selected layer to be moved up
-                enabled: true//When item is selected
+                enabled: (layersTable.model.count > 0 && layersTable.currentIndex != 0) ? true : false//When item is selected
                 fontIcon: "arrow-up"
                 text: qsTr("Move layer up")
                 onClicked: ExGlobals.Constants.proxy.moveSelectedLayersUp()
             }
 
             EaElements.SideBarButton {
-                // When an layer is selected and it is not at the bottom, 
-                // this button will be enabled to allow
-                // the selected layer to be moved down
-                enabled: true//When item is selected
+                enabled: (layersTable.model.count > 0 && layersTable.currentIndex + 1 != layersTable.model.count) ? true : false
                 fontIcon: "arrow-down"
                 text: qsTr("Move layer down")
                 onClicked: ExGlobals.Constants.proxy.moveSelectedLayersDown()
@@ -358,9 +435,9 @@ EaComponents.SideBarColumn {
 
     // Open phase CIF file dialog
 
-    Dialogs1.FileDialog{
-        id: loadPhaseFileDialog
-        nameFilters: [ "CIF files (*.cif)"]
-        onAccepted: ExGlobals.Constants.proxy.addSampleFromCif(fileUrl)
-    }
+    // Dialogs1.FileDialog{
+    //     id: loadPhaseFileDialog
+    //     nameFilters: [ "CIF files (*.cif)"]
+    //     onAccepted: ExGlobals.Constants.proxy.addSampleFromCif(fileUrl)
+    // }
 }

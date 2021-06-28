@@ -70,7 +70,8 @@ class DataSet1D(MSONable):
     def __init__(self, name: str = 'Series',
                  x: Union[np.ndarray, list] = None,
                  y: Union[np.ndarray, list] = None,
-                 e: Union[np.ndarray, list] = None,
+                 ye: Union[np.ndarray, list] = None,
+                 xe: Union[np.ndarray, list] = None,
                  data_type: str = 'simulation',
                  x_label: str = 'x',
                  y_label: str = 'y'):
@@ -84,8 +85,10 @@ class DataSet1D(MSONable):
             x = np.array([])
         if y is None:
             y = np.array([])
-        if e is None:
-            e = np.zeros_like(x)
+        if ye is None:
+            ye = np.zeros_like(x)
+        if xe is None: 
+            xe = np.zeros_like(x)
 
         self.name = name
         if not isinstance(x, np.ndarray):
@@ -95,7 +98,8 @@ class DataSet1D(MSONable):
 
         self.x = x
         self.y = y
-        self.e = e
+        self.ye = ye
+        self.xe = xe
 
         self.x_label = x_label
         self.y_label = y_label

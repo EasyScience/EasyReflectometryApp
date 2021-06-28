@@ -19,14 +19,16 @@ CloseDialog 1.0 CloseDialog.qml
 
 ProjectExamples 1.0 ProjectExamples.qml
 
-SampleMaterialExplorer 1.0 SampleMaterialExplorer.qml
 SampleSymmetry 1.0 SampleSymmetry.qml
 SampleCell 1.0 SampleCell.qml
 SampleAtoms 1.0 SampleAtoms.qml
 SampleAdps 1.0 SampleAdps.qml
+SampleSimulationSetup 1.0 SampleSimulationSetup.qml
 
 ExperimentDataExplorer 1.0 ExperimentDataExplorer.qml
 ExperimentAssociatedPhases 1.0 ExperimentAssociatedPhases.qml
+ExperimentResolutionSetup 1.0 ExperimentResolutionSetup.qml
+ExperimentBackgroundSetup 1.0 ExperimentBackgroundSetup.qml
 ExperimentSimulationSetup 1.0 ExperimentSimulationSetup.qml
 ExperimentInstrumentSetup 1.0 ExperimentInstrumentSetup.qml
 ExperimentPeakProfileG 1.0 ExperimentPeakProfileG.qml

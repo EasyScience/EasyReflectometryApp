@@ -34,7 +34,7 @@ EaComponents.SideBarColumn {
                 EaElements.TextField {
                     id: filterCriteriaField
 
-                    width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 3
+                    width: EaStyle.Sizes.sideBarContentWidth //(EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 3
 
                     placeholderText: qsTr("Filter parameters")
 
@@ -47,6 +47,8 @@ EaComponents.SideBarColumn {
             }
 
             Column {
+                visible: false
+
                 EaElements.Label {
                     visible: false
                     enabled: false
@@ -68,7 +70,7 @@ EaComponents.SideBarColumn {
 
                     model: [
                         { value: "", text: qsTr("All types") },
-                        { value: "phases.", text: formatFilterText("gem", "", "Phases") },
+                        { value: "structure.", text: formatFilterText("gem", "", "Sample") },
                         { value: "instrument.", text: formatFilterText("microscope", "", "Instrument") },
                         { value: ".lattice.", text: formatFilterText("gem", "cube", "Cell") },
                         { value: ".atoms.", text: formatFilterText("gem", "atom", "Atoms") },
@@ -85,6 +87,8 @@ EaComponents.SideBarColumn {
             }
 
             Column {
+                visible: false
+
                 EaElements.Label {
                     visible: false
                     enabled: false
