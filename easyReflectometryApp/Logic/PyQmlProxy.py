@@ -1594,7 +1594,7 @@ class PyQmlProxy(QObject):
 
         x = exp_data.x
         y = exp_data.y
-        weights = 1 / exp_data.e
+        weights = 1 / exp_data.ye
         method = self._current_minimizer_method_name
 
         args = (x, y)
