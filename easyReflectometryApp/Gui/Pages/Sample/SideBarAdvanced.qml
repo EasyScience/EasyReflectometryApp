@@ -10,11 +10,10 @@ import Gui.Components 1.0 as ExComponents
 
 EaComponents.SideBarColumn {
 
-
     EaElements.GroupBox {
         title: qsTr("Analysis conditions")
-        enabled: true
-        collapsible: false
+        //enabled: true
+        //collapsible: false
 
         Row {
             spacing: EaStyle.Sizes.fontPixelSize
@@ -32,10 +31,30 @@ EaComponents.SideBarColumn {
 
     EaElements.GroupBox {
         title: qsTr("Model simulation range")
-        enabled: true
-        collapsible: false
+        //enabled: true
+        //collapsible: false
 
         ExComponents.SampleSimulationSetup {}
+    }
+
+    EaElements.GroupBox {
+        title: qsTr("Chart")
+        //enabled: true
+        //collapsible: false
+        last: true
+
+        Row {
+            spacing: EaStyle.Sizes.fontPixelSize
+
+            EaElements.CheckBox {
+                checked: ExGlobals.Constants.proxy.plotting1d.sldXDataReversed
+                text: qsTr("Reverse SLD z axis")
+                //ToolTip.text: qsTr("Checking this box will activate polarisation/magnetisation")
+                onCheckedChanged: ExGlobals.Constants.proxy.plotting1d.reverseSldXData()
+            }
+
+        }
+
     }
 
 }
