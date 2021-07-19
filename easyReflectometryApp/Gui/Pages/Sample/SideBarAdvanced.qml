@@ -38,23 +38,18 @@ EaComponents.SideBarColumn {
     }
 
     EaElements.GroupBox {
-        title: qsTr("Chart")
+        title: qsTr("Plot")
         //enabled: true
         //collapsible: false
         last: true
 
-        Row {
-            spacing: EaStyle.Sizes.fontPixelSize
-
-            EaElements.CheckBox {
-                checked: ExGlobals.Constants.proxy.plotting1d.sldXDataReversed
-                text: qsTr("Reverse SLD z axis")
-                //ToolTip.text: qsTr("Checking this box will activate polarisation/magnetisation")
-                onCheckedChanged: ExGlobals.Constants.proxy.plotting1d.reverseSldXData()
-            }
-
+        EaElements.CheckBox {
+            topPadding: 0
+            checked: ExGlobals.Constants.proxy.plotting1d.sldXDataReversed
+            text: qsTr("Reverse SLD z-axis")
+            ToolTip.text: qsTr("Checking this box will reverce the z-axis of the SLD plot")
+            onToggled: ExGlobals.Constants.proxy.plotting1d.reverseSldXData()
         }
-
     }
 
 }

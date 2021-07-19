@@ -248,11 +248,8 @@ class Plotting1dProxy(QObject):
 
     @Slot()
     def reverseSldXData(self):
-        xarray = np.flipud(self._sld_xarray)
-        yarray = self._sld_yarray
-        self._setSldDataArrays(xarray, yarray)
-        self._setSldDataRanges()
-        self._setBokehSldDataObj()
+        self._sld_min_x, self._sld_max_x = self._sld_max_x, self._sld_min_x
+        self._setSldPlotRanges()
         self._sld_x_data_reversed = not self._sld_x_data_reversed
         self.sldXDataReversedChanged.emit()
 
@@ -419,6 +416,8 @@ class Plotting1dProxy(QObject):
     def _setSldDataRanges(self):
         self._sld_min_x = Plotting1dProxy.arrayMin(self._sld_xarray)
         self._sld_max_x = Plotting1dProxy.arrayMax(self._sld_xarray)
+        if self.sldXDataReversed:
+            self._sld_min_x, self._sld_max_x = self._sld_max_x, self._sld_min_x
         self._sld_min_y = Plotting1dProxy.arrayMin(self._sld_yarray)
         self._sld_max_y = Plotting1dProxy.arrayMax(self._sld_yarray)
 
