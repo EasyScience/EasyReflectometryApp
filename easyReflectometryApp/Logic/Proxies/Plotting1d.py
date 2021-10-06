@@ -35,6 +35,9 @@ class Plotting1dProxy(QObject):
     qtchartsDifferenceDataObjChanged = Signal()
     qtchartsBackgroundDataObjChanged = Signal()
 
+    # Misc
+    sldXDataReversedChanged = Signal()
+
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -101,6 +104,9 @@ class Plotting1dProxy(QObject):
         self._qtcharts_calculated_data_obj = {}
         self._qtcharts_difference_data_obj = {}
         self._qtcharts_background_data_obj = {}
+
+        # Misc
+        self._sld_x_data_reversed = False
 
     def clearFrontendState(self):
 
@@ -235,6 +241,18 @@ class Plotting1dProxy(QObject):
         brush.setTextureImage(textureImage)
         return brush
 
+    # Misc
+    @Property(bool, notify=sldXDataReversedChanged)
+    def sldXDataReversed(self):
+        return self._sld_x_data_reversed
+
+    @Slot()
+    def reverseSldXData(self):
+        self._sld_min_x, self._sld_max_x = self._sld_max_x, self._sld_min_x
+        self._setSldPlotRanges()
+        self._sld_x_data_reversed = not self._sld_x_data_reversed
+        self.sldXDataReversedChanged.emit()
+
     # Public: Python backend
 
     def setMeasuredData(self, xarray, yarray, syarray=None):
@@ -266,7 +284,6 @@ class Plotting1dProxy(QObject):
         if self._background_xarray.size:
             self._setBokehBackgroundDataObj()
             if self.currentLib == 'qtcharts':
-                print("AAAAAAAAA")
                 self._setQtChartsBackgroundDataObj()
 
     def setSldData(self, xarray, yarray):
@@ -399,6 +416,8 @@ class Plotting1dProxy(QObject):
     def _setSldDataRanges(self):
         self._sld_min_x = Plotting1dProxy.arrayMin(self._sld_xarray)
         self._sld_max_x = Plotting1dProxy.arrayMax(self._sld_xarray)
+        if self.sldXDataReversed:
+            self._sld_min_x, self._sld_max_x = self._sld_max_x, self._sld_min_x
         self._sld_min_y = Plotting1dProxy.arrayMin(self._sld_yarray)
         self._sld_max_y = Plotting1dProxy.arrayMax(self._sld_yarray)
 
