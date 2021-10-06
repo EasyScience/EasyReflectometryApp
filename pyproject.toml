@@ -22,7 +22,7 @@ python = '^3.9, <3.10'
 pyobjc-core = { version = '^7.1', platform = 'darwin' }
 pyobjc-framework-cocoa = { version = '^7.1', platform = 'darwin' }
 matplotlib = "^3.4.2"
-pint = "^0.16"
+pint = "^0.17"
 # easyScience
 easyReflectometryLib = { git = 'https://github.com/easyScience/easyReflectometryLib.git', rev = 'develop' }
 easyAppLogic = { git = 'https://github.com/easyScience/easyAppLogic.git', rev = 'easyreflectometry' }
