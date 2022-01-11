@@ -10,7 +10,7 @@
 
 **easyReflectometry** allows simulation of reflectometry profiles based on layered structures and the refinements of the structural parameters. For refinement, the program uses a number of fitting engines (minimizers).
 
-**easyReflectometry** offers a graphical user interface for the analysis of reflectometry data, built on _external_ reflectometry packages such as [refnx](https://refnx.readthedocs.io/en/latest/) and [bornagain](https://www.bornagainproject.org). 
+**easyReflectometry** offers a graphical user interface for the analysis of reflectometry data, built on _external_ reflectometry packages such as [refnx](https://refnx.readthedocs.io/en/latest/) and [refl1d](https://refl1d.readthedocs.io/en/latest/). 
 This allows **easyReflectometry** to cover different functionality aspects within a signle, intuitive, and user-friendly interface.  
 The reflectomety packages are included with the installation so there is no need to download andn compile any additional components. 
 
@@ -25,7 +25,7 @@ Current main features of **easyReflectometry**:
 
 - Support for the analysis of a single contrast of reflectometry data
 - Creation of materials to be used in structure from scattering length density
-- The ability to define repeating multi-layers of materials and refine these structures using [refnx](https://refnx.readthedocs.io/en/latest/). 
+- The ability to define repeating multi-layers of materials and refine these structures using [refnx](https://refnx.readthedocs.io/en/latest/) or [refl1d](https://refl1d.readthedocs.io/en/latest/). 
 - Multiple minimization engines: [lmfit](https://lmfit.github.io/lmfit-py), [bumps](https://github.com/bumps/bumps) and [DFO-LS](https://github.com/numericalalgorithmsgroup/dfols) (including the differential evolution method).
 - Interactive HTML and standard PDF report generation.
 - Undo/redo for both parameter changes and fitting 
@@ -33,7 +33,6 @@ Current main features of **easyReflectometry**:
 
 Planned improvements / new functionality for **easyReflectometry**:
 
-- The addition of the [refl1d](https://refl1d.readthedocs.io/en/latest/) reflectometry package for reflectometry calculation
 - Ability to corefine multiple contrasts of reflectometry data
 - Expansion of the flexible _item_ type to include chemical consistent models
 - Support for polarised reflectometry measurements
@@ -43,11 +42,7 @@ Planned improvements / new functionality for **easyReflectometry**:
 
 ### Downloading
 
-Download the official **easyReflectometry installer v0.0.1-develop** for your operating system:
-
-- [Windows 10 and above, 32-bit](https://github.com/easyScience/easyReflectometryApp/releases/download/develop/easyReflectometry_Windows_x86-32_v0.0.1_develop.zip)
-- [macOS 10.15 and above, 64-bit](https://github.com/easyScience/easyReflectometryApp/releases/download/develop/easyReflectometry_macOS_x86-64_v0.0.1_develop.zip)
-- [Ubuntu 20.04 and above, 64-bit](https://github.com/easyScience/easyReflectometryApp/releases/download/develop/easyReflectometry_Linux_x86-64_v0.0.1_develop.zip)
+[Download][31] the official **easyReflectometry installer v0.0.2-beta.2** for your operating system.
 
 ### Installing
 

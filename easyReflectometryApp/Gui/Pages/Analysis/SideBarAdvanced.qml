@@ -114,17 +114,33 @@ EaComponents.SideBarColumn {
     }
     */
 
+    /*
     EaElements.GroupBox {
         title: qsTr("Parameters")
         last: true
         //collapsed: false
 
         EaElements.CheckBox {
-            enabled: false
             topPadding: 0
             text: qsTr("Iconified names")
             checked: ExGlobals.Variables.iconifiedNames
             onCheckedChanged: ExGlobals.Variables.iconifiedNames = checked
+        }
+    }
+    */
+
+    EaElements.GroupBox {
+        title: qsTr("Plot")
+        //enabled: true
+        //collapsible: false
+        last: true
+
+        EaElements.CheckBox {
+            topPadding: 0
+            checked: ExGlobals.Constants.proxy.plotting1d.sldXDataReversed
+            text: qsTr("Reverse SLD z-axis")
+            ToolTip.text: qsTr("Checking this box will reverce the z-axis of the SLD plot")
+            onToggled: ExGlobals.Constants.proxy.plotting1d.reverseSldXData()
         }
     }
 
