@@ -6,7 +6,7 @@ build-backend = 'poetry.masonry.api'
 
 [tool.poetry]
 name = 'EasyReflectometry'
-version = '0.0.2-beta.1'
+version = '0.0.2-beta.2'
 description = 'Making reflectometry data analysis and modelling easy.'
 license = 'GPL-3.0-only'
 authors = ['Andrew McCluskey', 'Andrew Sazonov', 'Simon Ward']

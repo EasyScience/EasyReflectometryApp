@@ -200,6 +200,7 @@ class PyQmlProxy(QObject):
         self.qRangeChanged.connect(self._onSimulationParametersChanged)
         self.resolutionChanged.connect(self._onSimulationParametersChanged)
         self.sampleChanged.connect(self._onSimulationParametersChanged)
+        self.sampleChanged.connect(self._onParametersChanged)
         self.simulationParametersChanged.connect(self.undoRedoChanged)
         self.backgroundChanged.connect(self.undoRedoChanged)
         self.qRangeChanged.connect(self.undoRedoChanged)
