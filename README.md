@@ -42,15 +42,11 @@ Planned improvements / new functionality for **EasyReflectometry**:
 
 ### Downloading
 
-<<<<<<< HEAD
 Download the official **EasyReflectometry installer v0.0.1-develop** for your operating system:
 
 - [Windows 10 and above, 32-bit](https://github.com/easyScience/EasyReflectometryApp/releases/download/develop/EasyReflectometry_Windows_x86-32_v0.0.1_develop.zip)
 - [macOS 10.15 and above, 64-bit](https://github.com/easyScience/EasyReflectometryApp/releases/download/develop/EasyReflectometry_macOS_x86-64_v0.0.1_develop.zip)
 - [Ubuntu 20.04 and above, 64-bit](https://github.com/easyScience/EasyReflectometryApp/releases/download/develop/EasyReflectometry_Linux_x86-64_v0.0.1_develop.zip)
-=======
-[Download][31] the official **easyReflectometry installer v0.0.2-beta.2** for your operating system.
->>>>>>> develop
 
 ### Installing
 
