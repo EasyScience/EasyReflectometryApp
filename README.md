@@ -2,26 +2,26 @@
 
 <img height="80"><img src="./resources/images/er_logo.svg" height="65">
 
-**easyReflectometry** is a scientific software for modelling and analysis of reflectometry data. Currently, **easyReflectometry** covers single contrast measurements of layered structures.
+**EasyReflectometry** is a scientific software for modelling and analysis of reflectometry data. Currently, **EasyReflectometry** covers single contrast measurements of layered structures.
 
-![easyReflectometry Screenshot](./resources/images/er_analysis_dark.png) 
+![EasyReflectometry Screenshot](./resources/images/er_analysis_dark.png) 
 
-## What is easyReflectometry for?
+## What is EasyReflectometry for?
 
-**easyReflectometry** allows simulation of reflectometry profiles based on layered structures and the refinements of the structural parameters. For refinement, the program uses a number of fitting engines (minimizers).
+**EasyReflectometry** allows simulation of reflectometry profiles based on layered structures and the refinements of the structural parameters. For refinement, the program uses a number of fitting engines (minimizers).
 
-**easyReflectometry** offers a graphical user interface for the analysis of reflectometry data, built on _external_ reflectometry packages such as [refnx](https://refnx.readthedocs.io/en/latest/) and [bornagain](https://www.bornagainproject.org). 
-This allows **easyReflectometry** to cover different functionality aspects within a signle, intuitive, and user-friendly interface.  
+**EasyReflectometry** offers a graphical user interface for the analysis of reflectometry data, built on _external_ reflectometry packages such as [refnx](https://refnx.readthedocs.io/en/latest/) and [bornagain](https://www.bornagainproject.org). 
+This allows **EasyReflectometry** to cover different functionality aspects within a signle, intuitive, and user-friendly interface.  
 The reflectomety packages are included with the installation so there is no need to download andn compile any additional components. 
 
 ## Main features
 
-**easyReflectometry** is open source (currently [GPL v3](LICENSE.md)) and cross-platform, with support for Windows, macOS and Linux (Ubuntu).
+**EasyReflectometry** is open source (currently [GPL v3](LICENSE.md)) and cross-platform, with support for Windows, macOS and Linux (Ubuntu).
 
 The intuitive tabbed interface allows for a clear and defined data modelling and analysis workflow. 
 There are also built-in step-by-step user guides and video tutorials for new users.
 
-Current main features of **easyReflectometry**:
+Current main features of **EasyReflectometry**:
 
 - Support for the analysis of a single contrast of reflectometry data
 - Creation of materials to be used in structure from scattering length density
@@ -31,7 +31,7 @@ Current main features of **easyReflectometry**:
 - Undo/redo for both parameter changes and fitting 
 - Saving and loading of projects
 
-Planned improvements / new functionality for **easyReflectometry**:
+Planned improvements / new functionality for **EasyReflectometry**:
 
 - The addition of the [refl1d](https://refl1d.readthedocs.io/en/latest/) reflectometry package for reflectometry calculation
 - Ability to corefine multiple contrasts of reflectometry data
@@ -43,65 +43,65 @@ Planned improvements / new functionality for **easyReflectometry**:
 
 ### Downloading
 
-Download the official **easyReflectometry installer v0.0.1-develop** for your operating system:
+Download the official **EasyReflectometry installer v0.0.1-develop** for your operating system:
 
-- [Windows 10 and above, 32-bit](https://github.com/easyScience/easyReflectometryApp/releases/download/develop/easyReflectometry_Windows_x86-32_v0.0.1_develop.zip)
-- [macOS 10.15 and above, 64-bit](https://github.com/easyScience/easyReflectometryApp/releases/download/develop/easyReflectometry_macOS_x86-64_v0.0.1_develop.zip)
-- [Ubuntu 20.04 and above, 64-bit](https://github.com/easyScience/easyReflectometryApp/releases/download/develop/easyReflectometry_Linux_x86-64_v0.0.1_develop.zip)
+- [Windows 10 and above, 32-bit](https://github.com/easyScience/EasyReflectometryApp/releases/download/develop/EasyReflectometry_Windows_x86-32_v0.0.1_develop.zip)
+- [macOS 10.15 and above, 64-bit](https://github.com/easyScience/EasyReflectometryApp/releases/download/develop/EasyReflectometry_macOS_x86-64_v0.0.1_develop.zip)
+- [Ubuntu 20.04 and above, 64-bit](https://github.com/easyScience/EasyReflectometryApp/releases/download/develop/EasyReflectometry_Linux_x86-64_v0.0.1_develop.zip)
 
 ### Installing
 
-Run **easyReflectometry installer** and follow the instructions.
+Run **EasyReflectometry installer** and follow the instructions.
 
-macOS: If you see the message _easyReflectometrySetup.app can't be opened because it is from an unidentified developer_, do the following:
-In the **Finder**, locate the **easyReflectometry installer app**, then _control-click_ the app icon, then choose _Open_ from the shortcut menu and finally click _Open_.
+macOS: If you see the message _EasyReflectometrySetup.app can't be opened because it is from an unidentified developer_, do the following:
+In the **Finder**, locate the **EasyReflectometry installer app**, then _control-click_ the app icon, then choose _Open_ from the shortcut menu and finally click _Open_.
 
 ### Uninstalling
 
-Run **MaintenanceTool** from the **easyReflectometry** installation directory, select _Remove all components_ and follow the instructions.
+Run **MaintenanceTool** from the **EasyReflectometry** installation directory, select _Remove all components_ and follow the instructions.
 
 ## Get in touch
 
-<!---For general questions or comments, please contact us at [support@easyReflectometry.org](mailto:support@easyReflectometry.org).--->
+<!---For general questions or comments, please contact us at [support@EasyReflectometry.org](mailto:support@EasyReflectometry.org).--->
 
-For bug reports and feature requests, please use [Issue Tracker](https://github.com/easyScience/easyReflectometryApp/issues) instead.
+For bug reports and feature requests, please use [Issue Tracker](https://github.com/easyScience/EasyReflectometryApp/issues) instead.
 
 <!---URLs--->
 <!---https://naereen.github.io/badges/--->
 
 <!---CI Build Status--->
 
-[20]: https://img.shields.io/github/workflow/status/easyScience/easyReflectometryApp/build%20macOS,%20Linux,%20Windows/ci
-[21]: https://github.com/easyScience/easyReflectometryApp/actions?query=workflow%3A%22build+macOS%2C+Linux%2C+Windows%22
+[20]: https://img.shields.io/github/workflow/status/easyScience/EasyReflectometryApp/build%20macOS,%20Linux,%20Windows/ci
+[21]: https://github.com/easyScience/EasyReflectometryApp/actions?query=workflow%3A%22build+macOS%2C+Linux%2C+Windows%22
 
 <!---Release--->
 
-[30]: https://img.shields.io/github/release/easyScience/easyReflectometryApp.svg?include_prereleases
-[31]: https://github.com/easyScience/easyReflectometryApp/releases
+[30]: https://img.shields.io/github/release/easyScience/EasyReflectometryApp.svg?include_prereleases
+[31]: https://github.com/easyScience/EasyReflectometryApp/releases
 
 <!---License--->
 
-[50]: https://img.shields.io/github/license/easyScience/easyReflectometryApp.svg
-[51]: https://github.com/easyScience/easyReflectometryApp/blob/master/LICENSE.md
+[50]: https://img.shields.io/github/license/easyScience/EasyReflectometryApp.svg
+[51]: https://github.com/easyScience/EasyReflectometryApp/blob/master/LICENSE.md
 
 <!---LicenseScan--->
 
-[60]: https://app.fossa.com/api/projects/git%2Bgithub.com%2FeasyScience%2FeasyReflectometryApp.svg?type=shield
-[61]: https://app.fossa.com/projects/git%2Bgithub.com%2FeasyScience%2FeasyReflectometryApp?ref=badge_shield
+[60]: https://app.fossa.com/api/projects/git%2Bgithub.com%2FeasyScience%2FEasyReflectometryApp.svg?type=shield
+[61]: https://app.fossa.com/projects/git%2Bgithub.com%2FeasyScience%2FEasyReflectometryApp?ref=badge_shield
 
 <!---Downloads--->
 
-[70]: https://img.shields.io/github/downloads/easyScience/easyReflectometryApp/total.svg
-[71]: https://github.com/easyScience/easyReflectometryApp/releases
+[70]: https://img.shields.io/github/downloads/easyScience/EasyReflectometryApp/total.svg
+[71]: https://github.com/easyScience/EasyReflectometryApp/releases
 
 <!---Code statistics--->
 
-[80]: https://github.com/easyScience/easyReflectometryApp
-[81]: https://tokei.rs/b1/github/easyScience/easyReflectometryApp
-[82]: https://tokei.rs/b1/github/easyScience/easyReflectometryApp?category=code
-[83]: https://tokei.rs/b1/github/easyScience/easyReflectometryApp?category=files
+[80]: https://github.com/easyScience/EasyReflectometryApp
+[81]: https://tokei.rs/b1/github/easyScience/EasyReflectometryApp
+[82]: https://tokei.rs/b1/github/easyScience/EasyReflectometryApp?category=code
+[83]: https://tokei.rs/b1/github/easyScience/EasyReflectometryApp?category=files
 
 <!---W3C validation--->
 
-[90]: https://img.shields.io/w3c-validation/default?targetUrl=https://easyscience.github.io/easyReflectometryApp
-[91]: https://easyscience.github.io/easyReflectometryApp
+[90]: https://img.shields.io/w3c-validation/default?targetUrl=https://easyscience.github.io/EasyReflectometryApp
+[91]: https://easyscience.github.io/EasyReflectometryApp
