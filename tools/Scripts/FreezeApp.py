@@ -145,7 +145,7 @@ def excludeFiles():
         Functions.printSuccessMessage(message)
 
 if __name__ == "__main__":
-    copyMissingLibs()
-    copyMissingPlugins()
+    # copyMissingLibs()
+    # copyMissingPlugins()
     runPyInstaller()
     excludeFiles()
