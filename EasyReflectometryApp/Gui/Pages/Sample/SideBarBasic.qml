@@ -415,8 +415,18 @@ EaComponents.SideBarColumn {
                 text: qsTr("Move layer down")
                 onClicked: ExGlobals.Constants.proxy.moveSelectedLayersDown()
             }
-
         }
+
+        /*Row {
+            spacing: EaStyle.Sizes.fontPixelSize
+
+            EaElements.CheckBox {
+                checked: false
+                text: qsTr("Constrain item across contrasts")
+                ToolTip.text: qsTr("Checking this box will con")
+                onCheckedChanged: ExGlobals.Constants.proxy.usePolarisation = checked
+            }
+        }*/
 
         /*Row {
             spacing: EaStyle.Sizes.fontPixelSize
