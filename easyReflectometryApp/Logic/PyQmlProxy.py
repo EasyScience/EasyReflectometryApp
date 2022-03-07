@@ -19,19 +19,18 @@ from easyCore import np, borg
 from easyCore.Objects.Groups import BaseCollection
 from easyCore.Objects.Base import BaseObj
 
-from easyCore.Symmetry.tools import SpacegroupInfo
 from easyCore.Fitting.Fitting import Fitter
 from easyCore.Utils.classTools import generatePath
 from easyCore.Utils.UndoRedo import property_stack_deco, FunctionStack
 
-from easyReflectometryLib.Sample.material import Material
-from easyReflectometryLib.Sample.materials import Materials
-from easyReflectometryLib.Sample.layer import Layer
-from easyReflectometryLib.Sample.layers import Layers
-from easyReflectometryLib.Sample.item import MultiLayer, RepeatingMultiLayer
-from easyReflectometryLib.Sample.structure import Structure
-from easyReflectometryLib.Experiment.model import Model
-from easyReflectometryLib.interface import InterfaceFactory
+from EasyReflectometry.sample.material import Material
+from EasyReflectometry.sample.materials import Materials
+from EasyReflectometry.sample.layer import Layer
+from EasyReflectometry.sample.layers import Layers
+from EasyReflectometry.sample.item import MultiLayer, RepeatingMultiLayer
+from EasyReflectometry.sample.structure import Structure
+from EasyReflectometry.experiment.model import Model
+from EasyReflectometry.interface import InterfaceFactory
 
 from easyAppLogic.Utils.Utils import generalizePath
 
