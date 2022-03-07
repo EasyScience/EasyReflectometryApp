@@ -43,6 +43,7 @@ class Config():
 
         # Project
         self.package_name = f'{self.app_name}'
+        print(self.package_name)
         self.license_file = self.__dict__['ci']['project']['license_file']
 
         # Certificates
