@@ -88,16 +88,16 @@ Component.prototype.createOperations = function()
     /*
     component.addOperation(
       "Copy",
-      "@TargetDir@/easyReflectometry.desktop",
-      "@HomeDir@/Desktop/easyReflectometry.desktop"
+      "@TargetDir@/EasyReflectometryApp.desktop",
+      "@HomeDir@/Desktop/EasyReflectometryApp.desktop"
     )
     */
 
     /*
     component.addOperation(
       "Copy",
-      "@TargetDir@/easyReflectometry.desktop",
-      "/usr/share/applications/easyReflectometry.desktop"
+      "@TargetDir@/EasyReflectometryApp.desktop",
+      "/usr/share/applications/EasyReflectometryApp.desktop"
     )
     */
   }
