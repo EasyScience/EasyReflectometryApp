@@ -100,9 +100,13 @@ def runPyInstaller():
     try:
         message = 'freeze app'
         main_py_path = os.path.join(CONFIG.package_name, 'main.py')
+        print(main_py_path)
+        print(CONFIG.app_name[:-3])
+        print(CONFIG.dist_dir)
+        print(CONFIG.build_dir)
         pyInstallerMain([
             main_py_path,                           # Application main file
-            f'--name={CONFIG.app_name}',            # Name to assign to the bundled app and spec file (default: first script’s basename)
+            f'--name={CONFIG.app_name[:-3]}',       # Name to assign to the bundled app and spec file (default: first script’s basename)
             '--log-level', 'WARN',                  # LEVEL may be one of DEBUG, INFO, WARN, ERROR, CRITICAL (default: INFO).
             '--noconfirm',                          # Replace output directory (default: SPECPATH/dist/SPECNAME) without asking for confirmation
             '--clean',                              # Clean PyInstaller cache and remove temporary files before building
@@ -115,6 +119,7 @@ def runPyInstaller():
             *addedData(),                           # Add data
             appIcon()                               # Application icon
             ])
+        print("SUCSPDCHSDFNAO")
     except Exception as exception:
         Functions.printFailMessage(message, exception)
         sys.exit()
@@ -142,7 +147,11 @@ def excludeFiles():
         Functions.printSuccessMessage(message)
 
 if __name__ == "__main__":
+    print('1')
     copyMissingLibs()
+    print('2')
     copyMissingPlugins()
+    print('3')
     runPyInstaller()
+    print('4')
     excludeFiles()
