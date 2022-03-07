@@ -39,11 +39,11 @@ def addedData():
             {'from': easyAppGui.__path__[0], 'to': 'easyAppGui'},
             {'from': 'utils.py', 'to': '.'},
             {'from': 'pyproject.toml', 'to': '.'}]
-    extras = CONFIG['ci']['pyinstaller']['missing_other_libraries'][CONFIG.os]
-    if extras:
-        for extra_file in extras:
-            data.append({'from': extra_file, 'to': '.'})
-
+    # Add other missing libs
+    missing_other_libraries = CONFIG['ci']['pyinstaller']['missing_other_libraries'][CONFIG.os]
+    if missing_other_libraries:
+        for lib_file in missing_other_libraries:
+            data.append({'from': lib_file, 'to': '.'})
     # Format for pyinstaller  
     separator = CONFIG['ci']['pyinstaller']['separator'][CONFIG.os]
     formatted = []
@@ -102,9 +102,10 @@ def runPyInstaller():
     try:
         message = 'freeze app'
         main_py_path = os.path.join(CONFIG.package_name, 'main.py')
+        print(main_py_path)
         pyInstallerMain([
             main_py_path,                           # Application main file
-            f'--name={CONFIG.app_name}',       # Name to assign to the bundled app and spec file (default: first script’s basename)
+            f'--name={CONFIG.app_name}',            # Name to assign to the bundled app and spec file (default: first script’s basename)
             '--log-level', 'WARN',                  # LEVEL may be one of DEBUG, INFO, WARN, ERROR, CRITICAL (default: INFO).
             '--noconfirm',                          # Replace output directory (default: SPECPATH/dist/SPECNAME) without asking for confirmation
             '--clean',                              # Clean PyInstaller cache and remove temporary files before building
