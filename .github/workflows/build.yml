@@ -66,6 +66,8 @@ jobs:
         shell: bash
         run: |
           echo "APP_NAME=$(python utils.py --get tool.poetry.name)" >> $GITHUB_ENV
+          echo "RELEASE_TAG=$(python utils.py --get ci.app.info.release_tag)" >> $GITHUB_ENV
+          echo "RELEASE_TITLE=$(python utils.py --get ci.app.info.release_title)" >> $GITHUB_ENV
           echo "SCRIPTS_PATH=$(python utils.py --get ci.project.subdirs.scripts)" >> $GITHUB_ENV
           echo "DISTRIBUTION_PATH=$(python utils.py --get ci.project.subdirs.distribution)" >> $GITHUB_ENV
           echo "DOWNLOAD_PATH=$(python utils.py --get ci.project.subdirs.download)" >> $GITHUB_ENV

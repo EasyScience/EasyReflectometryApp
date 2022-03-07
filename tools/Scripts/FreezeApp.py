@@ -82,14 +82,13 @@ def copyMissingPlugins():
         Functions.printNeutralMessage(f'No missing PySide2 plugins for {CONFIG.os}')
         return
     try:
-        message = 'copy missing PySide2 plugins'
+        message = 'copy missing PySide2 libraries'
         pyside2_path = PySide2.__path__[0]
-        app_plugins_path = os.path.join(CONFIG.dist_dir, CONFIG.app_name, 'PySide2', 'plugins')
-        for relative_dir_path in missing_plugins:
-            src_dir_name = os.path.basename(relative_dir_path)
-            src_dir_path = os.path.join(pyside2_path, relative_dir_path)
-            dst_dir_path = os.path.join(app_plugins_path, src_dir_name)
-            Functions.copyDir(src_dir_path, dst_dir_path)
+        shiboken2_path = shiboken2.__path__[0]
+        for file_name in missing_files:
+            file_path = os.path.join(shiboken2_path, file_name)
+            for file_path in glob.glob(file_path): # for cases with '*' in the lib name
+                Functions.copyFile(file_path, pyside2_path)
     except Exception as exception:
         Functions.printFailMessage(message, exception)
         sys.exit()
