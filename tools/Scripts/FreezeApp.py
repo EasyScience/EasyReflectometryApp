@@ -44,6 +44,8 @@ def addedData():
         for extra_file in extras:
             data.append({'from': extra_file, 'to': '.'})
 
+    # Format for pyinstaller  
+    separator = CONFIG['ci']['pyinstaller']['separator'][CONFIG.os]
     formatted = []
     for element in data:
         formatted.append(f'--add-data={element["from"]}{separator}{element["to"]}')
