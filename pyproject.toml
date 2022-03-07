@@ -24,16 +24,16 @@ pyobjc-framework-cocoa = { version = '^7.1', platform = 'darwin' }
 matplotlib = "^3.4.2"
 pint = "^0.17"
 # easyScience
-EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'develop' }
+#EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'develop' }
 easyAppLogic = { git = 'https://github.com/easyScience/easyAppLogic.git', rev = 'easyreflectometry' }
 easyAppGui = { git = 'https://github.com/easyScience/easyAppGui.git', rev = 'easyreflectometry' }
-#EasyReflectometryLib = { path = '../EasyReflectometryLib'}
+EasyReflectometryLib = { path = '../EasyReflectometryLib'}
 #easyAppGui = { path = '../easyAppGui'}
 
 #[tool.poetry.dev-dependencies]
 # PyInstaller
 #pyinstaller = '^4.2'
-pyinstaller = { git = 'https://github.com/pyinstaller/pyinstaller.git', rev = 'develop' }
+pyinstaller = '4.5.1'  # 4.6-4.7 give "ModuleNotFoundError: No module named 'pip'" on Ubuntu, when run app
 pywin32-ctypes = { version = '^0.2.0', platform = 'win32' }
 pypiwin32 = { version = '^223', platform = 'win32' }
 pefile = { version = '^2019.4.18', platform = 'win32' }
