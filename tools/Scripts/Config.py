@@ -42,7 +42,7 @@ class Config():
         self.repository_dir_suffix = self.__dict__['ci']['app']['setup']['repository_dir_suffix']
 
         # Project
-        self.package_name = f'{self.app_name}App'
+        self.package_name = f'{self.app_name}'
         self.license_file = self.__dict__['ci']['project']['license_file']
 
         # Certificates
