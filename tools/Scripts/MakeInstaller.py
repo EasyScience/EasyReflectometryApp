@@ -326,7 +326,7 @@ def createInstallerSourceDir():
         #Functions.createFile(path=docs_package_xml_path, content=docsPackageXml())
         #Functions.copyDir(source=docs_dir_src, destination=os.path.join(docs_data_subsubdir_path, 'Documentation'))
         Functions.copyDir(source=docs_dir_src, destination=os.path.join(app_data_subsubdir_path, docs_dir_dest))
-        # # Current hthere are no examples to copy
+        # # Currently there are no examples to copy
         # # package: examples
         # examples_dir_src = CONFIG['ci']['project']['subdirs']['examples']['src']
         # examples_dir_dest = CONFIG['ci']['project']['subdirs']['examples']['dest']

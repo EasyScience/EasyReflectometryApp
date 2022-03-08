@@ -39,10 +39,10 @@ def addedData():
             {'from': 'utils.py', 'to': '.'},
             {'from': 'pyproject.toml', 'to': '.'}]
     # Add other missing libs
-    missing_other_libraries = CONFIG['ci']['pyinstaller']['missing_other_libraries'][CONFIG.os]
-    if missing_other_libraries:
-        for lib_file in missing_other_libraries:
-            data.append({'from': lib_file, 'to': '.'})
+    extras = CONFIG['ci']['pyinstaller']['missing_other_libraries'][CONFIG.os]
+    if extras:
+        for extra_file in extras:
+            data.append({'from': extra_file, 'to': '.'})
     # Format for pyinstaller  
     separator = CONFIG['ci']['pyinstaller']['separator'][CONFIG.os]
     formatted = []
@@ -73,7 +73,7 @@ def copyMissingLibs():
                 Functions.copyFile(file_path, pyside2_path)
     except Exception as exception:
         Functions.printFailMessage(message, exception)
-        sys.exit(1)
+        sys.exit()
     else:
         Functions.printSuccessMessage(message)
 
@@ -93,7 +93,7 @@ def copyMissingPlugins():
             Functions.copyDir(src_dir_path, dst_dir_path)
     except Exception as exception:
         Functions.printFailMessage(message, exception)
-        sys.exit(1)
+        sys.exit()
     else:
         Functions.printSuccessMessage(message)
 
@@ -104,7 +104,7 @@ def runPyInstaller():
         pyInstallerMain([
             main_py_path,                           # Application main file
             f'--name={CONFIG.app_name}',            # Name to assign to the bundled app and spec file (default: first script’s basename)
-            '--log-level', 'DEBUG',                  # LEVEL may be one of DEBUG, INFO, WARN, ERROR, CRITICAL (default: INFO).
+            '--log-level', 'WARN',                  # LEVEL may be one of DEBUG, INFO, WARN, ERROR, CRITICAL (default: INFO).
             '--noconfirm',                          # Replace output directory (default: SPECPATH/dist/SPECNAME) without asking for confirmation
             '--clean',                              # Clean PyInstaller cache and remove temporary files before building
             '--windowed',                           # Windows and Mac OS X: do not provide a console window for standard i/o.
@@ -116,7 +116,6 @@ def runPyInstaller():
             *addedData(),                           # Add data
             appIcon()                               # Application icon
             ])
-        print("SUCSPDCHSDFNAO")
     except Exception as exception:
         Functions.printFailMessage(message, exception)
         sys.exit()
@@ -144,7 +143,7 @@ def excludeFiles():
         Functions.printSuccessMessage(message)
 
 if __name__ == "__main__":
-    # copyMissingLibs()
-    # copyMissingPlugins()
+    copyMissingLibs()
+    copyMissingPlugins()
     runPyInstaller()
     excludeFiles()

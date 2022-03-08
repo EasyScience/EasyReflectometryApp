@@ -33,7 +33,7 @@ easyAppGui = { git = 'https://github.com/easyScience/easyAppGui.git', rev = 'eas
 #[tool.poetry.dev-dependencies]
 # PyInstaller
 #pyinstaller = '^4.2'
-pyinstaller = '4.5.1'  # 4.6-4.7 give "ModuleNotFoundError: No module named 'pip'" on Ubuntu, when run app
+pyinstaller = { git = 'https://github.com/pyinstaller/pyinstaller.git', rev = 'develop' }
 pywin32-ctypes = { version = '^0.2.0', platform = 'win32' }
 pypiwin32 = { version = '^223', platform = 'win32' }
 pefile = { version = '^2019.4.18', platform = 'win32' }
@@ -54,7 +54,6 @@ EasyReflectometry = 'EasyReflectometryApp.main:main'
 # CUSTOM CONFIG
 
 [release]
-app_name = "EasyReflectometry"
 date_for_qtifw = '2021-06-08' # YYYY-MM-DD, e.g. 2021-05-30
 tag_template = 'v{VERSION}'
 title_template = 'Version {VERSION} ({DATE})'

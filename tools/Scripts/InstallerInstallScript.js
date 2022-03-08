@@ -71,7 +71,7 @@ Component.prototype.createOperations = function()
       "Path=@TargetDir@/@ProductName@\n"+
       "Name=@ProductName@\n"+
       "GenericName=@ProductName@\n"+
-      "Icon=@TargetDir@/@ProductName@/@ProductName@/Gui/Resources/Logo/App.png\n"+
+      "Icon=@TargetDir@/@ProductName@/@ProductName@App/Gui/Resources/Logo/App.png\n"+
       "Terminal=false\n"+
       "Categories=Science;"
     )
