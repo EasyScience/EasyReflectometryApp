@@ -35,6 +35,10 @@ from EasyReflectometry.interface import InterfaceFactory
 
 from easyAppLogic.Utils.Utils import generalizePath
 
+from .LogicController import LogicController
+from .Project import ProjectProxy
+from .Simulation import SimulationProxy
+
 from EasyReflectometryApp.Logic.DataStore import DataSet1D, DataStore
 
 from EasyReflectometryApp.Logic.Proxies.Plotting1d import Plotting1dProxy
@@ -51,6 +55,11 @@ ITEM_LOOKUP = {
 
 class PyQmlProxy(QObject):
     # SIGNALS
+    currentCalculatorChanged = Signal()
+    parametersChanged = Signal()
+    
+    statusInfoChanged = Signal()
+    dummySignal = Signal()
 
     # Project
     projectCreatedChanged = Signal()
@@ -58,7 +67,7 @@ class PyQmlProxy(QObject):
     stateChanged = Signal(bool)
 
     # Fitables
-    parametersChanged = Signal()
+    
     parametersAsObjChanged = Signal()
     parametersAsXmlChanged = Signal()
     parametersFilterCriteriaChanged = Signal()
@@ -80,10 +89,6 @@ class PyQmlProxy(QObject):
     patternParametersChanged = Signal()
     patternParametersAsObjChanged = Signal()
 
-    instrumentParametersChanged = Signal()
-    instrumentParametersAsObjChanged = Signal()
-    instrumentParametersAsXmlChanged = Signal()
-
     experimentDataAdded = Signal()
     experimentDataRemoved = Signal()
     experimentDataChanged = Signal()
@@ -97,7 +102,6 @@ class PyQmlProxy(QObject):
     calculatedDataUpdated = Signal()
 
     simulationParametersChanged = Signal()
-    backgroundChanged = Signal()
     resolutionChanged = Signal()
     qRangeChanged = Signal()
 
@@ -109,28 +113,25 @@ class PyQmlProxy(QObject):
     currentMinimizerChanged = Signal()
     currentMinimizerMethodChanged = Signal()
 
-    currentCalculatorChanged = Signal()
 
     # Plotting
     showMeasuredSeriesChanged = Signal()
     showDifferenceChartChanged = Signal()
     current1dPlottingLibChanged = Signal()
 
-    htmlExportingFinished = Signal(bool, str)
-
-    # Status info
-    statusInfoChanged = Signal()
+    htmlExportingFinished = Signal(bool, str) 
 
     # Undo Redo
     undoRedoChanged = Signal()
 
-    # Misc
-    dummySignal = Signal()
-
-    # METHODS
-
     def __init__(self, parent=None):
         super().__init__(parent)
+
+        self.lc = LogicController(self)
+
+        ######### proxies #########
+        self._project_proxy = ProjectProxy(self, logic=self.lc) 
+        self._simulation_proxy = SimulationProxy(self, logic=self.lc)
 
         # Main
         self._interface = InterfaceFactory()
@@ -192,17 +193,16 @@ class PyQmlProxy(QObject):
         # Analysis
         self.calculatedDataChanged.connect(self._onCalculatedDataChanged)
 
-        self._background_as_obj = self._defaultBackground()
-        self._q_range_as_obj = self._defaultQRange()
-        self._resolution_as_obj = self._defaultResolution()
+        self._q_range_as_obj = self._simulation_proxy._defaultQRange()
+        self._resolution_as_obj = self._simulation_proxy._defaultResolution()
         self.simulationParametersChanged.connect(self._onSimulationParametersChanged)
-        self.backgroundChanged.connect(self._onSimulationParametersChanged)
+        self._simulation_proxy.backgroundChanged.connect(self._onSimulationParametersChanged)
         self.qRangeChanged.connect(self._onSimulationParametersChanged)
         self.resolutionChanged.connect(self._onSimulationParametersChanged)
         self.sampleChanged.connect(self._onSimulationParametersChanged)
         self.sampleChanged.connect(self._onParametersChanged)
         self.simulationParametersChanged.connect(self.undoRedoChanged)
-        self.backgroundChanged.connect(self.undoRedoChanged)
+        self._simulation_proxy.backgroundChanged.connect(self.undoRedoChanged)
         self.qRangeChanged.connect(self.undoRedoChanged)
         self.resolutionChanged.connect(self.undoRedoChanged)
 
@@ -269,6 +269,14 @@ class PyQmlProxy(QObject):
         self._currentProjectPath = os.path.expanduser("~")
         self._onMaterialsChanged()
         self._onItemsChanged()
+
+    @Property('QVariant', notify=dummySignal)
+    def project(self):
+        return self._project_proxy
+
+    @Property('QVariant', notify=dummySignal)
+    def simulation(self):
+        return self._simulation_proxy
 
     ####################################################################################################################
     ####################################################################################################################
@@ -1151,7 +1159,7 @@ class PyQmlProxy(QObject):
                                                 self._experiment_data.ye)
         self._experiment_parameters = self._experimentDataParameters(self._experiment_data)
         self.qRangeAsObj = json.dumps(self._experiment_parameters[0])
-        self.backgroundAsObj = json.dumps(self._experiment_parameters[1])
+        self._simulation_proxy.backgroundAsObj = json.dumps(self._experiment_parameters[1])
 
         self.experimentDataChanged.emit()
         self.projectInfoAsJson['experiments'] = self._data.experiments[0].name
@@ -1194,39 +1202,20 @@ class PyQmlProxy(QObject):
         print("***** _onExperimentLoadedChanged")
         if self.experimentLoaded:
             self._onParametersChanged()
-            self.instrumentParametersChanged.emit()
+            self._simulation_proxy.simulationParametersChanged.emit()
             self.patternParametersChanged.emit()
 
     def _onExperimentSkippedChanged(self):
         print("***** _onExperimentSkippedChanged")
         if self.experimentSkipped:
             self._onParametersChanged()
-            self.instrumentParametersChanged.emit()
+            self._simulation_proxy.simulationParametersChanged.emit()
             self.patternParametersChanged.emit()
             self.calculatedDataChanged.emit()
 
     ####################################################################################################################
-    # Instrument parameters
+    # Simulation parameters
     ####################################################################################################################
-
-    @Property('QVariant', notify=backgroundChanged)
-    def backgroundAsObj(self):
-        return self._background_as_obj
-
-    @backgroundAsObj.setter
-    def backgroundAsObj(self, json_str):
-        if self._background_as_obj == json.loads(json_str):
-            return 
-
-        self._background_as_obj = json.loads(json_str)
-        self._model.background = float(self._background_as_obj['bkg'])
-        self.simulationParametersChanged.emit()
-        self.parametersChanged.emit()
-
-    def _defaultBackground(self):
-        return {
-            'bkg': 0e0
-        }
     
     @Property('QVariant', notify=qRangeChanged)
     def qRangeAsObj(self):
@@ -1239,13 +1228,6 @@ class PyQmlProxy(QObject):
 
         self._q_range_as_obj = json.loads(json_str)
         self.simulationParametersChanged.emit()
-
-    def _defaultQRange(self):
-        return {
-            'x_min': 0.001,
-            'x_max': 0.3,
-            'x_step': 0.002
-        }
 
     @Property('QVariant', notify=resolutionChanged)
     def resolutionAsObj(self):
@@ -1260,11 +1242,6 @@ class PyQmlProxy(QObject):
         self._model.resolution = float(self._resolution_as_obj['res'])
         self.simulationParametersChanged.emit()
         self.parametersChanged.emit()
-
-    def _defaultResolution(self):
-        return {
-            'res': 0.0
-        }
 
     def _onSimulationParametersChanged(self):
         print("***** _onSimulationParametersChanged")
@@ -1719,25 +1696,6 @@ class PyQmlProxy(QObject):
     def _onStatusInfoChanged(self):
         print("***** _onStatusInfoChanged")
 
-    ####################################################################################################################
-    ####################################################################################################################
-    # Project examples
-    ####################################################################################################################
-    ####################################################################################################################
-
-    @Property(str, notify=dummySignal)
-    def projectExamplesAsXml(self):
-        model = [
-            {"name": "PbSO4", "description": "neutrons, powder, 1D, D1A@ILL",
-             "path": "../Resources/Examples/PbSO4/project.json"},
-            {"name": "Co2SiO4", "description": "neutrons, powder, 1D, D20@ILL",
-             "path": "../Resources/Examples/Co2SiO4/project.json"},
-            {"name": "Dy3Al5O12", "description": "neutrons, powder, 1D, G41@LLB",
-             "path": "../Resources/Examples/Dy3Al5O12/project.json"}
-        ]
-        xml = dicttoxml(model, attr_type=False)
-        xml = xml.decode()
-        return xml
 
     ####################################################################################################################
     ####################################################################################################################
