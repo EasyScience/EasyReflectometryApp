@@ -101,10 +101,6 @@ class PyQmlProxy(QObject):
     calculatedDataChanged = Signal()
     calculatedDataUpdated = Signal()
 
-    simulationParametersChanged = Signal()
-    resolutionChanged = Signal()
-    qRangeChanged = Signal()
-
     fitFinished = Signal()
     fitFinishedNotify = Signal()
     fitResultsChanged = Signal()
@@ -193,18 +189,12 @@ class PyQmlProxy(QObject):
         # Analysis
         self.calculatedDataChanged.connect(self._onCalculatedDataChanged)
 
-        self._q_range_as_obj = self._simulation_proxy._defaultQRange()
-        self._resolution_as_obj = self._simulation_proxy._defaultResolution()
-        self.simulationParametersChanged.connect(self._onSimulationParametersChanged)
-        self._simulation_proxy.backgroundChanged.connect(self._onSimulationParametersChanged)
-        self.qRangeChanged.connect(self._onSimulationParametersChanged)
-        self.resolutionChanged.connect(self._onSimulationParametersChanged)
-        self.sampleChanged.connect(self._onSimulationParametersChanged)
+        self.sampleChanged.connect(self._simulation_proxy._onSimulationParametersChanged)
         self.sampleChanged.connect(self._onParametersChanged)
-        self.simulationParametersChanged.connect(self.undoRedoChanged)
+        self._simulation_proxy.simulationParametersChanged.connect(self.undoRedoChanged)
         self._simulation_proxy.backgroundChanged.connect(self.undoRedoChanged)
-        self.qRangeChanged.connect(self.undoRedoChanged)
-        self.resolutionChanged.connect(self.undoRedoChanged)
+        self._simulation_proxy.qRangeChanged.connect(self.undoRedoChanged)
+        self._simulation_proxy.resolutionChanged.connect(self.undoRedoChanged)
 
         self._fit_results = self._defaultFitResults()
         self.fitter = Fitter(self._model, self._interface.fit_func)
@@ -222,7 +212,7 @@ class PyQmlProxy(QObject):
         self._parameters_as_xml = []
         self.parametersChanged.connect(self._onMaterialsChanged)
         self.parametersChanged.connect(self._onItemsChanged)
-        self.parametersChanged.connect(self._onSimulationParametersChanged)
+        self.parametersChanged.connect(self._simulation_proxy._onSimulationParametersChanged)
         self.parametersChanged.connect(self._onParametersChanged)
         self.parametersChanged.connect(self._onCalculatedDataChanged)
         self.parametersChanged.connect(self.undoRedoChanged)
@@ -1158,7 +1148,7 @@ class PyQmlProxy(QObject):
         self._plotting_1d_proxy.setMeasuredData(self._experiment_data.x, self._experiment_data.y,
                                                 self._experiment_data.ye)
         self._experiment_parameters = self._experimentDataParameters(self._experiment_data)
-        self.qRangeAsObj = json.dumps(self._experiment_parameters[0])
+        self._simulation_proxy.qRangeAsObj = json.dumps(self._experiment_parameters[0])
         self._simulation_proxy.backgroundAsObj = json.dumps(self._experiment_parameters[1])
 
         self.experimentDataChanged.emit()
@@ -1213,39 +1203,6 @@ class PyQmlProxy(QObject):
             self.patternParametersChanged.emit()
             self.calculatedDataChanged.emit()
 
-    ####################################################################################################################
-    # Simulation parameters
-    ####################################################################################################################
-    
-    @Property('QVariant', notify=qRangeChanged)
-    def qRangeAsObj(self):
-        return self._q_range_as_obj
-    
-    @qRangeAsObj.setter
-    def qRangeAsObj(self, json_str):
-        if self._q_range_as_obj == json.loads(json_str):
-            return
-
-        self._q_range_as_obj = json.loads(json_str)
-        self.simulationParametersChanged.emit()
-
-    @Property('QVariant', notify=resolutionChanged)
-    def resolutionAsObj(self):
-        return self._resolution_as_obj
-
-    @resolutionAsObj.setter
-    def resolutionAsObj(self, json_str):
-        if self._resolution_as_obj == json.loads(json_str):
-            return 
-
-        self._resolution_as_obj = json.loads(json_str)
-        self._model.resolution = float(self._resolution_as_obj['res'])
-        self.simulationParametersChanged.emit()
-        self.parametersChanged.emit()
-
-    def _onSimulationParametersChanged(self):
-        print("***** _onSimulationParametersChanged")
-        self.calculatedDataChanged.emit()
 
     ####################################################################################################################
     ####################################################################################################################
@@ -1269,11 +1226,10 @@ class PyQmlProxy(QObject):
         sim = self._data.simulations[0]
 
         # elif self.experimentSkipped:
-        x_min = float(self._q_range_as_obj['x_min'])
-        x_max = float(self._q_range_as_obj['x_max'])
-        x_step = float(self._q_range_as_obj['x_step'])
-        num_points = int((x_max - x_min) / x_step + 1)
-        sim.x = np.linspace(x_min, x_max, num_points)
+        x_min = float(self._simulation_proxy._q_range_as_obj['x_min'])
+        x_max = float(self._simulation_proxy._q_range_as_obj['x_max'])
+        x_step = float(self._simulation_proxy._q_range_as_obj['x_step'])
+        sim.x = np.arange(x_min, x_max + x_step, x_step)
 
         if self.experimentLoaded:
             exp = self._data.experiments[0]

@@ -22,7 +22,7 @@ Row {
         enabled: !ExGlobals.Constants.proxy.experimentLoaded
         width: textFieldWidth()
         units: "Å<sup>-1</sup>"
-        text: EaLogic.Utils.toFixed(ExGlobals.Constants.proxy.qRangeAsObj.x_min, 3)
+        text: EaLogic.Utils.toFixed(ExGlobals.Constants.proxy.simulation.qRangeAsObj.x_min, 3)
         onEditingFinished: updateParameters()
     }
 
@@ -37,7 +37,7 @@ Row {
         enabled: !ExGlobals.Constants.proxy.experimentLoaded
         width: textFieldWidth()
         units: "Å<sup>-1</sup>"
-        text: EaLogic.Utils.toFixed(ExGlobals.Constants.proxy.qRangeAsObj.x_max, 3)
+        text: EaLogic.Utils.toFixed(ExGlobals.Constants.proxy.simulation.qRangeAsObj.x_max, 3)
         onEditingFinished: updateParameters()
     }
 
@@ -52,7 +52,7 @@ Row {
         enabled: !ExGlobals.Constants.proxy.experimentLoaded
         width: textFieldWidth()
         units: "Å<sup>-1</sup>"
-        text: EaLogic.Utils.toFixed(ExGlobals.Constants.proxy.qRangeAsObj.x_step, 3)
+        text: EaLogic.Utils.toFixed(ExGlobals.Constants.proxy.simulation.qRangeAsObj.x_step, 3)
         onEditingFinished: updateParameters()
     }
 
@@ -72,6 +72,6 @@ Row {
             "x_max": parseFloat(xMax.text),
             "x_step": parseFloat(xStep.text)
         }
-        ExGlobals.Constants.proxy.qRangeAsObj = JSON.stringify(json)
+        ExGlobals.Constants.proxy.simulation.qRangeAsObj = JSON.stringify(json)
     }
 }
