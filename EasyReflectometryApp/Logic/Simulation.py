@@ -8,7 +8,7 @@ class SimulationLogic(QObject):
         super().__init__(parent)
         self.parent = parent
         self._interface = interface
-        
+
 
 class SimulationProxy(QObject):
     
@@ -80,9 +80,9 @@ class SimulationProxy(QObject):
         if self._resolution_as_obj == value:
             return 
         self._resolution_as_obj = value
-        self._model.resolution = float(self._resolution_as_obj['res'])
+        self.parent._model.resolution = float(self._resolution_as_obj['res'])
         self.simulationParametersChanged.emit()
-        self.parametersChanged.emit()
+        self.parent.parametersChanged.emit()
 
     @Property('QVariant', notify=qRangeChanged)
     def qRangeAsObj(self):
