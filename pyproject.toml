@@ -5,8 +5,8 @@ requires = ['poetry>=1.0']
 build-backend = 'poetry.masonry.api'
 
 [tool.poetry]
-name = 'EasyReflectometryApp'
-version = '0.0.2-beta.2'
+name = 'EasyReflectometry'
+version = '0.0.3-beta'
 description = 'Making reflectometry data analysis and modelling easy.'
 license = 'GPL-3.0-only'
 authors = ['Andrew McCluskey', 'Andrew Sazonov', 'Simon Ward']
@@ -24,10 +24,10 @@ pyobjc-framework-cocoa = { version = '^7.1', platform = 'darwin' }
 matplotlib = "^3.4.2"
 pint = "^0.17"
 # easyScience
-#EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'develop' }
+EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'develop' }
 easyAppLogic = { git = 'https://github.com/easyScience/easyAppLogic.git', rev = 'easyreflectometry' }
 easyAppGui = { git = 'https://github.com/easyScience/easyAppGui.git', rev = 'easyreflectometry' }
-EasyReflectometryLib = { path = '../EasyReflectometryLib'}
+#EasyReflectometryLib = { path = '../EasyReflectometryLib'}
 #easyAppGui = { path = '../easyAppGui'}
 
 #[tool.poetry.dev-dependencies]
@@ -49,12 +49,11 @@ google-trans-new = "^1.1.9"
 gTTS = '^2.2.2'
 
 [tool.poetry.scripts]
-EasyReflectometryApp = 'EasyReflectometryApp.main:main'
+EasyReflectometry = 'EasyReflectometryApp.main:main'
 
 # CUSTOM CONFIG
 
 [release]
-app_name = "EasyReflectometry"
 date_for_qtifw = '2021-06-08' # YYYY-MM-DD, e.g. 2021-05-30
 tag_template = 'v{VERSION}'
 title_template = 'Version {VERSION} ({DATE})'

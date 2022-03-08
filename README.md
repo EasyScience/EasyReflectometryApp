@@ -10,7 +10,7 @@
 
 **EasyReflectometry** allows simulation of reflectometry profiles based on layered structures and the refinements of the structural parameters. For refinement, the program uses a number of fitting engines (minimizers).
 
-**EasyReflectometry** offers a graphical user interface for the analysis of reflectometry data, built on _external_ reflectometry packages such as [refnx](https://refnx.readthedocs.io/en/latest/) and [bornagain](https://www.bornagainproject.org). 
+**EasyReflectometry** offers a graphical user interface for the analysis of reflectometry data, built on _external_ reflectometry packages such as [refnx](https://refnx.readthedocs.io/en/latest/) and [refl1d](https://refl1d.readthedocs.io/en/latest/). 
 This allows **EasyReflectometry** to cover different functionality aspects within a signle, intuitive, and user-friendly interface.  
 The reflectomety packages are included with the installation so there is no need to download andn compile any additional components. 
 
@@ -42,11 +42,7 @@ Planned improvements / new functionality for **EasyReflectometry**:
 
 ### Downloading
 
-Download the official **EasyReflectometry installer v0.0.1-develop** for your operating system:
-
-- [Windows 10 and above, 32-bit](https://github.com/easyScience/EasyReflectometryApp/releases/download/develop/EasyReflectometry_Windows_x86-32_v0.0.1_develop.zip)
-- [macOS 10.15 and above, 64-bit](https://github.com/easyScience/EasyReflectometryApp/releases/download/develop/EasyReflectometry_macOS_x86-64_v0.0.1_develop.zip)
-- [Ubuntu 20.04 and above, 64-bit](https://github.com/easyScience/EasyReflectometryApp/releases/download/develop/EasyReflectometry_Linux_x86-64_v0.0.1_develop.zip)
+[Download][31] the official **EasyReflectometry installer v0.0.3** for your operating system.
 
 ### Installing
 

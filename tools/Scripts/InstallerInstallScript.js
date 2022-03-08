@@ -65,7 +65,7 @@ Component.prototype.createOperations = function()
     component.addOperation(
       "CreateDesktopEntry",
       "@TargetDir@/@ProductName@.desktop",
-      "Comment=A scientific software for modelling and analysis of the neutron diffraction data.\n"+
+      "Comment=A scientific software for modelling and analysis of the neutron and X-ray reflectometry data.\n"+
       "Type=Application\n"+
       "Exec=@TargetDir@/@ProductName@/@ProductName@\n"+
       "Path=@TargetDir@/@ProductName@\n"+
@@ -88,16 +88,16 @@ Component.prototype.createOperations = function()
     /*
     component.addOperation(
       "Copy",
-      "@TargetDir@/EasyReflectometryApp.desktop",
-      "@HomeDir@/Desktop/EasyReflectometryApp.desktop"
+      "@TargetDir@/EasyReflectometry.desktop",
+      "@HomeDir@/Desktop/EasyReflectometry.desktop"
     )
     */
 
     /*
     component.addOperation(
       "Copy",
-      "@TargetDir@/EasyReflectometryApp.desktop",
-      "/usr/share/applications/EasyReflectometryApp.desktop"
+      "@TargetDir@/EasyReflectometry.desktop",
+      "/usr/share/applications/EasyReflectometry.desktop"
     )
     */
   }

@@ -42,7 +42,8 @@ def main():
     # Paths
     app_name = CONFIG['tool']['poetry']['name']
     current_path = os.path.dirname(sys.argv[0])
-    package_path = os.path.join(current_path, f'{app_name}')
+
+    package_path = os.path.join(current_path, f'{app_name}App')
     if not os.path.exists(package_path):
         package_path = current_path
 

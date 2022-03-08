@@ -24,7 +24,6 @@ __pycache__
 # Poetry
 dist
 *.egg-info
-poetry.lock
 
 # PyInstaller
 build

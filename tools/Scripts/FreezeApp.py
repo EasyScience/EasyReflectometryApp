@@ -26,7 +26,6 @@ def excludedModules():
     return formatted
 
 def addedData():
-    separator = CONFIG['ci']['pyinstaller']['separator'][CONFIG.os]
     #lib = CONFIG['ci']['pyinstaller']['libs'][CONFIG.os]
     data = [{'from': CONFIG.package_name, 'to': CONFIG.package_name},
             #{'from': importlib.import_module(lib).__path__[0], 'to': lib},
@@ -34,16 +33,18 @@ def addedData():
             {'from': refl1d.__path__[0], 'to': 'refl1d'},
             {'from': periodictable.__path__[0], 'to': 'periodictable'},
             {'from': easyCore.__path__[0], 'to': 'easyCore'},
-            {'from': EasyReflectometry.__path__[0], 'to': 'EasyReflectometry'},
+            {'from': EasyReflectometry.__path__[0], 'to': 'EasyReflectometryLib'},
             {'from': easyAppLogic.__path__[0], 'to': 'easyAppLogic'},
             {'from': easyAppGui.__path__[0], 'to': 'easyAppGui'},
             {'from': 'utils.py', 'to': '.'},
             {'from': 'pyproject.toml', 'to': '.'}]
+    # Add other missing libs
     extras = CONFIG['ci']['pyinstaller']['missing_other_libraries'][CONFIG.os]
     if extras:
         for extra_file in extras:
             data.append({'from': extra_file, 'to': '.'})
-
+    # Format for pyinstaller  
+    separator = CONFIG['ci']['pyinstaller']['separator'][CONFIG.os]
     formatted = []
     for element in data:
         formatted.append(f'--add-data={element["from"]}{separator}{element["to"]}')
