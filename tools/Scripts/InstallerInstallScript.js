@@ -65,13 +65,13 @@ Component.prototype.createOperations = function()
     component.addOperation(
       "CreateDesktopEntry",
       "@TargetDir@/@ProductName@.desktop",
-      "Comment=A scientific software for modelling and analysis of the neutron diffraction data.\n"+
+      "Comment=A scientific software for modelling and analysis of the neutron and X-ray reflectometry data.\n"+
       "Type=Application\n"+
       "Exec=@TargetDir@/@ProductName@/@ProductName@\n"+
       "Path=@TargetDir@/@ProductName@\n"+
       "Name=@ProductName@\n"+
       "GenericName=@ProductName@\n"+
-      "Icon=@TargetDir@/@ProductName@/@ProductName@App/Gui/Resources/Logo/App.png\n"+
+      "Icon=@TargetDir@/@ProductName@/@ProductName@/Gui/Resources/Logo/App.png\n"+
       "Terminal=false\n"+
       "Categories=Science;"
     )

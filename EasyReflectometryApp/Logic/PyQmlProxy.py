@@ -21,6 +21,7 @@ from easyCore.Objects.Base import BaseObj
 
 from easyCore.Fitting.Fitting import Fitter
 from easyCore.Utils.classTools import generatePath
+
 from easyCore.Utils.UndoRedo import property_stack_deco, FunctionStack
 
 from EasyReflectometry.sample.material import Material

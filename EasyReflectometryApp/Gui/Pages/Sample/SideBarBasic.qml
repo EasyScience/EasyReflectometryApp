@@ -415,7 +415,6 @@ EaComponents.SideBarColumn {
                 text: qsTr("Move layer down")
                 onClicked: ExGlobals.Constants.proxy.moveSelectedLayersDown()
             }
-
         }
 
         /*Row {
