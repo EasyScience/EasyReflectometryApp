@@ -420,17 +420,6 @@ EaComponents.SideBarColumn {
         /*Row {
             spacing: EaStyle.Sizes.fontPixelSize
 
-            EaElements.CheckBox {
-                checked: false
-                text: qsTr("Constrain item across contrasts")
-                ToolTip.text: qsTr("Checking this box will con")
-                onCheckedChanged: ExGlobals.Constants.proxy.usePolarisation = checked
-            }
-        }*/
-
-        /*Row {
-            spacing: EaStyle.Sizes.fontPixelSize
-
             EaElements.SideBarButton {
                 // In future this button will allow the use of custom (python) components.
                 // This will require a flexible table structure above I think and may not be

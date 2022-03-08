@@ -71,7 +71,7 @@ Component.prototype.createOperations = function()
       "Path=@TargetDir@/@ProductName@\n"+
       "Name=@ProductName@\n"+
       "GenericName=@ProductName@\n"+
-      "Icon=@TargetDir@/@ProductName@/@ProductName@/Gui/Resources/Logo/App.png\n"+
+      "Icon=@TargetDir@/@ProductName@/@ProductName@App/Gui/Resources/Logo/App.png\n"+
       "Terminal=false\n"+
       "Categories=Science;"
     )
@@ -88,16 +88,16 @@ Component.prototype.createOperations = function()
     /*
     component.addOperation(
       "Copy",
-      "@TargetDir@/EasyReflectometryApp.desktop",
-      "@HomeDir@/Desktop/EasyReflectometryApp.desktop"
+      "@TargetDir@/EasyReflectometry.desktop",
+      "@HomeDir@/Desktop/EasyReflectometry.desktop"
     )
     */
 
     /*
     component.addOperation(
       "Copy",
-      "@TargetDir@/EasyReflectometryApp.desktop",
-      "/usr/share/applications/EasyReflectometryApp.desktop"
+      "@TargetDir@/EasyReflectometry.desktop",
+      "/usr/share/applications/EasyReflectometry.desktop"
     )
     */
   }

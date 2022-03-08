@@ -10,8 +10,8 @@ QtObject {
     readonly property bool remote: typeof EaGlobals.Variables.projectConfig.ci.app.info !== 'undefined'
 
     readonly property string appName: EaGlobals.Variables.projectConfig.tool.poetry.name
-    readonly property string appPrefixName: "Easy"
-    readonly property string appSuffixName: appName.replace(appPrefixName, "").slice(0, -3)
+    readonly property string appPrefixName: "easy"
+    readonly property string appSuffixName: appName.replace(appPrefixName, "")
 
     readonly property string appLogo: logo('App.svg')
     readonly property string appUrl: EaGlobals.Variables.projectConfig.tool.poetry.homepage

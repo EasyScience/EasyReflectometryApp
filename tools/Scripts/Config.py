@@ -26,7 +26,6 @@ class Config():
         self.screenshots_dir = os.path.normpath(self.__dict__['ci']['project']['subdirs']['screenshots'])
         self.tutorials_dir = os.path.normpath(self.__dict__['ci']['project']['subdirs']['tutorials'])
         self.installation_dir = self.installationDir()
-        self.installation_dir_for_qtifw = self.installationDirForQtifw()
 
         # Application setup
         self.setup_os = self.__dict__['ci']['app']['setup']['os'][self.os]
@@ -43,8 +42,7 @@ class Config():
         self.repository_dir_suffix = self.__dict__['ci']['app']['setup']['repository_dir_suffix']
 
         # Project
-        self.package_name = f'{self.app_name}'
-        print(self.package_name)
+        self.package_name = f'{self.app_name}App'
         self.license_file = self.__dict__['ci']['project']['license_file']
 
         # Certificates
@@ -84,13 +82,3 @@ class Config():
         dir_shortcut = self.__dict__['ci']['app']['setup']['installation_dir_shortcut'][self.os]
         dir = os.path.join(dirs[self.os][dir_shortcut], self.app_name)
         return dir
-
-    def installationDirForQtifw(self):
-        dir_shortcut = self.__dict__['ci']['app']['setup']['installation_dir_shortcut'][self.os]
-        if self.os == 'macos' and dir_shortcut == '@ApplicationsDir@':
-            dir_shortcut = '/Applications'  # @ApplicationsDir@ = @ApplicationsDirUser@ [BUG in QTIFW?]
-        dir = os.path.join(dir_shortcut, self.app_name)
-        return dir
-
-if __name__ == "__main__":
-    Config()

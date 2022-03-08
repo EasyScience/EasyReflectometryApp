@@ -1,6 +1,6 @@
 # External Open Source Dependencies
 
-The following Open Source projects are used in easyReflectometry (_if there are any issues with licensing, please contact us via <https://easyReflectometry.org/contact.html>_):
+The following Open Source projects are used in EasyReflectometry (_if there are any issues with licensing, please contact us via <https://EasyReflectometry.org/contact.html>_):
 
 ## Computational libraries
 
