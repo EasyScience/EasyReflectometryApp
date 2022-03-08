@@ -42,7 +42,7 @@ Planned improvements / new functionality for **EasyReflectometry**:
 
 ### Downloading
 
-[Download][31] the official **EasyReflectometry installer v0.0.2-beta.2** for your operating system.
+[Download][31] the official **EasyReflectometry installer v0.0.3** for your operating system.
 
 ### Installing
 
