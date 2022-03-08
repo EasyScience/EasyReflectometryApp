@@ -100,6 +100,9 @@ def runPyInstaller():
     try:
         message = 'freeze app'
         main_py_path = os.path.join(CONFIG.package_name, 'main.py')
+        print(main_py_path)
+        print(CONFIG.dist_dir)
+        print(CONFIG.build_dir)
         pyInstallerMain([
             main_py_path,                           # Application main file
             f'--name={CONFIG.app_name}',            # Name to assign to the bundled app and spec file (default: first script’s basename)
