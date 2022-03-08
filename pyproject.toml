@@ -5,15 +5,15 @@ requires = ['poetry>=1.0']
 build-backend = 'poetry.masonry.api'
 
 [tool.poetry]
-name = 'easyReflectometry'
+name = 'EasyReflectometry'
 version = '0.0.2-beta.2'
 description = 'Making reflectometry data analysis and modelling easy.'
 license = 'GPL-3.0-only'
 authors = ['Andrew McCluskey', 'Andrew Sazonov', 'Simon Ward']
 readme = 'README.md'
-homepage = 'https://github.com/easyScience/easyReflectometryApp'
+homepage = 'https://github.com/easyScience/EasyReflectometryApp'
 repository = 'https://easyscience.apptimity.com/'
-documentation = 'https://github.com/easyScience/easyReflectometryApp'
+documentation = 'https://github.com/easyScience/EasyReflectometryApp'
 include = ['CHANGELOG.md']
 packages = [ { include = 'easyReflectometryApp' } ]
 
@@ -49,7 +49,7 @@ google-trans-new = "^1.1.9"
 gTTS = '^2.2.2'
 
 [tool.poetry.scripts]
-easyReflectometry = 'easyReflectometryApp.main:main'
+EasyReflectometry = 'easyReflectometryApp.main:main'
 
 # CUSTOM CONFIG
 
