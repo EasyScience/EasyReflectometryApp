@@ -34,7 +34,7 @@ def addedData():
             {'from': refl1d.__path__[0], 'to': 'refl1d'},
             {'from': periodictable.__path__[0], 'to': 'periodictable'},
             {'from': easyCore.__path__[0], 'to': 'easyCore'},
-            {'from': EasyReflectometry.__path__[0], 'to': 'EasyReflectometry'},
+            {'from': EasyReflectometry.__path__[0], 'to': 'EasyReflectometryLib'},
             {'from': easyAppLogic.__path__[0], 'to': 'easyAppLogic'},
             {'from': easyAppGui.__path__[0], 'to': 'easyAppGui'},
             {'from': 'utils.py', 'to': '.'},
