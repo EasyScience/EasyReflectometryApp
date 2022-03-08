@@ -15,7 +15,7 @@ homepage = 'https://github.com/easyScience/EasyReflectometryApp'
 repository = 'https://easyscience.apptimity.com/'
 documentation = 'https://github.com/easyScience/EasyReflectometryApp'
 include = ['CHANGELOG.md']
-packages = [ { include = 'easyReflectometryApp' } ]
+packages = [ { include = 'EasyReflectometryApp' } ]
 
 [tool.poetry.dependencies]
 python = '^3.9, <3.10'
@@ -27,7 +27,7 @@ pint = "^0.17"
 EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'develop' }
 easyAppLogic = { git = 'https://github.com/easyScience/easyAppLogic.git', rev = 'easyreflectometry' }
 easyAppGui = { git = 'https://github.com/easyScience/easyAppGui.git', rev = 'easyreflectometry' }
-#easyReflectometryLib = { path = '../easyReflectometryLib'}
+#EasyReflectometryLib = { path = '../EasyReflectometryLib'}
 #easyAppGui = { path = '../easyAppGui'}
 
 #[tool.poetry.dev-dependencies]
@@ -49,7 +49,7 @@ google-trans-new = "^1.1.9"
 gTTS = '^2.2.2'
 
 [tool.poetry.scripts]
-EasyReflectometry = 'easyReflectometryApp.main:main'
+EasyReflectometry = 'EasyReflectometryApp.main:main'
 
 # CUSTOM CONFIG
 

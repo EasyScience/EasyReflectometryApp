@@ -10,9 +10,9 @@ Controller.prototype.IntroductionPageCallback = function()
     if (installer.isInstaller())
     {
       var msg = ""
-      msg += "<p>Welcome to the easyReflectometry Setup Wizard.</p>"
-      msg += "<p>easyReflectometry is a scientific software for modelling and analysis of the neutron diffraction data.</p>"
-      msg += "<p>For more details, visit <a href=\"https://easyReflectometry.org\">https://easyReflectometry.org</a></p>"
+      msg += "<p>Welcome to the EasyReflectometry Setup Wizard.</p>"
+      msg += "<p>EasyReflectometry is a scientific software for modelling and analysis of the neutron and X-ray reflectometry data.</p>"
+      msg += "<p>For more details, visit <a href=\"https://EasyReflectometry.org\">https://EasyReflectometry.org</a></p>"
       page.MessageLabel.setText(msg)
     }
     if (installer.isUninstaller())

@@ -45,6 +45,6 @@ Copenhagen, Denmark.`
     }
 
     function githubRawContent(branch, file) {
-        return `https://raw.githubusercontent.com/easyScience/easyReflectometryApp/${branch}/${file}`
+        return `https://raw.githubusercontent.com/easyScience/EasyReflectometryApp/${branch}/${file}`
     }
 }

@@ -34,10 +34,10 @@ from EasyReflectometry.interface import InterfaceFactory
 
 from easyAppLogic.Utils.Utils import generalizePath
 
-from easyReflectometryApp.Logic.DataStore import DataSet1D, DataStore
+from EasyReflectometryApp.Logic.DataStore import DataSet1D, DataStore
 
-from easyReflectometryApp.Logic.Proxies.Plotting1d import Plotting1dProxy
-from easyReflectometryApp.Logic.Fitter import Fitter as ThreadedFitter
+from EasyReflectometryApp.Logic.Proxies.Plotting1d import Plotting1dProxy
+from EasyReflectometryApp.Logic.Fitter import Fitter as ThreadedFitter
 
 COLOURMAP = cm.get_cmap('Blues', 100)
 MIN_SLD = -3
@@ -253,7 +253,7 @@ class PyQmlProxy(QObject):
         # Screen recorder
         recorder = None
         try:
-            from easyReflectometryApp.Logic.ScreenRecorder import ScreenRecorder
+            from EasyReflectometryApp.Logic.ScreenRecorder import ScreenRecorder
             recorder = ScreenRecorder()
         except (ImportError, ModuleNotFoundError):
             print('Screen recording disabled')
@@ -2023,7 +2023,7 @@ class PyQmlProxy(QObject):
     @Slot()
     def resetState(self):
         pass
-        # Need to be reimplemented for easyReflectometry
+        # Need to be reimplemented for EasyReflectometry
         #self._project_info = self._defaultProjectInfo()
         #self.projectCreated = False
         #self.projectInfoChanged.emit()

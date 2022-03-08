@@ -16,7 +16,7 @@ from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView  # to call
 import utils
 import easyAppGui
 from easyAppLogic.Translate import Translator
-from easyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
+from EasyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
 
 # Global vars
 CONFIG = utils.conf()
@@ -32,7 +32,7 @@ def main():
     # Arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--logtofile', action='store_true',
-                        help='enable logging in the file easyReflectometry.log in the system directory tmp instead of the terminal')
+                        help='enable logging in the file EasyReflectometry.log in the system directory tmp instead of the terminal')
     parser.add_argument('-t', '--testmode', action='store_true',
                     help='run the application in test mode: run the tutorial, record a video and exit the application')
     args = parser.parse_args()

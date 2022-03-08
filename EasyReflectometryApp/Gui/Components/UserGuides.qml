@@ -37,7 +37,7 @@ Item {
         EaComponents.GuideWindow {
             container: homePageGuidesContainer
             parent: ExGlobals.Variables.startButton
-            text: qsTr("Click here to start your journey with easyReflectometry!")
+            text: qsTr("Click here to start your journey with EasyReflectometry!")
         }
     }
 

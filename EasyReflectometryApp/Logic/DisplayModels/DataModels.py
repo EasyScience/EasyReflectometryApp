@@ -5,7 +5,7 @@ from random import random
 
 from PySide2.QtCore import QPointF
 from PySide2.QtCharts import QtCharts
-from easyReflectometryApp.Logic.MatplotlibBackend import DisplayBridge
+from EasyReflectometryApp.Logic.MatplotlibBackend import DisplayBridge
 
 
 class MeasuredDataModel:

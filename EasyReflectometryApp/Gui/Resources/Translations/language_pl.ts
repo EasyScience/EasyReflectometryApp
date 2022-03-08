@@ -818,8 +818,8 @@ The next page becomes enabled when the previous page is fully completed.</source
     </message>
     <message>
         <location filename="../../Components/UserGuides.qml" line="40" />
-        <source>Click here to start your journey with easyReflectometry!</source>
-        <translation>Kliknij tutaj, aby rozpocząć podróż za pomocą easyReflectometry! </translation>
+        <source>Click here to start your journey with EasyReflectometry!</source>
+        <translation>Kliknij tutaj, aby rozpocząć podróż za pomocą EasyReflectometry! </translation>
     </message>
     <message>
         <location filename="../../Components/UserGuides.qml" line="54" />

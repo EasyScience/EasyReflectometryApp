@@ -9,7 +9,7 @@ from xml.dom.minidom import parseString
 import json
 
 from easyAppLogic.Utils.Utils import generalizePath
-from easyReflectometryApp.Logic.DataStore import DataSet1D, DataStore
+from EasyReflectometryApp.Logic.DataStore import DataSet1D, DataStore
 
 
 class State(object):
