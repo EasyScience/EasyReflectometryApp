@@ -2,6 +2,7 @@ from PySide2.QtCore import QObject, Signal
 
 from .Project import ProjectLogic
 from .Simulation import SimulationLogic
+from .Material import MaterialLogic
 from EasyReflectometry.interface import InterfaceFactory
 
 
@@ -20,6 +21,7 @@ class LogicController(QObject):
     def initializeLogics(self):
         self.l_project = ProjectLogic(self, interface=self.interface)
         self.l_simulation = SimulationLogic(self, interface=self.interface)
+        self.l_material = MaterialLogic(self, interface=self.interface)
 
     def setupSignals(self):
         pass

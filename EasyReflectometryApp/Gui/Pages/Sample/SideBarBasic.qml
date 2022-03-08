@@ -32,7 +32,7 @@ EaComponents.SideBarColumn {
             model: XmlListModel {
                 property int materialsIndex: ExGlobals.Constants.proxy.currentMaterialsIndex + 1
 
-                xml: ExGlobals.Constants.proxy.materialsAsXml
+                xml: ExGlobals.Constants.proxy.material.materialsAsXml
                 query: "/root/item"
 
                 XmlRole { name: "color"; query: "color/string()" }

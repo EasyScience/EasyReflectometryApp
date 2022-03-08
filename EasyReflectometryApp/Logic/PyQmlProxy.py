@@ -9,8 +9,6 @@ import json
 from typing import Union
 from dicttoxml import dicttoxml
 
-from matplotlib import cm, colors
-
 from PySide2.QtCore import QObject, Slot, Signal, Property
 from PySide2.QtCore import QByteArray, QBuffer, QIODevice
 
@@ -38,15 +36,12 @@ from easyAppLogic.Utils.Utils import generalizePath
 from .LogicController import LogicController
 from .Project import ProjectProxy
 from .Simulation import SimulationProxy
+from .Material import MaterialProxy
 
 from EasyReflectometryApp.Logic.DataStore import DataSet1D, DataStore
 
 from EasyReflectometryApp.Logic.Proxies.Plotting1d import Plotting1dProxy
 from EasyReflectometryApp.Logic.Fitter import Fitter as ThreadedFitter
-
-COLOURMAP = cm.get_cmap('Blues', 100)
-MIN_SLD = -3
-MAX_SLD = 15
 
 ITEM_LOOKUP = {
                 'Multi-layer': MultiLayer,
@@ -67,14 +62,12 @@ class PyQmlProxy(QObject):
     stateChanged = Signal(bool)
 
     # Fitables
-    
     parametersAsObjChanged = Signal()
     parametersAsXmlChanged = Signal()
     parametersFilterCriteriaChanged = Signal()
 
     # Materials
-    materialsAsObjChanged = Signal()
-    materialsAsXmlChanged = Signal()
+    # materialsAsXmlChanged = Signal()
     materialsNameChanged = Signal()
 
     # Items
@@ -128,12 +121,12 @@ class PyQmlProxy(QObject):
         ######### proxies #########
         self._project_proxy = ProjectProxy(self, logic=self.lc) 
         self._simulation_proxy = SimulationProxy(self, logic=self.lc)
+        self._material_proxy = MaterialProxy(self, logic=self.lc)
 
         # Main
         self._interface = InterfaceFactory()
 
         # Sample
-        self._materials = []
         self._model = Model.default(interface=self._interface)
         self._model.remove_item(0)
         self._model.remove_item(0)
@@ -155,9 +148,7 @@ class PyQmlProxy(QObject):
 
         # Materials
         self._current_materials_index = 1
-        self._current_materials_len = len(self._materials)
-        self._materials_as_obj = []
-        self._materials_as_xml = ""
+        self._current_materials_len = len(self._material_proxy._materials)
         self.sampleChanged.connect(self._onMaterialsChanged)
         self.currentSampleChanged.connect(self._onCurrentMaterialsChanged)
 
@@ -267,6 +258,10 @@ class PyQmlProxy(QObject):
     @Property('QVariant', notify=dummySignal)
     def simulation(self):
         return self._simulation_proxy
+
+    @Property('QVariant', notify=dummySignal)
+    def material(self):
+        return self._material_proxy
 
     ####################################################################################################################
     ####################################################################################################################
@@ -393,15 +388,15 @@ class PyQmlProxy(QObject):
     ####################################################################################################################
 
     def _defaultModel(self):
-        self._materials = [
+        self._material_proxy._materials = [
             Material.from_pars(0., 0., name='Vacuum'), 
             Material.from_pars(6.335, 0., name='D2O'), 
             Material.from_pars(2.074, 0., name='Si')
         ]
         layers = [
-            Layer.from_pars(self._materials[0], 0.0, 0.0, name='Vacuum Layer'),
-            Layer.from_pars(self._materials[1], 100.0, 3.0, name='D2O Layer'),
-            Layer.from_pars(self._materials[2], 0.0, 1.2, name='Si Layer'),
+            Layer.from_pars(self._material_proxy._materials[0], 0.0, 0.0, name='Vacuum Layer'),
+            Layer.from_pars(self._material_proxy._materials[1], 100.0, 3.0, name='D2O Layer'),
+            Layer.from_pars(self._material_proxy._materials[2], 0.0, 1.2, name='Si Layer'),
         ]
         layerss = [
             Layers.from_pars(layers[0], name='Vacuum Layer'),
@@ -427,37 +422,12 @@ class PyQmlProxy(QObject):
     #  Materials
     ####################################################################################################################
 
-    @Property('QVariant', notify=materialsAsObjChanged)
-    def materialsAsObj(self):
-        return self._materials_as_obj
-
-    @Property(str, notify=materialsAsXmlChanged)
-    def materialsAsXml(self):
-        return self._materials_as_xml
-
-    @materialsAsXml.setter
-    @property_stack_deco
-    def materialsAsXml(self):
-        self.parametersChanged.emit()
-
-    def _setMaterialsAsObj(self):
-        self._materials_as_obj = []
-        for i in self._materials:
-            dictionary = i.as_dict(skip=['interface'])
-            dictionary['color'] = colors.rgb2hex(COLOURMAP((dictionary['sld']['value'] - MIN_SLD) / (MAX_SLD - MIN_SLD)))
-            self._materials_as_obj.append(dictionary)
-        self.materialsAsObjChanged.emit()
-
-    def _setMaterialsAsXml(self):
-        self._materials_as_xml = dicttoxml(self._materials_as_obj).decode()
-        self.materialsAsXmlChanged.emit()
-
     def _onMaterialsChanged(self):
         for i in self._model.structure:
             for j in i.layers:
                 j.name = j.material.name + ' Layer'
-        self._setMaterialsAsObj()  # 0.025 s
-        self._setMaterialsAsXml()  # 0.065 s
+        self._material_proxy._setMaterialsAsObj()  # 0.025 s
+        self._material_proxy._setMaterialsAsXml()  # 0.065 s
         self._setMaterialsNames()
         self.stateChanged.emit(True)
 
@@ -471,7 +441,7 @@ class PyQmlProxy(QObject):
         self.parametersChanged.emit()
         
     def _setMaterialsNames(self):
-        self._materials_names =  [i.name for i in self._materials]
+        self._materials_names =  [i.name for i in self._material_proxy._materials]
         self.materialsNameChanged.emit()
 
     ####################################################################################################################
@@ -528,7 +498,7 @@ class PyQmlProxy(QObject):
         #if borg.stack.enabled:
         #    borg.stack.beginMacro('Loaded default material')
         borg.stack.enabled = False
-        self._materials.append(Material.from_pars(2.074, 0.000, name=f'Material {len(self._materials)+1}', interface=self._interface))
+        self._material_proxy._materials.append(Material.from_pars(2.074, 0.000, name=f'Material {len(self._material_proxy._materials)+1}', interface=self._interface))
         borg.stack.enabled = True
         self.sampleChanged.emit()
 
@@ -540,8 +510,8 @@ class PyQmlProxy(QObject):
         borg.stack.enabled = False
         # This is a fix until deepcopy is worked out
         # Manual duplication instead of creating a copy
-        to_dup = self._materials[self.currentMaterialsIndex] 
-        self._materials.append(Material.from_pars(to_dup.sld.raw_value, to_dup.isld.raw_value, name=to_dup.name))
+        to_dup = self._material_proxy._materials[self.currentMaterialsIndex] 
+        self._material_proxy._materials.append(Material.from_pars(to_dup.sld.raw_value, to_dup.isld.raw_value, name=to_dup.name))
         borg.stack.enabled = True
         self.sampleChanged.emit()
 
@@ -553,11 +523,11 @@ class PyQmlProxy(QObject):
         :param i: Index of the material
         :type i: str
         """
-        if len(self._materials) == 1:
-            self._materials = []
+        if len(self._material_proxy._materials) == 1:
+            self._material_proxy._materials = []
             self.sampleChanged.emit()
         else:
-            del self._materials[int(i)]
+            del self._material_proxy._materials[int(i)]
             self.sampleChanged.emit()
 
 
@@ -572,11 +542,11 @@ class PyQmlProxy(QObject):
         self._model.structure[0].layers[0].roughness.enabled = True
         self._model.structure[-1].layers[-1].thickness.enabled = True
         try:
-            self._model.add_item(MultiLayer.from_pars(Layers.from_pars(Layer.from_pars(self._materials[0], 10., 1.2)), f'Multi-layer {len(self._model.structure)+1}'))
+            self._model.add_item(MultiLayer.from_pars(Layers.from_pars(Layer.from_pars(self._material_proxy._materials[0], 10., 1.2)), f'Multi-layer {len(self._model.structure)+1}'))
         except IndexError:
             self.addNewMaterials()
             self._model.add_item(MultiLayer.from_pars(Layers.from_pars(Layer.from_pars(
-                self._materials[0], 10., 1.2)), f'Multi-layer {len(self._model.structure)+1}'))
+                self._material_proxy._materials[0], 10., 1.2)), f'Multi-layer {len(self._model.structure)+1}'))
         self._model.structure[0].layers[0].thickness.enabled = False
         self._model.structure[0].layers[0].roughness.enabled = False
         self._model.structure[-1].layers[-1].thickness.enabled = False
@@ -692,7 +662,7 @@ class PyQmlProxy(QObject):
         self._model.structure[0].layers[0].roughness.enabled = True
         self._model.structure[-1].layers[-1].thickness.enabled = True        
         try:
-            self._model.structure[self.currentItemsIndex].add_layer(Layer.from_pars(self._materials[0], 10.0, 1.2, name=f'Layer {len(self._model.structure[self.currentItemsIndex].layers)}'))
+            self._model.structure[self.currentItemsIndex].add_layer(Layer.from_pars(self._material_proxy._materials[0], 10.0, 1.2, name=f'Layer {len(self._model.structure[self.currentItemsIndex].layers)}'))
         except IndexError:
             self.addNewItems()
         self._model.structure[0].layers[0].thickness.enabled = False
@@ -822,10 +792,10 @@ class PyQmlProxy(QObject):
         :param sld: New name
         :type sld: str
         """
-        if self._materials[self.currentMaterialsIndex].name == name:
+        if self._material_proxy._materials[self.currentMaterialsIndex].name == name:
             return
 
-        self._materials[self.currentMaterialsIndex].name = name
+        self._material_proxy._materials[self.currentMaterialsIndex].name = name
         self.sampleChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
@@ -838,10 +808,10 @@ class PyQmlProxy(QObject):
         :param sld: New SLD value
         :type sld: float
         """
-        if self._materials[self.currentMaterialsIndex].sld == sld:
+        if self._material_proxy._materials[self.currentMaterialsIndex].sld == sld:
             return
 
-        self._materials[self.currentMaterialsIndex].sld = sld
+        self._material_proxy._materials[self.currentMaterialsIndex].sld = sld
         self.sampleChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
@@ -854,10 +824,10 @@ class PyQmlProxy(QObject):
         :param sld: New iSLD value
         :type sld: float
         """
-        if self._materials[self.currentMaterialsIndex].isld == isld:
+        if self._material_proxy._materials[self.currentMaterialsIndex].isld == isld:
             return
 
-        self._materials[self.currentMaterialsIndex].isld = isld
+        self._material_proxy._materials[self.currentMaterialsIndex].isld = isld
         self.sampleChanged.emit()
         # self.projectInfoAsJson['samples'] = name
         # self.projectInfoChanged.emit()
@@ -981,7 +951,7 @@ class PyQmlProxy(QObject):
         :type sld: str
         """
         print('***setCurrentLayersMaterial')
-        material = self._materials[int(current_index)]
+        material = self._material_proxy._materials[int(current_index)]
         if self._model.structure[self.currentItemsIndex].layers[self.currentLayersIndex].material == material:
             return
 
@@ -1704,7 +1674,7 @@ class PyQmlProxy(QObject):
             for j in i.layers:
                 materials_in_model.append(j.material)
         materials_not_in_model = []
-        for i in self._materials:
+        for i in self._material_proxy._materials:
             if i not in materials_in_model:
                 materials_not_in_model.append(i)
         descr = {
@@ -1768,13 +1738,12 @@ class PyQmlProxy(QObject):
             if old_interface_name != interface_name:
                 self._interface.switch(interface_name)
 
-        self._materials = []
         self._model = Model.from_dict(descr['model'])
         for i in self._model.structure:
             for j in i.layers:
-                self._materials.append(j.material)
+                self._material_proxy._materials.append(j.material)
         for i in Materials.from_dict(descr['materials_not_in_model']):
-            self._materials.append(i)
+            self._material_proxy._materials.append(i)
         self._model.interface = self._interface
         self.sampleChanged.emit()
 
