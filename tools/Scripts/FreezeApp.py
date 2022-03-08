@@ -99,7 +99,7 @@ def copyMissingPlugins():
 def runPyInstaller():
     try:
         message = 'freeze app'
-        main_py_path = os.path.join(CONFIG.package_name, 'main.py')
+        main_py_path = os.path.join('e' + CONFIG.package_name[1:], 'main.py')
         print(main_py_path)
         print(CONFIG.dist_dir)
         print(CONFIG.build_dir)
