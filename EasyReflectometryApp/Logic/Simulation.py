@@ -10,6 +10,9 @@ class SimulationProxy(QObject):
     simulationParametersChanged = Signal()
     simulationParametersAsObjChanged = Signal()
     simulationParametersAsXmlChanged = Signal()
+    
+    calculatedDataChanged = Signal()
+
     backgroundChanged = Signal()
     resolutionChanged = Signal()
     qRangeChanged = Signal()
@@ -31,8 +34,7 @@ class SimulationProxy(QObject):
         self.resolutionChanged.connect(self._onSimulationParametersChanged)
         self.qRangeChanged.connect(self._onSimulationParametersChanged)
 
-    def _onSimulationParametersChanged(self):
-        self.parent.calculatedDataChanged.emit()
+        self.calculatedDataChanged.connect(self._onCalculatedDataChanged)
 
     # # #
     # Defaults 
@@ -94,6 +96,7 @@ class SimulationProxy(QObject):
     # # # 
     # Actions
     # # # 
+
     def _onExperimentDataAdded(self):
         self.parent._plotting_1d_proxy.setMeasuredData(self.parent._experiment_data.x, self.parent._experiment_data.y, self.parent._experiment_data.ye)
         self._experiment_parameters = self._experimentDataParameters(self.parent._experiment_data)
@@ -103,6 +106,42 @@ class SimulationProxy(QObject):
         self.parent._data_proxy.experimentDataAsObjChanged.emit()
         self.parent.projectInfoAsJson['experiments'] = self.parent._data_proxy._data.experiments[0].name
         self.parent.projectInfoChanged.emit()
+
+    def _onCalculatedDataChanged(self):
+        self._updateCalculatedData()
+
+    def _onSimulationParametersChanged(self):
+        self.calculatedDataChanged.emit()
+
+    # # #
+    # Calculations
+    # # #
+
+    def _updateCalculatedData(self):
+
+        # if not self.experimentLoaded:# and not self.experimentSkipped:
+        #     return
+
+        # self._sample.output_index = self.currentPhaseIndex
+
+        #  THIS IS WHERE WE WOULD LOOK UP CURRENT EXP INDEX
+        sim = self.parent._data_proxy._data.simulations[0]
+
+        # elif self.experimentSkipped:
+        x_min = float(self._q_range_as_obj['x_min'])
+        x_max = float(self._q_range_as_obj['x_max'])
+        x_step = float(self._q_range_as_obj['x_step'])
+        sim.x = np.arange(x_min, x_max + x_step, x_step)
+
+        if self.parent._data_proxy.experimentLoaded:
+            exp = self.parent._data_proxy._data.experiments[0]
+            sim.x = exp.x
+
+        sim.y = self.parent._interface.fit_func(sim.x) 
+        sld_profile = self.parent._interface.sld_profile()
+
+        self.parent._plotting_1d_proxy.setCalculatedData(sim.x, sim.y)
+        self.parent._plotting_1d_proxy.setSldData(sld_profile[0], sld_profile[1])
 
     # # # 
     # Static methods

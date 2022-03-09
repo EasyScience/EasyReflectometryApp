@@ -67,10 +67,6 @@ class PyQmlProxy(QObject):
     experimentDataAdded = Signal()
     experimentDataRemoved = Signal()
 
-    # Analysis
-    calculatedDataChanged = Signal()
-    calculatedDataUpdated = Signal()
-
     fitFinished = Signal()
     fitFinishedNotify = Signal()
     fitResultsChanged = Signal()
@@ -136,7 +132,6 @@ class PyQmlProxy(QObject):
         self.experimentDataRemoved.connect(self._onExperimentDataRemoved)
 
         # Analysis
-        self.calculatedDataChanged.connect(self._onCalculatedDataChanged)
 
         self.sampleChanged.connect(self._simulation_proxy._onSimulationParametersChanged)
         self.sampleChanged.connect(self._parameter_proxy._onParametersChanged)
@@ -159,7 +154,7 @@ class PyQmlProxy(QObject):
         self.parametersChanged.connect(self._model_proxy._onModelChanged)
         self.parametersChanged.connect(self._simulation_proxy._onSimulationParametersChanged)
         self.parametersChanged.connect(self._parameter_proxy._onParametersChanged)
-        self.parametersChanged.connect(self._onCalculatedDataChanged)
+        self.parametersChanged.connect(self._simulation_proxy._onCalculatedDataChanged)
         self.parametersChanged.connect(self.undoRedoChanged)
 
         # Report
@@ -740,54 +735,6 @@ class PyQmlProxy(QObject):
     # ANALYSIS
     ####################################################################################################################
     ####################################################################################################################
-
-    ####################################################################################################################
-    # Calculated data
-    ####################################################################################################################
-
-    def _updateCalculatedData(self):
-        start_time = timeit.default_timer()
-
-        # if not self.experimentLoaded:# and not self.experimentSkipped:
-        #     return
-
-        # self._sample.output_index = self.currentPhaseIndex
-
-        #  THIS IS WHERE WE WOULD LOOK UP CURRENT EXP INDEX
-        sim = self._data_proxy._data.simulations[0]
-
-        # elif self.experimentSkipped:
-        x_min = float(self._simulation_proxy._q_range_as_obj['x_min'])
-        x_max = float(self._simulation_proxy._q_range_as_obj['x_max'])
-        x_step = float(self._simulation_proxy._q_range_as_obj['x_step'])
-        sim.x = np.arange(x_min, x_max + x_step, x_step)
-
-        if self._data_proxy.experimentLoaded:
-            exp = self._data_proxy._data.experiments[0]
-            sim.x = exp.x
-
-        sim.y = self._interface.fit_func(sim.x) 
-        sld_profile = self._interface.sld_profile()
-
-        self._plotting_1d_proxy.setCalculatedData(sim.x, sim.y)
-        self._plotting_1d_proxy.setSldData(sld_profile[0], sld_profile[1])
-
-        print("+ _updateCalculatedData: {0:.3f} s".format(timeit.default_timer() - start_time))
-
-    def _onCalculatedDataChanged(self):
-        print("***** _onCalculatedDataChanged")
-        try:
-            self._updateCalculatedData()
-        finally:
-            self.calculatedDataUpdated.emit()
-
-    @Property(str, notify=calculatedDataUpdated)
-    def calculatedDataXStr(self):
-        return self._calculated_data_x_str
-
-    @Property(str, notify=calculatedDataUpdated)
-    def calculatedDataYStr(self):
-        return self._calculated_data_y_str
 
     ####################################################################################################################
     # Minimizer
