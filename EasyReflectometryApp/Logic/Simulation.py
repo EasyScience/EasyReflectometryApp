@@ -1,6 +1,8 @@
 import json
+
 from PySide2.QtCore import QObject, Signal, Property
 
+from easyCore import np
 
 class SimulationLogic(QObject):
 
@@ -27,6 +29,7 @@ class SimulationProxy(QObject):
         self._background_as_obj = self._defaultBackground()
         self._resolution_as_obj = self._defaultResolution()
         self._q_range_as_obj = self._defaultQRange()
+        self._experiment_parameters = None
         
         # # #
         # Connections
@@ -95,3 +98,38 @@ class SimulationProxy(QObject):
             return
         self._q_range_as_obj = value
         self.simulationParametersChanged.emit()
+
+    # # # 
+    # Actions
+    # # # 
+    def _onExperimentDataAdded(self):
+        self.parent._plotting_1d_proxy.setMeasuredData(self.parent._experiment_data.x, self.parent._experiment_data.y, self.parent._experiment_data.ye)
+        self._experiment_parameters = self._experimentDataParameters(self.parent._experiment_data)
+        self.qRangeAsObj = json.dumps(self._experiment_parameters[0])
+        self.backgroundAsObj = json.dumps(self._experiment_parameters[1])
+
+        self.parent._data_proxy.experimentDataAsObjChanged.emit()
+        self.parent.projectInfoAsJson['experiments'] = self.parent._data_proxy._data.experiments[0].name
+        self.parent.projectInfoChanged.emit()
+
+    # # # 
+    # Static methods
+    # # #
+
+    @staticmethod
+    def _experimentDataParameters(data):
+        x_min = data.x[0]
+        x_max = data.x[-1]
+        x_step = (x_max - x_min) / (len(data.x) - 1)
+        bkg = np.min(data.y)
+        q_range_parameters = {
+            "x_min":  x_min,
+            "x_max":  x_max,
+            "x_step": x_step,
+        }
+        bkg_parameters = {
+            'bkg': bkg
+        }
+        return q_range_parameters, bkg_parameters
+
+    

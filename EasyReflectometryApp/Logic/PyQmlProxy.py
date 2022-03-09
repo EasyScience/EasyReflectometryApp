@@ -133,16 +133,10 @@ class PyQmlProxy(QObject):
         self.sampleChanged.connect(self._model_proxy._onModelChanged)
         self.currentSampleChanged.connect(self._onCurrentItemsChanged)
 
-        # Experiment and calculated data
-        self._data = self._defaultData()
-
         # Experiment
-        self._experiment_parameters = None
         self._experiment_data = None
-        # self._experiment_data_as_xml = ""
         self.experiments = []
-        # self._data_proxy.experimentDataAsObjChanged.connect(self._onExperimentDataChanged)
-        self.experimentDataAdded.connect(self._onExperimentDataAdded)
+        self.experimentDataAdded.connect(self._simulation_proxy._onExperimentDataAdded)
         self.experimentDataRemoved.connect(self._onExperimentDataRemoved)
 
         # Analysis
@@ -867,63 +861,13 @@ class PyQmlProxy(QObject):
 
     @Slot(str)
     def setCurrentExperimentDatasetName(self, name):
-        if self._data.experiments[0].name == name:
+        if self._data_proxy._data.experiments[0].name == name:
             return
 
-        self._data.experiments[0].name = name
+        self._data_proxy._data.experiments[0].name = name
         self._data_proxy.experimentDataAsObjChanged.emit()
         self.projectInfoAsJson['experiments'] = name
         self.projectInfoChanged.emit()
-
-    ####################################################################################################################
-    ####################################################################################################################
-    # EXPERIMENT
-    ####################################################################################################################
-    ####################################################################################################################
-
-    def _defaultData(self):
-        x_min = 0.001 #self._defaultSimulationParameters()['x_min']
-        x_max = 0.3 #self._defaultSimulationParameters()['x_max']
-        x_step = 0.002 #self._defaultSimulationParameters()['x_step']
-        num_points = int((x_max - x_min) / x_step + 1)
-        x_data = np.linspace(x_min, x_max, num_points)
-
-        data = DataStore()
-
-        data.append(
-            DataSet1D(
-                name='NPD data',
-                x=x_data, y=np.zeros_like(x_data),
-                x_label='q (1/angstrom)', y_label='Reflectivity',
-                data_type='experiment'
-            )
-        )
-        data.append(
-            DataSet1D(
-                name='{:s} engine'.format(self._interface.current_interface_name),
-                x=x_data, y=np.zeros_like(x_data),
-                x_label='q (1/angstrom)', y_label='Reflectivity',
-                data_type='simulation'
-            )
-        )
-        data.append(
-            DataSet1D(
-                name='Difference',
-                x=x_data, y=np.zeros_like(x_data),
-                x_label='q (1/angstrom)', y_label='Difference',
-                data_type='simulation'
-            )
-        )
-        return data
-
-    ####################################################################################################################
-    # Experiment models (list, xml, cif)
-    ####################################################################################################################
-
-    # def _onExperimentDataChanged(self):
-    #     print("***** _onExperimentDataChanged")
-    #     self._data_proxy._setExperimentDataAsXml()  # ? s
-    #     self.stateChanged.emit(True)
 
     ####################################################################################################################
     # Experiment data: Add / Remove
@@ -934,8 +878,8 @@ class PyQmlProxy(QObject):
         print(f"+ addExperimentDataFromOrt: {file_url}")
 
         self._experiment_data = self._loadExperimentData(file_url)
-        self._data.experiments[0].name = pathlib.Path(file_url).stem
-        self.experiments = [{'name': experiment.name} for experiment in self._data.experiments]
+        self._data_proxy._data.experiments[0].name = pathlib.Path(file_url).stem
+        self.experiments = [{'name': experiment.name} for experiment in self._data_proxy._data.experiments]
         self._data_proxy.experimentLoaded = True
         self._data_proxy.experimentSkipped = False
         self.experimentDataAdded.emit()
@@ -951,39 +895,12 @@ class PyQmlProxy(QObject):
     def _loadExperimentData(self, file_url):
         print("+ _loadExperimentData")
         file_path = generalizePath(file_url)
-        data = self._data.experiments[0]
+        data = self._data_proxy._data.experiments[0]
         try:
             data.x, data.y, data.ye, data.xe = np.loadtxt(file_path, unpack=True)
         except ValueError:
             data.x, data.y, data.ye = np.loadtxt(file_path, unpack=True)
         return data
-
-    def _experimentDataParameters(self, data):
-        x_min = data.x[0]
-        x_max = data.x[-1]
-        x_step = (x_max - x_min) / (len(data.x) - 1)
-        bkg = np.min(data.y)
-        q_range_parameters = {
-            "x_min":  x_min,
-            "x_max":  x_max,
-            "x_step": x_step,
-        }
-        bkg_parameters = {
-            'bkg': bkg
-        }
-        return q_range_parameters, bkg_parameters
-
-    def _onExperimentDataAdded(self):
-        print("***** _onExperimentDataAdded")
-        self._plotting_1d_proxy.setMeasuredData(self._experiment_data.x, self._experiment_data.y,
-                                                self._experiment_data.ye)
-        self._experiment_parameters = self._experimentDataParameters(self._experiment_data)
-        self._simulation_proxy.qRangeAsObj = json.dumps(self._experiment_parameters[0])
-        self._simulation_proxy.backgroundAsObj = json.dumps(self._experiment_parameters[1])
-
-        self._data_proxy.experimentDataAsObjChanged.emit()
-        self.projectInfoAsJson['experiments'] = self._data.experiments[0].name
-        self.projectInfoChanged.emit()
 
     def _onExperimentDataRemoved(self):
         print("***** _onExperimentDataRemoved")
@@ -1010,7 +927,7 @@ class PyQmlProxy(QObject):
         # self._sample.output_index = self.currentPhaseIndex
 
         #  THIS IS WHERE WE WOULD LOOK UP CURRENT EXP INDEX
-        sim = self._data.simulations[0]
+        sim = self._data_proxy._data.simulations[0]
 
         # elif self.experimentSkipped:
         x_min = float(self._simulation_proxy._q_range_as_obj['x_min'])
@@ -1019,7 +936,7 @@ class PyQmlProxy(QObject):
         sim.x = np.arange(x_min, x_max + x_step, x_step)
 
         if self._data_proxy.experimentLoaded:
-            exp = self._data.experiments[0]
+            exp = self._data_proxy._data.experiments[0]
             sim.x = exp.x
 
         sim.y = self._interface.fit_func(sim.x) 
@@ -1141,7 +1058,7 @@ class PyQmlProxy(QObject):
 
     def nonthreaded_fit(self):
         self.isFitFinished = False
-        exp_data = self._data.experiments[0]
+        exp_data = self._data_proxy._data.experiments[0]
 
         x = exp_data.x
         y = exp_data.y
@@ -1153,7 +1070,7 @@ class PyQmlProxy(QObject):
 
     def threaded_fit(self):
         self.isFitFinished = False
-        exp_data = self._data.experiments[0]
+        exp_data = self._data_proxy._data.experiments[0]
 
         x = exp_data.x
         y = exp_data.y
@@ -1341,12 +1258,12 @@ class PyQmlProxy(QObject):
             'materials_not_in_model': Materials(*materials_not_in_model).as_dict(skip=['interface'])
         }
         
-        if self._data.experiments:
-            experiments_x = self._data.experiments[0].x
-            experiments_y = self._data.experiments[0].y
-            experiments_ye = self._data.experiments[0].ye
-            if self._data.experiments[0].xe is not None:
-                experiments_xe = self._data.experiments[0].xe
+        if self._data_proxy._data.experiments:
+            experiments_x = self._data_proxy._data.experiments[0].x
+            experiments_y = self._data_proxy._data.experiments[0].y
+            experiments_ye = self._data_proxy._data.experiments[0].ye
+            if self._data_proxy._data.experiments[0].xe is not None:
+                experiments_xe = self._data_proxy._data.experiments[0].xe
                 descr['experiments'] = [experiments_x, experiments_y, experiments_ye, experiments_xe]
             else:
                 descr['experiments'] = [experiments_x, experiments_y, experiments_ye]
@@ -1409,14 +1326,14 @@ class PyQmlProxy(QObject):
         # experiment
         if 'experiments' in descr:
             self._data_proxy.experimentLoaded = True
-            self._data.experiments[0].x = np.array(descr['experiments'][0])
-            self._data.experiments[0].y = np.array(descr['experiments'][1])
-            self._data.experiments[0].ye = np.array(descr['experiments'][2])
+            self._data_proxy._data.experiments[0].x = np.array(descr['experiments'][0])
+            self._data_proxy._data.experiments[0].y = np.array(descr['experiments'][1])
+            self._data_proxy._data.experiments[0].ye = np.array(descr['experiments'][2])
             if len(descr['experiments'] == 4):
-                self._data.experiments[0].xe = np.array(descr['experiments'][3])
+                self._data_proxy._data.experiments[0].xe = np.array(descr['experiments'][3])
             else:
-                self._data.experiments[0].xe = None
-            self._experiment_data = self._data.experiments[0]
+                self._data_proxy._data.experiments[0].xe = None
+            self._experiment_data = self._data_proxy._data.experiments[0]
             self.experiments = [{'name': descr['project_info']['experiments']}]
             self.setCurrentExperimentDatasetName(descr['project_info']['experiments'])
             self._data_proxy.experimentLoaded = True

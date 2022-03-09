@@ -5,7 +5,10 @@ from matplotlib import cm, colors
 
 from PySide2.QtCore import QObject, Signal, Property
 
+from easyCore import np
 from easyCore.Utils.UndoRedo import property_stack_deco
+
+from .DataStore import DataSet1D, DataStore
 
 
 class DataLogic(QObject):
@@ -30,6 +33,8 @@ class DataProxy(QObject):
         self.parent = parent
         self.logic = logic.l_data
 
+        self._data = self._defaultData()
+
         self._experiment_skipped = False
         self._experiment_loaded = False
         self._experiment_data_as_xml = ""
@@ -43,8 +48,32 @@ class DataProxy(QObject):
     # Defaults
     # # # 
 
-    # def _defaultMaterials(self) -> Materials:
-    #     return Materials(Material.from_pars(0., 0., name='Vacuum'), Material.from_pars(6.335, 0., name='D2O'), Material.from_pars(2.074, 0., name='Si'))
+    def _defaultData(self):
+        x_min = 0.001 #self._defaultSimulationParameters()['x_min']
+        x_max = 0.3 #self._defaultSimulationParameters()['x_max']
+        x_step = 0.002 #self._defaultSimulationParameters()['x_step']
+        num_points = int((x_max - x_min) / x_step + 1)
+        x_data = np.linspace(x_min, x_max, num_points)
+
+        data = DataStore()
+
+        data.append(
+            DataSet1D(
+                name='data',
+                x=x_data, y=np.zeros_like(x_data),
+                x_label='q (1/angstrom)', y_label='Reflectivity',
+                data_type='experiment'
+            )
+        )
+        data.append(
+            DataSet1D(
+                name='{:s} engine'.format(self.parent._interface.current_interface_name),
+                x=x_data, y=np.zeros_like(x_data),
+                x_label='q (1/angstrom)', y_label='Reflectivity',
+                data_type='simulation'
+            )
+        )
+        return data
 
     # # #
     # Setters and getters
@@ -83,7 +112,7 @@ class DataProxy(QObject):
 
     @Property('QVariant', notify=experimentDataAsObjChanged)
     def experimentDataAsObj(self):
-        return [{'name': experiment.name} for experiment in self.parent._data.experiments]
+        return [{'name': experiment.name} for experiment in self._data.experiments]
 
     # # #
     # Actions
