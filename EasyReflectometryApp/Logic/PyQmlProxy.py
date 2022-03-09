@@ -14,13 +14,12 @@ from PySide2.QtCore import QObject, Slot, Signal, Property
 from PySide2.QtCore import QByteArray, QBuffer, QIODevice
 
 from easyCore import np, borg
-
 from easyCore.Objects.Groups import BaseCollection
 from easyCore.Objects.Base import BaseObj
-
 from easyCore.Fitting.Fitting import Fitter
-
 from easyCore.Utils.UndoRedo import property_stack_deco
+
+from easyAppLogic.Utils.Utils import generalizePath
 
 from EasyReflectometry.sample.material import Material
 from EasyReflectometry.sample.materials import Materials
@@ -30,7 +29,6 @@ from EasyReflectometry.sample.item import MultiLayer, RepeatingMultiLayer
 from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.interface import InterfaceFactory
 
-from easyAppLogic.Utils.Utils import generalizePath
 
 from .LogicController import LogicController
 from .Project import ProjectProxy
@@ -39,11 +37,11 @@ from .Material import MaterialProxy
 from .Model import ModelProxy
 from .Calculator import CalculatorProxy
 from .Parameter import ParameterProxy
+from .Data import DataProxy
 
-from EasyReflectometryApp.Logic.DataStore import DataSet1D, DataStore
-
-from EasyReflectometryApp.Logic.Proxies.Plotting1d import Plotting1dProxy
-from EasyReflectometryApp.Logic.Fitter import Fitter as ThreadedFitter
+from .DataStore import DataSet1D, DataStore
+from .Proxies.Plotting1d import Plotting1dProxy
+from .Fitter import Fitter as ThreadedFitter
 
 ITEM_LOOKUP = {
                 'Multi-layer': MultiLayer,
@@ -64,22 +62,11 @@ class PyQmlProxy(QObject):
 
     # Items
     sampleChanged = Signal()
-
-    modelNameChanged = Signal()
     
     currentSampleChanged = Signal()
 
-    # Experiment
-    # patternParametersChanged = Signal()
-    # patternParametersAsObjChanged = Signal()
-
     experimentDataAdded = Signal()
     experimentDataRemoved = Signal()
-    experimentDataChanged = Signal()
-    experimentDataAsXmlChanged = Signal()
-
-    experimentLoadedChanged = Signal()
-    experimentSkippedChanged = Signal()
 
     # Analysis
     calculatedDataChanged = Signal()
@@ -119,12 +106,10 @@ class PyQmlProxy(QObject):
         self._model_proxy = ModelProxy(self, logic=self.lc)
         self._calculator_proxy = CalculatorProxy(self, logic=self.lc)
         self._parameter_proxy = ParameterProxy(self, logic=self.lc)
+        self._data_proxy = DataProxy(self, logic=self.lc)
 
         # Plotting 1D
         self._plotting_1d_proxy = Plotting1dProxy()
-
-        self._show_bonds = True
-        self._bonds_max_distance = 2.0
 
         # Project
         self._project_created = False
@@ -154,16 +139,11 @@ class PyQmlProxy(QObject):
         # Experiment
         self._experiment_parameters = None
         self._experiment_data = None
-        self._experiment_data_as_xml = ""
+        # self._experiment_data_as_xml = ""
         self.experiments = []
-        self.experimentDataChanged.connect(self._onExperimentDataChanged)
+        # self._data_proxy.experimentDataAsObjChanged.connect(self._onExperimentDataChanged)
         self.experimentDataAdded.connect(self._onExperimentDataAdded)
         self.experimentDataRemoved.connect(self._onExperimentDataRemoved)
-
-        self._experiment_loaded = False
-        self._experiment_skipped = False
-        self.experimentLoadedChanged.connect(self._onExperimentLoadedChanged)
-        self.experimentSkippedChanged.connect(self._onExperimentSkippedChanged)
 
         # Analysis
         self.calculatedDataChanged.connect(self._onCalculatedDataChanged)
@@ -255,6 +235,10 @@ class PyQmlProxy(QObject):
     @Property('QVariant', notify=dummySignal)
     def parameter(self):
         return self._parameter_proxy
+
+    @Property('QVariant', notify=dummySignal)
+    def data(self):
+        return self._data_proxy
 
     ####################################################################################################################
     ####################################################################################################################
@@ -887,7 +871,7 @@ class PyQmlProxy(QObject):
             return
 
         self._data.experiments[0].name = name
-        self.experimentDataChanged.emit()
+        self._data_proxy.experimentDataAsObjChanged.emit()
         self.projectInfoAsJson['experiments'] = name
         self.projectInfoChanged.emit()
 
@@ -936,23 +920,10 @@ class PyQmlProxy(QObject):
     # Experiment models (list, xml, cif)
     ####################################################################################################################
 
-    @Property('QVariant', notify=experimentDataChanged)
-    def experimentDataAsObj(self):
-        return [{'name': experiment.name} for experiment in self._data.experiments]
-
-    @Property(str, notify=experimentDataAsXmlChanged)
-    def experimentDataAsXml(self):
-        return self._experiment_data_as_xml
-
-    def _setExperimentDataAsXml(self):
-        print("+ _setExperimentDataAsXml")
-        self._experiment_data_as_xml = dicttoxml(self.experiments, attr_type=True).decode()
-        self.experimentDataAsXmlChanged.emit()
-
-    def _onExperimentDataChanged(self):
-        print("***** _onExperimentDataChanged")
-        self._setExperimentDataAsXml()  # ? s
-        self.stateChanged.emit(True)
+    # def _onExperimentDataChanged(self):
+    #     print("***** _onExperimentDataChanged")
+    #     self._data_proxy._setExperimentDataAsXml()  # ? s
+    #     self.stateChanged.emit(True)
 
     ####################################################################################################################
     # Experiment data: Add / Remove
@@ -965,16 +936,16 @@ class PyQmlProxy(QObject):
         self._experiment_data = self._loadExperimentData(file_url)
         self._data.experiments[0].name = pathlib.Path(file_url).stem
         self.experiments = [{'name': experiment.name} for experiment in self._data.experiments]
-        self.experimentLoaded = True
-        self.experimentSkipped = False
+        self._data_proxy.experimentLoaded = True
+        self._data_proxy.experimentSkipped = False
         self.experimentDataAdded.emit()
 
     @Slot()
     def removeExperiment(self):
         print("+ removeExperiment")
         self.experiments.clear()
-        self.experimentLoaded = False
-        self.experimentSkipped = False
+        self._data_proxy.experimentLoaded = False
+        self._data_proxy.experimentSkipped = False
         self.experimentDataRemoved.emit()
 
     def _loadExperimentData(self, file_url):
@@ -1010,57 +981,14 @@ class PyQmlProxy(QObject):
         self._simulation_proxy.qRangeAsObj = json.dumps(self._experiment_parameters[0])
         self._simulation_proxy.backgroundAsObj = json.dumps(self._experiment_parameters[1])
 
-        self.experimentDataChanged.emit()
+        self._data_proxy.experimentDataAsObjChanged.emit()
         self.projectInfoAsJson['experiments'] = self._data.experiments[0].name
         self.projectInfoChanged.emit()
 
     def _onExperimentDataRemoved(self):
         print("***** _onExperimentDataRemoved")
         self._plotting_1d_proxy.clearFrontendState()
-        self.experimentDataChanged.emit()
-
-    ####################################################################################################################
-    # Experiment loaded and skipped flags
-    ####################################################################################################################
-
-    @Property(bool, notify=experimentLoadedChanged)
-    def experimentLoaded(self):
-        return self._experiment_loaded
-
-    @experimentLoaded.setter
-    def experimentLoaded(self, loaded: bool):
-        if self._experiment_loaded == loaded:
-            return
-
-        self._experiment_loaded = loaded
-        self.experimentLoadedChanged.emit()
-
-    @Property(bool, notify=experimentSkippedChanged)
-    def experimentSkipped(self):
-        return self._experiment_skipped
-
-    @experimentSkipped.setter
-    def experimentSkipped(self, skipped: bool):
-        if self._experiment_skipped == skipped:
-            return
-
-        self._experiment_skipped = skipped
-        self.experimentSkippedChanged.emit()
-
-    def _onExperimentLoadedChanged(self):
-        print("***** _onExperimentLoadedChanged")
-        if self.experimentLoaded:
-            self._parameter_proxy._onParametersChanged()
-            self._simulation_proxy.simulationParametersChanged.emit()
-            # self.patternParametersChanged.emit()
-
-    def _onExperimentSkippedChanged(self):
-        print("***** _onExperimentSkippedChanged")
-        if self.experimentSkipped:
-            self._parameter_proxy._onParametersChanged()
-            self._simulation_proxy.simulationParametersChanged.emit()
-            # self.patternParametersChanged.emit()
-            self.calculatedDataChanged.emit()
+        self._data_proxy.experimentDataAsObjChanged.emit()
 
 
     ####################################################################################################################
@@ -1090,7 +1018,7 @@ class PyQmlProxy(QObject):
         x_step = float(self._simulation_proxy._q_range_as_obj['x_step'])
         sim.x = np.arange(x_min, x_max + x_step, x_step)
 
-        if self.experimentLoaded:
+        if self._data_proxy.experimentLoaded:
             exp = self._data.experiments[0]
             sim.x = exp.x
 
@@ -1423,7 +1351,7 @@ class PyQmlProxy(QObject):
             else:
                 descr['experiments'] = [experiments_x, experiments_y, experiments_ye]
 
-        descr['experiment_skipped'] = self._experiment_skipped
+        descr['experiment_skipped'] = self._data_proxy._experiment_skipped
         descr['project_info'] = self._project_info
 
         descr['interface'] = self._interface.current_interface_name
@@ -1480,7 +1408,7 @@ class PyQmlProxy(QObject):
 
         # experiment
         if 'experiments' in descr:
-            self.experimentLoaded = True
+            self._data_proxy.experimentLoaded = True
             self._data.experiments[0].x = np.array(descr['experiments'][0])
             self._data.experiments[0].y = np.array(descr['experiments'][1])
             self._data.experiments[0].ye = np.array(descr['experiments'][2])
@@ -1491,20 +1419,20 @@ class PyQmlProxy(QObject):
             self._experiment_data = self._data.experiments[0]
             self.experiments = [{'name': descr['project_info']['experiments']}]
             self.setCurrentExperimentDatasetName(descr['project_info']['experiments'])
-            self.experimentLoaded = True
-            self.experimentSkipped = False
+            self._data_proxy.experimentLoaded = True
+            self._data_proxy.experimentSkipped = False
             self.experimentDataAdded.emit()
             self._parameter_proxy._onParametersChanged()
 
         else:
             # delete existing experiment
             self.removeExperiment()
-            self.experimentLoaded = False
+            self._data_proxy.experimentLoaded = False
             if descr['experiment_skipped']:
-                self.experimentSkipped = True
-                self.experimentSkippedChanged.emit()
+                self._data_proxy.experimentSkipped = True
+                self._data_proxy.experimentSkippedChanged.emit()
             else:
-                self.experimentSkipped = False
+                self._data_proxy.experimentSkipped = False
 
         # project info
         self.projectInfoAsJson = json.dumps(descr['project_info'])

@@ -186,7 +186,7 @@ EaComponents.SideBarColumn {
         // Start fitting button
         EaElements.SideBarButton {
             wide: true
-            enabled: ExGlobals.Constants.proxy.experimentLoaded && ExGlobals.Constants.proxy.isFitFinished
+            enabled: ExGlobals.Constants.proxy.data.experimentLoaded && ExGlobals.Constants.proxy.isFitFinished
             fontIcon: "play-circle"
             text: qsTr("Start fitting")
             onClicked: ExGlobals.Constants.proxy.fit()

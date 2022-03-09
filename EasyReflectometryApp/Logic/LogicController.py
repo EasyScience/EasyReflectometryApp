@@ -6,6 +6,7 @@ from .Material import MaterialLogic
 from .Model import ModelLogic
 from .Calculator import CalculatorLogic
 from .Parameter import ParameterLogic
+from .Data import DataLogic
 from EasyReflectometry.interface import InterfaceFactory
 
 
@@ -28,6 +29,7 @@ class LogicController(QObject):
         self.l_model = ModelLogic(self, interface=self.interface)
         self.l_calculator = CalculatorLogic(self, interface=self.interface)
         self.l_parameter = ParameterLogic(self, interface=self.interface)
+        self.l_data = DataLogic(self, interface=self.interface)
 
     def setupSignals(self):
         pass

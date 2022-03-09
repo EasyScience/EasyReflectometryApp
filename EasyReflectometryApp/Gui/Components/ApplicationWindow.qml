@@ -53,8 +53,8 @@ EaComponents.ApplicationWindow {
 
         EaElements.ToolButton {
             enabled: ExGlobals.Constants.proxy.projectCreated ||
-                     ExGlobals.Constants.proxy.experimentSkipped ||
-                     ExGlobals.Constants.proxy.experimentLoaded
+                     ExGlobals.Constants.proxy.data.experimentSkipped ||
+                     ExGlobals.Constants.proxy.data.experimentLoaded
             fontIcon: "backspace"
             ToolTip.text: qsTr("Reset to initial state without project, phases and data")
             onClicked: resetStateDialog.open()
@@ -133,8 +133,8 @@ EaComponents.ApplicationWindow {
         EaElements.AppBarTabButton {
             id: analysisTabButton
             enabled: ExGlobals.Variables.samplePageEnabled &&
-                     (ExGlobals.Constants.proxy.experimentSkipped ||
-                      ExGlobals.Constants.proxy.experimentLoaded)
+                     (ExGlobals.Constants.proxy.data.experimentSkipped ||
+                      ExGlobals.Constants.proxy.data.experimentLoaded)
             fontIcon: "calculator"
             text: qsTr("Analysis")
             ToolTip.text: qsTr("Simulation and fitting page")
@@ -145,8 +145,8 @@ EaComponents.ApplicationWindow {
         EaElements.AppBarTabButton {
             id: summaryTabButton
             enabled: ExGlobals.Variables.samplePageEnabled &&
-                     (ExGlobals.Constants.proxy.experimentSkipped ||
-                      ExGlobals.Constants.proxy.experimentLoaded)
+                     (ExGlobals.Constants.proxy.data.experimentSkipped ||
+                      ExGlobals.Constants.proxy.data.experimentLoaded)
             fontIcon: "clipboard-list"
             text: qsTr("Summary")
             ToolTip.text: qsTr("Summary of the work done")
@@ -227,7 +227,7 @@ EaComponents.ApplicationWindow {
 
         // Experiment page
         EaComponents.ContentPage {
-            defaultInfo: ExGlobals.Constants.proxy.experimentLoaded ? "" : qsTr("No Experiments Loaded")
+            defaultInfo: ExGlobals.Constants.proxy.data.experimentLoaded ? "" : qsTr("No Experiments Loaded")
 
             mainContent: EaComponents.MainContent {
                 tabs: [
@@ -263,10 +263,10 @@ EaComponents.ApplicationWindow {
             mainContent: EaComponents.MainContent {
                 tabs: [
                     EaElements.TabButton {
-                        text: ExGlobals.Constants.proxy.experimentLoaded ? qsTr("Fitting") : qsTr("Simulation")
+                        text: ExGlobals.Constants.proxy.data.experimentLoaded ? qsTr("Fitting") : qsTr("Simulation")
                     },
                     EaElements.TabButton {
-                        visible: ExGlobals.Constants.proxy.experimentLoaded
+                        visible: ExGlobals.Constants.proxy.data.experimentLoaded
                         enabled: false
                         text: 'calculations.cif' //ExGlobals.Constants.proxy.projectInfoAsJson.calculations
                         Component.onCompleted: ExGlobals.Variables.calculationCifTab = this

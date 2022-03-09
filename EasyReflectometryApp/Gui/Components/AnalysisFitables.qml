@@ -100,7 +100,7 @@ EaComponents.TableView {
         }
 
         EaComponents.TableViewCheckBox {
-            enabled: ExGlobals.Constants.proxy.experimentLoaded
+            enabled: ExGlobals.Constants.proxy.data.experimentLoaded
             id: fitColumn
             headerText: "Fit"
             checked: model.fit
@@ -141,7 +141,7 @@ EaComponents.TableView {
         if (index < 0 || typeof label === "undefined")
             return ""
 
-        const datasetName = ExGlobals.Constants.proxy.experimentDataAsObj[0].name
+        const datasetName = ExGlobals.Constants.proxy.data.experimentDataAsObj[0].name
 
         // Modify current label
         label = label.replace("Instrument.", `Instrument.${datasetName}.`)

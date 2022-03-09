@@ -18,7 +18,7 @@ EaComponents.TableView {
     // Table model
 
     model: XmlListModel {
-        xml: ExGlobals.Constants.proxy.experimentDataAsXml
+        xml: ExGlobals.Constants.proxy.data.experimentDataAsXml
         query: "/root/item"
 
         XmlRole { name: "label"; query: "name/string()" }
@@ -54,8 +54,8 @@ EaComponents.TableView {
             fontIcon: "minus-circle"
             ToolTip.text: qsTr("Remove this dataset")
             onClicked: {
-                ExGlobals.Constants.proxy.experimentLoaded = false
-                ExGlobals.Constants.proxy.experimentSkipped = true
+                ExGlobals.Constants.proxy.data.experimentLoaded = false
+                ExGlobals.Constants.proxy.data.experimentSkipped = true
                 ExGlobals.Constants.proxy.removeExperiment()
             }
         }
