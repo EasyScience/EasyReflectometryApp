@@ -91,6 +91,7 @@ class MaterialProxy(QObject):
     # # # 
     # Slot
     # # # 
+
     @Slot()
     def addNewMaterials(self):
         borg.stack.enabled = False
@@ -125,4 +126,43 @@ class MaterialProxy(QObject):
         else:
             del self._materials[int(i)]
         self.materialsNameChanged.emit()
+        self.parent.sampleChanged.emit()
+
+    @Slot(str)
+    def setCurrentMaterialsName(self, name):
+        """
+        Sets the name of the currently selected material.
+
+        :param sld: New name
+        :type sld: str
+        """
+        if self._materials[self.parent.currentMaterialsIndex].name == name:
+            return
+        self._materials[self.parent.currentMaterialsIndex].name = name
+        self.parent.sampleChanged.emit()
+
+    @Slot(str)
+    def setCurrentMaterialsSld(self, sld):
+        """
+        Sets the SLD of the currently selected material.
+
+        :param sld: New SLD value
+        :type sld: float
+        """
+        if self._materials[self.parent.currentMaterialsIndex].sld == sld:
+            return
+        self._materials[self.parent.currentMaterialsIndex].sld = sld
+        self.parent.sampleChanged.emit()
+    
+    @Slot(str)
+    def setCurrentMaterialsISld(self, isld):
+        """
+        Sets the iSLD of the currently selected material.
+
+        :param sld: New iSLD value
+        :type sld: float
+        """
+        if self._materials[self.parent.currentMaterialsIndex].isld == isld:
+            return
+        self._materials[self.parent.currentMaterialsIndex].isld = isld
         self.parent.sampleChanged.emit()

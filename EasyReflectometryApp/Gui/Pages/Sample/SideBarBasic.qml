@@ -55,7 +55,7 @@ EaComponents.SideBarColumn {
                     width: EaStyle.Sizes.fontPixelSize * 12.5
                     headerText: "Name"
                     text: model.label
-                    onEditingFinished: ExGlobals.Constants.proxy.setCurrentMaterialsName(text)
+                    onEditingFinished: ExGlobals.Constants.proxy.material.setCurrentMaterialsName(text)
                 }
 
                 EaComponents.TableViewTextInput {
@@ -63,7 +63,7 @@ EaComponents.SideBarColumn {
                     width: EaStyle.Sizes.fontPixelSize * 8.5
                     headerText: "SLD/10<sup>-6</sup> Å<sup>-2</sup>"
                     text: model.sld.toFixed(3)
-                    onEditingFinished: ExGlobals.Constants.proxy.setCurrentMaterialsSld(text)
+                    onEditingFinished: ExGlobals.Constants.proxy.material.setCurrentMaterialsSld(text)
                 }
 
                 EaComponents.TableViewTextInput {
@@ -71,7 +71,7 @@ EaComponents.SideBarColumn {
                     width: EaStyle.Sizes.fontPixelSize * 8.5
                     headerText: "<i>i</i> SLD/10<sup>-6</sup> Å<sup>-2</sup>"
                     text: model.isld.toFixed(3)
-                    onEditingFinished: ExGlobals.Constants.proxy.setCurrentMaterialsISld(text)
+                    onEditingFinished: ExGlobals.Constants.proxy.material.setCurrentMaterialsISld(text)
                 }
 
                 EaComponents.TableViewButton {
@@ -170,7 +170,7 @@ EaComponents.SideBarColumn {
                     width: EaStyle.Sizes.fontPixelSize * 16.5
                     headerText: "Label"
                     text: itemsModel.label
-                    onEditingFinished: ExGlobals.Constants.proxy.setCurrentItemsName(text)
+                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentItemsName(text)
                 }
 
                 EaComponents.TableViewComboBox{
@@ -336,7 +336,7 @@ EaComponents.SideBarColumn {
                     width: EaStyle.Sizes.fontPixelSize * 9.8
                     headerText: "Material"
                     onActivated: {
-                        ExGlobals.Constants.proxy.setCurrentLayersMaterial(currentIndex)
+                        ExGlobals.Constants.proxy.model.setCurrentLayersMaterial(currentIndex)
                     }
                     model: ExGlobals.Constants.proxy.material.materialsName
                     onModelChanged: {
@@ -352,7 +352,7 @@ EaComponents.SideBarColumn {
                     width: EaStyle.Sizes.fontPixelSize * 10.0
                     headerText: "Thickness/Å"
                     text: (isNaN(layersModel.thick)) ? '--' : layersModel.thick.toFixed(2)
-                    onEditingFinished: ExGlobals.Constants.proxy.setCurrentLayersThickness(text)
+                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersThickness(text)
                 }
 
                 EaComponents.TableViewTextInput {
@@ -360,7 +360,7 @@ EaComponents.SideBarColumn {
                     width: EaStyle.Sizes.fontPixelSize * 10.0
                     headerText: "Upper Roughness/Å"
                     text: (isNaN(layersModel.rough)) ? '--' : layersModel.rough.toFixed(2)
-                    onEditingFinished: ExGlobals.Constants.proxy.setCurrentLayersRoughness(text)
+                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
                 } 
 
                 EaComponents.TableViewButton {
@@ -368,7 +368,7 @@ EaComponents.SideBarColumn {
                     headerText: "Del." //"\uf2ed"
                     fontIcon: "minus-circle"
                     ToolTip.text: qsTr("Remove this item")
-                    onClicked: ExGlobals.Constants.proxy.removeLayers(layersTable.currentIndex)
+                    onClicked: ExGlobals.Constants.proxy.model.removeLayers(layersTable.currentIndex)
                 }
 
             }
@@ -387,7 +387,7 @@ EaComponents.SideBarColumn {
                 fontIcon: "plus-circle"
                 text: qsTr("Add a material layer")
                 onClicked: {
-                    ExGlobals.Constants.proxy.addNewLayers()
+                    ExGlobals.Constants.proxy.model.addNewLayers()
                 }
             }
 
@@ -395,7 +395,7 @@ EaComponents.SideBarColumn {
                 enabled: (layersTable.model.count > 0) ? true : false //when item is selected
                 fontIcon: "clone"
                 text: qsTr("Duplicate selected item")
-                onClicked: ExGlobals.Constants.proxy.duplicateSelectedLayers()
+                onClicked: ExGlobals.Constants.proxy.model.duplicateSelectedLayers()
             }
         }
 
@@ -406,14 +406,14 @@ EaComponents.SideBarColumn {
                 enabled: (layersTable.model.count > 0 && layersTable.currentIndex != 0) ? true : false//When item is selected
                 fontIcon: "arrow-up"
                 text: qsTr("Move layer up")
-                onClicked: ExGlobals.Constants.proxy.moveSelectedLayersUp()
+                onClicked: ExGlobals.Constants.proxy.model.moveSelectedLayersUp()
             }
 
             EaElements.SideBarButton {
                 enabled: (layersTable.model.count > 0 && layersTable.currentIndex + 1 != layersTable.model.count) ? true : false
                 fontIcon: "arrow-down"
                 text: qsTr("Move layer down")
-                onClicked: ExGlobals.Constants.proxy.moveSelectedLayersDown()
+                onClicked: ExGlobals.Constants.proxy.model.moveSelectedLayersDown()
             }
         }
 

@@ -104,6 +104,8 @@ class ModelProxy(QObject):
     # Slots
     # # #
 
+    # # Items
+
     @Slot()
     def addNewItems(self):
         self._model.structure[0].layers[0].thickness.enabled = True
@@ -199,7 +201,6 @@ class ModelProxy(QObject):
             self._model.structure[-1].layers[-1].thickness.enabled = False
             self.parent.sampleChanged.emit()
 
-
     @Slot(str)
     def removeItems(self, i: str):
         """
@@ -216,3 +217,165 @@ class ModelProxy(QObject):
         self._model.structure[0].layers[0].roughness.enabled = False
         self._model.structure[-1].layers[-1].thickness.enabled = False        
         self.parent.sampleChanged.emit()
+
+    @Slot(str)
+    def setCurrentItemsName(self, name):
+        """
+        Sets the name of the currently selected item.
+
+        :param sld: New name
+        :type sld: str
+        """
+        if self._model.structure[self.parent.currentItemsIndex].name == name:
+            return
+        self._model.structure[self.parent.currentItemsIndex].name = name
+        self.parent.sampleChanged.emit()
+
+    # # Layers
+
+    @Slot()
+    def addNewLayers(self):
+        self._model.structure[0].layers[0].thickness.enabled = True
+        self._model.structure[0].layers[0].roughness.enabled = True
+        self._model.structure[-1].layers[-1].thickness.enabled = True        
+        try:
+            self._model.structure[self.parent.currentItemsIndex].add_layer(Layer.from_pars(self._materials[0], 10.0, 1.2, name=f'Layer {len(self._model.structure[self.parent.currentItemsIndex].layers)}'))
+        except IndexError:
+            self.addNewItems()
+        self._model.structure[0].layers[0].thickness.enabled = False
+        self._model.structure[0].layers[0].roughness.enabled = False
+        self._model.structure[-1].layers[-1].thickness.enabled = False
+        self.parent.sampleChanged.emit()
+
+    @Slot()
+    def duplicateSelectedLayers(self):
+        # This is a fix until deepcopy is worked out
+        # Manual duplication instead of creating a copy
+        self._model.structure[0].layers[0].thickness.enabled = True
+        self._model.structure[0].layers[0].roughness.enabled = True
+        self._model.structure[-1].layers[-1].thickness.enabled = True
+        to_dup = self._model.structure[self.parent.currentItemsIndex].layers[self.parent.currentLayersIndex]
+        self._model.structure[self.parent.currentItemsIndex].add_layer(Layer.from_pars(to_dup.material, to_dup.thickness.raw_value, to_dup.roughness.raw_value, name=to_dup.name))
+        self._model.structure[0].layers[0].thickness.enabled = False
+        self._model.structure[0].layers[0].roughness.enabled = False
+        self._model.structure[-1].layers[-1].thickness.enabled = False
+        self.parent.sampleChanged.emit()
+
+    @Slot()
+    def moveSelectedLayersUp(self):
+        old_index = self.parent.currentLayersIndex
+        new_layers_list = []
+        item = self._model.structure[self.parent.currentItemsIndex]
+        layers = item.layers
+        # This convoluted approach is necessary as currently the BaseCollection does not allow
+        # insertion or popping. In future, this could be replaced with the approach for 
+        # moving items around
+        if old_index != 0:
+            borg.stack.enabled = False
+            self._model.structure[0].layers[0].thickness.enabled = True
+            self._model.structure[0].layers[0].roughness.enabled = True
+            self._model.structure[-1].layers[-1].thickness.enabled = True 
+            for i, l in enumerate(layers):
+                if i == old_index - 1:
+                    new_layers_list.append(layers[old_index])
+                elif i == old_index:
+                    new_layers_list.append(layers[old_index - 1])
+                else:
+                    new_layers_list.append(l)
+            while len(layers) != 0:
+                item.remove_layer(0)
+            for i in range(len(new_layers_list)):
+                item.add_layer(new_layers_list[i])
+            borg.stack.enabled = True
+            self._model.structure[0].layers[0].thickness.enabled = False
+            self._model.structure[0].layers[0].roughness.enabled = False
+            self._model.structure[-1].layers[-1].thickness.enabled = False
+            self.parent.sampleChanged.emit()
+
+    @Slot()
+    def moveSelectedLayersDown(self):
+        old_index = self.parent.currentLayersIndex
+        new_layers_list = []
+        item = self._model.structure[self.parent.currentItemsIndex]
+        layers = item.layers
+        # This convoluted approach is necessary as currently the BaseCollection does not allow
+        # insertion or popping. In future, this could be replaced with the approach for 
+        # moving items around
+        if old_index != len(layers):
+            self._model_proxy._model.structure[0].layers[0].thickness.enabled = True 
+            self.structure[0].layers[0].roughness.enabled = True 
+            self._model.structure[-1].layers[-1].thickness.enabled = True 
+            borg.stack.enabled = False
+            for i, l in enumerate(layers):
+                if i == old_index:
+                    new_layers_list.append(layers[old_index + 1])
+                elif i == old_index + 1:
+                    new_layers_list.append(layers[old_index])
+                else:
+                    new_layers_list.append(l)
+            while len(layers) != 0:
+                item.remove_layer(0)
+            for i in range(len(new_layers_list)):
+                item.add_layer(new_layers_list[i])
+            borg.stack.enabled = True
+            self._model.structure[0].layers[0].thickness.enabled = False
+            self._model.structure[0].layers[0].roughness.enabled = False
+            self._model.structure[-1].layers[-1].thickness.enabled = False
+            self.parent.sampleChanged.emit()
+            
+    @Slot(str)
+    def removeLayers(self, i: str):
+        """
+        Remove a layer from the layers list.
+
+        :param i: Index of the layer
+        :type i: str
+        """
+        self._model.structure[0].layers[0].thickness.enabled = True 
+        self._model.structure[0].layers[0].roughness.enabled = True 
+        self._model.structure[-1].layers[-1].thickness.enabled = True 
+        self._model.structure[self.parent.currentItemsIndex].remove_layer(int(i))
+        self._model.structure[0].layers[0].thickness.enabled = False
+        self._model.structure[0].layers[0].roughness.enabled = False
+        self._model.structure[-1].layers[-1].thickness.enabled = False
+        self.parent.sampleChanged.emit()
+
+    @Slot(str)
+    def setCurrentLayersMaterial(self, current_index):
+        """
+        Sets the material of the currently selected layer.
+
+        :param current_index: Material index
+        :type sld: str
+        """
+        material = self.parent._material_proxy._materials[int(current_index)]
+        if self._model.structure[self.parent.currentItemsIndex].layers[self.parent.currentLayersIndex].material == material:
+            return
+        self._model.structure[self.parent.currentItemsIndex].layers[self.parent.currentLayersIndex].assign_material(material)
+        self.parent.sampleChanged.emit()
+
+    @Slot(str)
+    def setCurrentLayersThickness(self, thickness):
+        """
+        Sets the thickness of the currently selected layer.
+
+        :param sld: New thickness value
+        :type sld: float
+        """
+        if self._model.structure[self.parent.currentItemsIndex].layers[self.parent.currentLayersIndex].thickness == thickness:
+            return
+        self._model.structure[self.parent.currentItemsIndex].layers[self.parent.currentLayersIndex].thickness = thickness
+        self.parent.sampleChanged.emit()
+
+    @Slot(str)
+    def setCurrentLayersRoughness(self, roughness):
+        """
+        Sets the roughness of the currently selected layer.
+
+        :param sld: New roughness value
+        :type sld: float
+        """
+        if self._model.structure[self.parent.currentItemsIndex].layers[self.parent.currentLayersIndex].roughness == roughness:
+            return
+        self._model.structure[self.parent.currentItemsIndex].layers[self.parent.currentLayersIndex].roughness = roughness
+        self.parent.sampleChanged.emit() 
