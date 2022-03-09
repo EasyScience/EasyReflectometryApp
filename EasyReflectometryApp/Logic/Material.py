@@ -13,14 +13,6 @@ from EasyReflectometry.sample.materials import Materials
 COLOURMAP = cm.get_cmap('Blues', 100)
 MIN_SLD = -3
 MAX_SLD = 15
-
-
-class MaterialLogic(QObject):
-
-    def __init__(self, parent=None, interface=None):
-        super().__init__(parent)
-        self.parent = parent
-        self._interface = interface
         
 
 class MaterialProxy(QObject):
@@ -30,10 +22,9 @@ class MaterialProxy(QObject):
     materialsAsXmlChanged = Signal()
     materialsAsObjChanged = Signal()
 
-    def __init__(self, parent=None, logic=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
-        self.logic = logic.l_material
 
         self._materials_as_obj = []
         self._materials_as_xml = ""

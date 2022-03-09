@@ -11,14 +11,6 @@ from easyCore.Utils.UndoRedo import property_stack_deco
 from .DataStore import DataSet1D, DataStore
 
 
-class DataLogic(QObject):
-
-    def __init__(self, parent=None, interface=None):
-        super().__init__(parent)
-        self.parent = parent
-        self._interface = interface
-        
-
 class DataProxy(QObject):
     
     experimentSkippedChanged = Signal()
@@ -28,10 +20,9 @@ class DataProxy(QObject):
     experimentDataAsObjChanged = Signal()
 
 
-    def __init__(self, parent=None, logic=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
-        self.logic = logic.l_data
 
         self._data = self._defaultData()
 

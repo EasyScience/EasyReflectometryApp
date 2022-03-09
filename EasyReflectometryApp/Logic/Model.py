@@ -15,14 +15,6 @@ from EasyReflectometry.sample.structure import Structure
 from EasyReflectometry.experiment.model import Model
 
 
-class ModelLogic(QObject):
-
-    def __init__(self, parent=None, interface=None):
-        super().__init__(parent)
-        self.parent = parent
-        self._interface = interface
-        
-
 class ModelProxy(QObject):
     
     modelNameChanged = Signal()
@@ -30,10 +22,9 @@ class ModelProxy(QObject):
     modelAsXmlChanged = Signal()
     modelAsObjChanged = Signal()
 
-    def __init__(self, parent=None, logic=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
-        self.logic = logic.l_model
 
         self._model_as_obj = []
         self._model_as_xml = ""

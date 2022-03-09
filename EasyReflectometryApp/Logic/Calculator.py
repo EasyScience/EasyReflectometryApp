@@ -9,24 +9,14 @@ from PySide2.QtCore import QObject, Signal, Property
 from easyCore import np
 from easyCore.Utils.UndoRedo import property_stack_deco
 
-
-class CalculatorLogic(QObject):
-
-    def __init__(self, parent=None, interface=None):
-        super().__init__(parent)
-        self.parent = parent
-        self._interface = interface
-        
-
 class CalculatorProxy(QObject):
     
     dummySignal = Signal()
     calculatorChanged = Signal()
 
-    def __init__(self, parent=None, logic=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
-        self.logic = logic.l_model
 
         self.calculatorChanged.connect(self._onCurrentCalculatorChanged)
 
@@ -36,7 +26,7 @@ class CalculatorProxy(QObject):
 
     @Property('QVariant', notify=dummySignal)
     def calculatorNames(self):
-        return self.logic._interface.available_interfaces
+        return self.parent._interface.available_interfaces
 
     @Property(int, notify=calculatorChanged)
     def currentCalculatorIndex(self):
@@ -49,7 +39,7 @@ class CalculatorProxy(QObject):
             return
         new_name = self.calculatorNames[new_index]
         self.parent._model_proxy._model.switch_interface(new_name)
-        self.parent.fitter.initialize(self.parent._model_proxy._model, self.logic._interface.fit_func)
+        self.parent.fitter.initialize(self.parent._model_proxy._model, self.parent._interface.fit_func)
         self.calculatorChanged.emit()
 
     # # # 

@@ -30,7 +30,6 @@ from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.interface import InterfaceFactory
 
 
-from .LogicController import LogicController
 from .Project import ProjectProxy
 from .Simulation import SimulationProxy
 from .Material import MaterialProxy
@@ -93,20 +92,18 @@ class PyQmlProxy(QObject):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-
-        self.lc = LogicController(self)
             
         # Main
         self._interface = InterfaceFactory()
 
         ######### proxies #########
-        self._project_proxy = ProjectProxy(self, logic=self.lc) 
-        self._simulation_proxy = SimulationProxy(self, logic=self.lc)
-        self._material_proxy = MaterialProxy(self, logic=self.lc)
-        self._model_proxy = ModelProxy(self, logic=self.lc)
-        self._calculator_proxy = CalculatorProxy(self, logic=self.lc)
-        self._parameter_proxy = ParameterProxy(self, logic=self.lc)
-        self._data_proxy = DataProxy(self, logic=self.lc)
+        # self._project_proxy = ProjectProxy(self)
+        self._simulation_proxy = SimulationProxy(self)
+        self._material_proxy = MaterialProxy(self)
+        self._model_proxy = ModelProxy(self)
+        self._calculator_proxy = CalculatorProxy(self)
+        self._parameter_proxy = ParameterProxy(self)
+        self._data_proxy = DataProxy(self)
 
         # Plotting 1D
         self._plotting_1d_proxy = Plotting1dProxy()
@@ -206,9 +203,9 @@ class PyQmlProxy(QObject):
         self._material_proxy._onMaterialsChanged()
         self._model_proxy._onModelChanged()
 
-    @Property('QVariant', notify=dummySignal)
-    def project(self):
-        return self._project_proxy
+    # @Property('QVariant', notify=dummySignal)
+    # def project(self):
+    #     return self._project_proxy
 
     @Property('QVariant', notify=dummySignal)
     def simulation(self):

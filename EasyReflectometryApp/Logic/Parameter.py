@@ -9,14 +9,6 @@ from PySide2.QtCore import QObject, Signal, Property, Slot
 from easyCore import borg
 from easyCore.Utils.UndoRedo import property_stack_deco
 from easyCore.Utils.classTools import generatePath
-
-
-class ParameterLogic(QObject):
-
-    def __init__(self, parent=None, interface=None):
-        super().__init__(parent)
-        self.parent = parent
-        self._interface = interface
         
 
 class ParameterProxy(QObject):
@@ -26,10 +18,9 @@ class ParameterProxy(QObject):
 
     parametersFilterCriteriaChanged = Signal()
 
-    def __init__(self, parent=None, logic=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
-        self.logic = logic.l_parameter
 
         self._parameters_as_obj = []
         self._parameters_as_xml = ""

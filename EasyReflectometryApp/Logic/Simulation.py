@@ -4,13 +4,6 @@ from PySide2.QtCore import QObject, Signal, Property
 
 from easyCore import np
 
-class SimulationLogic(QObject):
-
-    def __init__(self, parent=None, interface=None):
-        super().__init__(parent)
-        self.parent = parent
-        self._interface = interface
-
 
 class SimulationProxy(QObject):
     
@@ -21,10 +14,9 @@ class SimulationProxy(QObject):
     resolutionChanged = Signal()
     qRangeChanged = Signal()
 
-    def __init__(self, parent=None, logic=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
-        self.logic = logic.l_simulation
 
         self._background_as_obj = self._defaultBackground()
         self._resolution_as_obj = self._defaultResolution()
