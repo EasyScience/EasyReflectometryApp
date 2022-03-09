@@ -3,8 +3,9 @@ from dicttoxml import dicttoxml
 
 from matplotlib import cm, colors
 
-from PySide2.QtCore import QObject, Signal, Property
+from PySide2.QtCore import QObject, Signal, Property, Slot
 
+from easyCore import borg
 from easyCore.Utils.UndoRedo import property_stack_deco
 
 from EasyReflectometry.sample.material import Material
@@ -86,3 +87,42 @@ class MaterialProxy(QObject):
         self._setMaterialsAsObj()  # 0.025 s
         self._setMaterialsAsXml()  # 0.065 s
         self.parent.stateChanged.emit(True)
+
+    # # # 
+    # Slot
+    # # # 
+    @Slot()
+    def addNewMaterials(self):
+        borg.stack.enabled = False
+        self._materials.append(Material.from_pars(2.074, 0.000, name=f'Material {len(self._materials)+1}', interface=self.parent._interface))
+        borg.stack.enabled = True
+        self.materialsNameChanged.emit()
+        self.parent.sampleChanged.emit()
+
+    @Slot()
+    def duplicateSelectedMaterials(self):
+        #if borg.stack.enabled:
+        #    borg.stack.beginMacro('Loaded default material')
+        borg.stack.enabled = False
+        # This is a fix until deepcopy is worked out
+        # Manual duplication instead of creating a copy
+        to_dup = self._materials[self.parent.currentMaterialsIndex] 
+        self._materials.append(Material.from_pars(to_dup.sld.raw_value, to_dup.isld.raw_value, name=to_dup.name))
+        borg.stack.enabled = True
+        self.materialsNameChanged.emit()
+        self.parent.sampleChanged.emit()
+
+    @Slot(str)
+    def removeMaterials(self, i: str):
+        """
+        Remove a material from the materials list.
+
+        :param i: Index of the material
+        :type i: str
+        """
+        if len(self._materials) == 1:
+            self._materials = Materials.from_pars()
+        else:
+            del self._materials[int(i)]
+        self.materialsNameChanged.emit()
+        self.parent.sampleChanged.emit()

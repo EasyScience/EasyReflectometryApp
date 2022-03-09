@@ -97,7 +97,6 @@ class PyQmlProxy(QObject):
         self._interface = InterfaceFactory()
 
         ######### proxies #########
-        # self._project_proxy = ProjectProxy(self)
         self._simulation_proxy = SimulationProxy(self)
         self._material_proxy = MaterialProxy(self)
         self._model_proxy = ModelProxy(self)
@@ -202,10 +201,6 @@ class PyQmlProxy(QObject):
         self._currentProjectPath = os.path.expanduser("~")
         self._material_proxy._onMaterialsChanged()
         self._model_proxy._onModelChanged()
-
-    # @Property('QVariant', notify=dummySignal)
-    # def project(self):
-    #     return self._project_proxy
 
     @Property('QVariant', notify=dummySignal)
     def simulation(self):
@@ -350,71 +345,8 @@ class PyQmlProxy(QObject):
         self.stateHasChanged = changed
 
     ####################################################################################################################
-    # Materials: Add / Remove
-    ####################################################################################################################
-
-    @Slot()
-    def addNewMaterials(self):
-        print("+ addNewMaterials")
-        #if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default material')
-        borg.stack.enabled = False
-        self._material_proxy._materials.append(Material.from_pars(2.074, 0.000, name=f'Material {len(self._material_proxy._materials)+1}', interface=self._interface))
-        borg.stack.enabled = True
-        self._material_proxy.materialsNameChanged.emit()
-        self.sampleChanged.emit()
-
-    @Slot()
-    def duplicateSelectedMaterials(self):
-        print("+ duplicateSelectedMaterials")
-        #if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default material')
-        borg.stack.enabled = False
-        # This is a fix until deepcopy is worked out
-        # Manual duplication instead of creating a copy
-        to_dup = self._material_proxy._materials[self.currentMaterialsIndex] 
-        self._material_proxy._materials.append(Material.from_pars(to_dup.sld.raw_value, to_dup.isld.raw_value, name=to_dup.name))
-        borg.stack.enabled = True
-        self._material_proxy.materialsNameChanged.emit()
-        self.sampleChanged.emit()
-
-    @Slot(str)
-    def removeMaterials(self, i: str):
-        """
-        Remove a material from the materials list.
-
-        :param i: Index of the material
-        :type i: str
-        """
-        if len(self._material_proxy._materials) == 1:
-            self._material_proxy._materials = Materials.from_pars()
-        else:
-            del self._material_proxy._materials[int(i)]
-        self._material_proxy.materialsNameChanged.emit()
-        self.sampleChanged.emit()
-
-
-
-    ####################################################################################################################
     # Items: Add / Remove
     ####################################################################################################################
-
-    @Slot()
-    def addNewItems(self):
-        print("+ addNewItems")        
-        self._model_proxy._model.structure[0].layers[0].thickness.enabled = True
-        self._model_proxy._model.structure[0].layers[0].roughness.enabled = True
-        self._model_proxy._model.structure[-1].layers[-1].thickness.enabled = True
-        try:
-            self._model_proxy._model.add_item(MultiLayer.from_pars(Layers.from_pars(Layer.from_pars(self._material_proxy._materials[0], 10., 1.2)), f'Multi-layer {len(self._model_proxy._model.structure)+1}'))
-        except IndexError:
-            self.addNewMaterials()
-            self._model_proxy._model.add_item(MultiLayer.from_pars(Layers.from_pars(Layer.from_pars(
-                self._material_proxy._materials[0], 10., 1.2)), f'Multi-layer {len(self._model_proxy._model.structure)+1}'))
-        self._model_proxy._model.structure[0].layers[0].thickness.enabled = False
-        self._model_proxy._model.structure[0].layers[0].roughness.enabled = False
-        self._model_proxy._model.structure[-1].layers[-1].thickness.enabled = False
-        self.sampleChanged.emit()
 
     @Slot()
     def duplicateSelectedItems(self):
@@ -496,23 +428,6 @@ class PyQmlProxy(QObject):
             self._model_proxy._model.structure[0].layers[0].roughness.enabled = False
             self._model_proxy._model.structure[-1].layers[-1].thickness.enabled = False
             self.sampleChanged.emit()
-    
-    @Slot(str)
-    def removeItems(self, i: str):
-        """
-        Remove an item from the items list.
-
-        :param i: Index of the item
-        :type i: str
-        """
-        self._model_proxy._model.structure[0].layers[0].thickness.enabled = True
-        self._model_proxy._model.structure[0].layers[0].roughness.enabled = True
-        self._model_proxy._model.structure[-1].layers[-1].thickness.enabled = True        
-        self._model_proxy._model.remove_item(int(i))
-        self._model_proxy._model.structure[0].layers[0].thickness.enabled = False
-        self._model_proxy._model.structure[0].layers[0].roughness.enabled = False
-        self._model_proxy._model.structure[-1].layers[-1].thickness.enabled = False        
-        self.sampleChanged.emit()
 
 
     ####################################################################################################################

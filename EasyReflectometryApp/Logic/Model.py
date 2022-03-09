@@ -4,7 +4,7 @@ from dicttoxml import dicttoxml
 
 from matplotlib import cm, colors
 
-from PySide2.QtCore import QObject, Signal, Property
+from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import np
 from easyCore.Utils.UndoRedo import property_stack_deco
@@ -99,3 +99,39 @@ class ModelProxy(QObject):
         self._setModelAsObj()
         self._setModelAsXml() 
         self.parent.stateChanged.emit(True)
+
+    # # # 
+    # Slots
+    # # #
+
+    @Slot()
+    def addNewItems(self):
+        self._model.structure[0].layers[0].thickness.enabled = True
+        self._model.structure[0].layers[0].roughness.enabled = True
+        self._model.structure[-1].layers[-1].thickness.enabled = True
+        try:
+            self._model.add_item(MultiLayer.from_pars(Layer.from_pars(self.parent._material_proxy._materials[0], 10., 1.2), f'Multi-layer {len(self._model.structure)+1}'))
+        except IndexError:
+            self.parent._material_proxy.addNewMaterials()
+            self._model.add_item(MultiLayer.from_pars(Layer.from_pars(self.parent._material_proxy._materials[0], 10., 1.2), f'Multi-layer {len(self._model.structure)+1}'))
+        self._model.structure[0].layers[0].thickness.enabled = False
+        self._model.structure[0].layers[0].roughness.enabled = False
+        self._model.structure[-1].layers[-1].thickness.enabled = False
+        self.parent.sampleChanged.emit()
+
+    @Slot(str)
+    def removeItems(self, i: str):
+        """
+        Remove an item from the items list.
+
+        :param i: Index of the item
+        :type i: str
+        """
+        self._model.structure[0].layers[0].thickness.enabled = True
+        self._model.structure[0].layers[0].roughness.enabled = True
+        self._model.structure[-1].layers[-1].thickness.enabled = True        
+        self._model.remove_item(int(i))
+        self._model.structure[0].layers[0].thickness.enabled = False
+        self._model.structure[0].layers[0].roughness.enabled = False
+        self._model.structure[-1].layers[-1].thickness.enabled = False        
+        self.parent.sampleChanged.emit()

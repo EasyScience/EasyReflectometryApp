@@ -79,7 +79,7 @@ EaComponents.SideBarColumn {
                     headerText: "Del." //"\uf2ed"
                     fontIcon: "minus-circle"
                     ToolTip.text: qsTr("Remove this material")
-                    onClicked: ExGlobals.Constants.proxy.removeMaterials(materialsTable.currentIndex)
+                    onClicked: ExGlobals.Constants.proxy.material.removeMaterials(materialsTable.currentIndex)
                 }
 
             }
@@ -99,7 +99,7 @@ EaComponents.SideBarColumn {
                 enabled: true
                 fontIcon: "plus-circle"
                 text: qsTr("Add a new material")
-                onClicked: ExGlobals.Constants.proxy.addNewMaterials()
+                onClicked: ExGlobals.Constants.proxy.material.addNewMaterials()
             }
 
             EaElements.SideBarButton {
@@ -109,7 +109,7 @@ EaComponents.SideBarColumn {
                 enabled: (materialsTable.model.count > 0) ? true : false //When material is selected
                 fontIcon: "clone"
                 text: qsTr("Duplicate selected material")
-                onClicked: ExGlobals.Constants.proxy.duplicateSelectedMaterials()
+                onClicked: ExGlobals.Constants.proxy.material.duplicateSelectedMaterials()
             }
         }
 
@@ -193,7 +193,7 @@ EaComponents.SideBarColumn {
                     headerText: "Del." //"\uf2ed"
                     fontIcon: "minus-circle"
                     ToolTip.text: qsTr("Remove this layer")
-                    onClicked: ExGlobals.Constants.proxy.removeItems(itemsTable.currentIndex)
+                    onClicked: ExGlobals.Constants.proxy.model.removeItems(itemsTable.currentIndex)
                 }
 
             }
@@ -216,7 +216,7 @@ EaComponents.SideBarColumn {
                 enabled: true
                 fontIcon: "plus-circle"
                 text: qsTr("Add a new item")
-                onClicked: ExGlobals.Constants.proxy.addNewItems()
+                onClicked: ExGlobals.Constants.proxy.model.addNewItems()
             }
 
             EaElements.SideBarButton {
