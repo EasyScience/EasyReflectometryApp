@@ -225,7 +225,7 @@ EaComponents.SideBarColumn {
                 enabled: (itemsTable.model.count > 0) ? true : false//When item is selected
                 fontIcon: "clone"
                 text: qsTr("Duplicate selected item")
-                onClicked: ExGlobals.Constants.proxy.duplicateSelectedItems()
+                onClicked: ExGlobals.Constants.proxy.model.duplicateSelectedItems()
             }
 
         }
@@ -240,7 +240,7 @@ EaComponents.SideBarColumn {
                 enabled: (itemsTable.model.count > 0 && itemsTable.currentIndex != 0) ? true : false//When item is selected
                 fontIcon: "arrow-up"
                 text: qsTr("Move item up")
-                onClicked: ExGlobals.Constants.proxy.moveSelectedItemsUp()
+                onClicked: ExGlobals.Constants.proxy.model.moveSelectedItemsUp()
             }
 
             EaElements.SideBarButton {
@@ -251,7 +251,7 @@ EaComponents.SideBarColumn {
                 fontIcon: "arrow-down"
                 text: qsTr("Move item down")
                 onClicked: {
-                    ExGlobals.Constants.proxy.moveSelectedItemsDown()
+                    ExGlobals.Constants.proxy.model.moveSelectedItemsDown()
                 }
             }
 

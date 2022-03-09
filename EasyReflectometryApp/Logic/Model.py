@@ -6,11 +6,11 @@ from matplotlib import cm, colors
 
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
-from easyCore import np
+from easyCore import np, borg
 from easyCore.Utils.UndoRedo import property_stack_deco
 
 from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.item import MultiLayer
+from EasyReflectometry.sample.item import MultiLayer, RepeatingMultiLayer
 from EasyReflectometry.sample.structure import Structure
 from EasyReflectometry.experiment.model import Model
 
@@ -118,6 +118,87 @@ class ModelProxy(QObject):
         self._model.structure[0].layers[0].roughness.enabled = False
         self._model.structure[-1].layers[-1].thickness.enabled = False
         self.parent.sampleChanged.emit()
+
+    @Slot()
+    def duplicateSelectedItems(self):
+        # This is a fix until deepcopy is worked out
+        # Manual duplication instead of creating a copy
+        self._model.structure[0].layers[0].thickness.enabled = True
+        self._model.structure[0].layers[0].roughness.enabled = True
+        self._model.structure[-1].layers[-1].thickness.enabled = True
+        to_dup = self._model.structure[self.parent.currentItemsIndex]
+        to_dup_layers = []
+        for i in to_dup.layers:
+            to_dup_layers.append(Layer.from_pars(i.material, i.thickness.raw_value, i.roughness.raw_value, name=i.name, interface=self.parent._interface))
+        try: 
+            self._model.add_item(RepeatingMultiLayer.from_pars(*to_dup_layers, to_dup.repetitions.raw_value, name=to_dup.name))
+        except AttributeError:
+            self._model.add_item(MultiLayer.from_pars(*to_dup_layers, name=to_dup.name))
+        self._model.structure[0].layers[0].thickness.enabled = False
+        self._model.structure[0].layers[0].roughness.enabled = False
+        self._model.structure[-1].layers[-1].thickness.enabled = False
+        self.parent.sampleChanged.emit()
+
+    @Slot()
+    def moveSelectedItemsUp(self):
+        #if borg.stack.enabled:
+        #    borg.stack.beginMacro('Loaded default item')
+        borg.stack.enabled = False
+        # This convoluted approach is necessary as currently the BaseCollection does not allow
+        # insertion or popping. In future, this could be replaced with the approach for 
+        # moving items around
+        old_index = self.parent.currentItemsIndex
+        new_items_list = []
+        if old_index != 0:
+            self._model.structure[0].layers[0].thickness.enabled = True
+            self._model.structure[0].layers[0].roughness.enabled = True
+            self._model.structure[-1].layers[-1].thickness.enabled = True
+            for i, item in enumerate(self._model.structure):
+                if i == old_index - 1:
+                    new_items_list.append(self._model.structure[old_index])
+                elif i == old_index:
+                    new_items_list.append(self._model.structure[old_index - 1])
+                else:
+                    new_items_list.append(item)
+            while len(self._model.structure) != 0:
+                self._model.remove_item(0)
+            for i in range(len(new_items_list)):
+                self._model.add_item(new_items_list[i])
+            borg.stack.enabled = True
+            self._model.structure[0].layers[0].thickness.enabled = False
+            self._model.structure[0].layers[0].roughness.enabled = False
+            self._model.structure[-1].layers[-1].thickness.enabled = False
+            self.parent.sampleChanged.emit()
+
+    @Slot()
+    def moveSelectedItemsDown(self):
+        # This convoluted approach is necessary as currently the BaseCollection does not allow
+        # insertion or popping. In future, this could be replaced with the approach for 
+        # moving items around
+        old_index = self.parent.currentItemsIndex
+        new_items_list = []
+        if old_index != len(self._model.structure):
+            borg.stack.enabled = False
+            self._model.structure[0].layers[0].thickness.enabled = True
+            self._model.structure[0].layers[0].roughness.enabled = True
+            self._model.structure[-1].layers[-1].thickness.enabled = True
+            for i, item in enumerate(self._model.structure):
+                if i == old_index:
+                    new_items_list.append(self._model.structure[old_index + 1])
+                elif i == old_index + 1:
+                    new_items_list.append(self._model.structure[old_index])
+                else:
+                    new_items_list.append(item)
+            while len(self._model.structure) != 0:
+                self._model.remove_item(0)
+            for i in range(len(new_items_list)):
+                self._model.add_item(new_items_list[i])
+            borg.stack.enabled = True
+            self._model.structure[0].layers[0].thickness.enabled = False
+            self._model.structure[0].layers[0].roughness.enabled = False
+            self._model.structure[-1].layers[-1].thickness.enabled = False
+            self.parent.sampleChanged.emit()
+
 
     @Slot(str)
     def removeItems(self, i: str):
