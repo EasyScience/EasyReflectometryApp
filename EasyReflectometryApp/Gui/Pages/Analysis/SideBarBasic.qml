@@ -41,7 +41,7 @@ EaComponents.SideBarColumn {
                     onTextChanged: {
                         exampleFilterCriteria.currentIndex = exampleFilterCriteria.indexOfValue(text)
                         namesFilterCriteria.currentIndex = namesFilterCriteria.indexOfValue(text)
-                        ExGlobals.Constants.proxy.setParametersFilterCriteria(text)
+                        ExGlobals.Constants.proxy.parameter.setParametersFilterCriteria(text)
                     }
                 }
             }
@@ -223,7 +223,7 @@ EaComponents.SideBarColumn {
     }
 
     function editParameterValue(id, value) {
-        ExGlobals.Constants.proxy.editParameter(id, parseFloat(value))
+        ExGlobals.Constants.proxy.parameter.editParameter(id, parseFloat(value))
     }
 
 }

@@ -25,9 +25,9 @@ EaComponents.SideBarColumn {
             }
             EaElements.ComboBox {
                 width: minimizerSelector.width
-                model: ExGlobals.Constants.proxy.calculatorNames
-                currentIndex: ExGlobals.Constants.proxy.currentCalculatorIndex
-                onCurrentIndexChanged: ExGlobals.Constants.proxy.currentCalculatorIndex = currentIndex
+                model: ExGlobals.Constants.proxy.calculator.calculatorNames
+                currentIndex: ExGlobals.Constants.proxy.calculator.currentCalculatorIndex
+                onCurrentIndexChanged: ExGlobals.Constants.proxy.calculator.currentCalculatorIndex = currentIndex
                 Component.onCompleted: ExGlobals.Variables.calculatorSelector = this
             }
         }

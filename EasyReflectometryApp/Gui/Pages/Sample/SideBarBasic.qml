@@ -147,7 +147,7 @@ EaComponents.SideBarColumn {
             model: XmlListModel {
                 property int itemsIndex: ExGlobals.Constants.proxy.currentItemsIndex + 1
 
-                xml: ExGlobals.Constants.proxy.modelAsXml
+                xml: ExGlobals.Constants.proxy.model.modelAsXml
                 query: "/root/item"
 
                 XmlRole { name: "label"; query: "name/string()" }
@@ -312,7 +312,7 @@ EaComponents.SideBarColumn {
             model: XmlListModel {
                 property int layersIndex: ExGlobals.Constants.proxy.currentLayersIndex + 1
 
-                xml: ExGlobals.Constants.proxy.modelAsXml
+                xml: ExGlobals.Constants.proxy.model.modelAsXml
                 query: `/root/item[${itemsTable.currentIndex + 1}]/layers/item`
 
                 XmlRole { name: "thick"; query: "thickness/value/number()" }
@@ -338,7 +338,7 @@ EaComponents.SideBarColumn {
                     onActivated: {
                         ExGlobals.Constants.proxy.setCurrentLayersMaterial(currentIndex)
                     }
-                    model: ExGlobals.Constants.proxy.materialsName
+                    model: ExGlobals.Constants.proxy.material.materialsName
                     onModelChanged: {
                         currentIndex = indexOfValue(layersModel.materialid)
                     }

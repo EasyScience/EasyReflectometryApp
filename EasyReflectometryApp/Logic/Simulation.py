@@ -66,7 +66,7 @@ class SimulationProxy(QObject):
         if self._background_as_obj == value:
             return None
         self._background_as_obj = value
-        self.parent._model.background = float(self._background_as_obj['bkg'])
+        self.parent._model_proxy._model.background = float(self._background_as_obj['bkg'])
         self.simulationParametersChanged.emit()
         self.parent.parametersChanged.emit()
 
@@ -80,7 +80,7 @@ class SimulationProxy(QObject):
         if self._resolution_as_obj == value:
             return 
         self._resolution_as_obj = value
-        self.parent._model.resolution = float(self._resolution_as_obj['res'])
+        self.parent._model_proxy.model.resolution = float(self._resolution_as_obj['res'])
         self.simulationParametersChanged.emit()
         self.parent.parametersChanged.emit()
 
