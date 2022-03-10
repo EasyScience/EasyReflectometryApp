@@ -18,7 +18,7 @@ EaComponents.TableView {
     // Table model
 
     model: XmlListModel {
-        xml: ExGlobals.Constants.proxy.experimentDataAsXml
+        xml: ExGlobals.Constants.proxy.data.experimentDataAsXml
         query: "/root/item"
 
         XmlRole { name: "label"; query: "name/string()" }
@@ -39,7 +39,7 @@ EaComponents.TableView {
             width: EaStyle.Sizes.fontPixelSize * 27.9
             headerText: "Label"
             text: model.label
-            onEditingFinished: ExGlobals.Constants.proxy.setCurrentExperimentDatasetName(text)
+            onEditingFinished: ExGlobals.Constants.proxy.data.setCurrentExperimentDatasetName(text)
         }
 
         EaComponents.TableViewLabel {
@@ -54,9 +54,9 @@ EaComponents.TableView {
             fontIcon: "minus-circle"
             ToolTip.text: qsTr("Remove this dataset")
             onClicked: {
-                ExGlobals.Constants.proxy.experimentLoaded = false
-                ExGlobals.Constants.proxy.experimentSkipped = true
-                ExGlobals.Constants.proxy.removeExperiment()
+                ExGlobals.Constants.proxy.data.experimentLoaded = false
+                ExGlobals.Constants.proxy.data.experimentSkipped = true
+                ExGlobals.Constants.proxy.data.removeExperiment()
             }
         }
 

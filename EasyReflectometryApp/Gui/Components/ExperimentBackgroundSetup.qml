@@ -32,7 +32,7 @@ Row {
         width: elementWidth()
         anchors.verticalCenter: parent.verticalCenter
         units: ""
-        text: ExGlobals.Constants.proxy.backgroundAsObj.bkg
+        text: ExGlobals.Constants.proxy.simulation.backgroundAsObj.bkg
         onEditingFinished: updateParameters()
     }
 
@@ -46,6 +46,6 @@ Row {
         const json = {
             "bkg": parseFloat(bkg.text),
         }
-        ExGlobals.Constants.proxy.backgroundAsObj = JSON.stringify(json)
+        ExGlobals.Constants.proxy.simulation.backgroundAsObj = JSON.stringify(json)
     }
 }
