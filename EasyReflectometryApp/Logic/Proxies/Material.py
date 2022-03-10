@@ -1,4 +1,3 @@
-import json
 from dicttoxml import dicttoxml
 
 from matplotlib import cm, colors
@@ -14,10 +13,10 @@ from EasyReflectometry.sample.materials import Materials
 COLOURMAP = cm.get_cmap('Blues', 100)
 MIN_SLD = -3
 MAX_SLD = 15
-        
+
 
 class MaterialProxy(QObject):
-    
+
     materialsChanged = Signal()
     materialsNameChanged = Signal()
 
@@ -39,10 +38,12 @@ class MaterialProxy(QObject):
 
     # # #
     # Defaults
-    # # # 
+    # # #
 
     def _defaultMaterials(self) -> Materials:
-        return Materials(Material.from_pars(0., 0., name='Vacuum'), Material.from_pars(6.335, 0., name='D2O'), Material.from_pars(2.074, 0., name='Si'))
+        return Materials(Material.from_pars(0., 0., name='Vacuum'),
+                         Material.from_pars(6.335, 0., name='D2O'),
+                         Material.from_pars(2.074, 0., name='Si'))
 
     # # #
     # Setters and getters
@@ -56,7 +57,8 @@ class MaterialProxy(QObject):
         self._materials_as_obj = []
         for i in self._materials:
             dictionary = i.as_dict(skip=['interface'])
-            dictionary['color'] = colors.rgb2hex(COLOURMAP((dictionary['sld']['value'] - MIN_SLD) / (MAX_SLD - MIN_SLD)))
+            dictionary['color'] = colors.rgb2hex(
+                COLOURMAP((dictionary['sld']['value'] - MIN_SLD) / (MAX_SLD - MIN_SLD)))
             self._materials_as_obj.append(dictionary)
         self.materialsAsObjChanged.emit()
 
@@ -80,7 +82,7 @@ class MaterialProxy(QObject):
     @materialsName.setter
     @property_stack_deco
     def materialsName(self):
-        self.parent.parametersChanged.emit() 
+        self.parent.parametersChanged.emit()
 
     @Property(int, notify=materialsChanged)
     def currentMaterialsIndex(self):
@@ -93,9 +95,9 @@ class MaterialProxy(QObject):
         self._current_materials_index = new_index
         self.parent.sampleChanged.emit()
 
-    # # # 
+    # # #
     # Actions
-    # # # 
+    # # #
 
     def _onMaterialsChanged(self):
         for i in self.parent._model_proxy._model.structure:
@@ -108,27 +110,34 @@ class MaterialProxy(QObject):
     def _onCurrentMaterialsChanged(self):
         self.parent.sampleChanged.emit()
 
-    # # # 
+    # # #
     # Slot
-    # # # 
+    # # #
 
     @Slot()
     def addNewMaterials(self):
         borg.stack.enabled = False
-        self._materials.append(Material.from_pars(2.074, 0.000, name=f'Material {len(self._materials)+1}', interface=self.parent._interface))
+        self._materials.append(
+            Material.from_pars(2.074,
+                               0.000,
+                               name=f'Material {len(self._materials)+1}',
+                               interface=self.parent._interface))
         borg.stack.enabled = True
         self.materialsNameChanged.emit()
         self.parent.sampleChanged.emit()
 
     @Slot()
     def duplicateSelectedMaterials(self):
-        #if borg.stack.enabled:
+        # if borg.stack.enabled:
         #    borg.stack.beginMacro('Loaded default material')
         borg.stack.enabled = False
         # This is a fix until deepcopy is worked out
         # Manual duplication instead of creating a copy
-        to_dup = self._materials[self.currentMaterialsIndex] 
-        self._materials.append(Material.from_pars(to_dup.sld.raw_value, to_dup.isld.raw_value, name=to_dup.name))
+        to_dup = self._materials[self.currentMaterialsIndex]
+        self._materials.append(
+            Material.from_pars(to_dup.sld.raw_value,
+                               to_dup.isld.raw_value,
+                               name=to_dup.name))
         borg.stack.enabled = True
         self.materialsNameChanged.emit()
         self.parent.sampleChanged.emit()
@@ -173,7 +182,7 @@ class MaterialProxy(QObject):
             return
         self._materials[self.currentMaterialsIndex].sld = sld
         self.parent.sampleChanged.emit()
-    
+
     @Slot(str)
     def setCurrentMaterialsISld(self, isld):
         """

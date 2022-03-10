@@ -1,26 +1,21 @@
 import os
 import datetime
 import json
-from dicttoxml import dicttoxml
-
-from matplotlib import cm, colors
 
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
-from easyCore import borg, np
-from easyCore.Utils.UndoRedo import property_stack_deco
+from easyCore import np
 from easyAppLogic.Utils.Utils import generalizePath
 
-from EasyReflectometry.sample.material import Material
 from EasyReflectometry.sample.materials import Materials
 from EasyReflectometry.experiment.model import Model
 
 
 class ProjectProxy(QObject):
-    
+
     dummySignal = Signal()
     projectCreatedChanged = Signal()
-    projectInfoChanged = Signal() 
+    projectInfoChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -33,10 +28,9 @@ class ProjectProxy(QObject):
 
         self._report = ""
 
-
     # # #
     # Defaults
-    # # # 
+    # # #
 
     def _defaultProjectInfo(self):
         return dict(
@@ -45,8 +39,7 @@ class ProjectProxy(QObject):
             short_description="reflectometry, 1D",
             samples="Not loaded",
             experiments="Not loaded",
-            modified=datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
-        )
+            modified=datetime.datetime.now().strftime("%d.%m.%Y %H:%M"))
 
     # # #
     # Setters and getters
@@ -102,15 +95,15 @@ class ProjectProxy(QObject):
         if self._currentProjectPath == new_path:
             return
         self._currentProjectPath = new_path
-        self.projectInfoChanged.emit()    
+        self.projectInfoChanged.emit()
 
-    # # # 
+    # # #
     # Slot
-    # # # 
+    # # #
 
     @Slot()
     def createProject(self):
-        projectPath = self.currentProjectPath #self.projectInfoAsJson['location']
+        projectPath = self.currentProjectPath
         mainCif = os.path.join(projectPath, 'project.cif')
         samplesPath = os.path.join(projectPath, 'samples')
         experimentsPath = os.path.join(projectPath, 'experiments')
@@ -158,17 +151,21 @@ class ProjectProxy(QObject):
             if i not in materials_in_model:
                 materials_not_in_model.append(i)
         descr = {
-            'model': self.parent._model_proxy._model.as_dict(skip=['interface']),
-            'materials_not_in_model': Materials(*materials_not_in_model).as_dict(skip=['interface'])
+            'model':
+            self.parent._model_proxy._model.as_dict(skip=['interface']),
+            'materials_not_in_model':
+            Materials(*materials_not_in_model).as_dict(skip=['interface'])
         }
-        
+
         if self.parent._data_proxy._data.experiments:
             experiments_x = self.parent._data_proxy._data.experiments[0].x
             experiments_y = self.parent._data_proxy._data.experiments[0].y
             experiments_ye = self.parent._data_proxy._data.experiments[0].ye
             if self.parent._data_proxy._data.experiments[0].xe is not None:
                 experiments_xe = self.parent._data_proxy._data.experiments[0].xe
-                descr['experiments'] = [experiments_x, experiments_y, experiments_ye, experiments_xe]
+                descr['experiments'] = [
+                    experiments_x, experiments_y, experiments_ye, experiments_xe
+                ]
             else:
                 descr['experiments'] = [experiments_x, experiments_y, experiments_ye]
 
@@ -230,16 +227,21 @@ class ProjectProxy(QObject):
         # experiment
         if 'experiments' in descr:
             self.parent._data_proxy.experimentLoaded = True
-            self.parent._data_proxy._data.experiments[0].x = np.array(descr['experiments'][0])
-            self.parent._data_proxy._data.experiments[0].y = np.array(descr['experiments'][1])
-            self.parent._data_proxy._data.experiments[0].ye = np.array(descr['experiments'][2])
+            self.parent._data_proxy._data.experiments[0].x = np.array(
+                descr['experiments'][0])
+            self.parent._data_proxy._data.experiments[0].y = np.array(
+                descr['experiments'][1])
+            self.parent._data_proxy._data.experiments[0].ye = np.array(
+                descr['experiments'][2])
             if len(descr['experiments']) == 4:
-                self.parent._data_proxy._data.experiments[0].xe = np.array(descr['experiments'][3])
+                self.parent._data_proxy._data.experiments[0].xe = np.array(
+                    descr['experiments'][3])
             else:
                 self.parent._data_proxy._data.experiments[0].xe = None
             self._experiment_data = self.parent._data_proxy._data.experiments[0]
             self.experiments = [{'name': descr['project_info']['experiments']}]
-            self.parent.setCurrentExperimentDatasetName(descr['project_info']['experiments'])
+            self.parent.setCurrentExperimentDatasetName(
+                descr['project_info']['experiments'])
             self.parent._data_proxy.experimentLoaded = True
             self.parent._data_proxy.experimentSkipped = False
             self.parent.experimentDataAdded.emit()

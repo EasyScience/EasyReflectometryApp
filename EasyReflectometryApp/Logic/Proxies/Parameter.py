@@ -1,15 +1,11 @@
-import json
 from typing import Union
 from dicttoxml import dicttoxml
-
-from matplotlib import cm, colors
 
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import borg
-from easyCore.Utils.UndoRedo import property_stack_deco
 from easyCore.Utils.classTools import generatePath
-        
+
 
 class ParameterProxy(QObject):
 
@@ -27,8 +23,8 @@ class ParameterProxy(QObject):
 
         self._parameters_filter_criteria = ""
 
-        self.parametersFilterCriteriaChanged.connect(self._onParametersFilterCriteriaChanged)
-
+        self.parametersFilterCriteriaChanged.connect(
+            self._onParametersFilterCriteriaChanged)
 
     # # #
     # Setters and getters
@@ -76,13 +72,13 @@ class ParameterProxy(QObject):
                 label = 'Resolution (dq/q)'
                 unit = '%'
             self._parameters_as_obj.append({
-                "id":     str(par_id),
+                "id": str(par_id),
                 "number": par_index + 1,
-                "label":  label,
-                "value":  par.raw_value,
-                "unit":   unit,
-                "error":  float(par.error),
-                "fit":    int(not par.fixed)
+                "label": label,
+                "value": par.raw_value,
+                "unit": unit,
+                "error": float(par.error),
+                "fit": int(not par.fixed)
             })
 
         self.parametersAsObjChanged.emit()
@@ -92,7 +88,8 @@ class ParameterProxy(QObject):
         return self._parameters_as_xml
 
     def _setParametersAsXml(self):
-        self._parameters_as_xml = dicttoxml(self._parameters_as_obj, attr_type=False).decode()
+        self._parameters_as_xml = dicttoxml(self._parameters_as_obj,
+                                            attr_type=False).decode()
         self.parametersAsXmlChanged.emit()
 
     @Slot(str)
@@ -102,27 +99,28 @@ class ParameterProxy(QObject):
         self._parameters_filter_criteria = new_criteria
         self.parametersFilterCriteriaChanged.emit()
 
-    # # # 
+    # # #
     # Actions
-    # # # 
+    # # #
 
     def _onParametersChanged(self):
         self._setParametersAsObj()
         self._setParametersAsXml()
         self.parent._state_proxy.stateChanged.emit(True)
-    
+
     def _onParametersFilterCriteriaChanged(self):
         self._onParametersChanged()
 
     @Slot(str, 'QVariant')
-    def editParameter(self, obj_id: str, new_value: Union[bool, float, str]):  # covers both parameter and descriptor
+    def editParameter(self, obj_id: str,
+                      new_value: Union[bool, float,
+                                       str]):
         if not obj_id:
             return
 
         obj = self._parameterObj(obj_id)
         if obj is None:
             return
-        # print(f"\n\n+ editParameter {obj_id} of {type(new_value)} from {obj.raw_value} to {new_value}")
 
         if isinstance(new_value, bool):
             if obj.fixed == (not new_value):

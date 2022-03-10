@@ -6,11 +6,11 @@ from easyCore import np
 
 
 class SimulationProxy(QObject):
-    
+
     simulationParametersChanged = Signal()
     simulationParametersAsObjChanged = Signal()
     simulationParametersAsXmlChanged = Signal()
-    
+
     calculatedDataChanged = Signal()
 
     backgroundChanged = Signal()
@@ -25,7 +25,7 @@ class SimulationProxy(QObject):
         self._resolution_as_obj = self._defaultResolution()
         self._q_range_as_obj = self._defaultQRange()
         self._experiment_parameters = None
-        
+
         # # #
         # Connections
         # # #
@@ -38,12 +38,12 @@ class SimulationProxy(QObject):
         self.parent._data_proxy.experimentDataAdded.connect(self._onExperimentDataAdded)
 
     # # #
-    # Defaults 
+    # Defaults
     # # #
 
     def _defaultBackground(self):
         return {'bkg': 0e0}
-    
+
     def _defaultResolution(Self):
         return {'res': 0.0}
 
@@ -64,7 +64,8 @@ class SimulationProxy(QObject):
         if self._background_as_obj == value:
             return None
         self._background_as_obj = value
-        self.parent._model_proxy._model.background = float(self._background_as_obj['bkg'])
+        self.parent._model_proxy._model.background = float(
+            self._background_as_obj['bkg'])
         self.simulationParametersChanged.emit()
         self.parent.parametersChanged.emit()
 
@@ -76,16 +77,17 @@ class SimulationProxy(QObject):
     def resolutionAsObj(self, json_str):
         value = json.loads(json_str)
         if self._resolution_as_obj == value:
-            return 
+            return
         self._resolution_as_obj = value
-        self.parent._model_proxy.model.resolution = float(self._resolution_as_obj['res'])
+        self.parent._model_proxy.model.resolution = float(
+            self._resolution_as_obj['res'])
         self.simulationParametersChanged.emit()
         self.parent.parametersChanged.emit()
 
     @Property('QVariant', notify=qRangeChanged)
     def qRangeAsObj(self):
         return self._q_range_as_obj
-    
+
     @qRangeAsObj.setter
     def qRangeAsObj(self, json_str):
         value = json.loads(json_str)
@@ -94,18 +96,23 @@ class SimulationProxy(QObject):
         self._q_range_as_obj = value
         self.simulationParametersChanged.emit()
 
-    # # # 
+    # # #
     # Actions
-    # # # 
+    # # #
 
     def _onExperimentDataAdded(self):
-        self.parent._plotting_1d_proxy.setMeasuredData(self.parent._data_proxy._experiment_data.x, self.parent._data_proxy._experiment_data.y, self.parent._data_proxy._experiment_data.ye)
-        self._experiment_parameters = self._experimentDataParameters(self.parent._data_proxy._experiment_data)
+        self.parent._plotting_1d_proxy.setMeasuredData(
+            self.parent._data_proxy._experiment_data.x,
+            self.parent._data_proxy._experiment_data.y,
+            self.parent._data_proxy._experiment_data.ye)
+        self._experiment_parameters = self._experimentDataParameters(
+            self.parent._data_proxy._experiment_data)
         self.qRangeAsObj = json.dumps(self._experiment_parameters[0])
         self.backgroundAsObj = json.dumps(self._experiment_parameters[1])
 
         self.parent._data_proxy.experimentDataAsObjChanged.emit()
-        self.parent._project_proxy.projectInfoAsJson['experiments'] = self.parent._data_proxy.experiments[0]['name']
+        self.parent._project_proxy.projectInfoAsJson[
+            'experiments'] = self.parent._data_proxy.experiments[0]['name']
         self.parent._project_proxy.projectInfoChanged.emit()
 
     def _onCalculatedDataChanged(self):
@@ -138,13 +145,13 @@ class SimulationProxy(QObject):
             exp = self.parent._data_proxy._data.experiments[0]
             sim.x = exp.x
 
-        sim.y = self.parent._interface.fit_func(sim.x) 
+        sim.y = self.parent._interface.fit_func(sim.x)
         sld_profile = self.parent._interface.sld_profile()
 
         self.parent._plotting_1d_proxy.setCalculatedData(sim.x, sim.y)
         self.parent._plotting_1d_proxy.setSldData(sld_profile[0], sld_profile[1])
 
-    # # # 
+    # # #
     # Static methods
     # # #
 
@@ -155,13 +162,9 @@ class SimulationProxy(QObject):
         x_step = (x_max - x_min) / (len(data.x) - 1)
         bkg = np.min(data.y)
         q_range_parameters = {
-            "x_min":  x_min,
-            "x_max":  x_max,
+            "x_min": x_min,
+            "x_max": x_max,
             "x_step": x_step,
         }
-        bkg_parameters = {
-            'bkg': bkg
-        }
+        bkg_parameters = {'bkg': bkg}
         return q_range_parameters, bkg_parameters
-
-    

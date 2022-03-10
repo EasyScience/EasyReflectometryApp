@@ -5,6 +5,7 @@ from PySide2.QtCore import Signal, QThread, QObject, Property, Slot
 from easyCore import borg
 from easyCore.Fitting.Fitting import Fitter as easyFitter
 
+
 class Fitter(QThread):
     """
     Simple wrapper for calling a function in separate thread
@@ -51,22 +52,18 @@ class FitterProxy(QObject):
         self._fit_finished = True
         self._fit_results = self._defaultFitResults()
         self._fitter_thread = None
-        self.eFitter = easyFitter(self.parent._model_proxy._model, self.parent._interface.fit_func)
+        self.eFitter = easyFitter(self.parent._model_proxy._model,
+                                  self.parent._interface.fit_func)
 
         self.fitFinished.connect(self._onFitFinished)
         self.stopFit.connect(self.onStopFit)
 
     # # #
     # Defaults
-    # # # 
+    # # #
 
     def _defaultFitResults(self):
-        return {
-            "success": None,
-            "nvarys":  None,
-            "GOF":     None,
-            "redchi2": None
-        }
+        return {"success": None, "nvarys": None, "GOF": None, "redchi2": None}
 
     # # #
     # Setters and getters
@@ -90,8 +87,8 @@ class FitterProxy(QObject):
     def _setFitResults(self, res):
         self._fit_results = {
             "success": res.success,
-            "nvarys":  res.n_pars,
-            "GOF":     float(res.goodness_of_fit),
+            "nvarys": res.n_pars,
+            "GOF": float(res.goodness_of_fit),
             "redchi2": float(res.reduced_chi)
         }
         self.fitResultsChanged.emit()
@@ -101,9 +98,9 @@ class FitterProxy(QObject):
     def _setFitResultsFailed(self, res):
         self.isFitFinished = True
 
-    # # # 
+    # # #
     # Actions
-    # # # 
+    # # #
 
     def _onFitFinished(self):
         self.parent.parametersChanged.emit()
@@ -125,7 +122,7 @@ class FitterProxy(QObject):
         else:
             self.threaded_fit()
 
-    # # # 
+    # # #
     # Methods
     # # #
 

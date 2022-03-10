@@ -1,19 +1,16 @@
-import json, pathlib
+import pathlib
 from dicttoxml import dicttoxml
-
-from matplotlib import cm, colors
 
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import np
-from easyCore.Utils.UndoRedo import property_stack_deco
 from easyAppLogic.Utils.Utils import generalizePath
 
 from .DataStore import DataSet1D, DataStore
 
 
 class DataProxy(QObject):
-    
+
     experimentSkippedChanged = Signal()
     experimentLoadedChanged = Signal()
 
@@ -22,7 +19,6 @@ class DataProxy(QObject):
 
     experimentDataAsXmlChanged = Signal()
     experimentDataAsObjChanged = Signal()
-
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -41,36 +37,34 @@ class DataProxy(QObject):
         self.experimentDataAsObjChanged.connect(self._onExperimentDataChanged)
         self.experimentDataRemoved.connect(self._onExperimentDataRemoved)
 
-
     # # #
     # Defaults
-    # # # 
+    # # #
 
     def _defaultData(self):
-        x_min = 0.001 #self._defaultSimulationParameters()['x_min']
-        x_max = 0.3 #self._defaultSimulationParameters()['x_max']
-        x_step = 0.002 #self._defaultSimulationParameters()['x_step']
+        x_min = 0.001
+        x_max = 0.3
+        x_step = 0.002
         num_points = int((x_max - x_min) / x_step + 1)
         x_data = np.linspace(x_min, x_max, num_points)
 
         data = DataStore()
 
         data.append(
-            DataSet1D(
-                name='data',
-                x=x_data, y=np.zeros_like(x_data),
-                x_label='q (1/angstrom)', y_label='Reflectivity',
-                data_type='experiment'
-            )
-        )
+            DataSet1D(name='data',
+                      x=x_data,
+                      y=np.zeros_like(x_data),
+                      x_label='q (1/angstrom)',
+                      y_label='Reflectivity',
+                      data_type='experiment'))
         data.append(
-            DataSet1D(
-                name='{:s} engine'.format(self.parent._interface.current_interface_name),
-                x=x_data, y=np.zeros_like(x_data),
-                x_label='q (1/angstrom)', y_label='Reflectivity',
-                data_type='simulation'
-            )
-        )
+            DataSet1D(name='{:s} engine'.format(
+                self.parent._interface.current_interface_name),
+                      x=x_data,
+                      y=np.zeros_like(x_data),
+                      x_label='q (1/angstrom)',
+                      y_label='Reflectivity',
+                      data_type='simulation'))
         return data
 
     # # #
@@ -105,7 +99,8 @@ class DataProxy(QObject):
 
     def _setExperimentDataAsXml(self):
         print("+ _setExperimentDataAsXml")
-        self._experiment_data_as_xml = dicttoxml(self.experiments, attr_type=True).decode()
+        self._experiment_data_as_xml = dicttoxml(self.experiments,
+                                                 attr_type=True).decode()
         self.experimentDataAsXmlChanged.emit()
 
     @Property('QVariant', notify=experimentDataAsObjChanged)
@@ -127,7 +122,7 @@ class DataProxy(QObject):
             self.parent._simulation_proxy.simulationParametersChanged.emit()
 
     def _onExperimentDataChanged(self):
-        self._setExperimentDataAsXml() 
+        self._setExperimentDataAsXml()
         self.parent._state_proxy.stateChanged.emit(True)
 
     def _onExperimentDataRemoved(self):
@@ -151,7 +146,9 @@ class DataProxy(QObject):
     def addExperimentDataFromOrt(self, file_url):
         self._experiment_data = self._loadExperimentData(file_url)
         self._data.experiments[0].name = pathlib.Path(file_url).stem
-        self.experiments = [{'name': experiment.name} for experiment in self._data.experiments]
+        self.experiments = [{
+            'name': experiment.name
+        } for experiment in self._data.experiments]
         self.experimentLoaded = True
         self.experimentSkipped = False
         self.experimentDataAdded.emit()

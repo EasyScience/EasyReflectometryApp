@@ -1,49 +1,19 @@
-# noqa: E501
-from cmath import log
-import os
-import sys
-import pathlib
-import datetime
-import re
-import timeit
-import json
-from typing import Union
-from dicttoxml import dicttoxml
+from PySide2.QtCore import QObject, Signal, Property
 
-from PySide2.QtCore import QObject, Slot, Signal, Property
-from PySide2.QtCore import QByteArray, QBuffer, QIODevice
-
-from easyCore import np, borg
-from easyCore.Objects.Groups import BaseCollection
-from easyCore.Objects.Base import BaseObj
-from easyCore.Fitting.Fitting import Fitter
-from easyCore.Utils.UndoRedo import property_stack_deco
-
-from easyAppLogic.Utils.Utils import generalizePath
-
-from EasyReflectometry.sample.material import Material
-from EasyReflectometry.sample.materials import Materials
-from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.layers import Layers
-from EasyReflectometry.sample.item import MultiLayer, RepeatingMultiLayer
-from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.interface import InterfaceFactory
 
-
-from .Project import ProjectProxy
-from .Simulation import SimulationProxy
-from .Material import MaterialProxy
-from .Model import ModelProxy
-from .Calculator import CalculatorProxy
-from .Parameter import ParameterProxy
-from .Data import DataProxy
-from .Minimizer import MinimizerProxy
-from .UndoRedo import UndoRedoProxy
-from .State import StateProxy
-from .DataStore import DataSet1D, DataStore
+from .Proxies.Calculator import CalculatorProxy
+from .Proxies.Data import DataProxy
+from .Proxies.Fitter import FitterProxy
+from .Proxies.Material import MaterialProxy
+from .Proxies.Minimizer import MinimizerProxy
+from .Proxies.Project import ProjectProxy
+from .Proxies.Model import ModelProxy
+from .Proxies.Parameter import ParameterProxy
 from .Proxies.Plotting1d import Plotting1dProxy
-from .Fitter import FitterProxy
-from .Fitter import Fitter as ThreadedFitter
+from .Proxies.Simulation import SimulationProxy
+from .Proxies.State import StateProxy
+from .Proxies.UndoRedo import UndoRedoProxy
 
 
 class PyQmlProxy(QObject):
@@ -54,10 +24,10 @@ class PyQmlProxy(QObject):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-            
+
         self._interface = InterfaceFactory()
 
-        ######### proxies #########
+        # Proxies
         self._project_proxy = ProjectProxy(self)
         self._data_proxy = DataProxy(self)
         self._simulation_proxy = SimulationProxy(self)
@@ -74,13 +44,15 @@ class PyQmlProxy(QObject):
         # Sample Connections
         self.sampleChanged.connect(self._material_proxy._onMaterialsChanged)
         self.sampleChanged.connect(self._model_proxy._onModelChanged)
-        self.sampleChanged.connect(self._simulation_proxy._onSimulationParametersChanged)
+        self.sampleChanged.connect(
+            self._simulation_proxy._onSimulationParametersChanged)
         self.sampleChanged.connect(self._parameter_proxy._onParametersChanged)
 
         # Parameter Connections
         self.parametersChanged.connect(self._material_proxy._onMaterialsChanged)
         self.parametersChanged.connect(self._model_proxy._onModelChanged)
-        self.parametersChanged.connect(self._simulation_proxy._onSimulationParametersChanged)
+        self.parametersChanged.connect(
+            self._simulation_proxy._onSimulationParametersChanged)
         self.parametersChanged.connect(self._parameter_proxy._onParametersChanged)
         self.parametersChanged.connect(self._simulation_proxy._onCalculatedDataChanged)
         self.parametersChanged.connect(self._undoredo_proxy.undoRedoChanged)
@@ -97,11 +69,11 @@ class PyQmlProxy(QObject):
     @Property('QVariant', notify=dummySignal)
     def state(self):
         return self._state_proxy
-        
+
     @Property('QVariant', notify=dummySignal)
     def project(self):
         return self._project_proxy
-        
+
     @Property('QVariant', notify=dummySignal)
     def simulation(self):
         return self._simulation_proxy
@@ -142,11 +114,9 @@ class PyQmlProxy(QObject):
     def undoredo(self):
         return self._undoredo_proxy
 
-    ####################################################################################################################
-    ####################################################################################################################
+    # # #
     # Screen recorder
-    ####################################################################################################################
-    ####################################################################################################################
+    # # #
 
     @Property('QVariant', notify=dummySignal)
     def screenRecorder(self):

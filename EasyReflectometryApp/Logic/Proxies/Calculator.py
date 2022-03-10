@@ -1,16 +1,10 @@
-import json
-from struct import Struct
-from dicttoxml import dicttoxml
-
-from matplotlib import cm, colors
-
 from PySide2.QtCore import QObject, Signal, Property
 
-from easyCore import np
 from easyCore.Utils.UndoRedo import property_stack_deco
 
+
 class CalculatorProxy(QObject):
-    
+
     dummySignal = Signal()
     calculatorChanged = Signal()
 
@@ -39,12 +33,13 @@ class CalculatorProxy(QObject):
             return
         new_name = self.calculatorNames[new_index]
         self.parent._model_proxy._model.switch_interface(new_name)
-        self.parent._fitting_proxy.eFitter.initialize(self.parent._model_proxy._model, self.parent._interface.fit_func)
+        self.parent._fitting_proxy.eFitter.initialize(self.parent._model_proxy._model,
+                                                      self.parent._interface.fit_func)
         self.calculatorChanged.emit()
 
-    # # # 
+    # # #
     # Actions
-    # # # 
+    # # #
 
     def _onCurrentCalculatorChanged(self):
         # print("***** _onCurrentCalculatorChanged")
@@ -53,4 +48,3 @@ class CalculatorProxy(QObject):
         # data.name = f'{self._interface.current_interface_name} engine'
         # print(data.name)
         self.parent.calculatedDataChanged.emit()
-    

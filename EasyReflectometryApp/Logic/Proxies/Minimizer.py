@@ -1,15 +1,7 @@
-import json
-from typing import Union
-from dicttoxml import dicttoxml
+from PySide2.QtCore import QObject, Signal, Property
 
-from matplotlib import cm, colors
-
-from PySide2.QtCore import QObject, Signal, Property, Slot
-
-from easyCore import borg
 from easyCore.Utils.UndoRedo import property_stack_deco
-from easyCore.Utils.classTools import generatePath
-        
+
 
 class MinimizerProxy(QObject):
 
@@ -22,9 +14,9 @@ class MinimizerProxy(QObject):
         self.parent = parent
 
         self._current_minimizer_method_index = 0
-        self._current_minimizer_method_name = self.parent._fitter_proxy.eFitter.available_methods()[0]
+        self._current_minimizer_method_name = self.parent._fitter_proxy.eFitter.available_methods(
+        )[0]
         self.currentMinimizerChanged.connect(self._onCurrentMinimizerChanged)
-
 
     # # #
     # Setters and getters
@@ -87,4 +79,3 @@ class MinimizerProxy(QObject):
             self._current_minimizer_method_index = idx
             self._current_minimizer_method_name = self.minimizerMethodNames[idx]
             self.currentMinimizerMethodChanged.emit()
-    
