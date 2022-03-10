@@ -55,8 +55,8 @@ class PyQmlProxy(QObject):
     dummySignal = Signal()
 
     # Project
-    projectCreatedChanged = Signal()
-    projectInfoChanged = Signal()
+    # projectCreatedChanged = Signal()
+    # projectInfoChanged = Signal()
     stateChanged = Signal(bool)
 
     # Items
@@ -93,6 +93,7 @@ class PyQmlProxy(QObject):
         self._interface = InterfaceFactory()
 
         ######### proxies #########
+        self._project_proxy = ProjectProxy(self)
         self._simulation_proxy = SimulationProxy(self)
         self._material_proxy = MaterialProxy(self)
         self._model_proxy = ModelProxy(self)
@@ -104,9 +105,6 @@ class PyQmlProxy(QObject):
         self._plotting_1d_proxy = Plotting1dProxy()
 
         # Project
-        self._project_created = False
-        self._project_info = self._defaultProjectInfo()
-        self.project_save_filepath = ""
         self._status_model = None
         self._state_changed = False
         self.stateChanged.connect(self._onStateChanged)
@@ -193,10 +191,14 @@ class PyQmlProxy(QObject):
         borg.stack.clear()
         # borg.debug = True
 
-        self._currentProjectPath = os.path.expanduser("~")
+        # self._currentProjectPath = os.path.expanduser("~")
         self._material_proxy._onMaterialsChanged()
         self._model_proxy._onModelChanged()
 
+    @Property('QVariant', notify=dummySignal)
+    def project(self):
+        return self._project_proxy
+        
     @Property('QVariant', notify=dummySignal)
     def simulation(self):
         return self._simulation_proxy
@@ -253,75 +255,7 @@ class PyQmlProxy(QObject):
 
     ####################################################################################################################
     # Project
-    ####################################################################################################################
-
-    @Property('QVariant', notify=projectInfoChanged)
-    def projectInfoAsJson(self):
-        return self._project_info
-
-    @projectInfoAsJson.setter
-    def projectInfoAsJson(self, json_str):
-        self._project_info = json.loads(json_str)
-        self.projectInfoChanged.emit()
-
-    @Property(str, notify=projectInfoChanged)
-    def projectInfoAsCif(self):
-        cif_list = []
-        for key, value in self.projectInfoAsJson.items():
-            if ' ' in value:
-                value = f"'{value}'"
-            cif_list.append(f'_{key} {value}')
-        cif_str = '\n'.join(cif_list)
-        return cif_str
-
-    @Slot(str, str)
-    def editProjectInfo(self, key, value):
-        if key == 'location':
-            self.currentProjectPath = value
-            return
-        else:
-            if self._project_info[key] == value:
-                return
-            self._project_info[key] = value
-        self.projectInfoChanged.emit()
-
-    @Property(str, notify=projectInfoChanged)
-    def currentProjectPath(self):
-        return self._currentProjectPath
-
-    @currentProjectPath.setter
-    def currentProjectPath(self, new_path):
-        if self._currentProjectPath == new_path:
-            return
-        self._currentProjectPath = new_path
-        self.projectInfoChanged.emit()
-
-    @Slot()
-    def createProject(self):
-        projectPath = self.currentProjectPath #self.projectInfoAsJson['location']
-        mainCif = os.path.join(projectPath, 'project.cif')
-        samplesPath = os.path.join(projectPath, 'samples')
-        experimentsPath = os.path.join(projectPath, 'experiments')
-        calculationsPath = os.path.join(projectPath, 'calculations')
-        if not os.path.exists(projectPath):
-            os.makedirs(projectPath)
-            os.makedirs(samplesPath)
-            os.makedirs(experimentsPath)
-            os.makedirs(calculationsPath)
-            with open(mainCif, 'w') as file:
-                file.write(self.projectInfoAsCif)
-        else:
-            print(f"ERROR: Directory {projectPath} already exists")
-
-    def _defaultProjectInfo(self):
-        return dict(
-            name="Example Project",
-            # location=os.path.join(os.path.expanduser("~"), "Example Project"),
-            short_description="reflectometry, 1D",
-            samples="Not loaded",
-            experiments="Not loaded",
-            modified=datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
-        )
+    ###################################################################################################################
 
     @Property(bool, notify=stateChanged)
     def stateHasChanged(self):
@@ -496,8 +430,8 @@ class PyQmlProxy(QObject):
 
         self._data_proxy._data.experiments[0].name = name
         self._data_proxy.experimentDataAsObjChanged.emit()
-        self.projectInfoAsJson['experiments'] = name
-        self.projectInfoChanged.emit()
+        self._project_proxy.projectInfoAsJson['experiments'] = name
+        self._project_proxy.projectInfoChanged.emit()
 
 
     ####################################################################################################################
@@ -754,166 +688,6 @@ class PyQmlProxy(QObject):
         return self._screen_recorder
 
     ####################################################################################################################
-    ####################################################################################################################
-    # State save/load
-    ####################################################################################################################
-    ####################################################################################################################
-
-    @Slot()
-    def saveProject(self):
-        self._saveProject()
-        self.stateChanged.emit(False)
-
-    @Slot(str)
-    def loadProjectAs(self, filepath):
-        self._loadProjectAs(filepath)
-        self.stateChanged.emit(False)
-
-    @Slot()
-    def loadProject(self):
-        self._loadProject()
-        self.stateChanged.emit(False)
-
-    @Slot(str)
-    def loadExampleProject(self, filepath):
-        self._loadProjectAs(filepath)
-        self.currentProjectPath = '--- EXAMPLE ---'
-        self.stateChanged.emit(False)
-
-    @Property(str, notify=dummySignal)
-    def projectFilePath(self):
-        return self.project_save_filepath
-
-    def _saveProject(self):
-        """
-        """
-        projectPath = self.currentProjectPath
-        project_save_filepath = os.path.join(projectPath, 'project.json')
-        materials_in_model = []
-        for i in self._model_proxy._model.structure:
-            for j in i.layers:
-                materials_in_model.append(j.material)
-        materials_not_in_model = []
-        for i in self._material_proxy._materials:
-            if i not in materials_in_model:
-                materials_not_in_model.append(i)
-        descr = {
-            'model': self._model_proxy._model.as_dict(skip=['interface']),
-            'materials_not_in_model': Materials(*materials_not_in_model).as_dict(skip=['interface'])
-        }
-        
-        if self._data_proxy._data.experiments:
-            experiments_x = self._data_proxy._data.experiments[0].x
-            experiments_y = self._data_proxy._data.experiments[0].y
-            experiments_ye = self._data_proxy._data.experiments[0].ye
-            if self._data_proxy._data.experiments[0].xe is not None:
-                experiments_xe = self._data_proxy._data.experiments[0].xe
-                descr['experiments'] = [experiments_x, experiments_y, experiments_ye, experiments_xe]
-            else:
-                descr['experiments'] = [experiments_x, experiments_y, experiments_ye]
-
-        descr['experiment_skipped'] = self._data_proxy._experiment_skipped
-        descr['project_info'] = self._project_info
-
-        descr['interface'] = self._interface.current_interface_name
-
-        descr['minimizer'] = {
-            'engine': self.fitter.current_engine.name,
-            'method': self._current_minimizer_method_name
-        }
-
-        content_json = json.dumps(descr, indent=4, default=self.default)
-        path = generalizePath(project_save_filepath)
-        createFile(path, content_json)
-
-    def default(self, obj):
-        if type(obj).__module__ == np.__name__:
-            if isinstance(obj, np.ndarray):
-                return obj.tolist()
-            else:
-                return obj.item()
-        raise TypeError('Unknown type:', type(obj))
-
-    def _loadProjectAs(self, filepath):
-        """
-        """
-        self.project_load_filepath = filepath
-        print("LoadProjectAs " + filepath)
-        self.loadProject()
-
-    def _loadProject(self):
-        """
-        """
-        path = generalizePath(self.project_load_filepath)
-        if not os.path.isfile(path):
-            print("Failed to find project: '{0}'".format(path))
-            return
-        self.currentProjectPath = os.path.split(path)[0]
-        with open(path, 'r') as xml_file:
-            descr: dict = json.load(xml_file)
-
-        interface_name = descr.get('interface', None)
-        if interface_name is not None:
-            old_interface_name = self._interface.current_interface_name
-            if old_interface_name != interface_name:
-                self._interface.switch(interface_name)
-
-        self._model_proxy._model = Model.from_dict(descr['model'])
-        for i in self._model_proxy._model.structure:
-            for j in i.layers:
-                self._material_proxy._materials.append(j.material)
-        for i in Materials.from_dict(descr['materials_not_in_model']):
-            self._material_proxy._materials.append(i)
-        self._model_proxy._model.interface = self._interface
-        self.sampleChanged.emit()
-
-        # experiment
-        if 'experiments' in descr:
-            self._data_proxy.experimentLoaded = True
-            self._data_proxy._data.experiments[0].x = np.array(descr['experiments'][0])
-            self._data_proxy._data.experiments[0].y = np.array(descr['experiments'][1])
-            self._data_proxy._data.experiments[0].ye = np.array(descr['experiments'][2])
-            if len(descr['experiments'] == 4):
-                self._data_proxy._data.experiments[0].xe = np.array(descr['experiments'][3])
-            else:
-                self._data_proxy._data.experiments[0].xe = None
-            self._experiment_data = self._data_proxy._data.experiments[0]
-            self.experiments = [{'name': descr['project_info']['experiments']}]
-            self.setCurrentExperimentDatasetName(descr['project_info']['experiments'])
-            self._data_proxy.experimentLoaded = True
-            self._data_proxy.experimentSkipped = False
-            self.experimentDataAdded.emit()
-            self._parameter_proxy._onParametersChanged()
-
-        else:
-            # delete existing experiment
-            self.removeExperiment()
-            self._data_proxy.experimentLoaded = False
-            if descr['experiment_skipped']:
-                self._data_proxy.experimentSkipped = True
-                self._data_proxy.experimentSkippedChanged.emit()
-            else:
-                self._data_proxy.experimentSkipped = False
-
-        # project info
-        self.projectInfoAsJson = json.dumps(descr['project_info'])
-
-        new_minimizer_settings = descr.get('minimizer', None)
-        if new_minimizer_settings is not None:
-            new_engine = new_minimizer_settings['engine']
-            new_method = new_minimizer_settings['method']
-            new_engine_index = self.minimizerNames.index(new_engine)
-            self.currentMinimizerIndex = new_engine_index
-            new_method_index = self.minimizerMethodNames.index(new_method)
-            self.currentMinimizerMethodIndex = new_method_index
-
-        self.fitter.fit_object = self._model_proxy._model
-
-        self.resetUndoRedoStack()
-
-        self.projectCreated = True
-
-    ####################################################################################################################
     # Undo/Redo stack operations
     ####################################################################################################################
 
@@ -1012,18 +786,6 @@ class PyQmlProxy(QObject):
     # Reset state
     ####################################################################################################################
 
-    @Property(bool, notify=projectCreatedChanged)
-    def projectCreated(self):
-        return self._project_created
-
-    @projectCreated.setter
-    def projectCreated(self, created: bool):
-        if self._project_created == created:
-            return
-
-        self._project_created = created
-        self.projectCreatedChanged.emit()
-
     @Slot()
     def resetState(self):
         pass
@@ -1031,7 +793,7 @@ class PyQmlProxy(QObject):
         #self._project_info = self._defaultProjectInfo()
         #self.projectCreated = False
         #self.projectInfoChanged.emit()
-        #self.project_save_filepath = ""
+        #self._project_proxy.project_save_filepath = ""
         #self.removeExperiment()
         #self.removePhase(self._sample.phases[self.currentPhaseIndex].name)
         #self.resetUndoRedoStack()

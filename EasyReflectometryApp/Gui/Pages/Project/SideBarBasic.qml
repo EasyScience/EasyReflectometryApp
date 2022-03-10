@@ -66,7 +66,7 @@ EaComponents.SideBarColumn {
         onAccepted: {
             // enablement will depend on what is available in the project file,
             // obviously, so care is needed. TODO
-            ExGlobals.Constants.proxy.loadProjectAs(fileUrl)
+            ExGlobals.Constants.proxy.project.loadProjectAs(fileUrl)
 
             ExGlobals.Variables.samplePageEnabled = true
             ExGlobals.Variables.experimentPageEnabled = true

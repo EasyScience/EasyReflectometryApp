@@ -9,20 +9,20 @@ EaComponents.ProjectDescriptionDialog {
     visible: EaGlobals.Variables.showProjectDescriptionDialog
     onClosed: EaGlobals.Variables.showProjectDescriptionDialog = false
 
-    onProjectNameChanged: ExGlobals.Constants.proxy.editProjectInfo("name", projectName)
-    onProjectShortDescriptionChanged: ExGlobals.Constants.proxy.editProjectInfo("short_description", projectShortDescription)
-    //onProjectLocationChanged: ExGlobals.Constants.proxy.editProjectInfo("location", projectLocation)
+    onProjectNameChanged: ExGlobals.Constants.proxy.project.editProjectInfo("name", projectName)
+    onProjectShortDescriptionChanged: ExGlobals.Constants.proxy.project.editProjectInfo("short_description", projectShortDescription)
+    //onProjectLocationChanged: ExGlobals.Constants.proxy.project.editProjectInfo("location", projectLocation)
     onProjectLocationChanged: ExGlobals.Constants.proxy.currentProjectPath = projectLocation
 
     onAccepted: {
         ExGlobals.Constants.proxy.currentProjectPath = projectLocation
-        ExGlobals.Constants.proxy.createProject()
+        ExGlobals.Constants.proxy.project.createProject()
     }
 
     Component.onCompleted: {
-        projectName = ExGlobals.Constants.proxy.projectInfoAsJson.name
-        projectShortDescription = ExGlobals.Constants.proxy.projectInfoAsJson.short_description
-        projectLocation = ExGlobals.Constants.proxy.currentProjectPath
+        projectName = ExGlobals.Constants.proxy.project.projectInfoAsJson.name
+        projectShortDescription = ExGlobals.Constants.proxy.project.projectInfoAsJson.short_description
+        projectLocation = ExGlobals.Constants.proxy.project.currentProjectPath
     }
 }
 

@@ -34,7 +34,7 @@ EaComponents.ApplicationWindow {
             highlighted: true
             fontIcon: "save"
             ToolTip.text: qsTr("Save current state of the project")
-            onClicked:  ExGlobals.Constants.proxy.saveProject()
+            onClicked:  ExGlobals.Constants.proxy.project.saveProject()
         },
 
         EaElements.ToolButton {
@@ -52,7 +52,7 @@ EaComponents.ApplicationWindow {
         },
 
         EaElements.ToolButton {
-            enabled: ExGlobals.Constants.proxy.projectCreated ||
+            enabled: ExGlobals.Constants.proxy.project.projectCreated ||
                      ExGlobals.Constants.proxy.data.experimentSkipped ||
                      ExGlobals.Constants.proxy.data.experimentLoaded
             fontIcon: "backspace"
@@ -167,7 +167,7 @@ EaComponents.ApplicationWindow {
 
         // Project page
         EaComponents.ContentPage {
-            defaultInfo: ExGlobals.Constants.proxy.projectCreated ?
+            defaultInfo: ExGlobals.Constants.proxy.project.projectCreated ?
                              "" :
                              qsTr("No Project Created/Opened")
 
@@ -351,7 +351,7 @@ EaComponents.ApplicationWindow {
     // Application dialogs (invisible at the beginning)
     ExProjectPage.ProjectDescriptionDialog {
         onAccepted: {
-            ExGlobals.Constants.proxy.projectCreated = true
+            ExGlobals.Constants.proxy.project.projectCreated = true
             ExGlobals.Variables.samplePageEnabled = true
         }
     }
