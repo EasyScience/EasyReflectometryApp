@@ -18,6 +18,11 @@ class UndoRedoProxy(QObject):
         borg.stack.enabled = True
         borg.stack.clear()
 
+        self.parent._simulation_proxy.simulationParametersChanged.connect(self._undoredo_proxy.undoRedoChanged)
+        self.parent._simulation_proxy.backgroundChanged.connect(self._undoredo_proxy.undoRedoChanged)
+        self.parent._simulation_proxy.qRangeChanged.connect(self._undoredo_proxy.undoRedoChanged)
+        self.parent._simulation_proxy.resolutionChanged.connect(self._undoredo_proxy.undoRedoChanged)
+
     # # #
     # Setters and getters
     # # #

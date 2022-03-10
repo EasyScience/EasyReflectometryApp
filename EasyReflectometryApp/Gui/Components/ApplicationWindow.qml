@@ -336,7 +336,7 @@ EaComponents.ApplicationWindow {
         visible: EaGlobals.Variables.appBarCurrentIndex !== 0
 
         model: XmlListModel {
-            xml: ExGlobals.Constants.proxy.statusModelAsXml
+            xml: ExGlobals.Constants.proxy.state.statusModelAsXml
             query: "/root/item"
 
             XmlRole { name: "label"; query: "label/string()" }
@@ -382,7 +382,7 @@ EaComponents.ApplicationWindow {
                     EaGlobals.Variables.appBarCurrentIndex = 0
                     ExGlobals.Variables.projectPageEnabled = false
                     ExGlobals.Variables.samplePageEnabled = false
-                    ExGlobals.Constants.proxy.resetState()
+                    ExGlobals.Constants.proxy.state.resetState()
                     resetStateDialog.close()
                 }
             }

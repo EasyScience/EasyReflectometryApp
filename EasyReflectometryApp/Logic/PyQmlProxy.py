@@ -54,23 +54,12 @@ class PyQmlProxy(QObject):
     # SIGNALS
     parametersChanged = Signal()
     
-    statusInfoChanged = Signal()
     dummySignal = Signal()
-
-    # Project
-    # stateChanged = Signal(bool)
 
     # Items
     sampleChanged = Signal()
     
     currentSampleChanged = Signal()
-
-    # Plotting
-    showMeasuredSeriesChanged = Signal()
-    showDifferenceChartChanged = Signal()
-    current1dPlottingLibChanged = Signal()
-
-    htmlExportingFinished = Signal(bool, str) 
 
 
     def __init__(self, parent=None):
@@ -80,7 +69,6 @@ class PyQmlProxy(QObject):
         self._interface = InterfaceFactory()
 
         ######### proxies #########
-        self._state_proxy = StateProxy(self)
         self._project_proxy = ProjectProxy(self)
         self._data_proxy = DataProxy(self)
         self._simulation_proxy = SimulationProxy(self)
@@ -91,14 +79,8 @@ class PyQmlProxy(QObject):
         self._fitter_proxy = FitterProxy(self)
         self._minimizer_proxy = MinimizerProxy(self)
         self._plotting_1d_proxy = Plotting1dProxy(self)
+        self._state_proxy = StateProxy(self)
         self._undoredo_proxy = UndoRedoProxy(self)
-
-        # Plotting 1D
-
-        # Project
-        # self._status_model = None
-        # self._state_changed = False
-        # self.stateChanged.connect(self._onStateChanged)
 
         # Materials
         self._current_materials_index = 1
@@ -118,10 +100,6 @@ class PyQmlProxy(QObject):
 
         self.sampleChanged.connect(self._simulation_proxy._onSimulationParametersChanged)
         self.sampleChanged.connect(self._parameter_proxy._onParametersChanged)
-        self._simulation_proxy.simulationParametersChanged.connect(self._undoredo_proxy.undoRedoChanged)
-        self._simulation_proxy.backgroundChanged.connect(self._undoredo_proxy.undoRedoChanged)
-        self._simulation_proxy.qRangeChanged.connect(self._undoredo_proxy.undoRedoChanged)
-        self._simulation_proxy.resolutionChanged.connect(self._undoredo_proxy.undoRedoChanged)
 
         # Parameters
         self.parametersChanged.connect(self._material_proxy._onMaterialsChanged)
@@ -130,18 +108,6 @@ class PyQmlProxy(QObject):
         self.parametersChanged.connect(self._parameter_proxy._onParametersChanged)
         self.parametersChanged.connect(self._simulation_proxy._onCalculatedDataChanged)
         self.parametersChanged.connect(self._undoredo_proxy.undoRedoChanged)
-
-        # Report
-        # self._report = ""
-
-        # Status info
-        self.statusInfoChanged.connect(self._onStatusInfoChanged)
-        self._calculator_proxy.calculatorChanged.connect(self.statusInfoChanged)
-        #self._calculator_proxy.calculatorChanged.connect(self._undoredo_proxy.undoRedoChanged)
-        self._minimizer_proxy.currentMinimizerChanged.connect(self.statusInfoChanged)
-        #self.currentMinimizerChanged.connect(self._undoredo_proxy.undoRedoChanged)
-        self._minimizer_proxy.currentMinimizerMethodChanged.connect(self.statusInfoChanged)
-        #self.currentMinimizerMethodChanged.connect(self._undoredo_proxy.undoRedoChanged)
 
         # Screen recorder
         recorder = None
@@ -152,6 +118,10 @@ class PyQmlProxy(QObject):
             print('Screen recording disabled')
         self._screen_recorder = recorder
 
+    @Property('QVariant', notify=dummySignal)
+    def state(self):
+        return self._state_proxy
+        
     @Property('QVariant', notify=dummySignal)
     def project(self):
         return self._project_proxy
@@ -310,36 +280,6 @@ class PyQmlProxy(QObject):
 
     ####################################################################################################################
     ####################################################################################################################
-    # STATUS
-    ####################################################################################################################
-    ####################################################################################################################
-
-    @Property('QVariant', notify=statusInfoChanged)
-    def statusModelAsObj(self):
-        obj = {
-            "calculation":  self._interface.current_interface_name,
-            "minimization": f'{self._fitter_proxy.eFitter.current_engine.name} ({self._minimizer_proxy._current_minimizer_method_name})'
-        }
-        self._status_model = obj
-        return obj
-
-    @Property(str, notify=statusInfoChanged)
-    def statusModelAsXml(self):
-        model = [
-            {"label": "Calculation", "value": self._interface.current_interface_name},
-            {"label": "Minimization",
-             "value": f'{self._fitter_proxy.eFitter.current_engine.name} ({self._minimizer_proxy._current_minimizer_method_name})'}
-        ]
-        xml = dicttoxml(model, attr_type=False)
-        xml = xml.decode()
-        return xml
-
-    def _onStatusInfoChanged(self):
-        print("***** _onStatusInfoChanged")
-
-
-    ####################################################################################################################
-    ####################################################################################################################
     # Screen recorder
     ####################################################################################################################
     ####################################################################################################################
@@ -347,20 +287,3 @@ class PyQmlProxy(QObject):
     @Property('QVariant', notify=dummySignal)
     def screenRecorder(self):
         return self._screen_recorder
-
-    ####################################################################################################################
-    # Reset state
-    ####################################################################################################################
-
-    @Slot()
-    def resetState(self):
-        pass
-        # Need to be reimplemented for EasyReflectometry
-        #self._project_info = self._defaultProjectInfo()
-        #self.projectCreated = False
-        #self.projectInfoChanged.emit()
-        #self._project_proxy.project_save_filepath = ""
-        #self.removeExperiment()
-        #self.removePhase(self._sample.phases[self.currentPhaseIndex].name)
-        #self.resetUndoRedoStack()
-        #self.stateChanged.emit(False)
