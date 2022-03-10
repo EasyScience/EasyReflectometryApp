@@ -186,10 +186,10 @@ EaComponents.SideBarColumn {
         // Start fitting button
         EaElements.SideBarButton {
             wide: true
-            enabled: ExGlobals.Constants.proxy.data.experimentLoaded && ExGlobals.Constants.proxy.isFitFinished
+            enabled: ExGlobals.Constants.proxy.data.experimentLoaded && ExGlobals.Constants.proxy.fitter.isFitFinished
             fontIcon: "play-circle"
             text: qsTr("Start fitting")
-            onClicked: ExGlobals.Constants.proxy.fit()
+            onClicked: ExGlobals.Constants.proxy.fitter.fit()
             Component.onCompleted: ExGlobals.Variables.startFittingButton = this
         }
 
@@ -198,8 +198,8 @@ EaComponents.SideBarColumn {
 
     // Init results dialog
     ExComponents.ResultsDialog {
-        visible: typeof ExGlobals.Constants.proxy.fitResults.success !== 'undefined' &&
-                 ExGlobals.Constants.proxy.isFitFinished
+        visible: typeof ExGlobals.Constants.proxy.fitter.fitResults.success !== 'undefined' &&
+                 ExGlobals.Constants.proxy.fitter.isFitFinished
     }
 
     // Logic

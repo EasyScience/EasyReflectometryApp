@@ -14,8 +14,7 @@ import Gui.Globals 1.0 as ExGlobals
 Item {
     id: container
 
-    property bool isFitting: typeof ExGlobals.Constants.proxy.fitResults.redchi2 !== 'undefined'
-    property bool hasPhases: Object.keys(ExGlobals.Constants.proxy.phasesAsObj).length !== 0
+    property bool isFitting: typeof ExGlobals.Constants.proxy.fitter.fitResults.redchi2 !== 'undefined'
     property string htmlBackground: EaStyle.Colors.contentBackground
     property int chartWidth: 520
 
@@ -456,25 +455,6 @@ Item {
         return list.join('\n')
     }
 
-    property string projectSection: {
-        //if (!hasPhases)
-        //    return ''
-        const projectDescription = ExGlobals.Constants.proxy.project.projectInfoAsJson.short_description
-        //const phaseName = ExGlobals.Constants.proxy.phasesAsObj[0].name
-        const datasetName = ExGlobals.Constants.proxy.data.experimentDataAsObj[0].name
-        const modifiedDate = ExGlobals.Constants.proxy.project.projectInfoAsJson.modified
-        const list = [
-                `<h1>${ExGlobals.Constants.proxy.project.projectInfoAsJson.name}</h1>`,
-                '<p>',
-                `<b>Short description:</b> ${projectDescription}<br>`,
-                //`<b>Structural phases:</b> ${phaseName}<br>`,
-                `<b>Experimental data:</b> ${datasetName}<br>`,
-                `<b>Modified:</b> ${modifiedDate}<br>`,
-                '</p>'
-              ]
-        return list.join('\n')
-    }
-
     property string softwareSection: {
         const list = [
                   '<h2>Software</h2>',
@@ -484,24 +464,6 @@ Item {
                   `<b>Data chart:</b> <a href="${dataChartLibUrl}"> BokehJS v${dataChartLibVersion}</a><br>`,
                   `<b>Calculation engine:</b> <a href="">${ExGlobals.Constants.proxy.statusModelAsObj.calculation}</a><br>`,
                   isFitting ? `<b>Minimization:</b> <a href="">${ExGlobals.Constants.proxy.statusModelAsObj.minimization}</a><br>` : '',
-                  '</div>'
-              ]
-        return list.join('\n')
-    }
-
-    property string structureSection: {
-        if (!hasPhases)
-            return ''
-        const phase = ExGlobals.Constants.proxy.phasesAsObj[0]
-        const phaseName = phase.name
-        const spaceGroup = phase.spacegroup._space_group_HM_name.value
-        const list = [
-                  `<h2>Structure: ${phaseName}</h2>`,
-                  '<p>',
-                  `<b>Space group:</b> ${spaceGroup}<br>`,
-                  '</p>',
-                  '<div id="structureSection">',
-                  structureChart,
                   '</div>'
               ]
         return list.join('\n')

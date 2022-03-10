@@ -40,6 +40,7 @@ from .Data import DataProxy
 
 from .DataStore import DataSet1D, DataStore
 from .Proxies.Plotting1d import Plotting1dProxy
+from .Fitter import FitterProxy
 from .Fitter import Fitter as ThreadedFitter
 
 ITEM_LOOKUP = {
@@ -61,11 +62,6 @@ class PyQmlProxy(QObject):
     sampleChanged = Signal()
     
     currentSampleChanged = Signal()
-
-    fitFinished = Signal()
-    fitFinishedNotify = Signal()
-    fitResultsChanged = Signal()
-    stopFit = Signal()
 
     currentMinimizerChanged = Signal()
     currentMinimizerMethodChanged = Signal()
@@ -89,12 +85,13 @@ class PyQmlProxy(QObject):
 
         ######### proxies #########
         self._project_proxy = ProjectProxy(self)
+        self._data_proxy = DataProxy(self)
         self._simulation_proxy = SimulationProxy(self)
         self._material_proxy = MaterialProxy(self)
         self._model_proxy = ModelProxy(self)
         self._calculator_proxy = CalculatorProxy(self)
         self._parameter_proxy = ParameterProxy(self)
-        self._data_proxy = DataProxy(self)
+        self._fitter_proxy = FitterProxy(self)
 
         # Plotting 1D
         self._plotting_1d_proxy = Plotting1dProxy()
@@ -127,12 +124,10 @@ class PyQmlProxy(QObject):
         self._simulation_proxy.qRangeChanged.connect(self.undoRedoChanged)
         self._simulation_proxy.resolutionChanged.connect(self.undoRedoChanged)
 
-        self._fit_results = self._defaultFitResults()
-        self.fitter = Fitter(self._model_proxy._model, self._interface.fit_func)
-        self.fitFinished.connect(self._onFitFinished)
+        self.eFitter = Fitter(self._model_proxy._model, self._interface.fit_func)
 
         self._current_minimizer_method_index = 0
-        self._current_minimizer_method_name = self.fitter.available_methods()[0]
+        self._current_minimizer_method_name = self.eFitter.available_methods()[0]
         self.currentMinimizerChanged.connect(self._onCurrentMinimizerChanged)
         self.currentMinimizerMethodChanged.connect(self._onCurrentMinimizerMethodChanged)
 
@@ -155,15 +150,6 @@ class PyQmlProxy(QObject):
         #self.currentMinimizerChanged.connect(self.undoRedoChanged)
         self.currentMinimizerMethodChanged.connect(self.statusInfoChanged)
         #self.currentMinimizerMethodChanged.connect(self.undoRedoChanged)
-
-        # Multithreading
-        self._fitter_thread = None
-        self._fit_finished = True
-        self.stopFit.connect(self.onStopFit)
-
-        # Multithreading
-        self._fitter_thread = None
-        self._fit_finished = True
 
         # Screen recorder
         recorder = None
@@ -211,6 +197,10 @@ class PyQmlProxy(QObject):
     @Property('QVariant', notify=dummySignal)
     def data(self):
         return self._data_proxy
+
+    @Property('QVariant', notify=dummySignal)
+    def fitter(self):
+        return self._fitter_proxy
 
     ####################################################################################################################
     ####################################################################################################################
@@ -389,11 +379,11 @@ class PyQmlProxy(QObject):
 
     @Property('QVariant', notify=dummySignal)
     def minimizerNames(self):
-        return self.fitter.available_engines
+        return self.eFitter.available_engines
 
     @Property(int, notify=currentMinimizerChanged)
     def currentMinimizerIndex(self):
-        current_name = self.fitter.current_engine.name
+        current_name = self.eFitter.current_engine.name
         return self.minimizerNames.index(current_name)
 
     @currentMinimizerIndex.setter
@@ -402,7 +392,7 @@ class PyQmlProxy(QObject):
         if self.currentMinimizerIndex == new_index:
             return
         new_name = self.minimizerNames[new_index]
-        self.fitter.switch_engine(new_name)
+        self.eFitter.switch_engine(new_name)
         self.currentMinimizerChanged.emit()
 
     # @Slot(int)
@@ -411,13 +401,13 @@ class PyQmlProxy(QObject):
     #         return
     #
     #     new_name = self.minimizerNames[new_index]
-    #     self.fitter.switch_engine(new_name)
+    #     self.eFitter.switch_engine(new_name)
     #     self.currentMinimizerChanged.emit()
 
     def _onCurrentMinimizerChanged(self):
         print("***** _onCurrentMinimizerChanged")
         idx = 0
-        minimizer_name = self.fitter.current_engine.name
+        minimizer_name = self.eFitter.current_engine.name
         if minimizer_name == 'lmfit':
             idx = self.minimizerMethodNames.index('leastsq')
         elif minimizer_name == 'bumps':
@@ -438,7 +428,7 @@ class PyQmlProxy(QObject):
             'bumps': ['newton', 'lm', 'de'],
             'DFO_LS': ['leastsq']
         }
-        #return self.fitter.available_methods()
+        #return self.eFitter.available_methods()
         return tested_methods[current_minimizer]
 
     @Property(int, notify=currentMinimizerMethodChanged)
@@ -457,108 +447,6 @@ class PyQmlProxy(QObject):
 
     def _onCurrentMinimizerMethodChanged(self):
         print("***** _onCurrentMinimizerMethodChanged")
-
-    ####################################################################################################################
-    # Fitting
-    ####################################################################################################################
-
-    @Slot()
-    def fit(self):
-        # if running, stop the thread
-        if not self.isFitFinished:
-            self.onStopFit()
-            borg.stack.endMacro()  # need this to close the undo stack properly
-            return
-        # macos is possibly problematic with MT, skip on this platform
-        if 'darwin' in sys.platform:
-            self.nonthreaded_fit()
-        else:
-            self.threaded_fit()
-
-    def nonthreaded_fit(self):
-        self.isFitFinished = False
-        exp_data = self._data_proxy._data.experiments[0]
-
-        x = exp_data.x
-        y = exp_data.y
-        weights = 1 / exp_data.ye
-        method = self._current_minimizer_method_name
-
-        res = self.fitter.fit(x, y, weights=weights, method=method)
-        self._setFitResults(res)
-
-    def threaded_fit(self):
-        self.isFitFinished = False
-        exp_data = self._data_proxy._data.experiments[0]
-
-        x = exp_data.x
-        y = exp_data.y
-        weights = 1 / exp_data.ye
-        method = self._current_minimizer_method_name
-
-        args = (x, y)
-        kwargs = {"weights": weights, "method": method}
-        self._fitter_thread = ThreadedFitter(self, self.fitter, 'fit', *args, **kwargs)
-        self._fitter_thread.setTerminationEnabled(True)
-        self._fitter_thread.finished.connect(self._setFitResults)
-        self._fitter_thread.failed.connect(self._setFitResultsFailed)
-        self._fitter_thread.start()
-
-    def onStopFit(self):
-        """
-        Slot for thread cancelling and reloading parameters
-        """
-        self.stop_fit()
-        self._fitter_thread = None
-
-        self._fit_results['success'] = 'cancelled'
-        self._fit_results['nvarys'] = None
-        self._fit_results['GOF'] = None
-        self._fit_results['redchi2'] = None
-        self._setFitResultsFailed("Fitting stopped")
-
-    def stop_fit(self):
-        self._fitter_thread.stop()
-
-    @Property('QVariant', notify=fitResultsChanged)
-    def fitResults(self):
-        return self._fit_results
-
-    @Property(bool, notify=fitFinishedNotify)
-    def isFitFinished(self):
-        return self._fit_finished
-
-    @isFitFinished.setter
-    def isFitFinished(self, fit_finished: bool):
-        if self._fit_finished == fit_finished:
-            return
-        self._fit_finished = fit_finished
-        self.fitFinishedNotify.emit()
-
-    def _defaultFitResults(self):
-        return {
-            "success": None,
-            "nvarys":  None,
-            "GOF":     None,
-            "redchi2": None
-        }
-
-    def _setFitResults(self, res):
-        self._fit_results = {
-            "success": res.success,
-            "nvarys":  res.n_pars,
-            "GOF":     float(res.goodness_of_fit),
-            "redchi2": float(res.reduced_chi)
-        }
-        self.fitResultsChanged.emit()
-        self.isFitFinished = True
-        self.fitFinished.emit()
-
-    def _setFitResultsFailed(self, res):
-        self.isFitFinished = True
-
-    def _onFitFinished(self):
-        self.parametersChanged.emit()
 
     ####################################################################################################################
     ####################################################################################################################
@@ -598,7 +486,7 @@ class PyQmlProxy(QObject):
     def statusModelAsObj(self):
         obj = {
             "calculation":  self._interface.current_interface_name,
-            "minimization": f'{self.fitter.current_engine.name} ({self._current_minimizer_method_name})'
+            "minimization": f'{self.eFitter.current_engine.name} ({self._current_minimizer_method_name})'
         }
         self._status_model = obj
         return obj
@@ -608,7 +496,7 @@ class PyQmlProxy(QObject):
         model = [
             {"label": "Calculation", "value": self._interface.current_interface_name},
             {"label": "Minimization",
-             "value": f'{self.fitter.current_engine.name} ({self._current_minimizer_method_name})'}
+             "value": f'{self.eFitter.current_engine.name} ({self._current_minimizer_method_name})'}
         ]
         xml = dicttoxml(model, attr_type=False)
         xml = xml.decode()

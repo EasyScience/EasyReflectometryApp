@@ -130,7 +130,7 @@ class ParameterProxy(QObject):
 
             obj.fixed = not new_value
             self._onParametersChanged()
-            self.undoRedoChanged.emit()
+            self.parent.undoRedoChanged.emit()
 
         else:
             if obj.raw_value == new_value:

@@ -20,7 +20,7 @@ EaComponents.SideBarColumn {
         title: qsTr("Material editor")
         collapsible: true
         collapsed: false
-        enabled: ExGlobals.Constants.proxy.isFitFinished
+        enabled: ExGlobals.Constants.proxy.fitter.isFitFinished
 
         EaComponents.TableView {
             id: materialsTable
