@@ -30,7 +30,7 @@ EaComponents.SideBarColumn {
             // Table model
 
             model: XmlListModel {
-                property int materialsIndex: ExGlobals.Constants.proxy.currentMaterialsIndex + 1
+                property int materialsIndex: ExGlobals.Constants.proxy.material.currentMaterialsIndex + 1
 
                 xml: ExGlobals.Constants.proxy.material.materialsAsXml
                 query: "/root/item"
@@ -85,7 +85,7 @@ EaComponents.SideBarColumn {
             }
 
             onCurrentIndexChanged: {
-                ExGlobals.Constants.proxy.currentMaterialsIndex = materialsTable.currentIndex
+                ExGlobals.Constants.proxy.material.currentMaterialsIndex = materialsTable.currentIndex
             }
 
         }
@@ -145,7 +145,7 @@ EaComponents.SideBarColumn {
             // Table model
 
             model: XmlListModel {
-                property int itemsIndex: ExGlobals.Constants.proxy.currentItemsIndex + 1
+                property int itemsIndex: ExGlobals.Constants.proxy.model.currentItemsIndex + 1
 
                 xml: ExGlobals.Constants.proxy.model.modelAsXml
                 query: "/root/item"
@@ -180,8 +180,8 @@ EaComponents.SideBarColumn {
                     headerText: "Type"
                     model: ["Multi-layer", "Repeating Multi-layer"]
                     onActivated: {
-                        ExGlobals.Constants.proxy.currentItemsType = currentValue
-                        currentItemsType = ExGlobals.Constants.proxy.currentItemsType
+                        ExGlobals.Constants.proxy.model.currentItemsType = currentValue
+                        currentItemsType = ExGlobals.Constants.proxy.model.currentItemsType
                     }
                     Component.onCompleted: {
                         currentIndex = indexOfValue(itemsModel.type)
@@ -199,9 +199,9 @@ EaComponents.SideBarColumn {
             }
 
             onCurrentIndexChanged: {
-                ExGlobals.Constants.proxy.currentItemsIndex = itemsTable.currentIndex
-                currentItemsType = ExGlobals.Constants.proxy.currentItemsType
-                repsSpinBox.value = ExGlobals.Constants.proxy.currentItemsRepetitions
+                ExGlobals.Constants.proxy.model.currentItemsIndex = itemsTable.currentIndex
+                currentItemsType = ExGlobals.Constants.proxy.model.currentItemsType
+                repsSpinBox.value = ExGlobals.Constants.proxy.model.currentItemsRepetitions
             }
 
             onModelChanged: currentIndex = 0
@@ -297,9 +297,9 @@ EaComponents.SideBarColumn {
                 editable: true
                 from: 1
                 to: 9999
-                value: ExGlobals.Constants.proxy.currentItemsRepetitions 
+                value: ExGlobals.Constants.proxy.model.currentItemsRepetitions 
                 onValueChanged: {
-                    ExGlobals.Constants.proxy.currentItemsRepetitions = value
+                    ExGlobals.Constants.proxy.model.currentItemsRepetitions = value
                 }
             }
         }
@@ -310,7 +310,7 @@ EaComponents.SideBarColumn {
             // Table model
 
             model: XmlListModel {
-                property int layersIndex: ExGlobals.Constants.proxy.currentLayersIndex + 1
+                property int layersIndex: ExGlobals.Constants.proxy.model.currentLayersIndex + 1
 
                 xml: ExGlobals.Constants.proxy.model.modelAsXml
                 query: `/root/item[${itemsTable.currentIndex + 1}]/layers/item`
@@ -374,7 +374,7 @@ EaComponents.SideBarColumn {
             }
 
             onCurrentIndexChanged: {
-                ExGlobals.Constants.proxy.currentLayersIndex = layersTable.currentIndex
+                ExGlobals.Constants.proxy.model.currentLayersIndex = layersTable.currentIndex
             }
 
         }

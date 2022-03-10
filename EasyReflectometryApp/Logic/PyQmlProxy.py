@@ -45,27 +45,16 @@ from .Proxies.Plotting1d import Plotting1dProxy
 from .Fitter import FitterProxy
 from .Fitter import Fitter as ThreadedFitter
 
-ITEM_LOOKUP = {
-                'Multi-layer': MultiLayer,
-                'Repeating Multi-layer': RepeatingMultiLayer
-              }
 
 class PyQmlProxy(QObject):
     # SIGNALS
     parametersChanged = Signal()
-    
     dummySignal = Signal()
-
-    # Items
     sampleChanged = Signal()
-    
-    currentSampleChanged = Signal()
-
 
     def __init__(self, parent=None):
         super().__init__(parent)
             
-        # Main
         self._interface = InterfaceFactory()
 
         ######### proxies #########
@@ -82,26 +71,13 @@ class PyQmlProxy(QObject):
         self._state_proxy = StateProxy(self)
         self._undoredo_proxy = UndoRedoProxy(self)
 
-        # Materials
-        self._current_materials_index = 1
-        self._current_materials_len = len(self._material_proxy._materials)
+        # Sample Connections
         self.sampleChanged.connect(self._material_proxy._onMaterialsChanged)
-        self.currentSampleChanged.connect(self._onCurrentMaterialsChanged)
-
-        # Layers
-        self._current_layers_index = 1
-
-        # Items
-        self._current_items_index = 1
         self.sampleChanged.connect(self._model_proxy._onModelChanged)
-        self.currentSampleChanged.connect(self._onCurrentItemsChanged)
-
-        # Analysis
-
         self.sampleChanged.connect(self._simulation_proxy._onSimulationParametersChanged)
         self.sampleChanged.connect(self._parameter_proxy._onParametersChanged)
 
-        # Parameters
+        # Parameter Connections
         self.parametersChanged.connect(self._material_proxy._onMaterialsChanged)
         self.parametersChanged.connect(self._model_proxy._onModelChanged)
         self.parametersChanged.connect(self._simulation_proxy._onSimulationParametersChanged)
@@ -165,118 +141,6 @@ class PyQmlProxy(QObject):
     @Property('QVariant', notify=dummySignal)
     def undoredo(self):
         return self._undoredo_proxy
-
-    ####################################################################################################################
-    # Current Materials
-    ####################################################################################################################
-
-    @Property(int, notify=currentSampleChanged)
-    def currentMaterialsIndex(self):
-        return self._current_materials_index
-
-    @currentMaterialsIndex.setter
-    def currentMaterialsIndex(self, new_index: int):
-        if self._current_materials_index == new_index or new_index == -1:
-            return
-        self._current_materials_index = new_index
-        self.sampleChanged.emit()
-
-    def _onCurrentMaterialsChanged(self):
-        self.sampleChanged.emit()
-        
-    ####################################################################################################################
-    # Current Items
-    ####################################################################################################################
-
-    @Property(int, notify=currentSampleChanged)
-    def currentItemsIndex(self):
-        print('**currentItemsIndex')
-        return self._current_items_index
-
-    @currentItemsIndex.setter
-    def currentItemsIndex(self, new_index: int):
-        print('**currentItemsIndexSetter')
-        if self._current_items_index == new_index or new_index == -1:
-            return
-        self._current_items_index = new_index
-        self.sampleChanged.emit()
-
-    @Property(int, notify=currentSampleChanged)
-    def currentItemsRepetitions(self):
-        print('**currentItemsRepetitions')
-        if self._model_proxy._model.structure[self.currentItemsIndex].type != 'Repeating Multi-layer':
-            return 1
-        return self._model_proxy._model.structure[self.currentItemsIndex].repetitions.raw_value
-
-    @currentItemsRepetitions.setter
-    def currentItemsRepetitions(self, new_repetitions: int):
-        print('**currentItemsRepetitionsSetter')
-        if self._model_proxy._model.structure[self.currentItemsIndex].type != 'Repeating Multi-layer':
-            return
-        if self._model_proxy._model.structure[self.currentItemsIndex].repetitions.raw_value == new_repetitions or new_repetitions == -1:
-            return
-        self._model_proxy._model.structure[self.currentItemsIndex].repetitions = new_repetitions
-        self.sampleChanged.emit()
-
-    @Property(str, notify=currentSampleChanged)
-    def currentItemsType(self):
-        print('**currentItemsType')
-        return self._model_proxy._model.structure[self.currentItemsIndex].type
-
-    @currentItemsType.setter
-    def currentItemsType(self, type: str):
-        print('**ccurrentItemsTypeSetter')
-        if self._model_proxy._model.structure[self.currentItemsIndex].type == type or type == -1:
-            return
-        current_layers = self._model_proxy._model.structure[self.currentItemsIndex].layers
-        current_name = self._model_proxy._model.structure[self.currentItemsIndex].name
-        target_position = self.currentItemsIndex
-        self._model_proxy._model.remove_item(self.currentItemsIndex)
-        if type == 'Multi-layer':
-            self._model_proxy._model.add_item(ITEM_LOOKUP[type].from_pars(
-                current_layers, current_name))
-        elif type == 'Repeating Multi-layer':
-            self._model_proxy._model.add_item(ITEM_LOOKUP[type].from_pars(
-                current_layers, 1, current_name))
-        if target_position != len(self._model_proxy._model.structure) - 1:
-            new_items_list = []
-            self._model_proxy._model.structure[0].layers[0].thickness.enabled = True
-            self._model_proxy._model.structure[0].layers[0].roughness.enabled = True
-            self._model_proxy._model.structure[-1].layers[-1].thickness.enabled = True
-            for i, item in enumerate(self._model_proxy._model.structure):
-                if i == target_position:
-                    new_items_list.append(self._model_proxy._model.structure[len(self._model_proxy._model.structure) - 1])
-                elif i == len(self._model_proxy._model.structure) - 1:
-                    new_items_list.append(self._model_proxy._model.structure[target_position])
-                else:
-                    new_items_list.append(item)
-            while len(self._model_proxy._model.structure) != 0:
-                self._model_proxy._model.remove_item(0)
-            for i in range(len(new_items_list)):
-                self._model_proxy._model.add_item(new_items_list[i])
-            borg.stack.enabled = True
-            self._model_proxy._model.structure[0].layers[0].thickness.enabled = False
-            self._model_proxy._model.structure[0].layers[0].roughness.enabled = False
-            self._model_proxy._model.structure[-1].layers[-1].thickness.enabled = False
-        self.sampleChanged.emit()
-
-    def _onCurrentItemsChanged(self):
-        self.sampleChanged.emit()
-
-    ####################################################################################################################
-    # Current Layers
-    ####################################################################################################################
- 
-    @Property(int, notify=currentSampleChanged)
-    def currentLayersIndex(self):
-        return self._current_layers_index
-
-    @currentLayersIndex.setter
-    def currentLayersIndex(self, new_index: int):
-        if self._current_layers_index == new_index or new_index == -1:
-            return
-        self._current_layers_index = new_index
-        self.sampleChanged.emit()
 
     ####################################################################################################################
     ####################################################################################################################

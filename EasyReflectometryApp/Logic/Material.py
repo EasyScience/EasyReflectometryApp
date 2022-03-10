@@ -18,6 +18,7 @@ MAX_SLD = 15
 
 class MaterialProxy(QObject):
     
+    materialsChanged = Signal()
     materialsNameChanged = Signal()
 
     materialsAsXmlChanged = Signal()
@@ -30,6 +31,11 @@ class MaterialProxy(QObject):
         self._materials_as_obj = []
         self._materials_as_xml = ""
         self._materials = self._defaultMaterials()
+
+        self._current_materials_index = 1
+        self._current_materials_len = len(self._materials)
+
+        self.materialsChanged.connect(self._onCurrentMaterialsChanged)
 
     # # #
     # Defaults
@@ -76,6 +82,17 @@ class MaterialProxy(QObject):
     def materialsName(self):
         self.parent.parametersChanged.emit() 
 
+    @Property(int, notify=materialsChanged)
+    def currentMaterialsIndex(self):
+        return self._current_materials_index
+
+    @currentMaterialsIndex.setter
+    def currentMaterialsIndex(self, new_index: int):
+        if self._current_materials_index == new_index or new_index == -1:
+            return
+        self._current_materials_index = new_index
+        self.parent.sampleChanged.emit()
+
     # # # 
     # Actions
     # # # 
@@ -87,6 +104,9 @@ class MaterialProxy(QObject):
         self._setMaterialsAsObj()  # 0.025 s
         self._setMaterialsAsXml()  # 0.065 s
         self.parent._state_proxy.stateChanged.emit(True)
+
+    def _onCurrentMaterialsChanged(self):
+        self.parent.sampleChanged.emit()
 
     # # # 
     # Slot
@@ -107,7 +127,7 @@ class MaterialProxy(QObject):
         borg.stack.enabled = False
         # This is a fix until deepcopy is worked out
         # Manual duplication instead of creating a copy
-        to_dup = self._materials[self.parent.currentMaterialsIndex] 
+        to_dup = self._materials[self.currentMaterialsIndex] 
         self._materials.append(Material.from_pars(to_dup.sld.raw_value, to_dup.isld.raw_value, name=to_dup.name))
         borg.stack.enabled = True
         self.materialsNameChanged.emit()
@@ -136,9 +156,9 @@ class MaterialProxy(QObject):
         :param sld: New name
         :type sld: str
         """
-        if self._materials[self.parent.currentMaterialsIndex].name == name:
+        if self._materials[self.currentMaterialsIndex].name == name:
             return
-        self._materials[self.parent.currentMaterialsIndex].name = name
+        self._materials[self.currentMaterialsIndex].name = name
         self.parent.sampleChanged.emit()
 
     @Slot(str)
@@ -149,9 +169,9 @@ class MaterialProxy(QObject):
         :param sld: New SLD value
         :type sld: float
         """
-        if self._materials[self.parent.currentMaterialsIndex].sld == sld:
+        if self._materials[self.currentMaterialsIndex].sld == sld:
             return
-        self._materials[self.parent.currentMaterialsIndex].sld = sld
+        self._materials[self.currentMaterialsIndex].sld = sld
         self.parent.sampleChanged.emit()
     
     @Slot(str)
@@ -162,7 +182,7 @@ class MaterialProxy(QObject):
         :param sld: New iSLD value
         :type sld: float
         """
-        if self._materials[self.parent.currentMaterialsIndex].isld == isld:
+        if self._materials[self.currentMaterialsIndex].isld == isld:
             return
-        self._materials[self.parent.currentMaterialsIndex].isld = isld
+        self._materials[self.currentMaterialsIndex].isld = isld
         self.parent.sampleChanged.emit()
