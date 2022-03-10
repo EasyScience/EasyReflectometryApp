@@ -187,13 +187,11 @@ EaComponents.ApplicationWindow {
 
             sideBar: EaComponents.SideBar {
                 tabs: [
-                    EaElements.TabButton { text: qsTr("Basic controls") },
-                    EaElements.TabButton { enabled: false; text: qsTr("Advanced controls") }
+                    EaElements.TabButton { text: qsTr("Basic controls") }
                 ]
 
                 items: [
-                    ExProjectPage.SideBarBasic {},
-                    ExProjectPage.SideBarAdvanced {}
+                    ExProjectPage.SideBarBasic {}
                 ]
             }
         },
