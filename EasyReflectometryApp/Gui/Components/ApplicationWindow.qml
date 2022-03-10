@@ -38,17 +38,17 @@ EaComponents.ApplicationWindow {
         },
 
         EaElements.ToolButton {
-            enabled: ExGlobals.Constants.proxy.canUndo
+            enabled: ExGlobals.Constants.proxy.undoredo.canUndo
             fontIcon: "undo"
-            ToolTip.text: qsTr("Undo " + ExGlobals.Constants.proxy.undoText)
-            onClicked: ExGlobals.Constants.proxy.undo()
+            ToolTip.text: qsTr("Undo " + ExGlobals.Constants.proxy.undoredo.undoText)
+            onClicked: ExGlobals.Constants.proxy.undoredo.undo()
         },
 
         EaElements.ToolButton {
-            enabled: ExGlobals.Constants.proxy.canRedo
+            enabled: ExGlobals.Constants.proxy.undoredo.canRedo
             fontIcon: "redo"
-            ToolTip.text: qsTr("Redo " + ExGlobals.Constants.proxy.redoText)
-            onClicked: ExGlobals.Constants.proxy.redo()
+            ToolTip.text: qsTr("Redo " + ExGlobals.Constants.proxy.undoredo.redoText)
+            onClicked: ExGlobals.Constants.proxy.undoredo.redo()
         },
 
         EaElements.ToolButton {

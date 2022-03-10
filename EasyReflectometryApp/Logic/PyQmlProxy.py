@@ -38,6 +38,7 @@ from .Calculator import CalculatorProxy
 from .Parameter import ParameterProxy
 from .Data import DataProxy
 from .Minimizer import MinimizerProxy
+from .UndoRedo import UndoRedoProxy
 
 from .DataStore import DataSet1D, DataStore
 from .Proxies.Plotting1d import Plotting1dProxy
@@ -64,10 +65,6 @@ class PyQmlProxy(QObject):
     
     currentSampleChanged = Signal()
 
-    # currentMinimizerChanged = Signal()
-    # currentMinimizerMethodChanged = Signal()
-
-
     # Plotting
     showMeasuredSeriesChanged = Signal()
     showDifferenceChartChanged = Signal()
@@ -75,8 +72,6 @@ class PyQmlProxy(QObject):
 
     htmlExportingFinished = Signal(bool, str) 
 
-    # Undo Redo
-    undoRedoChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -94,9 +89,10 @@ class PyQmlProxy(QObject):
         self._parameter_proxy = ParameterProxy(self)
         self._fitter_proxy = FitterProxy(self)
         self._minimizer_proxy = MinimizerProxy(self)
+        self._plotting_1d_proxy = Plotting1dProxy(self)
+        self._undoredo_proxy = UndoRedoProxy(self)
 
         # Plotting 1D
-        self._plotting_1d_proxy = Plotting1dProxy()
 
         # Project
         self._status_model = None
@@ -121,10 +117,10 @@ class PyQmlProxy(QObject):
 
         self.sampleChanged.connect(self._simulation_proxy._onSimulationParametersChanged)
         self.sampleChanged.connect(self._parameter_proxy._onParametersChanged)
-        self._simulation_proxy.simulationParametersChanged.connect(self.undoRedoChanged)
-        self._simulation_proxy.backgroundChanged.connect(self.undoRedoChanged)
-        self._simulation_proxy.qRangeChanged.connect(self.undoRedoChanged)
-        self._simulation_proxy.resolutionChanged.connect(self.undoRedoChanged)
+        self._simulation_proxy.simulationParametersChanged.connect(self._undoredo_proxy.undoRedoChanged)
+        self._simulation_proxy.backgroundChanged.connect(self._undoredo_proxy.undoRedoChanged)
+        self._simulation_proxy.qRangeChanged.connect(self._undoredo_proxy.undoRedoChanged)
+        self._simulation_proxy.resolutionChanged.connect(self._undoredo_proxy.undoRedoChanged)
 
         # Parameters
         self.parametersChanged.connect(self._material_proxy._onMaterialsChanged)
@@ -132,7 +128,7 @@ class PyQmlProxy(QObject):
         self.parametersChanged.connect(self._simulation_proxy._onSimulationParametersChanged)
         self.parametersChanged.connect(self._parameter_proxy._onParametersChanged)
         self.parametersChanged.connect(self._simulation_proxy._onCalculatedDataChanged)
-        self.parametersChanged.connect(self.undoRedoChanged)
+        self.parametersChanged.connect(self._undoredo_proxy.undoRedoChanged)
 
         # Report
         self._report = ""
@@ -140,11 +136,11 @@ class PyQmlProxy(QObject):
         # Status info
         self.statusInfoChanged.connect(self._onStatusInfoChanged)
         self._calculator_proxy.calculatorChanged.connect(self.statusInfoChanged)
-        #self._calculator_proxy.calculatorChanged.connect(self.undoRedoChanged)
+        #self._calculator_proxy.calculatorChanged.connect(self._undoredo_proxy.undoRedoChanged)
         self._minimizer_proxy.currentMinimizerChanged.connect(self.statusInfoChanged)
-        #self.currentMinimizerChanged.connect(self.undoRedoChanged)
+        #self.currentMinimizerChanged.connect(self._undoredo_proxy.undoRedoChanged)
         self._minimizer_proxy.currentMinimizerMethodChanged.connect(self.statusInfoChanged)
-        #self.currentMinimizerMethodChanged.connect(self.undoRedoChanged)
+        #self.currentMinimizerMethodChanged.connect(self._undoredo_proxy.undoRedoChanged)
 
         # Screen recorder
         recorder = None
@@ -155,13 +151,6 @@ class PyQmlProxy(QObject):
             print('Screen recording disabled')
         self._screen_recorder = recorder
 
-        # !! THIS SHOULD ALWAYS GO AT THE END !!
-        # Start the undo/redo stack
-        borg.stack.enabled = True
-        borg.stack.clear()
-        # borg.debug = True
-
-        # self._currentProjectPath = os.path.expanduser("~")
         self._material_proxy._onMaterialsChanged()
         self._model_proxy._onModelChanged()
 
@@ -200,6 +189,10 @@ class PyQmlProxy(QObject):
     @Property('QVariant', notify=dummySignal)
     def minimizer(self):
         return self._minimizer_proxy
+
+    @Property('QVariant', notify=dummySignal)
+    def undoredo(self):
+        return self._undoredo_proxy
 
     ####################################################################################################################
     ####################################################################################################################
@@ -430,101 +423,6 @@ class PyQmlProxy(QObject):
     @Property('QVariant', notify=dummySignal)
     def screenRecorder(self):
         return self._screen_recorder
-
-    ####################################################################################################################
-    # Undo/Redo stack operations
-    ####################################################################################################################
-
-    @Property(bool, notify=undoRedoChanged)
-    def canUndo(self) -> bool:
-        return borg.stack.canUndo()
-
-    @Property(bool, notify=undoRedoChanged)
-    def canRedo(self) -> bool:
-        return borg.stack.canRedo()
-
-    @Slot()
-    def undo(self):
-        if self.canUndo:
-            callback = [self.parametersChanged]
-            if len(borg.stack.history[0]) > 1:
-                callback = [self.phaseAdded, self.parametersChanged]
-            else:
-                old = borg.stack.history[0].current._parent
-                if isinstance(old, (BaseObj, BaseCollection)):
-                    if isinstance(old, (Phase, Phases)):
-                        callback = [self.phaseAdded, self.parametersChanged]
-                    else:
-                        callback = [self.parametersChanged]
-                elif old is self:
-                    # This is a property of the proxy. I.e. minimizer, minimizer method, name or something boring.
-                    # Signals should be sent by triggering the set method.
-                    callback = []
-                else:
-                    print(f'Unknown undo thing: {old}')
-            borg.stack.undo()
-            _ = [call.emit() for call in callback]
-
-    @Slot()
-    def redo(self):
-        if self.canRedo:
-            callback = [self.parametersChanged]
-            if len(borg.stack.future[0]) > 1:
-                callback = [self.phaseAdded, self.parametersChanged]
-            else:
-                new = borg.stack.future[0].current._parent
-                if isinstance(new, (BaseObj, BaseCollection)):
-                    if isinstance(new, (Phase, Phases)):
-                        callback = [self.phaseAdded, self.parametersChanged]
-                    else:
-                        callback = [self.parametersChanged, self.undoRedoChanged]
-                elif new is self:
-                    # This is a property of the proxy. I.e. minimizer, minimizer method, name or something boring.
-                    # Signals should be sent by triggering the set method.
-                    callback = []
-                else:
-                    print(f'Unknown redo thing: {new}')
-            borg.stack.redo()
-            _ = [call.emit() for call in callback]
-
-    @Property(str, notify=undoRedoChanged)
-    def undoText(self):
-        return self.tooltip(borg.stack.undoText())
-
-    @Property(str, notify=undoRedoChanged)
-    def redoText(self):
-        return self.tooltip(borg.stack.redoText())
-
-    def tooltip(self, orig_tooltip=""):
-        if 'Parameter' not in orig_tooltip:
-            # if this is not a parameter, print the full undo text
-            return orig_tooltip
-        pattern = "<Parameter '(.*)': .* from (.*) to (.*)"
-        match = re.match(pattern, orig_tooltip)
-        if match is None:
-           # regex parsing failed, return the original tooltip
-            return orig_tooltip
-        param = match.group(1)
-        frm = match.group(2)
-        if '+/-' in frm:
-            # numerical values
-            pattern2 = "\((.*) \+.*"
-            frm2 = re.match(pattern2, frm)
-            if frm2 is None:
-                return orig_tooltip
-            frm = frm2.group(1)
-        to = match.group(3)
-        val_type = 'value'
-        if to == 'True' or to == 'False':
-            val_type = 'fit'
-        tooltip = "'{}' {} change from {} to {}".format(param, val_type, frm, to)
-        return tooltip
-
-    @Slot()
-    def resetUndoRedoStack(self):
-        if borg.stack.enabled:
-            borg.stack.clear()
-            self.undoRedoChanged.emit()
 
     ####################################################################################################################
     # Reset state
