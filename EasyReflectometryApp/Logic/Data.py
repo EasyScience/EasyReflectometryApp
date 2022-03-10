@@ -1,12 +1,13 @@
-import json
+import json, pathlib
 from dicttoxml import dicttoxml
 
 from matplotlib import cm, colors
 
-from PySide2.QtCore import QObject, Signal, Property
+from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import np
 from easyCore.Utils.UndoRedo import property_stack_deco
+from easyAppLogic.Utils.Utils import generalizePath
 
 from .DataStore import DataSet1D, DataStore
 
@@ -15,6 +16,9 @@ class DataProxy(QObject):
     
     experimentSkippedChanged = Signal()
     experimentLoadedChanged = Signal()
+
+    experimentDataAdded = Signal()
+    experimentDataRemoved = Signal()
 
     experimentDataAsXmlChanged = Signal()
     experimentDataAsObjChanged = Signal()
@@ -25,6 +29,8 @@ class DataProxy(QObject):
         self.parent = parent
 
         self._data = self._defaultData()
+        self._experiment_data = None
+        self.experiments = []
 
         self._experiment_skipped = False
         self._experiment_loaded = False
@@ -33,6 +39,7 @@ class DataProxy(QObject):
         self.experimentLoadedChanged.connect(self._onExperimentLoadedChanged)
         self.experimentSkippedChanged.connect(self._onExperimentSkippedChanged)
         self.experimentDataAsObjChanged.connect(self._onExperimentDataChanged)
+        self.experimentDataRemoved.connect(self._onExperimentDataRemoved)
 
 
     # # #
@@ -98,7 +105,7 @@ class DataProxy(QObject):
 
     def _setExperimentDataAsXml(self):
         print("+ _setExperimentDataAsXml")
-        self._experiment_data_as_xml = dicttoxml(self.parent.experiments, attr_type=True).decode()
+        self._experiment_data_as_xml = dicttoxml(self.experiments, attr_type=True).decode()
         self.experimentDataAsXmlChanged.emit()
 
     @Property('QVariant', notify=experimentDataAsObjChanged)
@@ -122,3 +129,45 @@ class DataProxy(QObject):
     def _onExperimentDataChanged(self):
         self._setExperimentDataAsXml() 
         self.parent.stateChanged.emit(True)
+
+    def _onExperimentDataRemoved(self):
+        self.parent._plotting_1d_proxy.clearFrontendState()
+        self.experimentDataAsObjChanged.emit()
+
+    def _loadExperimentData(self, file_url):
+        file_path = generalizePath(file_url)
+        data = self._data.experiments[0]
+        try:
+            data.x, data.y, data.ye, data.xe = np.loadtxt(file_path, unpack=True)
+        except ValueError:
+            data.x, data.y, data.ye = np.loadtxt(file_path, unpack=True)
+        return data
+
+    # # #
+    # Slots
+    # # #
+
+    @Slot(str)
+    def addExperimentDataFromOrt(self, file_url):
+        self._experiment_data = self._loadExperimentData(file_url)
+        self._data.experiments[0].name = pathlib.Path(file_url).stem
+        self.experiments = [{'name': experiment.name} for experiment in self._data.experiments]
+        self.experimentLoaded = True
+        self.experimentSkipped = False
+        self.experimentDataAdded.emit()
+
+    @Slot()
+    def removeExperiment(self):
+        self.experiments.clear()
+        self.experimentLoaded = False
+        self.experimentSkipped = False
+        self.experimentDataRemoved.emit()
+
+    @Slot(str)
+    def setCurrentExperimentDatasetName(self, name):
+        if self._data.experiments[0].name == name:
+            return
+        self._data.experiments[0].name = name
+        self.experimentDataAsObjChanged.emit()
+        self.parent._project_proxy.projectInfoAsJson['experiments'] = name
+        self.parent._project_proxy.projectInfoChanged.emit()

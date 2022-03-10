@@ -1,4 +1,3 @@
-from imp import new_module
 import os
 import datetime
 import json
@@ -30,7 +29,6 @@ class ProjectProxy(QObject):
         self._project_info = self._defaultProjectInfo()
         self.project_save_filepath = ""
         self._currentProjectPath = os.path.expanduser('~')
-        print(self._currentProjectPath)
 
 
     # # #

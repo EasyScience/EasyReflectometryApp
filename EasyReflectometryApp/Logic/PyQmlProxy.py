@@ -55,17 +55,12 @@ class PyQmlProxy(QObject):
     dummySignal = Signal()
 
     # Project
-    # projectCreatedChanged = Signal()
-    # projectInfoChanged = Signal()
     stateChanged = Signal(bool)
 
     # Items
     sampleChanged = Signal()
     
     currentSampleChanged = Signal()
-
-    experimentDataAdded = Signal()
-    experimentDataRemoved = Signal()
 
     fitFinished = Signal()
     fitFinishedNotify = Signal()
@@ -122,12 +117,6 @@ class PyQmlProxy(QObject):
         self._current_items_index = 1
         self.sampleChanged.connect(self._model_proxy._onModelChanged)
         self.currentSampleChanged.connect(self._onCurrentItemsChanged)
-
-        # Experiment
-        self._experiment_data = None
-        self.experiments = []
-        self.experimentDataAdded.connect(self._simulation_proxy._onExperimentDataAdded)
-        self.experimentDataRemoved.connect(self._onExperimentDataRemoved)
 
         # Analysis
 
@@ -384,54 +373,6 @@ class PyQmlProxy(QObject):
             return
         self._current_layers_index = new_index
         self.sampleChanged.emit()
-
-    ####################################################################################################################
-    # Experiment data: Add / Remove
-    ####################################################################################################################
-
-    @Slot(str)
-    def addExperimentDataFromOrt(self, file_url):
-        print(f"+ addExperimentDataFromOrt: {file_url}")
-
-        self._experiment_data = self._loadExperimentData(file_url)
-        self._data_proxy._data.experiments[0].name = pathlib.Path(file_url).stem
-        self.experiments = [{'name': experiment.name} for experiment in self._data_proxy._data.experiments]
-        self._data_proxy.experimentLoaded = True
-        self._data_proxy.experimentSkipped = False
-        self.experimentDataAdded.emit()
-
-    @Slot()
-    def removeExperiment(self):
-        print("+ removeExperiment")
-        self.experiments.clear()
-        self._data_proxy.experimentLoaded = False
-        self._data_proxy.experimentSkipped = False
-        self.experimentDataRemoved.emit()
-
-    def _loadExperimentData(self, file_url):
-        print("+ _loadExperimentData")
-        file_path = generalizePath(file_url)
-        data = self._data_proxy._data.experiments[0]
-        try:
-            data.x, data.y, data.ye, data.xe = np.loadtxt(file_path, unpack=True)
-        except ValueError:
-            data.x, data.y, data.ye = np.loadtxt(file_path, unpack=True)
-        return data
-
-    def _onExperimentDataRemoved(self):
-        print("***** _onExperimentDataRemoved")
-        self._plotting_1d_proxy.clearFrontendState()
-        self._data_proxy.experimentDataAsObjChanged.emit()
-
-    @Slot(str)
-    def setCurrentExperimentDatasetName(self, name):
-        if self._data_proxy._data.experiments[0].name == name:
-            return
-
-        self._data_proxy._data.experiments[0].name = name
-        self._data_proxy.experimentDataAsObjChanged.emit()
-        self._project_proxy.projectInfoAsJson['experiments'] = name
-        self._project_proxy.projectInfoChanged.emit()
 
 
     ####################################################################################################################

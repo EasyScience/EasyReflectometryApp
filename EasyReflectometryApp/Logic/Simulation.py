@@ -35,6 +35,7 @@ class SimulationProxy(QObject):
         self.qRangeChanged.connect(self._onSimulationParametersChanged)
 
         self.calculatedDataChanged.connect(self._onCalculatedDataChanged)
+        self.parent._data_proxy.experimentDataAdded.connect(self._onExperimentDataAdded)
 
     # # #
     # Defaults 
@@ -98,14 +99,14 @@ class SimulationProxy(QObject):
     # # # 
 
     def _onExperimentDataAdded(self):
-        self.parent._plotting_1d_proxy.setMeasuredData(self.parent._experiment_data.x, self.parent._experiment_data.y, self.parent._experiment_data.ye)
-        self._experiment_parameters = self._experimentDataParameters(self.parent._experiment_data)
+        self.parent._plotting_1d_proxy.setMeasuredData(self.parent._data_proxy._experiment_data.x, self.parent._data_proxy._experiment_data.y, self.parent._data_proxy._experiment_data.ye)
+        self._experiment_parameters = self._experimentDataParameters(self.parent._data_proxy._experiment_data)
         self.qRangeAsObj = json.dumps(self._experiment_parameters[0])
         self.backgroundAsObj = json.dumps(self._experiment_parameters[1])
 
         self.parent._data_proxy.experimentDataAsObjChanged.emit()
-        self.parent.projectInfoAsJson['experiments'] = self.parent._data_proxy._data.experiments[0].name
-        self.parent.projectInfoChanged.emit()
+        self.parent._project_proxy.projectInfoAsJson['experiments'] = self.parent._data_proxy.experiments[0]['name']
+        self.parent._project_proxy.projectInfoChanged.emit()
 
     def _onCalculatedDataChanged(self):
         self._updateCalculatedData()

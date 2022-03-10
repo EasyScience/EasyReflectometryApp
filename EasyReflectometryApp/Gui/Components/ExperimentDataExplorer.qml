@@ -39,7 +39,7 @@ EaComponents.TableView {
             width: EaStyle.Sizes.fontPixelSize * 27.9
             headerText: "Label"
             text: model.label
-            onEditingFinished: ExGlobals.Constants.proxy.setCurrentExperimentDatasetName(text)
+            onEditingFinished: ExGlobals.Constants.proxy.data.setCurrentExperimentDatasetName(text)
         }
 
         EaComponents.TableViewLabel {
@@ -56,7 +56,7 @@ EaComponents.TableView {
             onClicked: {
                 ExGlobals.Constants.proxy.data.experimentLoaded = false
                 ExGlobals.Constants.proxy.data.experimentSkipped = true
-                ExGlobals.Constants.proxy.removeExperiment()
+                ExGlobals.Constants.proxy.data.removeExperiment()
             }
         }
 

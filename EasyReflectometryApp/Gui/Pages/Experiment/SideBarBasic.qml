@@ -181,7 +181,7 @@ EaComponents.SideBarColumn {
 
         nameFilters: [ qsTr("Data files") + " (*.dat *.txt *.ort)" ]
 
-        onAccepted: ExGlobals.Constants.proxy.addExperimentDataFromOrt(fileUrl)
+        onAccepted: ExGlobals.Constants.proxy.data.addExperimentDataFromOrt(fileUrl)
     }
 
 }
