@@ -76,7 +76,7 @@ EaComponents.SideBarColumn {
 
                 width: minimizerSelector.width
                 model: ExGlobals.Constants.proxy.minimizer.minimizerMethodNames
-                currentIndex: ExGlobals.Constants.proxy.currentMinimizerMethodIndex
+                currentIndex: ExGlobals.Constants.proxy.minimizer.currentMinimizerMethodIndex
                 onCurrentIndexChanged: {
                     ExGlobals.Constants.proxy.currentMinimizerMethodIndex = currentIndex
                 }

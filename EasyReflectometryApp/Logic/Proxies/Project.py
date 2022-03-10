@@ -16,6 +16,7 @@ class ProjectProxy(QObject):
     dummySignal = Signal()
     projectCreatedChanged = Signal()
     projectInfoChanged = Signal()
+    htmlExportingFinished = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)

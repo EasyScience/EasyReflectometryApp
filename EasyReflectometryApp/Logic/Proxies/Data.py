@@ -6,7 +6,7 @@ from PySide2.QtCore import QObject, Signal, Property, Slot
 from easyCore import np
 from easyAppLogic.Utils.Utils import generalizePath
 
-from .DataStore import DataSet1D, DataStore
+from EasyReflectometryApp.Logic.DataStore import DataSet1D, DataStore
 
 
 class DataProxy(QObject):
@@ -98,7 +98,6 @@ class DataProxy(QObject):
         return self._experiment_data_as_xml
 
     def _setExperimentDataAsXml(self):
-        print("+ _setExperimentDataAsXml")
         self._experiment_data_as_xml = dicttoxml(self.experiments,
                                                  attr_type=True).decode()
         self.experimentDataAsXmlChanged.emit()

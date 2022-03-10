@@ -103,12 +103,10 @@ class ModelProxy(QObject):
 
     @Property(int, notify=modelChanged)
     def currentItemsIndex(self):
-        print('**currentItemsIndex')
         return self._current_items_index
 
     @currentItemsIndex.setter
     def currentItemsIndex(self, new_index: int):
-        print('**currentItemsIndexSetter')
         if self._current_items_index == new_index or new_index == -1:
             return
         self._current_items_index = new_index
@@ -116,7 +114,6 @@ class ModelProxy(QObject):
 
     @Property(int, notify=modelChanged)
     def currentItemsRepetitions(self):
-        print('**currentItemsRepetitions')
         if self._model.structure[
                 self.currentItemsIndex].type != 'Repeating Multi-layer':
             return 1
@@ -124,7 +121,6 @@ class ModelProxy(QObject):
 
     @currentItemsRepetitions.setter
     def currentItemsRepetitions(self, new_repetitions: int):
-        print('**currentItemsRepetitionsSetter')
         if self._model.structure[
                 self.currentItemsIndex].type != 'Repeating Multi-layer':
             return
@@ -137,12 +133,10 @@ class ModelProxy(QObject):
 
     @Property(str, notify=modelChanged)
     def currentItemsType(self):
-        print('**currentItemsType')
         return self._model.structure[self.currentItemsIndex].type
 
     @currentItemsType.setter
     def currentItemsType(self, type: str):
-        print('**ccurrentItemsTypeSetter')
         if self._model.structure[self.currentItemsIndex].type == type or type == -1:
             return
         current_layers = self._model.structure[self.currentItemsIndex].layers

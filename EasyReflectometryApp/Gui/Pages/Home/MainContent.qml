@@ -118,7 +118,7 @@ Item {
                     onClicked: EaGlobals.Variables.showAppAboutDialog = true
                     Component.onCompleted: ExGlobals.Variables.aboutButton = this
                 }
-                EaElements.Button {
+                /*EaElements.Button {
                     enabled: false
                     text: qsTr("Online documentation")
                     onClicked: Qt.openUrlExternally(ExGlobals.Constants.appUrl)
@@ -128,13 +128,19 @@ Item {
                     enabled: false
                     text: qsTr("Get in touch online")
                     onClicked: Qt.openUrlExternally(`${ExGlobals.Constants.appUrl}/issues`)
-                }
+                } */
             }
 
             Column {
                 spacing: EaStyle.Sizes.fontPixelSize
 
                 EaElements.Button {
+                    enabled: true
+                    text: qsTr("Online documentation")
+                    onClicked: Qt.openUrlExternally(ExGlobals.Constants.appUrl)
+                    Component.onCompleted: ExGlobals.Variables.onlineDocumentationButton = this
+                }
+                /*EaElements.Button {
                     //enabled: false
                     text: qsTr("Tutorial") + " 1: " + qsTr("App interface")
                     onClicked: appInterfaceTutorialTimer.start()
@@ -148,7 +154,7 @@ Item {
                     enabled: false
                     text: qsTr("Tutorial") + " 3: " + qsTr("Data fitting")
                     onClicked: dataFittingTutorialTimer.start()
-                }
+                }*/
             }
         }
     }

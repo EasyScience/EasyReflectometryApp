@@ -432,6 +432,16 @@ EaComponents.SideBarColumn {
 
     }
 
+    // Logic
+
+    function labelWidth() {
+        return (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2.5 - textFieldWidth() * 3) / 3
+    }
+
+    function textFieldWidth() {
+        return EaStyle.Sizes.fontPixelSize * 7.0
+    }
+
     // Open phase CIF file dialog
 
     // Dialogs1.FileDialog{

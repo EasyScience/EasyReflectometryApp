@@ -80,7 +80,7 @@ Item {
 
         Component.onCompleted: {
             ExGlobals.Variables.reportWebView = this
-            ExGlobals.Constants.proxy.htmlExportingFinished.connect(htmlExportingFinished)
+            ExGlobals.Constants.proxy.project.htmlExportingFinished.connect(htmlExportingFinished)
         }
     }
 
@@ -354,18 +354,6 @@ Item {
     }
 
     property string structureChart: ''
-    property string cifStr: ExGlobals.Constants.proxy.phasesAsExtendedCif
-    onCifStrChanged: ExGlobals.Variables.bokehStructureChart.runJavaScript(
-                         'document.body.outerHTML',
-                         function(result) {
-                             result = result.replace(/\<div id="toolbar".*?\/div\>/g, '<div id="toolbar"></div>')
-                             result = result.replace(/\<canvas class="ChemDoodleWebComponent".*?\/canvas\>/g, '')
-                             result = result.replace(/"data_.*"/g, JSON.stringify(cifStr))
-                             result = result.replace('structureViewer.camera.zoomOut()', 'structureViewer.camera.zoomOut()\nstructureViewer.camera.zoomOut()')
-                             structureChart = result
-                             structureChartChanged()
-                         }
-                         )
 
     property string dataChart:
         EaLogic.Plotting.bokehChart(
@@ -432,7 +420,7 @@ Item {
         hlist.push('</tr>')
         list.push(hlist.join(' '))
         // data
-        const params = ExGlobals.Constants.proxy.parametersAsObj
+        const params = ExGlobals.Constants.proxy.parameter.parametersAsObj
         for (let i = 0; i < params.length; i++) {
             const number = params[i].number
             const label = params[i].label.replace('.point_background', '')
@@ -508,9 +496,9 @@ Item {
 
     property string article: {
         const list = [
-                  projectSection + '\n',
+                  // projectSection + '\n',
                   softwareSection + '\n',
-                  structureSection + '\n',
+                  // structureSection + '\n',
                   analysisSection + '\n',
                   parametersSection
               ]
