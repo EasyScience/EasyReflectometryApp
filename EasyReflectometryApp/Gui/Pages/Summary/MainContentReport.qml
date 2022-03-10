@@ -14,8 +14,7 @@ import Gui.Globals 1.0 as ExGlobals
 Item {
     id: container
 
-    property bool isFitting: typeof ExGlobals.Constants.proxy.fitResults.redchi2 !== 'undefined'
-    property bool hasPhases: Object.keys(ExGlobals.Constants.proxy.phasesAsObj).length !== 0
+    property bool isFitting: typeof ExGlobals.Constants.proxy.fitter.fitResults.redchi2 !== 'undefined'
     property string htmlBackground: EaStyle.Colors.contentBackground
     property int chartWidth: 520
 
@@ -81,7 +80,7 @@ Item {
 
         Component.onCompleted: {
             ExGlobals.Variables.reportWebView = this
-            ExGlobals.Constants.proxy.htmlExportingFinished.connect(htmlExportingFinished)
+            ExGlobals.Constants.proxy.project.htmlExportingFinished.connect(htmlExportingFinished)
         }
     }
 
@@ -135,7 +134,7 @@ Item {
 
     onHtmlChanged: {
         //print(html)
-        ExGlobals.Constants.proxy.setReport(html)
+        ExGlobals.Constants.proxy.project.setReport(html)
         webView.loadHtml(html)
     }
 
@@ -355,18 +354,6 @@ Item {
     }
 
     property string structureChart: ''
-    property string cifStr: ExGlobals.Constants.proxy.phasesAsExtendedCif
-    onCifStrChanged: ExGlobals.Variables.bokehStructureChart.runJavaScript(
-                         'document.body.outerHTML',
-                         function(result) {
-                             result = result.replace(/\<div id="toolbar".*?\/div\>/g, '<div id="toolbar"></div>')
-                             result = result.replace(/\<canvas class="ChemDoodleWebComponent".*?\/canvas\>/g, '')
-                             result = result.replace(/"data_.*"/g, JSON.stringify(cifStr))
-                             result = result.replace('structureViewer.camera.zoomOut()', 'structureViewer.camera.zoomOut()\nstructureViewer.camera.zoomOut()')
-                             structureChart = result
-                             structureChartChanged()
-                         }
-                         )
 
     property string dataChart:
         EaLogic.Plotting.bokehChart(
@@ -433,7 +420,7 @@ Item {
         hlist.push('</tr>')
         list.push(hlist.join(' '))
         // data
-        const params = ExGlobals.Constants.proxy.parametersAsObj
+        const params = ExGlobals.Constants.proxy.parameter.parametersAsObj
         for (let i = 0; i < params.length; i++) {
             const number = params[i].number
             const label = params[i].label.replace('.point_background', '')
@@ -456,25 +443,6 @@ Item {
         return list.join('\n')
     }
 
-    property string projectSection: {
-        //if (!hasPhases)
-        //    return ''
-        const projectDescription = ExGlobals.Constants.proxy.projectInfoAsJson.short_description
-        //const phaseName = ExGlobals.Constants.proxy.phasesAsObj[0].name
-        const datasetName = ExGlobals.Constants.proxy.experimentDataAsObj[0].name
-        const modifiedDate = ExGlobals.Constants.proxy.projectInfoAsJson.modified
-        const list = [
-                `<h1>${ExGlobals.Constants.proxy.projectInfoAsJson.name}</h1>`,
-                '<p>',
-                `<b>Short description:</b> ${projectDescription}<br>`,
-                //`<b>Structural phases:</b> ${phaseName}<br>`,
-                `<b>Experimental data:</b> ${datasetName}<br>`,
-                `<b>Modified:</b> ${modifiedDate}<br>`,
-                '</p>'
-              ]
-        return list.join('\n')
-    }
-
     property string softwareSection: {
         const list = [
                   '<h2>Software</h2>',
@@ -482,26 +450,8 @@ Item {
                   `<b>Analysis:</b> <a href="${ExGlobals.Constants.appUrl}">${ExGlobals.Constants.appName} v${ExGlobals.Constants.appVersion}</a><br>`,
                   //`<b>Structure chart:</b> <a href="${ExGlobals.Variables.bokehStructureChart.info.url}"> ChemDoodle Web Components v${ExGlobals.Variables.bokehStructureChart.info.version}</a><br>`,
                   `<b>Data chart:</b> <a href="${dataChartLibUrl}"> BokehJS v${dataChartLibVersion}</a><br>`,
-                  `<b>Calculation engine:</b> <a href="">${ExGlobals.Constants.proxy.statusModelAsObj.calculation}</a><br>`,
-                  isFitting ? `<b>Minimization:</b> <a href="">${ExGlobals.Constants.proxy.statusModelAsObj.minimization}</a><br>` : '',
-                  '</div>'
-              ]
-        return list.join('\n')
-    }
-
-    property string structureSection: {
-        if (!hasPhases)
-            return ''
-        const phase = ExGlobals.Constants.proxy.phasesAsObj[0]
-        const phaseName = phase.name
-        const spaceGroup = phase.spacegroup._space_group_HM_name.value
-        const list = [
-                  `<h2>Structure: ${phaseName}</h2>`,
-                  '<p>',
-                  `<b>Space group:</b> ${spaceGroup}<br>`,
-                  '</p>',
-                  '<div id="structureSection">',
-                  structureChart,
+                  `<b>Calculation engine:</b> <a href="">${ExGlobals.Constants.proxy.state.statusModelAsObj.calculation}</a><br>`,
+                  isFitting ? `<b>Minimization:</b> <a href="">${ExGlobals.Constants.proxy.state.statusModelAsObj.minimization}</a><br>` : '',
                   '</div>'
               ]
         return list.join('\n')
@@ -510,7 +460,7 @@ Item {
     property string fittingInfo: {
         if (!isFitting)
             return ''
-        const redchi2 = ExGlobals.Constants.proxy.fitResults.redchi2.toFixed(2)
+        const redchi2 = ExGlobals.Constants.proxy.fitter.fitResults.redchi2.toFixed(2)
         let list = [
                 '<p>',
                 `<b>Goodness-of-fit (reduced \u03c7\u00b2):</b> ${redchi2}<br>`,
@@ -546,9 +496,9 @@ Item {
 
     property string article: {
         const list = [
-                  projectSection + '\n',
+                  // projectSection + '\n',
                   softwareSection + '\n',
-                  structureSection + '\n',
+                  // structureSection + '\n',
                   analysisSection + '\n',
                   parametersSection
               ]

@@ -12,7 +12,7 @@ import Gui.Globals 1.0 as ExGlobals
 EaComponents.TableView {
     id: table
 
-    enabled: ExGlobals.Constants.proxy.isFitFinished
+    enabled: ExGlobals.Constants.proxy.fitter.isFitFinished
 
     maxRowCountShow: 8
     defaultInfoText: qsTr("No Parameters Found")
@@ -23,7 +23,7 @@ EaComponents.TableView {
         id: fitablesModel
 
         //xml: ExGlobals.Constants.proxy.fitablesListAsXml
-        xml: ExGlobals.Constants.proxy.parametersAsXml
+        xml: ExGlobals.Constants.proxy.parameter.parametersAsXml
 
         query: "/root/item"
 
@@ -100,7 +100,7 @@ EaComponents.TableView {
         }
 
         EaComponents.TableViewCheckBox {
-            enabled: ExGlobals.Constants.proxy.experimentLoaded
+            enabled: ExGlobals.Constants.proxy.data.experimentLoaded
             id: fitColumn
             headerText: "Fit"
             checked: model.fit
@@ -130,18 +130,18 @@ EaComponents.TableView {
     }
 
     function editParameterValue(id, value) {
-        //ExGlobals.Constants.proxy.editParameter(id, parseFloat(value))
-        ExGlobals.Constants.proxy.editParameter(id, parseFloat(value))
+        //ExGlobals.Constants.proxy.parameter.editParameter(id, parseFloat(value))
+        ExGlobals.Constants.proxy.parameter.editParameter(id, parseFloat(value))
     }
     function editParameterFit(id, value) {
-        ExGlobals.Constants.proxy.editParameter(id, value)
+        ExGlobals.Constants.proxy.parameter.editParameter(id, value)
     }
 
     function formatLabel(index, label) {
         if (index < 0 || typeof label === "undefined")
             return ""
 
-        const datasetName = ExGlobals.Constants.proxy.experimentDataAsObj[0].name
+        const datasetName = ExGlobals.Constants.proxy.data.experimentDataAsObj[0].name
 
         // Modify current label
         label = label.replace("Instrument.", `Instrument.${datasetName}.`)

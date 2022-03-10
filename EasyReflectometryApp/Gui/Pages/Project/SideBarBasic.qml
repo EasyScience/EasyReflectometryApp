@@ -28,7 +28,7 @@ EaComponents.SideBarColumn {
                 onClicked: EaGlobals.Variables.showProjectDescriptionDialog = true
                 Component.onCompleted: {
                     ExGlobals.Variables.createProjectButton = this
-                    ExGlobals.Constants.proxy.resetUndoRedoStack()
+                    ExGlobals.Constants.proxy.undoredo.resetUndoRedoStack()
                 }
             }
 
@@ -39,7 +39,7 @@ EaComponents.SideBarColumn {
                 onClicked: ExGlobals.Variables.samplePageEnabled = true
                 Component.onCompleted: {
                     ExGlobals.Variables.continueWithoutProjectButton = this
-                    ExGlobals.Constants.proxy.resetUndoRedoStack()
+                    ExGlobals.Constants.proxy.undoredo.resetUndoRedoStack()
                 }
             }
 
@@ -66,7 +66,7 @@ EaComponents.SideBarColumn {
         onAccepted: {
             // enablement will depend on what is available in the project file,
             // obviously, so care is needed. TODO
-            ExGlobals.Constants.proxy.loadProjectAs(fileUrl)
+            ExGlobals.Constants.proxy.project.loadProjectAs(fileUrl)
 
             ExGlobals.Variables.samplePageEnabled = true
             ExGlobals.Variables.experimentPageEnabled = true

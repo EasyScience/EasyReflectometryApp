@@ -25,9 +25,9 @@ EaComponents.SideBarColumn {
             }
             EaElements.ComboBox {
                 width: minimizerSelector.width
-                model: ExGlobals.Constants.proxy.calculatorNames
-                currentIndex: ExGlobals.Constants.proxy.currentCalculatorIndex
-                onCurrentIndexChanged: ExGlobals.Constants.proxy.currentCalculatorIndex = currentIndex
+                model: ExGlobals.Constants.proxy.calculator.calculatorNames
+                currentIndex: ExGlobals.Constants.proxy.calculator.currentCalculatorIndex
+                onCurrentIndexChanged: ExGlobals.Constants.proxy.calculator.currentCalculatorIndex = currentIndex
                 Component.onCompleted: ExGlobals.Variables.calculatorSelector = this
             }
         }
@@ -35,7 +35,7 @@ EaComponents.SideBarColumn {
 
     EaElements.GroupBox {
         title: qsTr("Minimization")
-        enabled: ExGlobals.Constants.proxy.experimentLoaded
+        enabled: ExGlobals.Constants.proxy.data.experimentLoaded
         //collapsed: false
 
         Row {
@@ -54,11 +54,11 @@ EaComponents.SideBarColumn {
 
                 width: (EaStyle.Sizes.sideBarContentWidth - minimizerLabel.width * 2 - EaStyle.Sizes.fontPixelSize * 4) / 2
 
-                model: ExGlobals.Constants.proxy.minimizerNames
-                currentIndex: ExGlobals.Constants.proxy.currentMinimizerIndex
+                model: ExGlobals.Constants.proxy.minimizer.minimizerNames
+                currentIndex: ExGlobals.Constants.proxy.minimizer.currentMinimizerIndex
 
                 onCurrentIndexChanged: {
-                    ExGlobals.Constants.proxy.currentMinimizerIndex = currentIndex
+                    ExGlobals.Constants.proxy.minimizer.currentMinimizerIndex = currentIndex
                 }
             }
 
@@ -75,8 +75,8 @@ EaComponents.SideBarColumn {
                 id: methodSelector
 
                 width: minimizerSelector.width
-                model: ExGlobals.Constants.proxy.minimizerMethodNames
-                currentIndex: ExGlobals.Constants.proxy.currentMinimizerMethodIndex
+                model: ExGlobals.Constants.proxy.minimizer.minimizerMethodNames
+                currentIndex: ExGlobals.Constants.proxy.minimizer.currentMinimizerMethodIndex
                 onCurrentIndexChanged: {
                     ExGlobals.Constants.proxy.currentMinimizerMethodIndex = currentIndex
                 }
