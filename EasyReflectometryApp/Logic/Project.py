@@ -175,7 +175,7 @@ class ProjectProxy(QObject):
         descr['interface'] = self.parent._interface.current_interface_name
 
         descr['minimizer'] = {
-            'engine': self.parent.fitter.current_engine.name,
+            'engine': self.parent._fitting_proxy.eFitter.current_engine.name,
             'method': self.parent._current_minimizer_method_name
         }
 
@@ -268,7 +268,7 @@ class ProjectProxy(QObject):
                 new_method_index = self.parent.minimizerMethodNames[0]
             self.currentMinimizerMethodIndex = new_method_index
 
-        self.parent.fitter.fit_object = self.parent._model_proxy._model
+        self.parent._fitting_proxy.eFitter.fit_object = self.parent._model_proxy._model
 
         self.parent.resetUndoRedoStack()
 

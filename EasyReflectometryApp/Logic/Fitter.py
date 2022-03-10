@@ -3,6 +3,7 @@ import sys
 from PySide2.QtCore import Signal, QThread, QObject, Property, Slot
 
 from easyCore import borg
+from easyCore.Fitting.Fitting import Fitter as easyFitter
 
 class Fitter(QThread):
     """
@@ -50,6 +51,7 @@ class FitterProxy(QObject):
         self._fit_finished = True
         self._fit_results = self._defaultFitResults()
         self._fitter_thread = None
+        self.eFitter = easyFitter(self.parent._model_proxy._model, self.parent._interface.fit_func)
 
         self.fitFinished.connect(self._onFitFinished)
         self.stopFit.connect(self.onStopFit)
@@ -136,7 +138,7 @@ class FitterProxy(QObject):
         weights = 1 / exp_data.ye
         method = self.parent._current_minimizer_method_name
 
-        res = self.parent.eFitter.fit(x, y, weights=weights, method=method)
+        res = self.eFitter.fit(x, y, weights=weights, method=method)
         self._setFitResults(res)
 
     def threaded_fit(self):

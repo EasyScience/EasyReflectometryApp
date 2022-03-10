@@ -37,6 +37,7 @@ from .Model import ModelProxy
 from .Calculator import CalculatorProxy
 from .Parameter import ParameterProxy
 from .Data import DataProxy
+from .Minimizer import MinimizerProxy
 
 from .DataStore import DataSet1D, DataStore
 from .Proxies.Plotting1d import Plotting1dProxy
@@ -63,8 +64,8 @@ class PyQmlProxy(QObject):
     
     currentSampleChanged = Signal()
 
-    currentMinimizerChanged = Signal()
-    currentMinimizerMethodChanged = Signal()
+    # currentMinimizerChanged = Signal()
+    # currentMinimizerMethodChanged = Signal()
 
 
     # Plotting
@@ -92,6 +93,7 @@ class PyQmlProxy(QObject):
         self._calculator_proxy = CalculatorProxy(self)
         self._parameter_proxy = ParameterProxy(self)
         self._fitter_proxy = FitterProxy(self)
+        self._minimizer_proxy = MinimizerProxy(self)
 
         # Plotting 1D
         self._plotting_1d_proxy = Plotting1dProxy()
@@ -124,13 +126,6 @@ class PyQmlProxy(QObject):
         self._simulation_proxy.qRangeChanged.connect(self.undoRedoChanged)
         self._simulation_proxy.resolutionChanged.connect(self.undoRedoChanged)
 
-        self.eFitter = Fitter(self._model_proxy._model, self._interface.fit_func)
-
-        self._current_minimizer_method_index = 0
-        self._current_minimizer_method_name = self.eFitter.available_methods()[0]
-        self.currentMinimizerChanged.connect(self._onCurrentMinimizerChanged)
-        self.currentMinimizerMethodChanged.connect(self._onCurrentMinimizerMethodChanged)
-
         # Parameters
         self.parametersChanged.connect(self._material_proxy._onMaterialsChanged)
         self.parametersChanged.connect(self._model_proxy._onModelChanged)
@@ -146,9 +141,9 @@ class PyQmlProxy(QObject):
         self.statusInfoChanged.connect(self._onStatusInfoChanged)
         self._calculator_proxy.calculatorChanged.connect(self.statusInfoChanged)
         #self._calculator_proxy.calculatorChanged.connect(self.undoRedoChanged)
-        self.currentMinimizerChanged.connect(self.statusInfoChanged)
+        self._minimizer_proxy.currentMinimizerChanged.connect(self.statusInfoChanged)
         #self.currentMinimizerChanged.connect(self.undoRedoChanged)
-        self.currentMinimizerMethodChanged.connect(self.statusInfoChanged)
+        self._minimizer_proxy.currentMinimizerMethodChanged.connect(self.statusInfoChanged)
         #self.currentMinimizerMethodChanged.connect(self.undoRedoChanged)
 
         # Screen recorder
@@ -201,6 +196,10 @@ class PyQmlProxy(QObject):
     @Property('QVariant', notify=dummySignal)
     def fitter(self):
         return self._fitter_proxy
+
+    @Property('QVariant', notify=dummySignal)
+    def minimizer(self):
+        return self._minimizer_proxy
 
     ####################################################################################################################
     ####################################################################################################################
@@ -364,90 +363,6 @@ class PyQmlProxy(QObject):
         self._current_layers_index = new_index
         self.sampleChanged.emit()
 
-
-    ####################################################################################################################
-    ####################################################################################################################
-    # ANALYSIS
-    ####################################################################################################################
-    ####################################################################################################################
-
-    ####################################################################################################################
-    # Minimizer
-    ####################################################################################################################
-
-    # Minimizer
-
-    @Property('QVariant', notify=dummySignal)
-    def minimizerNames(self):
-        return self.eFitter.available_engines
-
-    @Property(int, notify=currentMinimizerChanged)
-    def currentMinimizerIndex(self):
-        current_name = self.eFitter.current_engine.name
-        return self.minimizerNames.index(current_name)
-
-    @currentMinimizerIndex.setter
-    @property_stack_deco('Minimizer change')
-    def currentMinimizerIndex(self, new_index: int):
-        if self.currentMinimizerIndex == new_index:
-            return
-        new_name = self.minimizerNames[new_index]
-        self.eFitter.switch_engine(new_name)
-        self.currentMinimizerChanged.emit()
-
-    # @Slot(int)
-    # def changeCurrentMinimizer(self, new_index: int):
-    #     if self.currentMinimizerIndex == new_index:
-    #         return
-    #
-    #     new_name = self.minimizerNames[new_index]
-    #     self.eFitter.switch_engine(new_name)
-    #     self.currentMinimizerChanged.emit()
-
-    def _onCurrentMinimizerChanged(self):
-        print("***** _onCurrentMinimizerChanged")
-        idx = 0
-        minimizer_name = self.eFitter.current_engine.name
-        if minimizer_name == 'lmfit':
-            idx = self.minimizerMethodNames.index('leastsq')
-        elif minimizer_name == 'bumps':
-            idx = self.minimizerMethodNames.index('lm')
-        if -1 < idx != self._current_minimizer_method_index:
-            # Bypass the property as it would be added to the stack.
-            self._current_minimizer_method_index = idx
-            self._current_minimizer_method_name = self.minimizerMethodNames[idx]
-            self.currentMinimizerMethodChanged.emit()
-
-    # Minimizer method
-
-    @Property('QVariant', notify=currentMinimizerChanged)
-    def minimizerMethodNames(self):
-        current_minimizer = self.minimizerNames[self.currentMinimizerIndex]
-        tested_methods = {
-            'lmfit': ['leastsq', 'powell', 'cobyla'],
-            'bumps': ['newton', 'lm', 'de'],
-            'DFO_LS': ['leastsq']
-        }
-        #return self.eFitter.available_methods()
-        return tested_methods[current_minimizer]
-
-    @Property(int, notify=currentMinimizerMethodChanged)
-    def currentMinimizerMethodIndex(self):
-        return self._current_minimizer_method_index
-
-    @currentMinimizerMethodIndex.setter
-    @property_stack_deco('Minimizer method change')
-    def currentMinimizerMethodIndex(self, new_index: int):
-        if self._current_minimizer_method_index == new_index:
-            return
-
-        self._current_minimizer_method_index = new_index
-        self._current_minimizer_method_name = self.minimizerMethodNames[new_index]
-        self.currentMinimizerMethodChanged.emit()
-
-    def _onCurrentMinimizerMethodChanged(self):
-        print("***** _onCurrentMinimizerMethodChanged")
-
     ####################################################################################################################
     ####################################################################################################################
     # Report
@@ -486,7 +401,7 @@ class PyQmlProxy(QObject):
     def statusModelAsObj(self):
         obj = {
             "calculation":  self._interface.current_interface_name,
-            "minimization": f'{self.eFitter.current_engine.name} ({self._current_minimizer_method_name})'
+            "minimization": f'{self._fitter_proxy.eFitter.current_engine.name} ({self._minimizer_proxy._current_minimizer_method_name})'
         }
         self._status_model = obj
         return obj
@@ -496,7 +411,7 @@ class PyQmlProxy(QObject):
         model = [
             {"label": "Calculation", "value": self._interface.current_interface_name},
             {"label": "Minimization",
-             "value": f'{self.eFitter.current_engine.name} ({self._current_minimizer_method_name})'}
+             "value": f'{self._fitter_proxy.eFitter.current_engine.name} ({self._minimizer_proxy._current_minimizer_method_name})'}
         ]
         xml = dicttoxml(model, attr_type=False)
         xml = xml.decode()

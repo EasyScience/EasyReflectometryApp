@@ -39,7 +39,7 @@ class CalculatorProxy(QObject):
             return
         new_name = self.calculatorNames[new_index]
         self.parent._model_proxy._model.switch_interface(new_name)
-        self.parent.fitter.initialize(self.parent._model_proxy._model, self.parent._interface.fit_func)
+        self.parent._fitting_proxy.eFitter.initialize(self.parent._model_proxy._model, self.parent._interface.fit_func)
         self.calculatorChanged.emit()
 
     # # # 
