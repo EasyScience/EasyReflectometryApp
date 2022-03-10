@@ -1,16 +1,11 @@
-import json, re
-from typing import Union
-from dicttoxml import dicttoxml
-
-from matplotlib import cm, colors
+import re
 
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import borg
-from easyCore.Utils.UndoRedo import property_stack_deco
-from easyCore.Utils.classTools import generatePath
 from easyCore.Objects.Groups import BaseCollection
 from easyCore.Objects.Base import BaseObj
+
 
 class UndoRedoProxy(QObject):
 
@@ -22,7 +17,6 @@ class UndoRedoProxy(QObject):
 
         borg.stack.enabled = True
         borg.stack.clear()
-
 
     # # #
     # Setters and getters
@@ -47,7 +41,8 @@ class UndoRedoProxy(QObject):
                 if isinstance(old, (BaseObj, BaseCollection)):
                     callback = [self.parent.parametersChanged]
                 elif old is self:
-                    # This is a property of the proxy. I.e. minimizer, minimizer method, name or something boring.
+                    # This is a property of the proxy. I.e. minimizer,
+                    # minimizer method, name or something boring.
                     # Signals should be sent by triggering the set method.
                     callback = []
                 else:
@@ -66,7 +61,8 @@ class UndoRedoProxy(QObject):
                 if isinstance(new, (BaseObj, BaseCollection)):
                     callback = [self.parent.parametersChanged, self.undoRedoChanged]
                 elif new is self:
-                    # This is a property of the proxy. I.e. minimizer, minimizer method, name or something boring.
+                    # This is a property of the proxy. I.e. minimizer,
+                    # minimizer method, name or something boring.
                     # Signals should be sent by triggering the set method.
                     callback = []
                 else:
@@ -89,13 +85,13 @@ class UndoRedoProxy(QObject):
         pattern = "<Parameter '(.*)': .* from (.*) to (.*)"
         match = re.match(pattern, orig_tooltip)
         if match is None:
-           # regex parsing failed, return the original tooltip
+            # regex parsing failed, return the original tooltip
             return orig_tooltip
         param = match.group(1)
         frm = match.group(2)
         if '+/-' in frm:
             # numerical values
-            pattern2 = "\((.*) \+.*"
+            pattern2 = r'\((.*) \+.*'
             frm2 = re.match(pattern2, frm)
             if frm2 is None:
                 return orig_tooltip
