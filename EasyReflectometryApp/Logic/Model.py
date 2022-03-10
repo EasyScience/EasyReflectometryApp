@@ -98,7 +98,7 @@ class ModelProxy(QObject):
                 j.name = j.material.name + ' Layer'
         self._setModelAsObj()
         self._setModelAsXml() 
-        self.parent.stateChanged.emit(True)
+        self.parent._state_proxy.stateChanged.emit(True)
 
     # # # 
     # Slots

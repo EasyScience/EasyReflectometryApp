@@ -86,7 +86,7 @@ class MaterialProxy(QObject):
                 j.name = j.material.name + ' Layer'
         self._setMaterialsAsObj()  # 0.025 s
         self._setMaterialsAsXml()  # 0.065 s
-        self.parent.stateChanged.emit(True)
+        self.parent._state_proxy.stateChanged.emit(True)
 
     # # # 
     # Slot

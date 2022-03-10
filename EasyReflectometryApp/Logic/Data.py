@@ -128,7 +128,7 @@ class DataProxy(QObject):
 
     def _onExperimentDataChanged(self):
         self._setExperimentDataAsXml() 
-        self.parent.stateChanged.emit(True)
+        self.parent._state_proxy.stateChanged.emit(True)
 
     def _onExperimentDataRemoved(self):
         self.parent._plotting_1d_proxy.clearFrontendState()

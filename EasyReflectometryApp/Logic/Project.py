@@ -15,6 +15,7 @@ from EasyReflectometry.sample.material import Material
 from EasyReflectometry.sample.materials import Materials
 from EasyReflectometry.experiment.model import Model
 
+
 class ProjectProxy(QObject):
     
     dummySignal = Signal()
@@ -29,6 +30,8 @@ class ProjectProxy(QObject):
         self._project_info = self._defaultProjectInfo()
         self.project_save_filepath = ""
         self._currentProjectPath = os.path.expanduser('~')
+
+        self._report = ""
 
 
     # # #
@@ -125,17 +128,17 @@ class ProjectProxy(QObject):
     @Slot()
     def saveProject(self):
         self._saveProject()
-        self.parent.stateChanged.emit(False)
+        self.parent._state_proxy.stateChanged.emit(False)
 
     @Slot(str)
     def loadProjectAs(self, filepath):
         self._loadProjectAs(filepath)
-        self.parent.stateChanged.emit(False)
+        self.parent._state_proxy.stateChanged.emit(False)
 
     @Slot()
     def loadProject(self):
         self._loadProject()
-        self.parent.stateChanged.emit(False)
+        self.parent._state_proxy.stateChanged.emit(False)
 
     @Property(str, notify=dummySignal)
     def projectFilePath(self):
@@ -285,3 +288,25 @@ class ProjectProxy(QObject):
                 file.write(content)
         except Exception as exception:
             print(message, exception)
+
+    @Slot(str)
+    def setReport(self, report):
+        """
+        Keep the QML generated HTML report for saving
+        """
+        self._report = report
+
+    @Slot(str)
+    def saveReport(self, filepath):
+        """
+        Save the generated report to the specified file
+        Currently only html
+        """
+        try:
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write(self._report)
+            success = True
+        except IOError:
+            success = False
+        finally:
+            self.htmlExportingFinished.emit(success, filepath)

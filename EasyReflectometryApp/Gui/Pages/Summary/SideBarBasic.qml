@@ -116,7 +116,7 @@ EaComponents.SideBarColumn {
 
             onClicked: {
                 if (reportFormatField.currentValue === 'html') {
-                    ExGlobals.Constants.proxy.saveReport(reportLocationField.text)
+                    ExGlobals.Constants.proxy.project.saveReport(reportLocationField.text)
                 } else if (reportFormatField.currentValue === 'pdf') {
                     ExGlobals.Variables.reportWebView.printToPdf(reportLocationField.text)
                 }

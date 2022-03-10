@@ -136,7 +136,7 @@ class FitterProxy(QObject):
         x = exp_data.x
         y = exp_data.y
         weights = 1 / exp_data.ye
-        method = self.parent._current_minimizer_method_name
+        method = self.parent.minimizer._current_minimizer_method_name
 
         res = self.eFitter.fit(x, y, weights=weights, method=method)
         self._setFitResults(res)
@@ -148,7 +148,7 @@ class FitterProxy(QObject):
         x = exp_data.x
         y = exp_data.y
         weights = 1 / exp_data.ye
-        method = self._current_minimizer_method_name
+        method = self.parent.minimizer._current_minimizer_method_name
 
         args = (x, y)
         kwargs = {"weights": weights, "method": method}

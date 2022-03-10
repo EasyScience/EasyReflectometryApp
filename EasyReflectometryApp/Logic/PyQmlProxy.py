@@ -39,7 +39,7 @@ from .Parameter import ParameterProxy
 from .Data import DataProxy
 from .Minimizer import MinimizerProxy
 from .UndoRedo import UndoRedoProxy
-
+from .State import StateProxy
 from .DataStore import DataSet1D, DataStore
 from .Proxies.Plotting1d import Plotting1dProxy
 from .Fitter import FitterProxy
@@ -58,7 +58,7 @@ class PyQmlProxy(QObject):
     dummySignal = Signal()
 
     # Project
-    stateChanged = Signal(bool)
+    # stateChanged = Signal(bool)
 
     # Items
     sampleChanged = Signal()
@@ -80,6 +80,7 @@ class PyQmlProxy(QObject):
         self._interface = InterfaceFactory()
 
         ######### proxies #########
+        self._state_proxy = StateProxy(self)
         self._project_proxy = ProjectProxy(self)
         self._data_proxy = DataProxy(self)
         self._simulation_proxy = SimulationProxy(self)
@@ -95,9 +96,9 @@ class PyQmlProxy(QObject):
         # Plotting 1D
 
         # Project
-        self._status_model = None
-        self._state_changed = False
-        self.stateChanged.connect(self._onStateChanged)
+        # self._status_model = None
+        # self._state_changed = False
+        # self.stateChanged.connect(self._onStateChanged)
 
         # Materials
         self._current_materials_index = 1
@@ -131,7 +132,7 @@ class PyQmlProxy(QObject):
         self.parametersChanged.connect(self._undoredo_proxy.undoRedoChanged)
 
         # Report
-        self._report = ""
+        # self._report = ""
 
         # Status info
         self.statusInfoChanged.connect(self._onStatusInfoChanged)
@@ -150,9 +151,6 @@ class PyQmlProxy(QObject):
         except (ImportError, ModuleNotFoundError):
             print('Screen recording disabled')
         self._screen_recorder = recorder
-
-        self._material_proxy._onMaterialsChanged()
-        self._model_proxy._onModelChanged()
 
     @Property('QVariant', notify=dummySignal)
     def project(self):
@@ -191,58 +189,12 @@ class PyQmlProxy(QObject):
         return self._minimizer_proxy
 
     @Property('QVariant', notify=dummySignal)
-    def undoredo(self):
-        return self._undoredo_proxy
-
-    ####################################################################################################################
-    ####################################################################################################################
-    # Charts
-    ####################################################################################################################
-    ####################################################################################################################
-
-    # 1d plotting
-
-    @Property('QVariant', notify=dummySignal)
     def plotting1d(self):
         return self._plotting_1d_proxy
 
-    # Charts for report
-
-    @Slot('QVariant', result=str)
-    def imageToSource(self, image):
-        ba = QByteArray()
-        buffer = QBuffer(ba)
-        buffer.open(QIODevice.WriteOnly)
-        image.save(buffer, 'png')
-        data = ba.toBase64().data().decode('utf-8')
-        source = f'data:image/png;base64,{data}'
-        return source
-
-    ####################################################################################################################
-    ####################################################################################################################
-    # PROJECT
-    ####################################################################################################################
-    ####################################################################################################################
-
-    ####################################################################################################################
-    # Project
-    ###################################################################################################################
-
-    @Property(bool, notify=stateChanged)
-    def stateHasChanged(self):
-        return self._state_changed
-
-    @stateHasChanged.setter
-    def stateHasChanged(self, changed: bool):
-        if self._state_changed == changed:
-            print("same state changed value - {}".format(str(changed)))
-            return
-        self._state_changed = changed
-        print("new state changed value - {}".format(str(changed)))
-        self.stateChanged.emit(changed)
-
-    def _onStateChanged(self, changed=True):
-        self.stateHasChanged = changed
+    @Property('QVariant', notify=dummySignal)
+    def undoredo(self):
+        return self._undoredo_proxy
 
     ####################################################################################################################
     # Current Materials
@@ -358,34 +310,6 @@ class PyQmlProxy(QObject):
 
     ####################################################################################################################
     ####################################################################################################################
-    # Report
-    ####################################################################################################################
-    ####################################################################################################################
-
-    @Slot(str)
-    def setReport(self, report):
-        """
-        Keep the QML generated HTML report for saving
-        """
-        self._report = report
-
-    @Slot(str)
-    def saveReport(self, filepath):
-        """
-        Save the generated report to the specified file
-        Currently only html
-        """
-        try:
-            with open(filepath, 'w', encoding='utf-8') as f:
-                f.write(self._report)
-            success = True
-        except IOError:
-            success = False
-        finally:
-            self.htmlExportingFinished.emit(success, filepath)
-
-    ####################################################################################################################
-    ####################################################################################################################
     # STATUS
     ####################################################################################################################
     ####################################################################################################################
@@ -440,15 +364,3 @@ class PyQmlProxy(QObject):
         #self.removePhase(self._sample.phases[self.currentPhaseIndex].name)
         #self.resetUndoRedoStack()
         #self.stateChanged.emit(False)
-
-
-def createFile(path, content):
-    if os.path.exists(path):
-        print(f'File already exists {path}. Overwriting...')
-        os.unlink(path)
-    try:
-        message = f'create file {path}'
-        with open(path, "w") as file:
-            file.write(content)
-    except Exception as exception:
-        print(message, exception)

@@ -109,7 +109,7 @@ class ParameterProxy(QObject):
     def _onParametersChanged(self):
         self._setParametersAsObj()
         self._setParametersAsXml()
-        self.parent.stateChanged.emit(True)
+        self.parent._state_proxy.stateChanged.emit(True)
     
     def _onParametersFilterCriteriaChanged(self):
         self._onParametersChanged()
@@ -130,7 +130,7 @@ class ParameterProxy(QObject):
 
             obj.fixed = not new_value
             self._onParametersChanged()
-            self.parent.undoRedoChanged.emit()
+            self.parent._undoredo_proxy.undoRedoChanged.emit()
 
         else:
             if obj.raw_value == new_value:
