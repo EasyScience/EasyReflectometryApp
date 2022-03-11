@@ -4,6 +4,9 @@ from PySide2.QtCore import QObject, Signal, Property
 
 from easyCore import np
 
+from EasyReflectometry.experiment.model import Model
+from EasyReflectometry.sample.structure import Structure
+from EasyReflectometry.interface import InterfaceFactory
 
 class SimulationProxy(QObject):
 
@@ -147,6 +150,7 @@ class SimulationProxy(QObject):
         sld_profile = self.parent._interface.sld_profile()
 
         self.parent._plotting_1d_proxy.setCalculatedData(sim.x, sim.y)
+        self.parent._plotting_1d_proxy.setPureData(sim.x, self.parent._model_proxy.getPureModelReflectometry(sim.x))
         self.parent._plotting_1d_proxy.setSldData(sld_profile[0], sld_profile[1])
 
     # # #
