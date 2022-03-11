@@ -176,7 +176,7 @@ class ProjectProxy(QObject):
         descr['interface'] = self.parent._interface.current_interface_name
 
         descr['minimizer'] = {
-            'engine': self.parent._fitting_proxy.eFitter.current_engine.name,
+            'engine': self.parent._fitter_proxy.eFitter.current_engine.name,
             'method': self.parent._current_minimizer_method_name
         }
 
