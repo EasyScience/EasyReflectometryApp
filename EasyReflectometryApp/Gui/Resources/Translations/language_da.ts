@@ -231,19 +231,6 @@ This operation cannot be undone.</source>
     </message>
 </context>
 <context>
-    <name>ExperimentAssociatedPhases</name>
-    <message>
-        <location filename="../../Components/ExperimentAssociatedPhases.qml" line="16" />
-        <source>No Associated Phases</source>
-        <translation>Ingen tilknyttede faser </translation>
-    </message>
-    <message>
-        <location filename="../../Components/ExperimentAssociatedPhases.qml" line="72" />
-        <source>Remove this phase</source>
-        <translation>Fjern denne fase </translation>
-    </message>
-</context>
-<context>
     <name>ExperimentDataExplorer</name>
     <message>
         <location filename="../../Components/ExperimentDataExplorer.qml" line="16" />

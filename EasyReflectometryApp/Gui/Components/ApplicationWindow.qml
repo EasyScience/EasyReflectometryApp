@@ -262,18 +262,18 @@ EaComponents.ApplicationWindow {
                 tabs: [
                     EaElements.TabButton {
                         text: ExGlobals.Constants.proxy.data.experimentLoaded ? qsTr("Fitting") : qsTr("Simulation")
-                    },
-                    EaElements.TabButton {
+                    } //,
+                    /* EaElements.TabButton {
                         visible: ExGlobals.Constants.proxy.data.experimentLoaded
                         enabled: false
                         text: 'calculations.cif' //ExGlobals.Constants.proxy.projectInfoAsJson.calculations
                         Component.onCompleted: ExGlobals.Variables.calculationCifTab = this
-                    }
+                    } */
                 ]
 
                 items: [
-                    ExAnalysisPage.MainContentFitting {},
-                    ExAnalysisPage.MainContentTextView {}
+                    ExAnalysisPage.MainContentFitting {} //,
+                    // ExAnalysisPage.MainContentTextView {}
                 ]
 
                 Component.onCompleted: ExGlobals.Variables.analysisPageMainContent = this

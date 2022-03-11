@@ -130,8 +130,6 @@ class SimulationProxy(QObject):
         # if not self.experimentLoaded:# and not self.experimentSkipped:
         #     return
 
-        # self._sample.output_index = self.currentPhaseIndex
-
         #  THIS IS WHERE WE WOULD LOOK UP CURRENT EXP INDEX
         sim = self.parent._data_proxy._data.simulations[0]
 

@@ -53,10 +53,6 @@ Rectangle {
             }
 
             EaElements.Label {
-                font.bold: true
-                text: qsTr("Phases:")
-            }
-            EaElements.Label {
                 text: ExGlobals.Constants.proxy.project.projectInfoAsJson.samples
                 //onEditingFinished: ExGlobals.Constants.proxy.editProjectInfo("samples", text)
             }
