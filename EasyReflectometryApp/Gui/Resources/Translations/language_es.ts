@@ -244,19 +244,6 @@ This operation cannot be undone.</source>
     </message>
 </context>
 <context>
-    <name>ExperimentBackground</name>
-    <message>
-        <location filename="../../Components/ExperimentBackground.qml" line="15" />
-        <source>No Background Points Added</source>
-        <translation>No hay puntos de fondo añadidos </translation>
-    </message>
-    <message>
-        <location filename="../../Components/ExperimentBackground.qml" line="67" />
-        <source>Remove this point</source>
-        <translation>Quitar este punto </translation>
-    </message>
-</context>
-<context>
     <name>ExperimentDataExplorer</name>
     <message>
         <location filename="../../Components/ExperimentDataExplorer.qml" line="16" />
@@ -267,19 +254,6 @@ This operation cannot be undone.</source>
         <location filename="../../Components/ExperimentDataExplorer.qml" line="55" />
         <source>Remove this dataset</source>
         <translation>Retire este conjunto de datos </translation>
-    </message>
-</context>
-<context>
-    <name>ExperimentInstrumentSetup</name>
-    <message>
-        <location filename="../../Components/ExperimentInstrumentSetup.qml" line="18" />
-        <source>Zero shift:</source>
-        <translation>Cambio de cero: </translation>
-    </message>
-    <message>
-        <location filename="../../Components/ExperimentInstrumentSetup.qml" line="31" />
-        <source>Wavelength:</source>
-        <translation>Longitud de onda: </translation>
     </message>
 </context>
 <context>

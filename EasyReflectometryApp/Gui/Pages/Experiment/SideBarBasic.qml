@@ -113,14 +113,6 @@ EaComponents.SideBarColumn {
         ExComponents.ExperimentSimulationSetup {}
     }
 
-    /*EaElements.GroupBox {
-        title: qsTr("Instrument setup")
-        enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||
-                 ExGlobals.Constants.proxy.data.experimentSkipped
-
-        ExComponents.ExperimentInstrumentSetup {}
-    }*/
-
     EaElements.GroupBox {
         title: qsTr("Resolution")
         enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||

@@ -26,14 +26,11 @@ SampleAdps 1.0 SampleAdps.qml
 SampleSimulationSetup 1.0 SampleSimulationSetup.qml
 
 ExperimentDataExplorer 1.0 ExperimentDataExplorer.qml
-ExperimentAssociatedPhases 1.0 ExperimentAssociatedPhases.qml
 ExperimentResolutionSetup 1.0 ExperimentResolutionSetup.qml
 ExperimentBackgroundSetup 1.0 ExperimentBackgroundSetup.qml
 ExperimentSimulationSetup 1.0 ExperimentSimulationSetup.qml
-ExperimentInstrumentSetup 1.0 ExperimentInstrumentSetup.qml
 ExperimentPeakProfileG 1.0 ExperimentPeakProfileG.qml
 ExperimentPeakProfileL 1.0 ExperimentPeakProfileL.qml
-ExperimentBackground 1.0 ExperimentBackground.qml
 
 AnalysisFitables 1.0 AnalysisFitables.qml
 AnalysisConstraints 1.0 AnalysisConstraints.qml
