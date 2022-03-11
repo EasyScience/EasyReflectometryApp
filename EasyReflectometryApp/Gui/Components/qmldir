@@ -4,9 +4,6 @@ ApplicationWindow 1.0 ApplicationWindow.qml
 
 # Main content components
 
-SampleStructure3dQtDataVisualization 1.0 SampleStructure3dQtDataVisualization.qml
-SampleStructure3dChemDoodle 1.0 SampleStructure3dChemDoodle.qml
-
 ExperimentDataChartBokeh 1.0 ExperimentDataChartBokeh.qml
 ExperimentDataChartQtCharts 1.0 ExperimentDataChartQtCharts.qml
 
@@ -19,8 +16,6 @@ CloseDialog 1.0 CloseDialog.qml
 
 ProjectExamples 1.0 ProjectExamples.qml
 
-SampleSymmetry 1.0 SampleSymmetry.qml
-SampleCell 1.0 SampleCell.qml
 SampleSimulationSetup 1.0 SampleSimulationSetup.qml
 
 ExperimentDataExplorer 1.0 ExperimentDataExplorer.qml

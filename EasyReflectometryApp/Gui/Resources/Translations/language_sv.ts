@@ -392,24 +392,6 @@ This operation cannot be undone.</source>
     </message>
 </context>
 <context>
-    <name>SampleSymmetry</name>
-    <message>
-        <location filename="../../Components/SampleSymmetry.qml" line="18" />
-        <source>Crystal system</source>
-        <translation>Kristallsystem </translation>
-    </message>
-    <message>
-        <location filename="../../Components/SampleSymmetry.qml" line="35" />
-        <source>Space group</source>
-        <translation>Rymdgrupp </translation>
-    </message>
-    <message>
-        <location filename="../../Components/SampleSymmetry.qml" line="51" />
-        <source>Setting</source>
-        <translation>Miljö </translation>
-    </message>
-</context>
-<context>
     <name>SideBarAdvanced</name>
     <message>
         <location filename="../../Pages/Analysis/SideBarAdvanced.qml" line="14" />
