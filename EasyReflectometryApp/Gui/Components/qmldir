@@ -29,8 +29,6 @@ ExperimentDataExplorer 1.0 ExperimentDataExplorer.qml
 ExperimentResolutionSetup 1.0 ExperimentResolutionSetup.qml
 ExperimentBackgroundSetup 1.0 ExperimentBackgroundSetup.qml
 ExperimentSimulationSetup 1.0 ExperimentSimulationSetup.qml
-ExperimentPeakProfileG 1.0 ExperimentPeakProfileG.qml
-ExperimentPeakProfileL 1.0 ExperimentPeakProfileL.qml
 
 AnalysisFitables 1.0 AnalysisFitables.qml
 AnalysisConstraints 1.0 AnalysisConstraints.qml
