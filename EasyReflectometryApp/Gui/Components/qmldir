@@ -21,7 +21,6 @@ ProjectExamples 1.0 ProjectExamples.qml
 
 SampleSymmetry 1.0 SampleSymmetry.qml
 SampleCell 1.0 SampleCell.qml
-SampleAtoms 1.0 SampleAtoms.qml
 SampleSimulationSetup 1.0 SampleSimulationSetup.qml
 
 ExperimentDataExplorer 1.0 ExperimentDataExplorer.qml

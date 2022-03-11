@@ -392,27 +392,6 @@ This operation cannot be undone.</source>
     </message>
 </context>
 <context>
-    <name>SampleAtoms</name>
-    <message>
-        <location filename="../../Components/SampleAtoms.qml" line="118" />
-        <source>Remove this atom</source>
-        <translation>Supprimer cet atome </translation>
-    </message>
-</context>
-<context>
-    <name>SamplePhasesExplorer</name>
-    <message>
-        <location filename="../../Components/SamplePhasesExplorer.qml" line="16" />
-        <source>No Samples Added/Loaded</source>
-        <translation>Aucun échantillon ajouté / chargé </translation>
-    </message>
-    <message>
-        <location filename="../../Components/SamplePhasesExplorer.qml" line="59" />
-        <source>Remove this phase</source>
-        <translation>Supprimer cette phase </translation>
-    </message>
-</context>
-<context>
     <name>SampleSymmetry</name>
     <message>
         <location filename="../../Components/SampleSymmetry.qml" line="18" />
