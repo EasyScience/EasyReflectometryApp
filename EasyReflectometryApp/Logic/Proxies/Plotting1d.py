@@ -290,6 +290,7 @@ class Plotting1dProxy(QObject):
     def setSldData(self, xarray, yarray):
         self._setSldDataArrays(xarray, yarray)
         self._setSldDataRanges()
+        self._setSldPlotRanges()
         self._setBokehSldDataObj()
         if self.currentLib == 'qtcharts':
             pass
