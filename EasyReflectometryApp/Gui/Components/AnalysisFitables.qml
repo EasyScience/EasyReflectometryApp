@@ -175,14 +175,12 @@ EaComponents.TableView {
         if (list[0] === previousList[0]) {
             if (ExGlobals.Variables.iconifiedNames) {
                 list[0] = `<font color=${iconColor} face="${EaStyle.Fonts.iconsFamily}">${list[0]}</font>`
-                list[0] = list[0].replace("Phases", "gem").replace("Instrument", "microscope")
             } else {
                 list[0] = `<font color=${EaStyle.Colors.themeForegroundMinor}>${list[0]}</font>`
             }
         } else {
             if (ExGlobals.Variables.iconifiedNames) {
                 list[0] = `<font face="${EaStyle.Fonts.iconsFamily}">${list[0]}</font>`
-                list[0] = list[0].replace("Phases", "gem").replace("Instrument", "microscope")
             } else {
                 list[0] = `<font color=${EaStyle.Colors.themeForeground}>${list[0]}</font>`
             }

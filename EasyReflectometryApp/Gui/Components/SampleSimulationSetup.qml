@@ -72,6 +72,6 @@ Row {
             "x_max": parseFloat(xMax.text),
             "x_step": parseFloat(xStep.text)
         }
-        ExGlobals.Constants.proxy.qRangeAsObj = JSON.stringify(json)
+        ExGlobals.Constants.proxy.simulation.qRangeAsObj = JSON.stringify(json)
     }
 }

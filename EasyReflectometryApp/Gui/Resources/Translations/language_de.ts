@@ -244,19 +244,6 @@ This operation cannot be undone.</source>
     </message>
 </context>
 <context>
-    <name>ExperimentBackground</name>
-    <message>
-        <location filename="../../Components/ExperimentBackground.qml" line="15" />
-        <source>No Background Points Added</source>
-        <translation>Keine hintergrundpunkte hinzugefügt </translation>
-    </message>
-    <message>
-        <location filename="../../Components/ExperimentBackground.qml" line="67" />
-        <source>Remove this point</source>
-        <translation>Diesen punkt entfernen. </translation>
-    </message>
-</context>
-<context>
     <name>ExperimentDataExplorer</name>
     <message>
         <location filename="../../Components/ExperimentDataExplorer.qml" line="16" />
@@ -267,19 +254,6 @@ This operation cannot be undone.</source>
         <location filename="../../Components/ExperimentDataExplorer.qml" line="55" />
         <source>Remove this dataset</source>
         <translation>Entfernen sie dieses dataset </translation>
-    </message>
-</context>
-<context>
-    <name>ExperimentInstrumentSetup</name>
-    <message>
-        <location filename="../../Components/ExperimentInstrumentSetup.qml" line="18" />
-        <source>Zero shift:</source>
-        <translation>Null-schicht: </translation>
-    </message>
-    <message>
-        <location filename="../../Components/ExperimentInstrumentSetup.qml" line="31" />
-        <source>Wavelength:</source>
-        <translation>Wellenlänge: </translation>
     </message>
 </context>
 <context>
@@ -415,45 +389,6 @@ This operation cannot be undone.</source>
         <location filename="../../Components/ResultsDialog.qml" line="16" />
         <source>Refinement Results</source>
         <translation>Raffinementsergebnisse. </translation>
-    </message>
-</context>
-<context>
-    <name>SampleAtoms</name>
-    <message>
-        <location filename="../../Components/SampleAtoms.qml" line="118" />
-        <source>Remove this atom</source>
-        <translation>Dieses atom entfernen. </translation>
-    </message>
-</context>
-<context>
-    <name>SamplePhasesExplorer</name>
-    <message>
-        <location filename="../../Components/SamplePhasesExplorer.qml" line="16" />
-        <source>No Samples Added/Loaded</source>
-        <translation>Keine proben hinzugefügt / geladen </translation>
-    </message>
-    <message>
-        <location filename="../../Components/SamplePhasesExplorer.qml" line="59" />
-        <source>Remove this phase</source>
-        <translation>Diese phase entfernen </translation>
-    </message>
-</context>
-<context>
-    <name>SampleSymmetry</name>
-    <message>
-        <location filename="../../Components/SampleSymmetry.qml" line="18" />
-        <source>Crystal system</source>
-        <translation>Kristallsystem </translation>
-    </message>
-    <message>
-        <location filename="../../Components/SampleSymmetry.qml" line="35" />
-        <source>Space group</source>
-        <translation>Raumgruppe </translation>
-    </message>
-    <message>
-        <location filename="../../Components/SampleSymmetry.qml" line="51" />
-        <source>Setting</source>
-        <translation>Rahmen </translation>
     </message>
 </context>
 <context>

@@ -88,21 +88,10 @@ Item {
 
         EaComponents.GuideWindow {
             container: samplePageGuidesContainer
-            parent: ExGlobals.Variables.structuralPhasesGroup
-            text: qsTr("This group on the sidebar allows you to load,\nmanually set or delete structural phases. ")
-        }
-
-        EaComponents.GuideWindow {
-            container: samplePageGuidesContainer
             parent: ExGlobals.Variables.samplePageMainContent
             text: qsTr("Crystal structure is shown here in the main area.")
         }
 
-        EaComponents.GuideWindow {
-            container: samplePageGuidesContainer
-            parent: ExGlobals.Variables.phaseCifTab
-            text: qsTr("This tab button allows to see the phase\ndetails as plain text (CIF format).")
-        }
 
         EaComponents.GuideWindow {
             container: samplePageGuidesContainer
@@ -146,12 +135,6 @@ Item {
             container: experimentPageGuidesContainer
             parent: ExGlobals.Variables.experimentCifTab
             text: qsTr("This tab button allows to see the\nmeasured data as plain text.")
-        }
-
-        EaComponents.GuideWindow {
-            container: experimentPageGuidesContainer
-            parent: ExGlobals.Variables.associatedPhasesGroup
-            text: qsTr("The sidebar groups contain details related to the experiment.\n\nClick on the group name to unfold the group.")
         }
 
         EaComponents.GuideWindow {

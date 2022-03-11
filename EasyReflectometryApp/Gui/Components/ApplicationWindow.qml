@@ -173,13 +173,13 @@ EaComponents.ApplicationWindow {
 
             mainContent: EaComponents.MainContent {
                 tabs: [
-                    EaElements.TabButton { text: qsTr("Description") },
-                    EaElements.TabButton { text: qsTr("Text View") + " (CIF)" }
+                    EaElements.TabButton { text: qsTr("Description") } //,
+                    // EaElements.TabButton { text: qsTr("Text View") + " (CIF)" }
                 ]
 
                 items: [
-                    ExProjectPage.MainContentDescription {},
-                    ExProjectPage.MainContentTextView {}
+                    ExProjectPage.MainContentDescription {} // ,
+                    // ExProjectPage.MainContentTextView {}
                 ]
 
                 Component.onCompleted: ExGlobals.Variables.projectPageMainContent = this
@@ -187,13 +187,11 @@ EaComponents.ApplicationWindow {
 
             sideBar: EaComponents.SideBar {
                 tabs: [
-                    EaElements.TabButton { text: qsTr("Basic controls") },
-                    EaElements.TabButton { enabled: true; text: qsTr("Advanced controls") }
+                    EaElements.TabButton { text: qsTr("Basic controls") }
                 ]
 
                 items: [
-                    ExProjectPage.SideBarBasic {},
-                    ExProjectPage.SideBarAdvanced {}
+                    ExProjectPage.SideBarBasic {}
                 ]
             }
         },
@@ -247,13 +245,13 @@ EaComponents.ApplicationWindow {
 
             sideBar: EaComponents.SideBar {
                 tabs: [
-                    EaElements.TabButton { text: qsTr("Basic controls") },
-                    EaElements.TabButton { enabled: false; text: qsTr("Advanced controls") }
+                    EaElements.TabButton { text: qsTr("Basic controls") } // ,
+                    // EaElements.TabButton { enabled: false; text: qsTr("Advanced controls") }
                 ]
 
                 items: [
-                    ExExperimentPage.SideBarBasic {},
-                    ExExperimentPage.SideBarAdvanced {}
+                    ExExperimentPage.SideBarBasic {} //,
+                    // ExExperimentPage.SideBarAdvanced {}
                 ]
             }
         },
@@ -264,18 +262,18 @@ EaComponents.ApplicationWindow {
                 tabs: [
                     EaElements.TabButton {
                         text: ExGlobals.Constants.proxy.data.experimentLoaded ? qsTr("Fitting") : qsTr("Simulation")
-                    },
-                    EaElements.TabButton {
+                    } //,
+                    /* EaElements.TabButton {
                         visible: ExGlobals.Constants.proxy.data.experimentLoaded
                         enabled: false
                         text: 'calculations.cif' //ExGlobals.Constants.proxy.projectInfoAsJson.calculations
                         Component.onCompleted: ExGlobals.Variables.calculationCifTab = this
-                    }
+                    } */
                 ]
 
                 items: [
-                    ExAnalysisPage.MainContentFitting {},
-                    ExAnalysisPage.MainContentTextView {}
+                    ExAnalysisPage.MainContentFitting {} //,
+                    // ExAnalysisPage.MainContentTextView {}
                 ]
 
                 Component.onCompleted: ExGlobals.Variables.analysisPageMainContent = this
@@ -316,13 +314,13 @@ EaComponents.ApplicationWindow {
 
             sideBar: EaComponents.SideBar {
                 tabs: [
-                    EaElements.TabButton { text: qsTr("Basic controls") },
-                    EaElements.TabButton { enabled: false; text: qsTr("Advanced controls") }
+                    EaElements.TabButton { text: qsTr("Basic controls") } //,
+                    //EaElements.TabButton { enabled: true; text: qsTr("Advanced controls") }
                 ]
 
                 items: [
-                    ExSummaryPage.SideBarBasic {},
-                    ExSummaryPage.SideBarAdvanced {}
+                    ExSummaryPage.SideBarBasic {} //,
+                    // ExSummaryPage.SideBarAdvanced {}
                 ]
             }
         }

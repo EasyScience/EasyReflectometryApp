@@ -6,7 +6,7 @@ import easyAppGui.Charts 1.0 as EaCharts
 import Gui.Globals 1.0 as ExGlobals
 
 EaCharts.BaseBokeh {
-    calculatedData: ExGlobals.Constants.proxy.plotting1d.bokehCalculatedDataObj
+    calculatedData: ExGlobals.Constants.proxy.plotting1d.bokehPureDataObj
     sldData: ExGlobals.Constants.proxy.plotting1d.bokehSldDataObj
 
     plotRanges: ExGlobals.Constants.proxy.plotting1d.analysisPlotRangesObj

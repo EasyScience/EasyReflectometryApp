@@ -83,6 +83,5 @@ class StateProxy(QObject):
         # self.projectInfoChanged.emit()
         # self._project_proxy.project_save_filepath = ""
         # self.removeExperiment()
-        # self.removePhase(self._sample.phases[self.currentPhaseIndex].name)
         # self.resetUndoRedoStack()
         # self.stateChanged.emit(False)
