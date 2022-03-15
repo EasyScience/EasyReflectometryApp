@@ -6,12 +6,12 @@ from easyCore import np, borg
 from easyCore.Utils.UndoRedo import property_stack_deco
 
 from EasyReflectometry.sample.layer import Layer
-from EasyReflectometry.sample.item import MultiLayer, RepeatingMultiLayer
+from EasyReflectometry.sample.item import MultiLayer, RepeatingMultiLayer, SurfactantLayer
 from EasyReflectometry.sample.structure import Structure
 from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.interface import InterfaceFactory
 
-ITEM_LOOKUP = {'Multi-layer': MultiLayer, 'Repeating Multi-layer': RepeatingMultiLayer}
+ITEM_LOOKUP = {'Multi-layer': MultiLayer, 'Repeating Multi-layer': RepeatingMultiLayer, 'Surfactant Layer': SurfactantLayer}
 
 
 class ModelProxy(QObject):
@@ -153,6 +153,9 @@ class ModelProxy(QObject):
         elif type == 'Repeating Multi-layer':
             self._model.add_item(ITEM_LOOKUP[type].from_pars(current_layers, 1,
                                                              current_name))
+        elif type == 'Surfactant Layer':
+            self._model.add_item(ITEM_LOOKUP[type].default())
+            self._model.structure[self.currentItemsIndex].conformal_roughness = False
         if target_position != len(self._structure) - 1:
             new_items_list = []
             self._structure[0].layers[0].thickness.enabled = True
@@ -185,6 +188,38 @@ class ModelProxy(QObject):
         if self._current_layers_index == new_index or new_index == -1:
             return
         self._current_layers_index = new_index
+        self.parent.sampleChanged.emit()
+
+    @Property(bool, notify=modelChanged)
+    def constrainApm(self):
+        try:
+            return self._model.structure[self.currentItemsIndex].constrain_apm
+        except AttributeError:
+            return
+
+    @constrainApm.setter
+    def constrainApm(self, x: bool):
+        if self._model.structure[self.currentItemsIndex].constrain_apm == x:
+            return 
+        self._model.structure[self.currentItemsIndex].constrain_apm = x
+        self.parent.sampleChanged.emit()
+
+    @Property(bool, notify=modelChanged)
+    def conformalRoughness(self):
+        try:
+            return self._model.structure[self.currentItemsIndex].conformal_roughness
+        except AttributeError:
+            return
+
+    @constrainApm.setter
+    def conformalRoughness(self, x: bool):
+        if self._model.structure[self.currentItemsIndex].conformal_roughness == x:
+            return 
+        self._model.structure[self.currentItemsIndex].conformal_roughness = x
+        print(x)
+        if x:
+            self._model.structure[self.currentItemsIndex].constrain_solvent_roughness(self._model.structure[self.currentItemsIndex].layers[0].roughness)
+        self._model.structure[self.currentItemsIndex].roughness.user_constraints['solvent_roughness'].enabled = x
         self.parent.sampleChanged.emit()
 
     # # #
@@ -515,11 +550,25 @@ class ModelProxy(QObject):
             self.currentLayersIndex].roughness = roughness
         self.parent.sampleChanged.emit()
 
+    @Slot(str)
+    def setCurrentItemApm(self, apm):
+        if self._structure[self.currentItemsIndex].constrain_apm:
+            if self._structure[self.currentItemsIndex].area_per_molecule == apm:
+                return 
+            self._structure[self.currentItemsIndex].area_per_molecule = apm
+            self.parent.sampleChanged.emit()
+        else:
+            if self._structure[self.currentItemsIndex].layers[self.currentLayersIndex].area_per_molecule == apm:
+                return 
+            self._structure[self.currentItemsIndex].layers[self.currentLayersIndex].area_per_molecule = apm
+            self.parent.sampleChanged.emit()
+
     # # # 
     # Calculations 
     # # #
 
     def getPureModelReflectometry(self, x):
         structure_dict = self._model.structure.as_dict()
+        # print(self._model.structure.as_dict()) 
         pure = Model.from_pars(Structure.from_dict(structure_dict), 1, 0, 0, interface=InterfaceFactory())
         return pure.interface.fit_func(x)

@@ -41,7 +41,7 @@ class MaterialProxy(QObject):
     # # #
 
     def _defaultMaterials(self) -> Materials:
-        return Materials(Material.from_pars(0., 0., name='Vacuum'),
+        return Materials(Material.from_pars(0., 0., name='Air'),
                          Material.from_pars(6.335, 0., name='D2O'),
                          Material.from_pars(2.074, 0., name='Si'))
 
