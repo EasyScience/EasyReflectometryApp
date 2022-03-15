@@ -1,3 +1,5 @@
+__author__ = 'github.com/arm61'
+
 import sys
 
 from PySide2.QtCore import Signal, QThread, QObject, Property, Slot

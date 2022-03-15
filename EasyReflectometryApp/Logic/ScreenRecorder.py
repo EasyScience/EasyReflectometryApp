@@ -1,3 +1,5 @@
+__author__ = 'github.com/andrewsazonov'
+
 import mss
 import cv2
 import time

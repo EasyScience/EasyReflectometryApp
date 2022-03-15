@@ -1,3 +1,5 @@
+__author__ = 'github.com/arm61'
+
 from PySide2.QtCore import QObject, Signal, Property
 
 from easyCore.Utils.UndoRedo import property_stack_deco

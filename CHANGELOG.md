@@ -7,6 +7,7 @@
 - Removal of more old EasyDiffraction GUI code
 - Solve problem when number of iterations was changed in a RepeatingMultiLayer ([issue #18](https://github.com/easyScience/EasyReflectometryApp/issues/18)))
 - Enable the data plotted in the Sample tab to be pure reflectometry (i.e. scaling of one, no background or resolution) ([issue #66](https://github.com/easyScience/EasyReflectometryApp/issues/66))
+- Move to BSD license
 
 ### Changes 0.0.3
 

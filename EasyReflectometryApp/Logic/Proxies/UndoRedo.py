@@ -1,3 +1,5 @@
+__author__ = 'github.com/arm61'
+
 import re
 
 from PySide2.QtCore import QObject, Signal, Property, Slot

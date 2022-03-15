@@ -1,3 +1,5 @@
+__author__ = 'github.com/arm61'
+
 import os
 import datetime
 import json
