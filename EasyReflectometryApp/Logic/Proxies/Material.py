@@ -1,3 +1,5 @@
+__author__ = 'github.com/arm61'
+
 from dicttoxml import dicttoxml
 
 from matplotlib import cm, colors

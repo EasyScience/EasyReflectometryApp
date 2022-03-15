@@ -1,5 +1,4 @@
 __author__ = 'github.com/andrewsazonov'
-__version__ = '0.0.1'
 
 from random import random
 
