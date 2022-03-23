@@ -216,7 +216,6 @@ class ModelProxy(QObject):
         if self._model.structure[self.currentItemsIndex].conformal_roughness == x:
             return 
         self._model.structure[self.currentItemsIndex].conformal_roughness = x
-        print(x)
         if x:
             self._model.structure[self.currentItemsIndex].constrain_solvent_roughness(self._model.structure[self.currentItemsIndex].layers[0].roughness)
         self._model.structure[self.currentItemsIndex].roughness.user_constraints['solvent_roughness'].enabled = x
@@ -528,6 +527,7 @@ class ModelProxy(QObject):
         :param sld: New thickness value
         :type sld: float
         """
+        print(self._structure)
         if self._structure[self.currentItemsIndex].layers[
                 self.currentLayersIndex].thickness == thickness:
             return
@@ -562,6 +562,33 @@ class ModelProxy(QObject):
                 return 
             self._structure[self.currentItemsIndex].layers[self.currentLayersIndex].area_per_molecule = apm
             self.parent.sampleChanged.emit()
+
+    @Slot(str)
+    def setCurrentLayersSolvation(self, solvation):
+        """
+        Sets the solvation of the currently selected layer.
+
+        :param solvation: New solvation value
+        """
+        if self._structure[self.currentItemsIndex].layers[self.currentLayersIndex].solvation == solvation:
+            return
+        self._structure[self.currentItemsIndex].layers[self.currentLayersIndex].solvation = solvation
+        self.parent.sampleChanged.emit()
+
+    @Slot(str)
+    def setCurrentLayersSolvent(self, current_index):
+        """
+        Sets the solvent for the currently selected layer.
+        
+        :param current_index: Material index. 
+        """
+        material = self.parent._material_proxy._materials[int(current_index)]
+        if self._structure[self.currentItemsIndex].layers[
+                self.currentLayersIndex].solvent == material:
+            return
+        self._structure[self.currentItemsIndex].layers[
+            self.currentLayersIndex].assign_material(material)
+        self.parent.sampleChanged.emit()
 
     # # # 
     # Calculations 

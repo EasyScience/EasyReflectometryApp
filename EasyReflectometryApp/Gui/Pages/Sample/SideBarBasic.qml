@@ -341,7 +341,7 @@ EaComponents.SideBarColumn {
                     width: EaStyle.Sizes.fontPixelSize * 5.5
                     headerText: "Thickness/Å"
                     text: (isNaN(surfactantModel.thick)) ? '--' : surfactantModel.thick.toFixed(2)
-                    //onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
+                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersThickness(text)
                 }
 
                 EaComponents.TableViewTextInput {
@@ -349,7 +349,7 @@ EaComponents.SideBarColumn {
                     width: EaStyle.Sizes.fontPixelSize * 6.0
                     headerText: "Roughness/Å"
                     text: (isNaN(surfactantModel.rough)) ? '--' : surfactantModel.rough.toFixed(2)
-                    //onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
+                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
                 }
 
                 EaComponents.TableViewTextInput {
@@ -357,7 +357,7 @@ EaComponents.SideBarColumn {
                     width: EaStyle.Sizes.fontPixelSize * 6.0
                     headerText: "Solvation/%"
                     text: (isNaN(surfactantModel.solvation)) ? '--' : surfactantModel.solvation.toFixed(2)
-                    //onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
+                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersSolvation(text)
                 }
 
                 EaComponents.TableViewTextInput {
@@ -372,9 +372,9 @@ EaComponents.SideBarColumn {
                     horizontalAlignment: Text.AlignLeft
                     width: EaStyle.Sizes.fontPixelSize * 6.5
                     headerText: "Solvent"
-                    /*onActivated: {
-                        ExGlobals.Constants.proxy.model.setCurrentLayersMaterial(currentIndex)
-                    }*/
+                    onActivated: {
+                        ExGlobals.Constants.proxy.model.setCurrentLayersSolvent(currentIndex)
+                    }
                     model: ExGlobals.Constants.proxy.material.materialsName
                     onModelChanged: {
                         currentIndex = indexOfValue(surfactantModel.materialid)
