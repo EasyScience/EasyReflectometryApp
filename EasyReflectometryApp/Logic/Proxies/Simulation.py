@@ -70,7 +70,7 @@ class SimulationProxy(QObject):
         self.parent._model_proxy._model.background = float(
             self._background_as_obj['bkg'])
         self.simulationParametersChanged.emit()
-        self.parent.parametersChanged.emit()
+        self.parent.sampleChanged.emit()
 
     @Property('QVariant', notify=resolutionChanged)
     def resolutionAsObj(self):
@@ -85,7 +85,7 @@ class SimulationProxy(QObject):
         self.parent._model_proxy.model.resolution = float(
             self._resolution_as_obj['res'])
         self.simulationParametersChanged.emit()
-        self.parent.parametersChanged.emit()
+        self.parent.sampleChanged.emit()
 
     @Property('QVariant', notify=qRangeChanged)
     def qRangeAsObj(self):

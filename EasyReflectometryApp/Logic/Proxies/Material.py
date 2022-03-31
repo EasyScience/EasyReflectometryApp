@@ -69,7 +69,7 @@ class MaterialProxy(QObject):
     @materialsAsXml.setter
     @property_stack_deco
     def materialsAsXml(self):
-        self.parent.parametersChanged.emit()
+        self.parent.sampleChanged.emit()
 
     def _setMaterialsAsXml(self):
         self._materials_as_xml = dicttoxml(self._materials_as_obj).decode()
@@ -82,7 +82,7 @@ class MaterialProxy(QObject):
     @materialsName.setter
     @property_stack_deco
     def materialsName(self):
-        self.parent.parametersChanged.emit()
+        self.parent.sampleChanged.emit()
 
     @Property(int, notify=materialsChanged)
     def currentMaterialsIndex(self):
@@ -93,7 +93,7 @@ class MaterialProxy(QObject):
         if self._current_materials_index == new_index or new_index == -1:
             return
         self._current_materials_index = new_index
-        self.parent.sampleChanged.emit()
+        #self.parent.sampleChanged.emit()
 
     # # #
     # Actions

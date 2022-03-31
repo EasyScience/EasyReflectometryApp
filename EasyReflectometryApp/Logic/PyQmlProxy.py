@@ -18,7 +18,6 @@ from .Proxies.UndoRedo import UndoRedoProxy
 
 class PyQmlProxy(QObject):
     # SIGNALS
-    parametersChanged = Signal()
     dummySignal = Signal()
     sampleChanged = Signal()
 
@@ -43,19 +42,13 @@ class PyQmlProxy(QObject):
 
         # Sample Connections
         self.sampleChanged.connect(self._material_proxy._onMaterialsChanged)
-        self.sampleChanged.connect(self._model_proxy._onModelChanged)
+        self.sampleChanged.connect(self._model_proxy._onLayersChanged)
+        self.sampleChanged.connect(self._model_proxy._onItemsChanged)
         self.sampleChanged.connect(
             self._simulation_proxy._onSimulationParametersChanged)
         self.sampleChanged.connect(self._parameter_proxy._onParametersChanged)
-
-        # Parameter Connections
-        self.parametersChanged.connect(self._material_proxy._onMaterialsChanged)
-        self.parametersChanged.connect(self._model_proxy._onModelChanged)
-        self.parametersChanged.connect(
-            self._simulation_proxy._onSimulationParametersChanged)
-        self.parametersChanged.connect(self._parameter_proxy._onParametersChanged)
-        self.parametersChanged.connect(self._simulation_proxy._onCalculatedDataChanged)
-        self.parametersChanged.connect(self._undoredo_proxy.undoRedoChanged)
+        self.sampleChanged.connect(self._simulation_proxy._onCalculatedDataChanged)
+        self.sampleChanged.connect(self._undoredo_proxy.undoRedoChanged)
 
         # Screen recorder
         recorder = None

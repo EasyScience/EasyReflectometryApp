@@ -103,7 +103,7 @@ class FitterProxy(QObject):
     # # #
 
     def _onFitFinished(self):
-        self.parent.parametersChanged.emit()
+        self.parent.sampleChanged.emit()
 
     # # #
     # Slots

@@ -19,8 +19,10 @@ class ModelProxy(QObject):
     modelChanged = Signal()
     modelNameChanged = Signal()
 
-    modelAsXmlChanged = Signal()
-    modelAsObjChanged = Signal()
+    itemsAsXmlChanged = Signal()
+    itemsAsObjChanged = Signal()
+    layersAsXmlChanged = Signal()
+    layersAsObjChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -28,7 +30,11 @@ class ModelProxy(QObject):
 
         self._model_as_obj = []
         self._model_as_xml = ""
-        self._structure = self._defaultStructure(interface=parent._interface)
+        self._items_as_obj = []
+        self._items_as_xml = ""
+        self._layers_as_obj = []
+        self._layers_as_xml = ""
+        self._structure = self._defaultStructure()
         self._model = self._defaultModel(structure=self._structure, interface=parent._interface)
 
         self._current_layers_index = 1
@@ -40,7 +46,7 @@ class ModelProxy(QObject):
     # Defaults
     # # #
 
-    def _defaultStructure(self, interface=None) -> Structure:
+    def _defaultStructure(self) -> Structure:
         layers = [
             Layer.from_pars(self.parent._material_proxy._materials[0],
                             0.0,
@@ -73,37 +79,73 @@ class ModelProxy(QObject):
     # Setters and getters
     # # #
 
-    @Property('QVariant', notify=modelAsObjChanged)
-    def modelAsObj(self):
-        return self._model_as_obj
+    # def _setModelAsObj(self):
+    #     self._model_as_obj = []
+    #     for i in self._structure:
+    #         dictionary = {'name': i.name}
+    #         dictionary['type'] = i.type
+    #         dictionary['layers'] = [j.as_dict(skip=['interface']) for j in i.layers]
+    #         if 'repetitions' in dictionary.keys():
+    #             dictionary['repetitions'] = i.repetitions.as_dict(skip=['interface'])
+    #         self._model_as_obj.append(dictionary)
+    #     if len(self._structure) > 0:
+    #         self._model_as_obj[0]['layers'][0]['thickness']['value'] = np.nan
+    #         self._model_as_obj[0]['layers'][0]['roughness']['value'] = np.nan
+    #         self._model_as_obj[-1]['layers'][-1]['thickness']['value'] = np.nan
+    #     self.modelAsObjChanged.emit()
 
-    def _setModelAsObj(self):
-        self._model_as_obj = []
+    @Property(list, notify=itemsAsObjChanged)
+    def itemsNamesConstrain(self):
+        return [i['name'] for i in self._items_as_obj[1:] if i['type'] != 'Surfactant Layer']
+
+    @Property('QVariant', notify=itemsAsObjChanged)
+    def itemsAsObj(self):
+        return self._items_as_obj
+
+    def _setItemsAsObj(self):
+        self._items_as_obj = []
         for i in self._structure:
             dictionary = {'name': i.name}
             dictionary['type'] = i.type
-            dictionary['layers'] = [j.as_dict(skip=['interface']) for j in i.layers]
+            self._items_as_obj.append(dictionary)
+        self.itemsAsObjChanged.emit()
+
+    @Property(str, notify=itemsAsXmlChanged)
+    def itemsAsXml(self):
+        print('>>> itemsAsXml')
+        return self._items_as_xml
+
+    def _setItemsAsXml(self):
+        self._items_as_xml = dicttoxml(self._items_as_obj).decode()
+        self.itemsAsXmlChanged.emit()
+
+    @Property('QVariant', notify=layersAsObjChanged)
+    def layersAsObj(self):
+        return self._layers_as_obj
+
+    def _setLayersAsObj(self):
+        self._layers_as_obj = []
+        for i in self._structure:
+            # dictionary = {'name': i.name}
+            # dictionary['type'] = i.type
+            dictionary = {'layers': [j.as_dict(skip=['interface']) for j in i.layers]}
             if 'repetitions' in dictionary.keys():
                 dictionary['repetitions'] = i.repetitions.as_dict(skip=['interface'])
-            self._model_as_obj.append(dictionary)
+            self._layers_as_obj.append(dictionary)
         if len(self._structure) > 0:
-            self._model_as_obj[0]['layers'][0]['thickness']['value'] = np.nan
-            self._model_as_obj[0]['layers'][0]['roughness']['value'] = np.nan
-            self._model_as_obj[-1]['layers'][-1]['thickness']['value'] = np.nan
-        self.modelAsObjChanged.emit()
+            self._layers_as_obj[0]['layers'][0]['thickness']['value'] = np.nan
+            self._layers_as_obj[0]['layers'][0]['roughness']['value'] = np.nan
+            self._layers_as_obj[-1]['layers'][-1]['thickness']['value'] = np.nan
+        self.layersAsObjChanged.emit()
 
-    @Property(str, notify=modelAsXmlChanged)
-    def modelAsXml(self):
-        return self._model_as_xml
+    @Property(str, notify=layersAsXmlChanged)
+    def layersAsXml(self):
+        print('>>> layersAsXml')
+        return self._layers_as_xml
 
-    @modelAsXml.setter
-    @property_stack_deco
-    def modelAsXml(self):
-        self.parent.parametersChanged.emit()
-
-    def _setModelAsXml(self):
-        self._model_as_xml = dicttoxml(self._model_as_obj).decode()
-        self.modelAsXmlChanged.emit()
+    def _setLayersAsXml(self):
+        self._layers_as_xml = dicttoxml(self._layers_as_obj).decode()
+        self.layersAsXmlChanged.emit()
 
     @Property(int, notify=modelChanged)
     def currentItemsIndex(self):
@@ -154,8 +196,11 @@ class ModelProxy(QObject):
             self._model.add_item(ITEM_LOOKUP[type].from_pars(current_layers, 1,
                                                              current_name))
         elif type == 'Surfactant Layer':
-            self._model.add_item(ITEM_LOOKUP[type].default())
-            self._model.structure[self.currentItemsIndex].conformal_roughness = False
+            self._model.add_item(ITEM_LOOKUP[type].from_pars(
+                'C32D64', 16, self.parent._material_proxy._materials[0], 0.0, 48.0, 3.0,
+                'C10H18NO8P', 10, self.parent._material_proxy._materials[0], 0.2, 48.0, 3.0,
+                name='DPPC'))
+        self.parent._parameter_proxy._setParametersAsObj()
         if target_position != len(self._structure) - 1:
             new_items_list = []
             self._structure[0].layers[0].thickness.enabled = True
@@ -181,6 +226,8 @@ class ModelProxy(QObject):
 
     @Property(int, notify=modelChanged)
     def currentLayersIndex(self):
+        if self._current_layers_index + 1 > len(self._structure[self.currentItemsIndex].layers):
+            self._current_layers_index = 0
         return self._current_layers_index
 
     @currentLayersIndex.setter
@@ -193,44 +240,57 @@ class ModelProxy(QObject):
     @Property(bool, notify=modelChanged)
     def constrainApm(self):
         try:
-            return self._model.structure[self.currentItemsIndex].constrain_apm
+            return self._structure[self.currentItemsIndex].constrain_apm
         except AttributeError:
             return
 
     @constrainApm.setter
     def constrainApm(self, x: bool):
-        if self._model.structure[self.currentItemsIndex].constrain_apm == x:
+        if self._structure[self.currentItemsIndex].constrain_apm == x:
             return 
-        self._model.structure[self.currentItemsIndex].constrain_apm = x
+        self._structure[self.currentItemsIndex].constrain_apm = x
         self.parent.sampleChanged.emit()
 
     @Property(bool, notify=modelChanged)
     def conformalRoughness(self):
         try:
-            return self._model.structure[self.currentItemsIndex].conformal_roughness
+            return self._structure[self.currentItemsIndex].conformal_roughness
         except AttributeError:
             return
 
     @constrainApm.setter
     def conformalRoughness(self, x: bool):
-        if self._model.structure[self.currentItemsIndex].conformal_roughness == x:
+        if self._structure[self.currentItemsIndex].conformal_roughness == x:
             return 
-        self._model.structure[self.currentItemsIndex].conformal_roughness = x
-        if x:
-            self._model.structure[self.currentItemsIndex].constrain_solvent_roughness(self._model.structure[self.currentItemsIndex].layers[0].roughness)
-        self._model.structure[self.currentItemsIndex].roughness.user_constraints['solvent_roughness'].enabled = x
+        self._structure[self.currentItemsIndex].conformal_roughness = x
         self.parent.sampleChanged.emit()
 
     # # #
     # Actions
     # # #
 
-    def _onModelChanged(self):
+    def _onItemsChanged(self):
         for i in self._structure:
             for j in i.layers:
-                j.name = j.material.name + ' Layer'
-        self._setModelAsObj()
-        self._setModelAsXml()
+                if i.type == 'Surfactant Layer':
+                    j.name = j.material.name
+                else:
+                    j.name = j.material.name + ' Layer'
+        self._setItemsAsObj()
+        self._setItemsAsXml()
+        print('>>> _onItemsChanged')
+        self.parent._state_proxy.stateChanged.emit(True)
+
+    def _onLayersChanged(self):
+        for i in self._structure:
+            for j in i.layers:
+                if i.type == 'Surfactant Layer':
+                    j.name = j.material.name
+                else:
+                    j.name = j.material.name + ' Layer'
+        self._setLayersAsObj()
+        self._setLayersAsXml()
+        print('>>> _onItemsChanged')
         self.parent._state_proxy.stateChanged.emit(True)
 
     def _onCurrentItemsChanged(self):
@@ -527,7 +587,6 @@ class ModelProxy(QObject):
         :param sld: New thickness value
         :type sld: float
         """
-        print(self._structure)
         if self._structure[self.currentItemsIndex].layers[
                 self.currentLayersIndex].thickness == thickness:
             return
@@ -543,25 +602,39 @@ class ModelProxy(QObject):
         :param sld: New roughness value
         :type sld: float
         """
-        if self._structure[self.currentItemsIndex].layers[
-                self.currentLayersIndex].roughness == roughness:
-            return
-        self._structure[self.currentItemsIndex].layers[
-            self.currentLayersIndex].roughness = roughness
+        item = self._structure[self.currentItemsIndex]
+        if hasattr(item, 'conformal_roughness'):
+            if item.conformal_roughness:
+                if item.roughness == roughness:
+                    return 
+                item.roughness = roughness
+            else:
+                layer = item.layers[self.currentLayersIndex]
+                if layer.roughness == roughness:
+                    return 
+                layer.roughness.enabled = True
+                layer.roughness = roughness
+        else:
+            layer = item.layers[self.currentLayersIndex]
+            if layer.roughness == roughness:
+                return 
+            layer.roughness.enabled = True
+            layer.roughness = roughness
         self.parent.sampleChanged.emit()
 
     @Slot(str)
     def setCurrentItemApm(self, apm):
-        if self._structure[self.currentItemsIndex].constrain_apm:
-            if self._structure[self.currentItemsIndex].area_per_molecule == apm:
+        item = self._structure[self.currentItemsIndex]
+        if item.constrain_apm:
+            if item.area_per_molecule == apm:
                 return 
-            self._structure[self.currentItemsIndex].area_per_molecule = apm
-            self.parent.sampleChanged.emit()
+            item.area_per_molecule = apm
         else:
-            if self._structure[self.currentItemsIndex].layers[self.currentLayersIndex].area_per_molecule == apm:
+            layer = item.layers[self.currentLayersIndex]
+            if layer.area_per_molecule == apm:
                 return 
-            self._structure[self.currentItemsIndex].layers[self.currentLayersIndex].area_per_molecule = apm
-            self.parent.sampleChanged.emit()
+            layer.area_per_molecule = apm
+        self.parent.sampleChanged.emit()
 
     @Slot(str)
     def setCurrentLayersSolvation(self, solvation):
@@ -570,9 +643,11 @@ class ModelProxy(QObject):
 
         :param solvation: New solvation value
         """
-        if self._structure[self.currentItemsIndex].layers[self.currentLayersIndex].solvation == solvation:
+        layer = self._structure[self.currentItemsIndex].layers[self.currentLayersIndex]
+        if layer.solvation == solvation:
             return
-        self._structure[self.currentItemsIndex].layers[self.currentLayersIndex].solvation = solvation
+        layer.solvation.enabled = True
+        layer.solvation = solvation
         self.parent.sampleChanged.emit()
 
     @Slot(str)
@@ -583,19 +658,44 @@ class ModelProxy(QObject):
         :param current_index: Material index. 
         """
         material = self.parent._material_proxy._materials[int(current_index)]
-        if self._structure[self.currentItemsIndex].layers[
-                self.currentLayersIndex].solvent == material:
+        layer = self._structure[self.currentItemsIndex].layers[self.currentLayersIndex]
+        if layer.material.material_b == material:
             return
-        self._structure[self.currentItemsIndex].layers[
-            self.currentLayersIndex].assign_material(material)
+        layer.material.material_b = material
         self.parent.sampleChanged.emit()
+    
+    @Slot(str)
+    def setCurrentLayersChemStructure(self, structure: str):
+        """
+        Sets the chemical structure for the currently selected layer. 
+        
+        :param structure: Chemical structure
+        """
+        if self._structure[self.currentItemsIndex].layers[self.currentLayersIndex].chemical_structure == structure:
+            return 
+        self._structure[self.currentItemsIndex].layers[self.currentLayersIndex].chemical_structure = structure
+        self.parent.sampleChanged.emit()
+
+    @Slot(str)
+    def currentSurfactantSolventRoughness(self, x):
+        solvent = None
+        for i, item in enumerate(self._items_as_obj):
+            if item['name'] == x:
+                solvent = self._structure[i].layers[0]
+        if solvent is None:
+            self._structure[self.currentItemsIndex].roughness.user_constraints['solvent_roughness'].enabled == False
+        else:
+            solvent.roughness.enabled = True
+            self._structure[self.currentItemsIndex].constrain_solvent_roughness(solvent.roughness)
+        self.parent.sampleChanged.emit()
+
 
     # # # 
     # Calculations 
     # # #
 
     def getPureModelReflectometry(self, x):
-        structure_dict = self._model.structure.as_dict()
-        # print(self._model.structure.as_dict()) 
+        structure_dict = self._structure.as_dict()
+        # print(self._structure.as_dict()) 
         pure = Model.from_pars(Structure.from_dict(structure_dict), 1, 0, 0, interface=InterfaceFactory())
         return pure.interface.fit_func(x)

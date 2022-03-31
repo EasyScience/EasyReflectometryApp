@@ -147,7 +147,7 @@ EaComponents.SideBarColumn {
             model: XmlListModel {
                 property int itemsIndex: ExGlobals.Constants.proxy.model.currentItemsIndex + 1
 
-                xml: ExGlobals.Constants.proxy.model.modelAsXml
+                xml: ExGlobals.Constants.proxy.model.itemsAsXml
                 query: "/root/item"
 
                 XmlRole { name: "label"; query: "name/string()" }
@@ -304,15 +304,15 @@ EaComponents.SideBarColumn {
             }
         }
         EaComponents.TableView {
-            property int layersIndex: ExGlobals.Constants.proxy.model.currentLayersIndex + 1
             visible: (currentItemsType == 'Surfactant Layer') ? true : false
             id: surfactantTable
 
             // Table model
 
             model: XmlListModel {
+                property int layersIndex: ExGlobals.Constants.proxy.model.currentLayersIndex + 1
 
-                xml: ExGlobals.Constants.proxy.model.modelAsXml
+                xml: ExGlobals.Constants.proxy.model.layersAsXml
                 query: `/root/item[${itemsTable.currentIndex + 1}]/layers/item`
 
                 XmlRole { name: "formula"; query: "chemical_structure/string()" }
@@ -320,7 +320,7 @@ EaComponents.SideBarColumn {
                 XmlRole { name: "rough"; query: "roughness/value/number()" }
                 XmlRole { name: "apm"; query: "area_per_molecule/value/number()" }
                 XmlRole { name: "solvation"; query: "solvation/value/number()" }
-                XmlRole { name: "materialid"; query: "solvent/name/string()"}
+                XmlRole { name: "solvent"; query: "solvent/name/string()"}
             }
 
             // Table rows
@@ -333,7 +333,7 @@ EaComponents.SideBarColumn {
                     width: EaStyle.Sizes.fontPixelSize * 7.0
                     headerText: "Formula"
                     text: surfactantModel.formula
-                    //onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
+                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersChemStructure(text)
                 }
 
                 EaComponents.TableViewTextInput {
@@ -355,7 +355,7 @@ EaComponents.SideBarColumn {
                 EaComponents.TableViewTextInput {
                     horizontalAlignment: Text.AlignHCenter
                     width: EaStyle.Sizes.fontPixelSize * 6.0
-                    headerText: "Solvation/%"
+                    headerText: "Solvation"
                     text: (isNaN(surfactantModel.solvation)) ? '--' : surfactantModel.solvation.toFixed(2)
                     onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersSolvation(text)
                 }
@@ -377,10 +377,10 @@ EaComponents.SideBarColumn {
                     }
                     model: ExGlobals.Constants.proxy.material.materialsName
                     onModelChanged: {
-                        currentIndex = indexOfValue(surfactantModel.materialid)
+                        currentIndex = indexOfValue(surfactantModel.solvent)
                     }
                     Component.onCompleted: {
-                        currentIndex = indexOfValue(surfactantModel.materialid)
+                        currentIndex = indexOfValue(surfactantModel.solvent)
                     }
                 }
             }
@@ -398,18 +398,41 @@ EaComponents.SideBarColumn {
             collapsed: true
 
             title: qsTr('Chemical Constraints')
-            EaElements.CheckBox {
-                checked: true
-                text: qsTr("Area-per-molecule")
-                ToolTip.text: qsTr("Checking this box will ensure that the area-per-molecule of the head and tail layers is the same")
-                onCheckedChanged: ExGlobals.Constants.proxy.model.constrainApm = checked
+            Row {
+                EaElements.CheckBox {
+                    checked: false
+                    id: apm_check
+                    text: qsTr("Area-per-molecule")
+                    ToolTip.text: qsTr("Checking this box will ensure that the area-per-molecule of the head and tail layers is the same")
+                    onCheckedChanged: ExGlobals.Constants.proxy.model.constrainApm = checked
+                }
+                EaElements.CheckBox {
+                    checked: false
+                    id: conformal
+                    text: qsTr("Conformal roughness")
+                    ToolTip.text: qsTr("Checking this box will ensure that the interfacial roughness is the same for all interfaces of the surfactant")
+                    onCheckedChanged: ExGlobals.Constants.proxy.model.conformalRoughness = checked
+                }
             }
-            EaElements.CheckBox {
-                checked: false
-                id: conformal
-                text: qsTr("Conformal roughness")
-                ToolTip.text: qsTr("Checking this box will ensure that the interfacial roughness is the same for all interfaces of the surfactant")
-                onCheckedChanged: ExGlobals.Constants.proxy.model.conformalRoughness = checked
+            
+            Row {
+                EaElements.CheckBox {
+                    checked: false
+                    id: solvent_rough
+                    text: qsTr("Constrain roughness to item")
+                    enabled: conformal.checked
+                    ToolTip.text: qsTr("Checking this box allows another item to be selected and the conformal roughness will be constrained to this")
+                    onCheckedChanged: checked ? ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(solvent_rough_item.currentText) : ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(null)
+                }
+                EaElements.ComboBox {
+                    id: solvent_rough_item
+                    enabled: solvent_rough.checked
+                    onActivated: {
+                        ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(null) 
+                        ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(currentText)
+                    }
+                    model: ExGlobals.Constants.proxy.model.itemsNamesConstrain
+                }
             }
         }
         
@@ -423,7 +446,7 @@ EaComponents.SideBarColumn {
             model: XmlListModel {
                 property int layersIndex: ExGlobals.Constants.proxy.model.currentLayersIndex + 1
 
-                xml: ExGlobals.Constants.proxy.model.modelAsXml
+                xml: ExGlobals.Constants.proxy.model.layersAsXml
                 query: `/root/item[${itemsTable.currentIndex + 1}]/layers/item`
 
                 XmlRole { name: "thick"; query: "thickness/value/number()" }
