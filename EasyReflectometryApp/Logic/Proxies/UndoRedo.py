@@ -41,13 +41,13 @@ class UndoRedoProxy(QObject):
     @Slot()
     def undo(self):
         if self.canUndo:
-            callback = [self.parent.parametersChanged]
+            callback = [self.parent.sampleChanged]
             if len(borg.stack.history[0]) > 1:
-                callback = [self.parent.parametersChanged]
+                callback = [self.parent.sampleChanged]
             else:
                 old = borg.stack.history[0].current._parent
                 if isinstance(old, (BaseObj, BaseCollection)):
-                    callback = [self.parent.parametersChanged]
+                    callback = [self.parent.sampleChanged]
                 elif old is self:
                     # This is a property of the proxy. I.e. minimizer,
                     # minimizer method, name or something boring.
@@ -61,13 +61,13 @@ class UndoRedoProxy(QObject):
     @Slot()
     def redo(self):
         if self.canRedo:
-            callback = [self.parent.parametersChanged]
+            callback = [self.parent.sampleChanged]
             if len(borg.stack.future[0]) > 1:
-                callback = [self.parent.parametersChanged]
+                callback = [self.parent.sampleChanged]
             else:
                 new = borg.stack.future[0].current._parent
                 if isinstance(new, (BaseObj, BaseCollection)):
-                    callback = [self.parent.parametersChanged, self.undoRedoChanged]
+                    callback = [self.parent.sampleChanged, self.undoRedoChanged]
                 elif new is self:
                     # This is a property of the proxy. I.e. minimizer,
                     # minimizer method, name or something boring.

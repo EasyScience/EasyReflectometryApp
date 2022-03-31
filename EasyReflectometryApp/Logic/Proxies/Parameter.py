@@ -73,6 +73,16 @@ class ParameterProxy(QObject):
             elif par_path == 'resolution':
                 label = 'Resolution (dq/q)'
                 unit = '%'
+            elif par_path[-9:] == 'solvation':
+                label = 'Fractional '
+                label += par_path.split('.')[-2].split('/')[1]
+                label += ' in '
+                label += par_path.split('.')[-2].split('/')[0]
+            elif par_path[-17:] == 'area_per_molecule':
+                label = par_path.split('.')[-2].split('/')[0]
+                label = label + ' APM'
+            elif par_path[-22:-5] == 'scattering_length': 
+                continue
             self._parameters_as_obj.append({
                 "id": str(par_id),
                 "number": par_index + 1,
@@ -137,7 +147,7 @@ class ParameterProxy(QObject):
                 return
 
             obj.value = new_value
-            self.parent.parametersChanged.emit()
+            self.parent.sampleChanged.emit()
 
     def _parameterObj(self, obj_id: str):
         if not obj_id:

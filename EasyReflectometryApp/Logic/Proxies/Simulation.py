@@ -72,7 +72,7 @@ class SimulationProxy(QObject):
         self.parent._model_proxy._model.background = float(
             self._background_as_obj['bkg'])
         self.simulationParametersChanged.emit()
-        self.parent.parametersChanged.emit()
+        self.parent.sampleChanged.emit()
 
     @Property('QVariant', notify=resolutionChanged)
     def resolutionAsObj(self):
@@ -87,7 +87,7 @@ class SimulationProxy(QObject):
         self.parent._model_proxy.model.resolution = float(
             self._resolution_as_obj['res'])
         self.simulationParametersChanged.emit()
-        self.parent.parametersChanged.emit()
+        self.parent.sampleChanged.emit()
 
     @Property('QVariant', notify=qRangeChanged)
     def qRangeAsObj(self):
@@ -152,7 +152,8 @@ class SimulationProxy(QObject):
         sld_profile = self.parent._interface.sld_profile()
 
         self.parent._plotting_1d_proxy.setCalculatedData(sim.x, sim.y)
-        self.parent._plotting_1d_proxy.setPureData(sim.x, self.parent._model_proxy.getPureModelReflectometry(sim.x))
+        # self.parent._plotting_1d_proxy.setPureData(sim.x, self.parent._model_proxy.getPureModelReflectometry(sim.x))
+        self.parent._plotting_1d_proxy.setPureData(sim.x, sim.y) 
         self.parent._plotting_1d_proxy.setSldData(sld_profile[0], sld_profile[1])
 
     # # #
