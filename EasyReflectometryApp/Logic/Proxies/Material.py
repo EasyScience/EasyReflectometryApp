@@ -95,7 +95,6 @@ class MaterialProxy(QObject):
         if self._current_materials_index == new_index or new_index == -1:
             return
         self._current_materials_index = new_index
-        #self.parent.sampleChanged.emit()
 
     # # #
     # Actions
@@ -170,6 +169,7 @@ class MaterialProxy(QObject):
         if self._materials[self.currentMaterialsIndex].name == name:
             return
         self._materials[self.currentMaterialsIndex].name = name
+        self.materialsNameChanged.emit()
         self.parent.sampleChanged.emit()
 
     @Slot(str)
