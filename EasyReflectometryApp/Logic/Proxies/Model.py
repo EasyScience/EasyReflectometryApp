@@ -25,6 +25,7 @@ class ModelProxy(QObject):
     itemsAsObjChanged = Signal()
     layersAsXmlChanged = Signal()
     layersAsObjChanged = Signal()
+    layersChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -177,7 +178,7 @@ class ModelProxy(QObject):
                 currentItemsIndex].repetitions.raw_value == new_repetitions or new_repetitions == -1:
             return
         self._structure[self.currentItemsIndex].repetitions = new_repetitions
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
 
     @Property(str, notify=modelChanged)
     def currentItemsType(self):
@@ -189,6 +190,9 @@ class ModelProxy(QObject):
             return
         current_layers = self._structure[self.currentItemsIndex].layers
         current_name = self._structure[self.currentItemsIndex].name
+        if self._structure[self.currentItemsIndex].type == 'Surfactant Layer':
+            current_layers = Layer.from_pars(self.parent._material_proxy._materials[0], 10, 3)
+            current_name = self.parent._material_proxy._materials[0].name + ' Layer'
         target_position = self.currentItemsIndex
         self._model.remove_item(self.currentItemsIndex)
         if type == 'Multi-layer':
@@ -237,7 +241,7 @@ class ModelProxy(QObject):
         if self._current_layers_index == new_index or new_index == -1:
             return
         self._current_layers_index = new_index
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
 
     @Property(bool, notify=modelChanged)
     def constrainApm(self):
@@ -251,7 +255,7 @@ class ModelProxy(QObject):
         if self._structure[self.currentItemsIndex].constrain_apm == x:
             return 
         self._structure[self.currentItemsIndex].constrain_apm = x
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
 
     @Property(bool, notify=modelChanged)
     def conformalRoughness(self):
@@ -265,7 +269,7 @@ class ModelProxy(QObject):
         if self._structure[self.currentItemsIndex].conformal_roughness == x:
             return 
         self._structure[self.currentItemsIndex].conformal_roughness = x
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
 
     # # #
     # Actions
@@ -292,7 +296,7 @@ class ModelProxy(QObject):
                     j.name = j.material.name + ' Layer'
         self._setLayersAsObj()
         self._setLayersAsXml()
-        print('>>> _onItemsChanged')
+        print('>>> _onLayersChanged')
         self.parent._state_proxy.stateChanged.emit(True)
 
     def _onCurrentItemsChanged(self):
@@ -465,7 +469,7 @@ class ModelProxy(QObject):
         self._structure[0].layers[0].thickness.enabled = False
         self._structure[0].layers[0].roughness.enabled = False
         self._structure[-1].layers[-1].thickness.enabled = False
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
 
     @Slot()
     def duplicateSelectedLayers(self):
@@ -484,7 +488,7 @@ class ModelProxy(QObject):
         self._structure[0].layers[0].thickness.enabled = False
         self._structure[0].layers[0].roughness.enabled = False
         self._structure[-1].layers[-1].thickness.enabled = False
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
 
     @Slot()
     def moveSelectedLayersUp(self):
@@ -515,7 +519,7 @@ class ModelProxy(QObject):
             self._structure[0].layers[0].thickness.enabled = False
             self._structure[0].layers[0].roughness.enabled = False
             self._structure[-1].layers[-1].thickness.enabled = False
-            self.parent.sampleChanged.emit()
+            self.layersChanged.emit()
 
     @Slot()
     def moveSelectedLayersDown(self):
@@ -546,7 +550,7 @@ class ModelProxy(QObject):
             self._structure[0].layers[0].thickness.enabled = False
             self._structure[0].layers[0].roughness.enabled = False
             self._structure[-1].layers[-1].thickness.enabled = False
-            self.parent.sampleChanged.emit()
+            self.layersChanged.emit()
 
     @Slot(str)
     def removeLayers(self, i: str):
@@ -563,7 +567,7 @@ class ModelProxy(QObject):
         self._structure[0].layers[0].thickness.enabled = False
         self._structure[0].layers[0].roughness.enabled = False
         self._structure[-1].layers[-1].thickness.enabled = False
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
 
     @Slot(str)
     def setCurrentLayersMaterial(self, current_index):
@@ -579,7 +583,7 @@ class ModelProxy(QObject):
             return
         self._structure[self.currentItemsIndex].layers[
             self.currentLayersIndex].assign_material(material)
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
 
     @Slot(str)
     def setCurrentLayersThickness(self, thickness):
@@ -594,7 +598,7 @@ class ModelProxy(QObject):
             return
         self._structure[self.currentItemsIndex].layers[
             self.currentLayersIndex].thickness = thickness
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
 
     @Slot(str)
     def setCurrentLayersRoughness(self, roughness):
@@ -622,7 +626,7 @@ class ModelProxy(QObject):
                 return 
             layer.roughness.enabled = True
             layer.roughness = roughness
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
 
     @Slot(str)
     def setCurrentItemApm(self, apm):
@@ -636,7 +640,7 @@ class ModelProxy(QObject):
             if layer.area_per_molecule == apm:
                 return 
             layer.area_per_molecule = apm
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
 
     @Slot(str)
     def setCurrentLayersSolvation(self, solvation):
@@ -650,7 +654,7 @@ class ModelProxy(QObject):
             return
         layer.solvation.enabled = True
         layer.solvation = solvation
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
 
     @Slot(str)
     def setCurrentLayersSolvent(self, current_index):
@@ -664,7 +668,7 @@ class ModelProxy(QObject):
         if layer.material.material_b == material:
             return
         layer.material.material_b = material
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
     
     @Slot(str)
     def setCurrentLayersChemStructure(self, structure: str):
@@ -676,7 +680,7 @@ class ModelProxy(QObject):
         if self._structure[self.currentItemsIndex].layers[self.currentLayersIndex].chemical_structure == structure:
             return 
         self._structure[self.currentItemsIndex].layers[self.currentLayersIndex].chemical_structure = structure
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
 
     @Slot(str)
     def currentSurfactantSolventRoughness(self, x):
@@ -689,7 +693,7 @@ class ModelProxy(QObject):
         else:
             solvent.roughness.enabled = True
             self._structure[self.currentItemsIndex].constrain_solvent_roughness(solvent.roughness)
-        self.parent.sampleChanged.emit()
+        self.layersChanged.emit()
 
 
     # # # 
@@ -698,6 +702,6 @@ class ModelProxy(QObject):
 
     def getPureModelReflectometry(self, x):
         structure_dict = self._structure.as_dict()
-        # print(self._structure.as_dict()) 
+        k = self._structure[1].as_dict()
         pure = Model.from_pars(Structure.from_dict(structure_dict), 1, 0, 0, interface=InterfaceFactory())
         return pure.interface.fit_func(x)
