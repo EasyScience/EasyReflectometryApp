@@ -288,7 +288,7 @@ EaComponents.SideBarColumn {
             // used.
             EaComponents.TableViewLabel{
                 horizontalAlignment: Text.AlignRight
-                width: labelWidth()
+                width: labelWidth() * 2.1
                 ToolTip.text: qsTr("To create some repeating multilayer structure")
                 text: qsTr("Number of repetitions:")
             }

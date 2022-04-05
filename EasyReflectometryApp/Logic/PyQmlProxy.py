@@ -45,11 +45,13 @@ class PyQmlProxy(QObject):
         # Sample Connections
         self.sampleChanged.connect(self._material_proxy._onMaterialsChanged)
         self.sampleChanged.connect(self._model_proxy._onLayersChanged)
+        self._model_proxy.layersChanged.connect(self._model_proxy._onLayersChanged)
         self.sampleChanged.connect(self._model_proxy._onItemsChanged)
         self.sampleChanged.connect(
             self._simulation_proxy._onSimulationParametersChanged)
         self.sampleChanged.connect(self._parameter_proxy._onParametersChanged)
         self.sampleChanged.connect(self._simulation_proxy._onCalculatedDataChanged)
+        self._model_proxy.layersChanged.connect(self._simulation_proxy._onCalculatedDataChanged)
         self.sampleChanged.connect(self._undoredo_proxy.undoRedoChanged)
 
         # Screen recorder

@@ -6,7 +6,7 @@ from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import borg
 from easyCore.Objects.Groups import BaseCollection
-from easyCore.Objects.Base import BaseObj
+from easyCore.Objects.ObjectClasses import BaseObj
 
 
 class UndoRedoProxy(QObject):

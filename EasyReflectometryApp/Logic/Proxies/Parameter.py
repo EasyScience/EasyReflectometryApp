@@ -43,7 +43,8 @@ class ParameterProxy(QObject):
         for par_index, par_path in enumerate(par_paths):
             par_id = par_ids[par_index]
             par = borg.map.get_item_by_key(par_id)
-            if par_path[-11:] == 'repetitions' and par.raw_value == 1:
+            path_split = par_path.split('.')
+            if path_split[-1] == 'repetitions' and par.raw_value == 1:
                 continue
 
             if not par.enabled:
@@ -54,16 +55,16 @@ class ParameterProxy(QObject):
 
             label = par_path
             unit = '{:~P}'.format(par.unit)
-            if par_path[-3:] == 'sld':
+            if path_split[-1][-3:] == 'sld':
                 label = (' ').join(par_path.split('.')[-2:])
                 label = label[:-3] + 'SLD'
-            elif par_path[-9:] == 'thickness':
+            elif path_split[-1] == 'thickness':
                 label = (' ').join(par_path.split('.')[-2:])
                 label = label[:-9] + 'Thickness'
-            elif par_path[-9:] == 'roughness':
+            elif path_split[-1] == 'roughness':
                 label = (' ').join(par_path.split('.')[-2:])
                 label = label[:-9] + 'Upper Roughness'
-            elif par_path[-11:] == 'repetitions':
+            elif path_split[-1] == 'repetitions':
                 label = (' ').join(par_path.split('.')[-2:])
                 label = label[:-11] + 'Repetitions'
             elif par_path == 'scale':
@@ -73,15 +74,15 @@ class ParameterProxy(QObject):
             elif par_path == 'resolution':
                 label = 'Resolution (dq/q)'
                 unit = '%'
-            elif par_path[-9:] == 'solvation':
+            elif path_split[-1] == 'solvation':
                 label = 'Fractional '
                 label += par_path.split('.')[-2].split('/')[1]
                 label += ' in '
                 label += par_path.split('.')[-2].split('/')[0]
-            elif par_path[-17:] == 'area_per_molecule':
+            elif path_split[-1] == 'area_per_molecule':
                 label = par_path.split('.')[-2].split('/')[0]
                 label = label + ' APM'
-            elif par_path[-22:-5] == 'scattering_length': 
+            elif path_split[-1][:-5] == 'scattering_length': 
                 continue
             self._parameters_as_obj.append({
                 "id": str(par_id),
