@@ -40,8 +40,12 @@ class ParameterProxy(QObject):
         self._parameters_as_obj.clear()
 
         par_ids, par_paths = generatePath(self.parent._model_proxy._model, True)
+        pids = []
         for par_index, par_path in enumerate(par_paths):
             par_id = par_ids[par_index]
+            if par_id in pids:
+                continue
+            pids.append(par_id)
             par = borg.map.get_item_by_key(par_id)
             path_split = par_path.split('.')
             if path_split[-1] == 'repetitions' and par.raw_value == 1:
