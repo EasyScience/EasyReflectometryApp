@@ -296,6 +296,8 @@ class ModelProxy(QObject):
                     j.name = j.material.name + ' Layer'
         self._setLayersAsObj()
         self._setLayersAsXml()
+        # structure_dict = self._structure.as_dict()
+        # self._pure = Model.from_pars(Structure.from_dict(structure_dict), 1, 0, 0, interface=InterfaceFactory())
         print('>>> _onLayersChanged')
         self.parent._state_proxy.stateChanged.emit(True)
 
@@ -650,10 +652,9 @@ class ModelProxy(QObject):
         :param solvation: New solvation value
         """
         layer = self._structure[self.currentItemsIndex].layers[self.currentLayersIndex]
-        if layer.solvation == solvation:
+        if layer.material.fraction == solvation:
             return
-        layer.solvation.enabled = True
-        layer.solvation = solvation
+        layer.material.fraction = solvation
         self.layersChanged.emit()
 
     @Slot(str)
@@ -700,8 +701,9 @@ class ModelProxy(QObject):
     # Calculations 
     # # #
 
-    def getPureModelReflectometry(self, x):
-        structure_dict = self._structure.as_dict()
-        k = self._structure[1].as_dict()
-        pure = Model.from_pars(Structure.from_dict(structure_dict), 1, 0, 0, interface=InterfaceFactory())
-        return pure.interface.fit_func(x)
+    # def getPureModelReflectometry(self, x):
+    #     return self._pure.interface.fit_func(x)
+        
+    # def getPureModelSld(self):
+    #     return self._pure.interface.sld_profile()
+    
