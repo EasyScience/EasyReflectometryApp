@@ -34,6 +34,8 @@ EaComponents.TableView {
         XmlRole { name: "unit"; query: "unit/string()" }
         XmlRole { name: "error"; query: "error/number()" }
         XmlRole { name: "fit"; query: "fit/number()" }
+        XmlRole { name: "min"; query: "min/string()" }
+        XmlRole { name: "max"; query: "max/string()" }
 
         onStatusChanged: {
             if (status === XmlListModel.Ready) {
@@ -62,6 +64,8 @@ EaComponents.TableView {
                    valueColumn.width -
                    unitColumn.width -
                    errorColumn.width -
+                   minColumn.width - 
+                   maxColumn.width - 
                    fitColumn.width
             headerText: "Label"
             text: formatLabel(model.index, model.label)
@@ -94,9 +98,27 @@ EaComponents.TableView {
         EaComponents.TableViewLabel {
             id: errorColumn
             horizontalAlignment: Text.AlignRight
-            width: EaStyle.Sizes.fontPixelSize * 4
+            width: EaStyle.Sizes.fontPixelSize * 3.5
             headerText: "Error  "
             text: model.error === 0.0 || model.error > 999999 ? "" : model.error.toFixed(4) + "  "
+        }
+
+        EaComponents.TableViewTextInput {
+            id: minColumn
+            horizontalAlignment: Text.AlignRight
+            width: EaStyle.Sizes.fontPixelSize * 3.5
+            headerText: "Min  "
+            text: model.min < -999999 ? "-inf" : model.min > 999999 ? "+inf" : model.min
+            onEditingFinished: editParameterValueMin(model.id, text)
+        }
+
+        EaComponents.TableViewTextInput {
+            id: maxColumn
+            horizontalAlignment: Text.AlignRight
+            width: EaStyle.Sizes.fontPixelSize * 3.5
+            headerText: "Max  "
+            text: model.max < -999999 ? "-inf" : model.max > 999999 ? "+inf" : model.max
+            onEditingFinished: editParameterValueMax(model.id, text)
         }
 
         EaComponents.TableViewCheckBox {
@@ -133,6 +155,15 @@ EaComponents.TableView {
         //ExGlobals.Constants.proxy.parameter.editParameter(id, parseFloat(value))
         ExGlobals.Constants.proxy.parameter.editParameter(id, parseFloat(value))
     }
+
+    function editParameterValueMin(id, value) {
+        ExGlobals.Constants.proxy.parameter.editParameterMin(id, value)
+    }
+
+    function editParameterValueMax(id, value) {
+        ExGlobals.Constants.proxy.parameter.editParameterMax(id, value)
+    }
+
     function editParameterFit(id, value) {
         ExGlobals.Constants.proxy.parameter.editParameter(id, value)
     }

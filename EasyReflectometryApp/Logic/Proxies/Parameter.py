@@ -6,6 +6,7 @@ from dicttoxml import dicttoxml
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import borg
+from easyCore import np
 from easyCore.Utils.classTools import generatePath
 
 
@@ -95,7 +96,9 @@ class ParameterProxy(QObject):
                 "value": par.raw_value,
                 "unit": unit,
                 "error": float(par.error),
-                "fit": int(not par.fixed)
+                "fit": int(not par.fixed),
+                "min": float(par.min),
+                "max": float(par.max)
             })
 
         self.parametersAsObjChanged.emit()
@@ -153,6 +156,54 @@ class ParameterProxy(QObject):
 
             obj.value = new_value
             self.parent.sampleChanged.emit()
+
+    @Slot(str, 'QVariant')
+    def editParameterMin(self, obj_id: str, new_value: Union[float, str]):
+        if not obj_id:
+            return
+        
+        obj = self._parameterObj(obj_id)
+        if obj is None:
+            return 
+        
+        if isinstance(new_value, str):
+            new_value = new_value.lower()
+            if new_value == '-inf':
+                new_value = -np.inf
+            if new_value == '+inf':
+                new_value = np.inf
+            
+        new_value = float(new_value)
+
+        if obj.min == new_value:
+            return 
+        
+        obj.min = new_value
+        self.parent.sampleChanged.emit()
+
+    @Slot(str, 'QVariant')
+    def editParameterMax(self, obj_id: str, new_value: Union[float, str]):
+        if not obj_id:
+            return
+        
+        obj = self._parameterObj(obj_id)
+        if obj is None:
+            return 
+        
+        if isinstance(new_value, str):
+            new_value = new_value.lower()
+            if new_value == '-inf':
+                new_value = -np.inf
+            if new_value == '+inf':
+                new_value = np.inf
+
+        new_value = float(new_value)
+        
+        if obj.min == new_value:
+            return 
+        
+        obj.max = new_value
+        self.parent.sampleChanged.emit()
 
     def _parameterObj(self, obj_id: str):
         if not obj_id:
