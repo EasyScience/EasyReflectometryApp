@@ -49,4 +49,4 @@ class CalculatorProxy(QObject):
         # data = data[0]  # THIS IS WHERE WE WOULD LOOK UP CURRENT EXP INDEX
         # data.name = f'{self._interface.current_interface_name} engine'
         # print(data.name)
-        self.parent.calculatedDataChanged.emit()
+        self.parent._simulation_proxy.calculatedDataChanged.emit()

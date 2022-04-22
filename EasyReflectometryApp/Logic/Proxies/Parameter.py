@@ -68,7 +68,7 @@ class ParameterProxy(QObject):
                 label = label[:-9] + 'Thickness'
             elif path_split[-1] == 'roughness':
                 label = (' ').join(par_path.split('.')[-2:])
-                label = label[:-9] + 'Upper Roughness'
+                label = label[:-9] + 'Roughness'
             elif path_split[-1] == 'repetitions':
                 label = (' ').join(par_path.split('.')[-2:])
                 label = label[:-11] + 'Repetitions'

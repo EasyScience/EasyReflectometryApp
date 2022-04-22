@@ -75,7 +75,7 @@ EaComponents.TableView {
         EaComponents.TableViewTextInput {
             id: valueColumn
             horizontalAlignment: Text.AlignRight
-            width: EaStyle.Sizes.fontPixelSize * 4
+            width: EaStyle.Sizes.fontPixelSize * 3.5
             headerText: "Value"
             text: {
                 if (model.label.endsWith('Background')) {
@@ -98,7 +98,7 @@ EaComponents.TableView {
         EaComponents.TableViewLabel {
             id: errorColumn
             horizontalAlignment: Text.AlignRight
-            width: EaStyle.Sizes.fontPixelSize * 3.5
+            width: EaStyle.Sizes.fontPixelSize * 3
             headerText: "Error  "
             text: model.error === 0.0 || model.error > 999999 ? "" : model.error.toFixed(4) + "  "
         }
@@ -106,18 +106,20 @@ EaComponents.TableView {
         EaComponents.TableViewTextInput {
             id: minColumn
             horizontalAlignment: Text.AlignRight
-            width: EaStyle.Sizes.fontPixelSize * 3.5
+            width: EaStyle.Sizes.fontPixelSize * 3
             headerText: "Min  "
-            text: model.min < -999999 ? "-inf" : model.min > 999999 ? "+inf" : model.min
+            enabled: model.fit
+            text: model.fit == false ? '--' : model.min < -999999 ? "-inf" : model.min > 999999 ? "+inf" : model.min
             onEditingFinished: editParameterValueMin(model.id, text)
         }
 
         EaComponents.TableViewTextInput {
             id: maxColumn
             horizontalAlignment: Text.AlignRight
-            width: EaStyle.Sizes.fontPixelSize * 3.5
+            width: EaStyle.Sizes.fontPixelSize * 3
             headerText: "Max  "
-            text: model.max < -999999 ? "-inf" : model.max > 999999 ? "+inf" : model.max
+            enabled: model.fit
+            text: model.fit == false ? '--' : model.max < -999999 ? "-inf" : model.max > 999999 ? "+inf" : model.max
             onEditingFinished: editParameterValueMax(model.id, text)
         }
 
