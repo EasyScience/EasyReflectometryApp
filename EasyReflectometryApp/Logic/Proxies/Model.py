@@ -296,8 +296,8 @@ class ModelProxy(QObject):
                     j.name = j.material.name + ' Layer'
         self._setLayersAsObj()
         self._setLayersAsXml()
-        # structure_dict = self._structure.as_dict()
-        # self._pure = Model.from_pars(Structure.from_dict(structure_dict), 1, 0, 0, interface=InterfaceFactory())
+        structure_dict = self._structure.as_dict()
+        self._pure = Model.from_pars(Structure.from_dict(structure_dict), 1, 0, 0, interface=InterfaceFactory())
         print('>>> _onLayersChanged')
         self.parent._state_proxy.stateChanged.emit(True)
 
@@ -701,9 +701,9 @@ class ModelProxy(QObject):
     # Calculations 
     # # #
 
-    # def getPureModelReflectometry(self, x):
-    #     return self._pure.interface.fit_func(x)
+    def getPureModelReflectometry(self, x):
+        return self._pure.interface.fit_func(x)
         
-    # def getPureModelSld(self):
-    #     return self._pure.interface.sld_profile()
+    def getPureModelSld(self):
+        return self._pure.interface.sld_profile()
     
