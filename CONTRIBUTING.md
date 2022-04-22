@@ -51,7 +51,7 @@ git commit -m 'Lock package versions'
 Once the Githib builds have been completed, these should also be tested. 
 
 If all is well, then a pull request can be opened to merge the `<version-number>rc` branch into the `main` branch. 
-With this pull request merged the final version will be built from `main` and the `0.0.3rc` branch can be removed. 
+With this pull request merged the final version will be built from `main` and the `<version-number>rc` branch can be removed. 
 The final `main` branch action will then run to build the release version of EasyReflectometry, this will produce a release in the [releases](https://github.com/easyScience/EasyReflectometryApp/releases) section of the Github repository. 
 Once is it there, the release should be tagged and renamed, this is achieved by selecting the 'edit' button (the pencil). 
 The tag should be given as `v<version-number>` and the name of the release should be "Version <version-number> (<date>)` and currently (until new tutorials are produced) the tutorial should be removed from the release.
