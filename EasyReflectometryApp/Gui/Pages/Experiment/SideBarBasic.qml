@@ -16,7 +16,7 @@ EaComponents.SideBarColumn {
     EaElements.GroupBox {
         title: qsTr("Experimental data")
         collapsible: false
-        enabled: ExGlobals.Constants.proxy.isFitFinished
+        enabled: ExGlobals.Constants.proxy.fitter.isFitFinished
 
         ExComponents.ExperimentDataExplorer {}
 
@@ -24,7 +24,7 @@ EaComponents.SideBarColumn {
             spacing: EaStyle.Sizes.fontPixelSize
 
             EaElements.SideBarButton {
-                enabled: !ExGlobals.Constants.proxy.experimentLoaded
+                enabled: !ExGlobals.Constants.proxy.data.experimentLoaded
 
                 fontIcon: "upload"
                 text: qsTr("Import data from local drive")
@@ -33,13 +33,13 @@ EaComponents.SideBarColumn {
             }
 
             EaElements.SideBarButton {
-                enabled: !ExGlobals.Constants.proxy.experimentLoaded &&
-                         !ExGlobals.Constants.proxy.experimentSkipped
+                enabled: !ExGlobals.Constants.proxy.data.experimentLoaded &&
+                         !ExGlobals.Constants.proxy.data.experimentSkipped
 
                 fontIcon: "arrow-circle-right"
                 text: qsTr("Continue without experiment data")
 
-                onClicked: ExGlobals.Constants.proxy.experimentSkipped = true
+                onClicked: ExGlobals.Constants.proxy.data.experimentSkipped = true
 
                 Component.onCompleted: ExGlobals.Variables.continueWithoutExperimentDataButton = this
             }
@@ -50,8 +50,8 @@ EaComponents.SideBarColumn {
 
     EaElements.GroupBox {
         title: qsTr("Instrument and experiment type")
-        enabled: ExGlobals.Constants.proxy.experimentLoaded ||
-                 ExGlobals.Constants.proxy.experimentSkipped
+        enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||
+                 ExGlobals.Constants.proxy.data.experimentSkipped
 
         Column {
 
@@ -104,27 +104,19 @@ EaComponents.SideBarColumn {
     }
 
     EaElements.GroupBox {
-        title: ExGlobals.Constants.proxy.experimentLoaded ?
+        title: ExGlobals.Constants.proxy.data.experimentLoaded ?
                    qsTr("Measured range") :
                    qsTr("Simulation range")
-        enabled: ExGlobals.Constants.proxy.experimentLoaded ||
-                 ExGlobals.Constants.proxy.experimentSkipped
+        enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||
+                 ExGlobals.Constants.proxy.data.experimentSkipped
 
         ExComponents.ExperimentSimulationSetup {}
     }
 
-    /*EaElements.GroupBox {
-        title: qsTr("Instrument setup")
-        enabled: ExGlobals.Constants.proxy.experimentLoaded ||
-                 ExGlobals.Constants.proxy.experimentSkipped
-
-        ExComponents.ExperimentInstrumentSetup {}
-    }*/
-
     EaElements.GroupBox {
         title: qsTr("Resolution")
-        enabled: ExGlobals.Constants.proxy.experimentLoaded ||
-                 ExGlobals.Constants.proxy.experimentSkipped
+        enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||
+                 ExGlobals.Constants.proxy.data.experimentSkipped
 
         /*
         Column {
@@ -150,8 +142,8 @@ EaComponents.SideBarColumn {
     EaElements.GroupBox {
         title: qsTr("Background")
         last: true
-        enabled: ExGlobals.Constants.proxy.experimentLoaded ||
-                 ExGlobals.Constants.proxy.experimentSkipped
+        enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||
+                 ExGlobals.Constants.proxy.data.experimentSkipped
 
         /*
         Column {
@@ -181,7 +173,7 @@ EaComponents.SideBarColumn {
 
         nameFilters: [ qsTr("Data files") + " (*.dat *.txt *.ort)" ]
 
-        onAccepted: ExGlobals.Constants.proxy.addExperimentDataFromOrt(fileUrl)
+        onAccepted: ExGlobals.Constants.proxy.data.addExperimentDataFromOrt(fileUrl)
     }
 
 }

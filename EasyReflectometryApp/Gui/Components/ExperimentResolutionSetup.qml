@@ -32,7 +32,7 @@ Row {
         width: elementWidth()
         anchors.verticalCenter: parent.verticalCenter
         units: "%"
-        text: EaLogic.Utils.toFixed(ExGlobals.Constants.proxy.resolutionAsObj.res, 3)
+        text: EaLogic.Utils.toFixed(ExGlobals.Constants.proxy.simulation.resolutionAsObj.res, 3)
         onEditingFinished: updateParameters()
     }
 
@@ -46,6 +46,6 @@ Row {
         const json = {
             "res": parseFloat(res.text),
         }
-        ExGlobals.Constants.proxy.resolutionAsObj = JSON.stringify(json)
+        ExGlobals.Constants.proxy.simulation.resolutionAsObj = JSON.stringify(json)
     }
 }

@@ -101,24 +101,24 @@ jobs:
       - name: Sign the installer
         run: poetry run python ${{ env.SCRIPTS_PATH }}/Signatures.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
 
-      - name: Set up screen recording dependencies (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
-          system_profiler SPDisplaysDataType | grep Resolution
+      #- name: Set up screen recording dependencies (macOS)
+      #  if: runner.os == 'macOS'
+      #  run: |
+      #    "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
+      #    system_profiler SPDisplaysDataType | grep Resolution
 
-      - name: Set up screen recording dependencies (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get install libxkbcommon-x11-0
-          Xvfb :0 -screen 0 1920x1080x24 -ac &
-          echo "DISPLAY=:0" >> $GITHUB_ENV
+      #- name: Set up screen recording dependencies (Linux)
+      #  if: runner.os == 'Linux'
+      #  run: |
+      #    sudo apt-get install libxkbcommon-x11-0
+      #    Xvfb :0 -screen 0 1920x1080x24 -ac &
+      #    echo "DISPLAY=:0" >> $GITHUB_ENV
 
-      - name: Set up screen recording dependencies (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          Set-DisplayResolution -Width 1920 -Height 1080 -Force
-          Get-DisplayResolution
+      #- name: Set up screen recording dependencies (Windows)
+      #  if: runner.os == 'Windows'
+      #  run: |
+      #    Set-DisplayResolution -Width 1920 -Height 1080 -Force
+      #    Get-DisplayResolution
 
       - name: Make dir for .desktop file (Linux)
         if: runner.os == 'Linux'
@@ -131,8 +131,8 @@ jobs:
         if: runner.os != 'Windows'
         run: poetry run python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
 
-      - name: Rename test videos
-        run: poetry run python ${{ env.SCRIPTS_PATH }}/CreateTestVideos.py ${{ env.BRANCH_NAME }}
+      #- name: Rename test videos
+      #  run: poetry run python ${{ env.SCRIPTS_PATH }}/CreateTestVideos.py ${{ env.BRANCH_NAME }}
 
       - name: Create zip archive of offline app installer
         run: poetry run python ${{ env.SCRIPTS_PATH }}/ZipArtifacts.py ${{ env.BRANCH_NAME }}

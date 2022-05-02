@@ -29,32 +29,32 @@ EaComponents.ApplicationWindow {
     appBarLeftButtons: [
 
         EaElements.ToolButton {
-            enabled: ExGlobals.Constants.proxy.stateHasChanged &&
-                     ExGlobals.Constants.proxy.currentProjectPath !== '--- EXAMPLE ---'
+            enabled: ExGlobals.Constants.proxy.state.stateHasChanged &&
+                     ExGlobals.Constants.proxy.project.currentProjectPath !== '--- EXAMPLE ---'
             highlighted: true
             fontIcon: "save"
             ToolTip.text: qsTr("Save current state of the project")
-            onClicked:  ExGlobals.Constants.proxy.saveProject()
+            onClicked:  ExGlobals.Constants.proxy.project.saveProject()
         },
 
         EaElements.ToolButton {
-            enabled: ExGlobals.Constants.proxy.canUndo
+            enabled: ExGlobals.Constants.proxy.undoredo.canUndo
             fontIcon: "undo"
-            ToolTip.text: qsTr("Undo " + ExGlobals.Constants.proxy.undoText)
-            onClicked: ExGlobals.Constants.proxy.undo()
+            ToolTip.text: qsTr("Undo " + ExGlobals.Constants.proxy.undoredo.undoText)
+            onClicked: ExGlobals.Constants.proxy.undoredo.undo()
         },
 
         EaElements.ToolButton {
-            enabled: ExGlobals.Constants.proxy.canRedo
+            enabled: ExGlobals.Constants.proxy.undoredo.canRedo
             fontIcon: "redo"
-            ToolTip.text: qsTr("Redo " + ExGlobals.Constants.proxy.redoText)
-            onClicked: ExGlobals.Constants.proxy.redo()
+            ToolTip.text: qsTr("Redo " + ExGlobals.Constants.proxy.undoredo.redoText)
+            onClicked: ExGlobals.Constants.proxy.undoredo.redo()
         },
 
         EaElements.ToolButton {
-            enabled: ExGlobals.Constants.proxy.projectCreated ||
-                     ExGlobals.Constants.proxy.experimentSkipped ||
-                     ExGlobals.Constants.proxy.experimentLoaded
+            enabled: ExGlobals.Constants.proxy.project.projectCreated ||
+                     ExGlobals.Constants.proxy.data.experimentSkipped ||
+                     ExGlobals.Constants.proxy.data.experimentLoaded
             fontIcon: "backspace"
             ToolTip.text: qsTr("Reset to initial state without project, phases and data")
             onClicked: resetStateDialog.open()
@@ -133,8 +133,8 @@ EaComponents.ApplicationWindow {
         EaElements.AppBarTabButton {
             id: analysisTabButton
             enabled: ExGlobals.Variables.samplePageEnabled &&
-                     (ExGlobals.Constants.proxy.experimentSkipped ||
-                      ExGlobals.Constants.proxy.experimentLoaded)
+                     (ExGlobals.Constants.proxy.data.experimentSkipped ||
+                      ExGlobals.Constants.proxy.data.experimentLoaded)
             fontIcon: "calculator"
             text: qsTr("Analysis")
             ToolTip.text: qsTr("Simulation and fitting page")
@@ -145,8 +145,8 @@ EaComponents.ApplicationWindow {
         EaElements.AppBarTabButton {
             id: summaryTabButton
             enabled: ExGlobals.Variables.samplePageEnabled &&
-                     (ExGlobals.Constants.proxy.experimentSkipped ||
-                      ExGlobals.Constants.proxy.experimentLoaded)
+                     (ExGlobals.Constants.proxy.data.experimentSkipped ||
+                      ExGlobals.Constants.proxy.data.experimentLoaded)
             fontIcon: "clipboard-list"
             text: qsTr("Summary")
             ToolTip.text: qsTr("Summary of the work done")
@@ -167,19 +167,19 @@ EaComponents.ApplicationWindow {
 
         // Project page
         EaComponents.ContentPage {
-            defaultInfo: ExGlobals.Constants.proxy.projectCreated ?
+            defaultInfo: ExGlobals.Constants.proxy.project.projectCreated ?
                              "" :
                              qsTr("No Project Created/Opened")
 
             mainContent: EaComponents.MainContent {
                 tabs: [
-                    EaElements.TabButton { text: qsTr("Description") },
-                    EaElements.TabButton { text: qsTr("Text View") + " (CIF)" }
+                    EaElements.TabButton { text: qsTr("Description") } //,
+                    // EaElements.TabButton { text: qsTr("Text View") + " (CIF)" }
                 ]
 
                 items: [
-                    ExProjectPage.MainContentDescription {},
-                    ExProjectPage.MainContentTextView {}
+                    ExProjectPage.MainContentDescription {} // ,
+                    // ExProjectPage.MainContentTextView {}
                 ]
 
                 Component.onCompleted: ExGlobals.Variables.projectPageMainContent = this
@@ -187,13 +187,11 @@ EaComponents.ApplicationWindow {
 
             sideBar: EaComponents.SideBar {
                 tabs: [
-                    EaElements.TabButton { text: qsTr("Basic controls") },
-                    EaElements.TabButton { enabled: false; text: qsTr("Advanced controls") }
+                    EaElements.TabButton { text: qsTr("Basic controls") }
                 ]
 
                 items: [
-                    ExProjectPage.SideBarBasic {},
-                    ExProjectPage.SideBarAdvanced {}
+                    ExProjectPage.SideBarBasic {}
                 ]
             }
         },
@@ -227,7 +225,7 @@ EaComponents.ApplicationWindow {
 
         // Experiment page
         EaComponents.ContentPage {
-            defaultInfo: ExGlobals.Constants.proxy.experimentLoaded ? "" : qsTr("No Experiments Loaded")
+            defaultInfo: ExGlobals.Constants.proxy.data.experimentLoaded ? "" : qsTr("No Experiments Loaded")
 
             mainContent: EaComponents.MainContent {
                 tabs: [
@@ -247,13 +245,13 @@ EaComponents.ApplicationWindow {
 
             sideBar: EaComponents.SideBar {
                 tabs: [
-                    EaElements.TabButton { text: qsTr("Basic controls") },
-                    EaElements.TabButton { enabled: false; text: qsTr("Advanced controls") }
+                    EaElements.TabButton { text: qsTr("Basic controls") } // ,
+                    // EaElements.TabButton { enabled: false; text: qsTr("Advanced controls") }
                 ]
 
                 items: [
-                    ExExperimentPage.SideBarBasic {},
-                    ExExperimentPage.SideBarAdvanced {}
+                    ExExperimentPage.SideBarBasic {} //,
+                    // ExExperimentPage.SideBarAdvanced {}
                 ]
             }
         },
@@ -263,19 +261,19 @@ EaComponents.ApplicationWindow {
             mainContent: EaComponents.MainContent {
                 tabs: [
                     EaElements.TabButton {
-                        text: ExGlobals.Constants.proxy.experimentLoaded ? qsTr("Fitting") : qsTr("Simulation")
-                    },
-                    EaElements.TabButton {
-                        visible: ExGlobals.Constants.proxy.experimentLoaded
+                        text: ExGlobals.Constants.proxy.data.experimentLoaded ? qsTr("Fitting") : qsTr("Simulation")
+                    } //,
+                    /* EaElements.TabButton {
+                        visible: ExGlobals.Constants.proxy.data.experimentLoaded
                         enabled: false
                         text: 'calculations.cif' //ExGlobals.Constants.proxy.projectInfoAsJson.calculations
                         Component.onCompleted: ExGlobals.Variables.calculationCifTab = this
-                    }
+                    } */
                 ]
 
                 items: [
-                    ExAnalysisPage.MainContentFitting {},
-                    ExAnalysisPage.MainContentTextView {}
+                    ExAnalysisPage.MainContentFitting {} //,
+                    // ExAnalysisPage.MainContentTextView {}
                 ]
 
                 Component.onCompleted: ExGlobals.Variables.analysisPageMainContent = this
@@ -316,13 +314,13 @@ EaComponents.ApplicationWindow {
 
             sideBar: EaComponents.SideBar {
                 tabs: [
-                    EaElements.TabButton { text: qsTr("Basic controls") },
-                    EaElements.TabButton { enabled: false; text: qsTr("Advanced controls") }
+                    EaElements.TabButton { text: qsTr("Basic controls") } //,
+                    //EaElements.TabButton { enabled: true; text: qsTr("Advanced controls") }
                 ]
 
                 items: [
-                    ExSummaryPage.SideBarBasic {},
-                    ExSummaryPage.SideBarAdvanced {}
+                    ExSummaryPage.SideBarBasic {} //,
+                    // ExSummaryPage.SideBarAdvanced {}
                 ]
             }
         }
@@ -336,7 +334,7 @@ EaComponents.ApplicationWindow {
         visible: EaGlobals.Variables.appBarCurrentIndex !== 0
 
         model: XmlListModel {
-            xml: ExGlobals.Constants.proxy.statusModelAsXml
+            xml: ExGlobals.Constants.proxy.state.statusModelAsXml
             query: "/root/item"
 
             XmlRole { name: "label"; query: "label/string()" }
@@ -351,7 +349,7 @@ EaComponents.ApplicationWindow {
     // Application dialogs (invisible at the beginning)
     ExProjectPage.ProjectDescriptionDialog {
         onAccepted: {
-            ExGlobals.Constants.proxy.projectCreated = true
+            ExGlobals.Constants.proxy.project.projectCreated = true
             ExGlobals.Variables.samplePageEnabled = true
         }
     }
@@ -382,7 +380,7 @@ EaComponents.ApplicationWindow {
                     EaGlobals.Variables.appBarCurrentIndex = 0
                     ExGlobals.Variables.projectPageEnabled = false
                     ExGlobals.Variables.samplePageEnabled = false
-                    ExGlobals.Constants.proxy.resetState()
+                    ExGlobals.Constants.proxy.state.resetState()
                     resetStateDialog.close()
                 }
             }
@@ -400,8 +398,8 @@ EaComponents.ApplicationWindow {
     ////////
 
     onClosing: {
-       closeDialog.visible = ExGlobals.Constants.proxy.stateHasChanged
-       close.accepted = !ExGlobals.Constants.proxy.stateHasChanged
+       closeDialog.visible = ExGlobals.Constants.proxy.state.stateHasChanged
+       close.accepted = !ExGlobals.Constants.proxy.state.stateHasChanged
     }
 
     Component.onCompleted: {

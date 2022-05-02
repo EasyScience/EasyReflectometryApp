@@ -41,7 +41,7 @@ EaComponents.SideBarColumn {
                     onTextChanged: {
                         exampleFilterCriteria.currentIndex = exampleFilterCriteria.indexOfValue(text)
                         namesFilterCriteria.currentIndex = namesFilterCriteria.indexOfValue(text)
-                        ExGlobals.Constants.proxy.setParametersFilterCriteria(text)
+                        ExGlobals.Constants.proxy.parameter.setParametersFilterCriteria(text)
                     }
                 }
             }
@@ -186,10 +186,10 @@ EaComponents.SideBarColumn {
         // Start fitting button
         EaElements.SideBarButton {
             wide: true
-            enabled: ExGlobals.Constants.proxy.experimentLoaded && ExGlobals.Constants.proxy.isFitFinished
+            enabled: ExGlobals.Constants.proxy.data.experimentLoaded && ExGlobals.Constants.proxy.fitter.isFitFinished
             fontIcon: "play-circle"
             text: qsTr("Start fitting")
-            onClicked: ExGlobals.Constants.proxy.fit()
+            onClicked: ExGlobals.Constants.proxy.fitter.fit()
             Component.onCompleted: ExGlobals.Variables.startFittingButton = this
         }
 
@@ -198,8 +198,8 @@ EaComponents.SideBarColumn {
 
     // Init results dialog
     ExComponents.ResultsDialog {
-        visible: typeof ExGlobals.Constants.proxy.fitResults.success !== 'undefined' &&
-                 ExGlobals.Constants.proxy.isFitFinished
+        visible: typeof ExGlobals.Constants.proxy.fitter.fitResults.success !== 'undefined' &&
+                 ExGlobals.Constants.proxy.fitter.isFitFinished
     }
 
     // Logic
@@ -223,7 +223,7 @@ EaComponents.SideBarColumn {
     }
 
     function editParameterValue(id, value) {
-        ExGlobals.Constants.proxy.editParameter(id, parseFloat(value))
+        ExGlobals.Constants.proxy.parameter.editParameter(id, parseFloat(value))
     }
 
 }

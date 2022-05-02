@@ -170,8 +170,8 @@ def appPackageXml():
         version = CONFIG['tool']['poetry']['version']
         release_date = "2020-01-01" #datetime.datetime.strptime(config['release']['date'], "%d %b %Y").strftime("%Y-%m-%d")
         package_install_script = CONFIG['ci']['scripts']['package_install']
-        license_id = CONFIG['tool']['poetry']['license'].replace('-only', '')
-        license_name = dephell_licenses.licenses.get_by_id(license_id).name
+        license_id = CONFIG['tool']['poetry']['license']
+        license_name = dephell_licenses.licenses.get_by_id(license_id).name.replace('"', "'")
         raw_xml = Functions.dict2xml({
             'Package': {
                 'DisplayName': CONFIG.app_name,

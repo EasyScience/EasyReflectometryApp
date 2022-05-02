@@ -1,5 +1,4 @@
 __author__ = 'github.com/andrewsazonov'
-__version__ = '0.0.1'
 
 import numpy as np
 
@@ -7,6 +6,7 @@ from PySide2.QtCore import QObject, Qt, QPointF, Signal, Slot, Property
 from PySide2.QtGui import QImage, QBrush
 from PySide2.QtQml import QJSValue
 from PySide2.QtCharts import QtCharts
+
 
 class Plotting1dProxy(QObject):
     """
@@ -26,6 +26,7 @@ class Plotting1dProxy(QObject):
     # Data containers
     bokehMeasuredDataObjChanged = Signal()
     bokehCalculatedDataObjChanged = Signal()
+    bokehPureDataObjChanged = Signal()
     bokehDifferenceDataObjChanged = Signal()
     bokehBackgroundDataObjChanged = Signal()
     bokehSldDataObjChanged = Signal()
@@ -42,7 +43,7 @@ class Plotting1dProxy(QObject):
         super().__init__(parent)
 
         # Lib
-        self._libs = ['bokeh', 'qtcharts']
+        self._libs = ['bokeh']#, 'qtcharts']
         self._current_lib = 'bokeh'
         self.currentLibChanged.connect(self.onCurrentLibChanged)
 
@@ -56,6 +57,11 @@ class Plotting1dProxy(QObject):
         self._calculated_max_x = -999999
         self._calculated_min_y = 999999
         self._calculated_max_y = -999999
+
+        self._pure_min_x = 999999
+        self._pure_max_x = -999999
+        self._pure_min_y = 999999
+        self._pure_max_y = -999999
 
         self._sld_min_x = 999999
         self._sld_max_x = -999999
@@ -78,6 +84,9 @@ class Plotting1dProxy(QObject):
         self._calculated_xarray = np.empty(0)
         self._calculated_yarray = np.empty(0)
 
+        self._pure_xarray = np.empty(0)
+        self._pure_yarray = np.empty(0)
+
         self._sld_xarray = np.empty(0)
         self._sld_yarray = np.empty(0)
 
@@ -96,6 +105,7 @@ class Plotting1dProxy(QObject):
         # Data containers for GUI
         self._bokeh_measured_data_obj = {}
         self._bokeh_calculated_data_obj = {}
+        self._bokeh_pure_data_obj = {}
         self._bokeh_difference_data_obj = {}
         self._bokeh_background_data_obj = {}
         self._bokeh_sld_data_obj = {}
@@ -118,6 +128,7 @@ class Plotting1dProxy(QObject):
         # Data containers for GUI
         self._bokeh_measured_data_obj = {}
         self._bokeh_calculated_data_obj = {}
+        self._bokeh_pure_data_obj = {}
         self._bokeh_difference_data_obj = {}
         self._bokeh_background_data_obj = {}
         self._bokeh_sld_data_obj = {}
@@ -135,6 +146,7 @@ class Plotting1dProxy(QObject):
         # Data containers
         self.bokehMeasuredDataObjChanged.emit()
         self.bokehCalculatedDataObjChanged.emit()
+        self.bokehPureDataObjChanged.emit()
         self.bokehDifferenceDataObjChanged.emit()
         self.bokehBackgroundDataObjChanged.emit()
         self.bokehSldDataObjChanged.emit()
@@ -183,6 +195,10 @@ class Plotting1dProxy(QObject):
     @Property('QVariant', notify=bokehCalculatedDataObjChanged)
     def bokehCalculatedDataObj(self):
         return self._bokeh_calculated_data_obj
+
+    @Property('QVariant', notify=bokehPureDataObjChanged)
+    def bokehPureDataObj(self):
+        return self._bokeh_pure_data_obj
 
     @Property('QVariant', notify=bokehDifferenceDataObjChanged)
     def bokehDifferenceDataObj(self):
@@ -235,7 +251,7 @@ class Plotting1dProxy(QObject):
                 textureImage.setPixelColor(column, row, Qt.transparent)
         # Vertical line
         for row in range(height):
-            column = int(width/2)
+            column = int(width / 2)
             textureImage.setPixelColor(column, row, color)
         brush = QBrush()
         brush.setTextureImage(textureImage)
@@ -279,6 +295,21 @@ class Plotting1dProxy(QObject):
             if self.currentLib == 'qtcharts':
                 self._setQtChartsDifferenceDataObj()
 
+    def setPureData(self, xarray, yarray):
+        self._setPureDataArrays(xarray, yarray)
+        self._setPureDataRanges()
+        self._setAnalysisPlotRanges()
+        self._setSldPlotRanges()
+        self._setBokehPureDataObj()
+        # if self.currentLib == 'qtcharts':
+        #     self._setQtChartsCalculatedDataObj()
+        if self._measured_xarray.size:
+            self._setDifferenceDataArrays()
+            self._setDifferenceDataRanges()
+            self._setBokehDifferenceDataObj()
+            # if self.currentLib == 'qtcharts':
+            #     self._setQtChartsDifferenceDataObj()
+
     def setBackgroundData(self, xarray, yarray):
         self._setBackgroundDataArrays(xarray, yarray)
         if self._background_xarray.size:
@@ -289,10 +320,10 @@ class Plotting1dProxy(QObject):
     def setSldData(self, xarray, yarray):
         self._setSldDataArrays(xarray, yarray)
         self._setSldDataRanges()
+        self._setSldPlotRanges()
         self._setBokehSldDataObj()
         if self.currentLib == 'qtcharts':
             pass
-            #self._setQtChartsCalculatedDataObj()
 
     def onCurrentLibChanged(self):
         if self.currentLib == 'qtcharts':
@@ -311,21 +342,30 @@ class Plotting1dProxy(QObject):
             self._measured_syarray = syarray
         else:
             self._measured_syarray = np.ones_like(yarray)
-        self._measured_yarray_upper = np.add(self._measured_yarray, self._measured_syarray)
-        self._measured_yarray_lower = np.subtract(self._measured_yarray, self._measured_syarray)
+        self._measured_yarray_upper = np.add(self._measured_yarray,
+                                             self._measured_syarray)
+        self._measured_yarray_lower = np.subtract(self._measured_yarray,
+                                                  self._measured_syarray)
 
     def _setCalculatedDataArrays(self, xarray, yarray):
         self._calculated_xarray = xarray
         self._calculated_yarray = yarray
+
+    def _setPureDataArrays(self, xarray, yarray):
+        self._pure_xarray = xarray
+        self._pure_yarray = yarray
 
     def _setSldDataArrays(self, xarray, yarray):
         self._sld_xarray = xarray
         self._sld_yarray = yarray
 
     def _setDifferenceDataArrays(self):
-        self._difference_yarray = np.subtract(self._measured_yarray, self._calculated_yarray)
-        self._difference_yarray_upper = np.add(self._difference_yarray, self._measured_syarray)
-        self._difference_yarray_lower = np.subtract(self._difference_yarray, self._measured_syarray)
+        self._difference_yarray = np.subtract(self._measured_yarray,
+                                              self._calculated_yarray)
+        self._difference_yarray_upper = np.add(self._difference_yarray,
+                                               self._measured_syarray)
+        self._difference_yarray_lower = np.subtract(self._difference_yarray,
+                                                    self._measured_syarray)
 
     def _setBackgroundDataArrays(self, xarray, yarray):
         self._background_xarray = xarray
@@ -347,6 +387,21 @@ class Plotting1dProxy(QObject):
             'y': Plotting1dProxy.aroundY(self._calculated_yarray)
         }
         self.bokehCalculatedDataObjChanged.emit()
+
+    def _setBokehPureDataObj(self):
+        self._bokeh_pure_data_obj = {
+            'x': Plotting1dProxy.aroundX(self._pure_xarray),
+            'y': Plotting1dProxy.aroundY(self._pure_yarray)
+        }
+        print(self._pure_yarray)
+        self.bokehPureDataObjChanged.emit()
+
+    def _setBokehPureDataObj(self):
+        self._bokeh_pure_data_obj = {
+            'x': Plotting1dProxy.aroundX(self._pure_xarray),
+            'y': Plotting1dProxy.aroundY(self._pure_yarray)
+        }
+        self.bokehPureDataObjChanged.emit()
 
     def _setBokehSldDataObj(self):
         self._bokeh_sld_data_obj = {
@@ -373,29 +428,45 @@ class Plotting1dProxy(QObject):
 
     def _setQtChartsMeasuredDataObj(self):
         self._qtcharts_measured_data_obj = {
-            'xy': Plotting1dProxy.arraysToPoints(self._measured_xarray, self._measured_yarray),
-            'xy_upper': Plotting1dProxy.arraysToPoints(self._measured_xarray, self._measured_yarray_upper),
-            'xy_lower': Plotting1dProxy.arraysToPoints(self._measured_xarray, self._measured_yarray_lower)
+            'xy':
+            Plotting1dProxy.arraysToPoints(self._measured_xarray,
+                                           self._measured_yarray),
+            'xy_upper':
+            Plotting1dProxy.arraysToPoints(self._measured_xarray,
+                                           self._measured_yarray_upper),
+            'xy_lower':
+            Plotting1dProxy.arraysToPoints(self._measured_xarray,
+                                           self._measured_yarray_lower)
         }
         self.qtchartsMeasuredDataObjChanged.emit()
 
     def _setQtChartsCalculatedDataObj(self):
         self._qtcharts_calculated_data_obj = {
-            'xy': Plotting1dProxy.arraysToPoints(self._calculated_xarray, self._calculated_yarray)
+            'xy':
+            Plotting1dProxy.arraysToPoints(self._calculated_xarray,
+                                           self._calculated_yarray)
         }
         self.qtchartsCalculatedDataObjChanged.emit()
 
     def _setQtChartsDifferenceDataObj(self):
         self._qtcharts_difference_data_obj = {
-            'xy': Plotting1dProxy.arraysToPoints(self._measured_xarray, self._difference_yarray),
-            'xy_upper': Plotting1dProxy.arraysToPoints(self._measured_xarray, self._difference_yarray_upper),
-            'xy_lower': Plotting1dProxy.arraysToPoints(self._measured_xarray, self._difference_yarray_lower)
+            'xy':
+            Plotting1dProxy.arraysToPoints(self._measured_xarray,
+                                           self._difference_yarray),
+            'xy_upper':
+            Plotting1dProxy.arraysToPoints(self._measured_xarray,
+                                           self._difference_yarray_upper),
+            'xy_lower':
+            Plotting1dProxy.arraysToPoints(self._measured_xarray,
+                                           self._difference_yarray_lower)
         }
         self.qtchartsDifferenceDataObjChanged.emit()
 
     def _setQtChartsBackgroundDataObj(self):
         self._qtcharts_background_data_obj = {
-            'xy': Plotting1dProxy.arraysToPoints(self._background_xarray, self._background_yarray)
+            'xy':
+            Plotting1dProxy.arraysToPoints(self._background_xarray,
+                                           self._background_yarray)
         }
         self.qtchartsBackgroundDataObjChanged.emit()
 
@@ -413,6 +484,12 @@ class Plotting1dProxy(QObject):
         self._calculated_min_y = Plotting1dProxy.arrayMin(self._calculated_yarray)
         self._calculated_max_y = Plotting1dProxy.arrayMax(self._calculated_yarray)
 
+    def _setPureDataRanges(self):
+        self._pure_min_x = Plotting1dProxy.arrayMin(self._pure_xarray)
+        self._pure_max_x = Plotting1dProxy.arrayMax(self._pure_xarray)
+        self._pure_min_y = Plotting1dProxy.arrayMin(self._pure_yarray)
+        self._pure_max_y = Plotting1dProxy.arrayMax(self._pure_yarray)
+
     def _setSldDataRanges(self):
         self._sld_min_x = Plotting1dProxy.arrayMin(self._sld_xarray)
         self._sld_max_x = Plotting1dProxy.arrayMax(self._sld_xarray)
@@ -427,17 +504,22 @@ class Plotting1dProxy(QObject):
         self._difference_median_y = Plotting1dProxy.arrayMedian(self._difference_yarray)
 
     def _yAxisMin(self, min_y, max_y):
-        return min_y #- self._y_axis_range_extension * max_y
+        return min_y
 
     def _yAxisMax(self, max_y):
-        return max_y #+ self._y_axis_range_extension * max_y
+        return max_y
 
     def _setExperimentPlotRanges(self):
         self._experiment_plot_ranges_obj = {
-            'min_x': Plotting1dProxy.aroundX(self._measured_min_x),
-            'max_x': Plotting1dProxy.aroundX(self._measured_max_x),
-            'min_y': Plotting1dProxy.aroundY(self._yAxisMin(self._measured_min_y, self._measured_max_y)),
-            'max_y': Plotting1dProxy.aroundY(self._yAxisMax(self._measured_max_y))
+            'min_x':
+            Plotting1dProxy.aroundX(self._measured_min_x),
+            'max_x':
+            Plotting1dProxy.aroundX(self._measured_max_x),
+            'min_y':
+            Plotting1dProxy.aroundY(
+                self._yAxisMin(self._measured_min_y, self._measured_max_y)),
+            'max_y':
+            Plotting1dProxy.aroundY(self._yAxisMax(self._measured_max_y))
         }
         self.experimentPlotRangesObjChanged.emit()
 
@@ -510,24 +592,18 @@ class Plotting1dProxy(QObject):
 
     @staticmethod
     def arrayToString(array):
-        string = np.array2string(
-            array,
-            separator=',',
-            precision=2,
-            suppress_small=True,
-            max_line_width=99999,
-            threshold=99999
-        )
+        string = np.array2string(array,
+                                 separator=',',
+                                 precision=2,
+                                 suppress_small=True,
+                                 max_line_width=99999,
+                                 threshold=99999)
         string = string.replace(' ', '')
         return string
 
     @staticmethod
     def stringToFloatList(string):
-        array = np.fromstring(
-            string,
-            separator=',',
-            dtype=float
-        )
+        array = np.fromstring(string, separator=',', dtype=float)
         float_list = array.tolist()
         return float_list
 

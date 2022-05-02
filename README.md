@@ -16,7 +16,7 @@ The reflectomety packages are included with the installation so there is no need
 
 ## Main features
 
-**EasyReflectometry** is open source (currently [GPL v3](LICENSE.md)) and cross-platform, with support for Windows, macOS and Linux (Ubuntu).
+**EasyReflectometry** is open source (currently [BSD](LICENSE.md)) and cross-platform, with support for Windows, macOS and Linux (Ubuntu).
 
 The intuitive tabbed interface allows for a clear and defined data modelling and analysis workflow. 
 There are also built-in step-by-step user guides and video tutorials for new users.
@@ -42,7 +42,7 @@ Planned improvements / new functionality for **EasyReflectometry**:
 
 ### Downloading
 
-[Download][31] the official **EasyReflectometry installer v0.0.3** for your operating system.
+[Download][31] the official **EasyReflectometry installer v0.0.4** for your operating system.
 
 ### Installing
 

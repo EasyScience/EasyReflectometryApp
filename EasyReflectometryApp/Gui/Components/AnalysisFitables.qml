@@ -12,7 +12,7 @@ import Gui.Globals 1.0 as ExGlobals
 EaComponents.TableView {
     id: table
 
-    enabled: ExGlobals.Constants.proxy.isFitFinished
+    enabled: ExGlobals.Constants.proxy.fitter.isFitFinished
 
     maxRowCountShow: 8
     defaultInfoText: qsTr("No Parameters Found")
@@ -23,7 +23,7 @@ EaComponents.TableView {
         id: fitablesModel
 
         //xml: ExGlobals.Constants.proxy.fitablesListAsXml
-        xml: ExGlobals.Constants.proxy.parametersAsXml
+        xml: ExGlobals.Constants.proxy.parameter.parametersAsXml
 
         query: "/root/item"
 
@@ -34,6 +34,8 @@ EaComponents.TableView {
         XmlRole { name: "unit"; query: "unit/string()" }
         XmlRole { name: "error"; query: "error/number()" }
         XmlRole { name: "fit"; query: "fit/number()" }
+        XmlRole { name: "min"; query: "min/string()" }
+        XmlRole { name: "max"; query: "max/string()" }
 
         onStatusChanged: {
             if (status === XmlListModel.Ready) {
@@ -62,6 +64,8 @@ EaComponents.TableView {
                    valueColumn.width -
                    unitColumn.width -
                    errorColumn.width -
+                   minColumn.width - 
+                   maxColumn.width - 
                    fitColumn.width
             headerText: "Label"
             text: formatLabel(model.index, model.label)
@@ -71,7 +75,7 @@ EaComponents.TableView {
         EaComponents.TableViewTextInput {
             id: valueColumn
             horizontalAlignment: Text.AlignRight
-            width: EaStyle.Sizes.fontPixelSize * 4
+            width: EaStyle.Sizes.fontPixelSize * 3.5
             headerText: "Value"
             text: {
                 if (model.label.endsWith('Background')) {
@@ -94,13 +98,33 @@ EaComponents.TableView {
         EaComponents.TableViewLabel {
             id: errorColumn
             horizontalAlignment: Text.AlignRight
-            width: EaStyle.Sizes.fontPixelSize * 4
+            width: EaStyle.Sizes.fontPixelSize * 3
             headerText: "Error  "
             text: model.error === 0.0 || model.error > 999999 ? "" : model.error.toFixed(4) + "  "
         }
 
+        EaComponents.TableViewTextInput {
+            id: minColumn
+            horizontalAlignment: Text.AlignRight
+            width: EaStyle.Sizes.fontPixelSize * 3
+            headerText: "Min  "
+            enabled: model.fit
+            text: model.fit == false ? '--' : model.min < -999999 ? "-inf" : model.min > 999999 ? "+inf" : model.min
+            onEditingFinished: editParameterValueMin(model.id, text)
+        }
+
+        EaComponents.TableViewTextInput {
+            id: maxColumn
+            horizontalAlignment: Text.AlignRight
+            width: EaStyle.Sizes.fontPixelSize * 3
+            headerText: "Max  "
+            enabled: model.fit
+            text: model.fit == false ? '--' : model.max < -999999 ? "-inf" : model.max > 999999 ? "+inf" : model.max
+            onEditingFinished: editParameterValueMax(model.id, text)
+        }
+
         EaComponents.TableViewCheckBox {
-            enabled: ExGlobals.Constants.proxy.experimentLoaded
+            enabled: ExGlobals.Constants.proxy.data.experimentLoaded
             id: fitColumn
             headerText: "Fit"
             checked: model.fit
@@ -130,18 +154,27 @@ EaComponents.TableView {
     }
 
     function editParameterValue(id, value) {
-        //ExGlobals.Constants.proxy.editParameter(id, parseFloat(value))
-        ExGlobals.Constants.proxy.editParameter(id, parseFloat(value))
+        //ExGlobals.Constants.proxy.parameter.editParameter(id, parseFloat(value))
+        ExGlobals.Constants.proxy.parameter.editParameter(id, parseFloat(value))
     }
+
+    function editParameterValueMin(id, value) {
+        ExGlobals.Constants.proxy.parameter.editParameterMin(id, value)
+    }
+
+    function editParameterValueMax(id, value) {
+        ExGlobals.Constants.proxy.parameter.editParameterMax(id, value)
+    }
+
     function editParameterFit(id, value) {
-        ExGlobals.Constants.proxy.editParameter(id, value)
+        ExGlobals.Constants.proxy.parameter.editParameter(id, value)
     }
 
     function formatLabel(index, label) {
         if (index < 0 || typeof label === "undefined")
             return ""
 
-        const datasetName = ExGlobals.Constants.proxy.experimentDataAsObj[0].name
+        const datasetName = ExGlobals.Constants.proxy.data.experimentDataAsObj[0].name
 
         // Modify current label
         label = label.replace("Instrument.", `Instrument.${datasetName}.`)
@@ -175,14 +208,12 @@ EaComponents.TableView {
         if (list[0] === previousList[0]) {
             if (ExGlobals.Variables.iconifiedNames) {
                 list[0] = `<font color=${iconColor} face="${EaStyle.Fonts.iconsFamily}">${list[0]}</font>`
-                list[0] = list[0].replace("Phases", "gem").replace("Instrument", "microscope")
             } else {
                 list[0] = `<font color=${EaStyle.Colors.themeForegroundMinor}>${list[0]}</font>`
             }
         } else {
             if (ExGlobals.Variables.iconifiedNames) {
                 list[0] = `<font face="${EaStyle.Fonts.iconsFamily}">${list[0]}</font>`
-                list[0] = list[0].replace("Phases", "gem").replace("Instrument", "microscope")
             } else {
                 list[0] = `<font color=${EaStyle.Colors.themeForeground}>${list[0]}</font>`
             }
