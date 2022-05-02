@@ -34,25 +34,25 @@ Once you have completed the feature and commited your changes, please open a pul
 ## Release workflow
 
 Periodically, or after the additional of major new features, there will be stable releases of `EasyReflectometryApp`. 
-These should be produced firstly by bumping the version number in the `develop` branch appropriately and updating the [CHANGELOG.md](./CHANGELOG.md). 
-The files where the version numbers should be changed are: 
-- `pyproject.toml`
-- `README.md`
-- `INSTALLATION.md`
-Once the version number is bumped and the resulting build EasyReflectometry application is tested, a branch should be taken from `develop` for the release candidate.
-This branch should be named `<version-number>rc` and a lock file for the poetry package management should be produced and commited to the repository using
+These should be produced firstly by:
+1. Bumping the version number in the `develop` branch appropriately and updating the [CHANGELOG.md](./CHANGELOG.md). 
+    The files where the version numbers should be changed are: 
+    - `pyproject.toml`
+    - `README.md`
+    - `INSTALLATION.md`
 
-```
-poetry lock
-git add -f package.lock
-git commit -m 'Lock package versions'
-```
+    This should be allowed to build on Github and the resulting application tested. 
+2. Then a branch should be taken from `develop` for the release candidate, named `<version-number>rc`. If there has been changes to `EasyReflectometryLib:main`, the `pyproject.toml` should be changed to use the `main` branch rather than `develop` of `EasyReflectometryLib`. Then a lock file for the poetry package management should be produced and commited to the repository using
 
-Once the Githib builds have been completed, these should also be tested. 
+    ```
+    poetry lock
+    git add -f poetry.lock pyproject.toml
+    git commit -m 'Lock package versions'
+    ```
 
-If all is well, then a pull request can be opened to merge the `<version-number>rc` branch into the `main` branch. 
-With this pull request merged the final version will be built from `main` and the `<version-number>rc` branch can be removed. 
-The final `main` branch action will then run to build the release version of EasyReflectometry, this will produce a release in the [releases](https://github.com/easyScience/EasyReflectometryApp/releases) section of the Github repository. 
-Once is it there, the release should be tagged and renamed, this is achieved by selecting the 'edit' button (the pencil). 
-The tag should be given as `v<version-number>` and the name of the release should be "Version <version-number> (<date>)` and currently (until new tutorials are produced) the tutorial should be removed from the release.
-Finally, the release should be published.  
+3. Once the `<version-number>rc` Github builds have been completed, these should also be tested. 
+4. Then a pull request can be opened to merge the `<version-number>rc` branch into the `main` branch and tested, at this stage the CHANGELOG.md information for the given release should be copy-and-pasted into the PR.
+5. Once this pull request is merged, the final version will be built from `main` and the `<version-number>rc` branch can be removed (locally).
+6. The final `main` branch action will then run to build the release version of EasyReflectometry, this will produce a release in the [releases](https://github.com/easyScience/EasyReflectometryApp/releases) section of the Github repository. 
+7. Once is it there, the release should be tagged and renamed, this is achieved by selecting the 'edit' button (the pencil). The tag should be given as `v<version-number>` and the name of the release should be `Version <version-number> (<date>)` and currently (until new tutorials are produced) the tutorial should be removed from the release.
+8. Finally, the release should be published.  
