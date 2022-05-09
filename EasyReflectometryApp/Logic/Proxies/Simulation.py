@@ -155,6 +155,12 @@ class SimulationProxy(QObject):
         self.parent._plotting_1d_proxy.setPureData(sim.x, self.parent._model_proxy.getPureModelReflectometry(sim.x))
         self.parent._plotting_1d_proxy.setSldData(*sld_profile)
 
+    def resetSimulation(self):
+        self._background_as_obj = self._defaultBackground()
+        self._resolution_as_obj = self._defaultResolution()
+        self._q_range_as_obj = self._defaultQRange()
+        self._experiment_parameters = None
+
     # # #
     # Static methods
     # # #

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### Changes 0.0.5
+
+- Fix the reset state button []()
+
 ### Changes 0.0.4
 
 - Add min and max columns to the Analysis tab [da47432](https://github.com/easyScience/EasyReflectometryApp/commit/da47432db1bec0e16e587328a24c23bdd174c099)

@@ -197,3 +197,7 @@ class MaterialProxy(QObject):
             return
         self._materials[self.currentMaterialsIndex].isld = isld
         self.parent.sampleChanged.emit()
+
+    def resetMaterial(self):
+        self._materials = self.parent._material_proxy._defaultMaterials()
+        self.materialsChanged.emit()

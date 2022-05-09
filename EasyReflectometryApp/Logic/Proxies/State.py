@@ -4,6 +4,9 @@ from dicttoxml import dicttoxml
 
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
+from easyCore import np
+
+
 
 class StateProxy(QObject):
 
@@ -78,12 +81,12 @@ class StateProxy(QObject):
 
     @Slot()
     def resetState(self):
-        pass
-        # Need to be reimplemented for EasyReflectometry
-        # self._project_info = self._defaultProjectInfo()
-        # self.projectCreated = False
-        # self.projectInfoChanged.emit()
-        # self._project_proxy.project_save_filepath = ""
-        # self.removeExperiment()
-        # self.resetUndoRedoStack()
-        # self.stateChanged.emit(False)
+        self.parent._project_proxy.resetProject()
+        self.parent._material_proxy.resetMaterial()
+        self.parent._model_proxy.resetModel()
+        self.parent._data_proxy.resetData()
+        self.parent._undoredo_proxy.resetUndoRedoStack()
+        self.parent._simulation_proxy.resetSimulation()
+        self.parent._plotting_1d_proxy._setMeasuredDataArrays(np.empty(0), np.empty(0))
+        self.parent._model_proxy.modelChanged.emit()
+        self.stateChanged.emit(False)

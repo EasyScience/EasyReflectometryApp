@@ -315,3 +315,8 @@ class ProjectProxy(QObject):
             success = False
         finally:
             self.htmlExportingFinished.emit(success, filepath)
+
+    def resetProject(self):
+        self._project_created = False 
+        self._project_info = self._defaultProjectInfo()
+        self.projectInfoChanged.emit()
