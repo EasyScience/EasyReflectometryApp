@@ -161,6 +161,16 @@ class DataProxy(QObject):
         self.experimentSkipped = False
         self.experimentDataRemoved.emit()
 
+    def resetData(self):
+        self._data = self._defaultData()
+        self._experiment_data = None
+        self.experiments = []
+
+        self.experimentLoaded = False
+        self.experimentSkipped = False
+        self._experiment_data_as_xml = ""
+        self.experimentDataAsXmlChanged.emit()
+
     @Slot(str)
     def setCurrentExperimentDatasetName(self, name):
         if self._data.experiments[0].name == name:

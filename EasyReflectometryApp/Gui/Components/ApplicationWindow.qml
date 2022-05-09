@@ -52,9 +52,7 @@ EaComponents.ApplicationWindow {
         },
 
         EaElements.ToolButton {
-            enabled: ExGlobals.Constants.proxy.project.projectCreated ||
-                     ExGlobals.Constants.proxy.data.experimentSkipped ||
-                     ExGlobals.Constants.proxy.data.experimentLoaded
+            enabled: ExGlobals.Variables.projectPageEnabled
             fontIcon: "backspace"
             ToolTip.text: qsTr("Reset to initial state without project, phases and data")
             onClicked: resetStateDialog.open()
@@ -365,7 +363,7 @@ EaComponents.ApplicationWindow {
 
         EaElements.Label {
             horizontalAlignment: Text.AlignHCenter
-            text: qsTr("Are you sure you want to reset the application to its\noriginal state without project, phases and data?\n\nThis operation cannot be undone.")
+            text: qsTr("Are you sure you want to reset the application to its\noriginal state without project, sample and data?\n\nThis operation cannot be undone.")
         }
 
         footer: EaElements.DialogButtonBox {
