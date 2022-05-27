@@ -11,6 +11,7 @@ import easyAppGui.Logic 1.0 as EaLogic
 
 import Gui.Globals 1.0 as ExGlobals
 import Gui.Components 1.0 as ExComponents
+import Gui.Pages.Sample 1.0 as ExSample
 
 EaComponents.SideBarColumn {
 
@@ -79,6 +80,7 @@ EaComponents.SideBarColumn {
                     headerText: "Del." //"\uf2ed"
                     fontIcon: "minus-circle"
                     ToolTip.text: qsTr("Remove this material")
+                    enabled: (materialsTable.model.count > 1) ? true : false  
                     onClicked: ExGlobals.Constants.proxy.material.removeMaterials(materialsTable.currentIndex)
                 }
 
@@ -128,9 +130,101 @@ EaComponents.SideBarColumn {
         }*/
     }
 
+    EaElements.GroupBox{
+        id: modelGroup
+        title: qsTr("Models editor")
+        ToolTip.text: qsTr("Define the multiple models or contrasts here")
+        ToolTip.visible: hovered
+        ToolTip.delay: 500
+        collapsible: true
+        collapsed: true
+        enabled: true
+
+        EaComponents.TableView {
+            id: modelTable
+
+            defaultInfoText: qsTr("No Models Present")
+
+            // Table model
+            model: XmlListModel {
+                // property int itemsIndex: ExGlobals.Constants.proxy.model.currentItemsIndex + 1
+
+                xml: ExGlobals.Constants.proxy.model.modelsAsXml
+                query: "/root/item"
+
+                XmlRole { name: "color"; query: "color/string()" }
+                XmlRole { name: "label"; query: "name/string()" }
+            }
+            // Table rows
+
+            delegate: EaComponents.TableViewDelegate {
+                property var modelsModel: model
+
+                EaComponents.TableViewLabel {
+                    headerText: "Color"
+                    backgroundColor: model.color
+                }
+
+                EaComponents.TableViewTextInput {
+                    horizontalAlignment: Text.AlignLeft
+                    width: EaStyle.Sizes.fontPixelSize * 29.8
+                    headerText: "Label"
+                    text: modelsModel.label
+                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentModelsName(text)
+                }
+
+                // EaComponents.TableViewCheckBox {
+                //     horizontalAlignment: Text.AlignHCenter
+                //     width: EaStyle.Sizes.fontPixelSize * 3.2 
+                //     checked: false
+                //     headerText: "Plot"
+                // }
+
+                EaComponents.TableViewButton {
+                    id: deleteRowColumn
+                    headerText: "Del." //"\uf2ed"
+                    fontIcon: "minus-circle"
+                    enabled: (modelTable.model.count > 1) ? true : false//When item is selected
+                    ToolTip.text: qsTr("Remove this model")
+                    onClicked: {
+                        ExGlobals.Constants.proxy.model.removeModels(modelTable.currentIndex)
+                        modelTable.currentIndex = modelTable.currentIndex - 1
+                    }
+                }
+            }
+
+            onCurrentIndexChanged: {
+                ExGlobals.Constants.proxy.model.currentModelIndex = modelTable.currentIndex
+                itemsTable.currentIndex = 0
+                layersTable.currentIndex = 0
+            }
+        }
+        Row {
+            spacing: EaStyle.Sizes.fontPixelSize
+
+            EaElements.SideBarButton {
+                // This button should add a new item to the model editor.
+                enabled: true
+                fontIcon: "plus-circle"
+                text: qsTr("Add a new model")
+                onClicked: ExGlobals.Constants.proxy.model.addNewModels()
+            }
+
+            EaElements.SideBarButton {
+                // When an item is selected, this button will be enabled to allow
+                // the selected item to be duplicated
+                enabled: (modelTable.model.count > 0) ? true : false//When item is selected
+                fontIcon: "clone"
+                text: qsTr("Duplicate selected model")
+                onClicked: ExGlobals.Constants.proxy.model.duplicateSelectedModels()
+            }
+
+        }
+    }
+
     EaElements.GroupBox {
         id: itemsGroup
-        title: qsTr("Model editor")
+        title: qsTr(ExGlobals.Constants.proxy.model.currentModelsName + " editor")
         ToolTip.text: qsTr("The radiation is incident first on the top layer")
         ToolTip.visible: hovered
         ToolTip.delay: 500
@@ -193,6 +287,7 @@ EaComponents.SideBarColumn {
                     headerText: "Del." //"\uf2ed"
                     fontIcon: "minus-circle"
                     ToolTip.text: qsTr("Remove this layer")
+                    enabled: (itemsTable.model.count > 1) ? true : false  
                     onClicked: ExGlobals.Constants.proxy.model.removeItems(itemsTable.currentIndex)
                 }
 
@@ -276,7 +371,7 @@ EaComponents.SideBarColumn {
         // When an item in the above table is selected, this box will become enabled.
         // Allowing different parameters and layers to be defined for the item.
         id: layersGroup
-        title: qsTr(currentItemsType + " editor")
+        title: qsTr(ExGlobals.Constants.proxy.model.currentItemsName + " editor")
         enabled: (itemsTable.model.count > 0) ? true : false //When a layer is selected
         collapsible: false
         last: true
@@ -303,214 +398,18 @@ EaComponents.SideBarColumn {
                 }
             }
         }
-        EaComponents.TableView {
-            visible: (currentItemsType == 'Surfactant Layer') ? true : false
+        ExSample.SurfactantTable{
             id: surfactantTable
-
-            // Table model
-
-            model: XmlListModel {
-                property int layersIndex: ExGlobals.Constants.proxy.model.currentLayersIndex + 1
-
-                xml: ExGlobals.Constants.proxy.model.layersAsXml
-                query: `/root/item[${itemsTable.currentIndex + 1}]/layers/item`
-
-                XmlRole { name: "formula"; query: "chemical_structure/string()" }
-                XmlRole { name: "thick"; query: "thickness/value/number()" }
-                XmlRole { name: "rough"; query: "roughness/value/number()" }
-                XmlRole { name: "apm"; query: "area_per_molecule/value/number()" }
-                XmlRole { name: "solvation"; query: "solvation/value/number()" }
-                XmlRole { name: "solvent"; query: "solvent/name/string()"}
-            }
-
-            // Table rows
-
-            delegate: EaComponents.TableViewDelegate {
-                property var surfactantModel: model
-
-                EaComponents.TableViewTextInput {
-                    horizontalAlignment: Text.AlignHCenter
-                    width: EaStyle.Sizes.fontPixelSize * 7.0
-                    headerText: "Formula"
-                    text: surfactantModel.formula
-                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersChemStructure(text)
-                }
-
-                EaComponents.TableViewTextInput {
-                    horizontalAlignment: Text.AlignHCenter
-                    width: EaStyle.Sizes.fontPixelSize * 5.5
-                    headerText: "Thickness/Å"
-                    text: (isNaN(surfactantModel.thick)) ? '--' : surfactantModel.thick.toFixed(2)
-                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersThickness(text)
-                }
-
-                EaComponents.TableViewTextInput {
-                    horizontalAlignment: Text.AlignHCenter
-                    width: EaStyle.Sizes.fontPixelSize * 6.0
-                    headerText: "Roughness/Å"
-                    text: (isNaN(surfactantModel.rough)) ? '--' : surfactantModel.rough.toFixed(2)
-                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
-                }
-
-                EaComponents.TableViewTextInput {
-                    horizontalAlignment: Text.AlignHCenter
-                    width: EaStyle.Sizes.fontPixelSize * 6.0
-                    headerText: "Solvation"
-                    text: (isNaN(surfactantModel.solvation)) ? '--' : surfactantModel.solvation.toFixed(2)
-                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersSolvation(text)
-                }
-
-                EaComponents.TableViewTextInput {
-                    horizontalAlignment: Text.AlignHCenter
-                    width: EaStyle.Sizes.fontPixelSize * 4.0
-                    headerText: "APM/Å<sup>2</sup>"
-                    text: (isNaN(surfactantModel.apm)) ? '--' : surfactantModel.apm.toFixed(2)
-                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentItemApm(text)
-                }
-
-                EaComponents.TableViewComboBox{
-                    horizontalAlignment: Text.AlignLeft
-                    width: EaStyle.Sizes.fontPixelSize * 6.5
-                    headerText: "Solvent"
-                    onActivated: {
-                        ExGlobals.Constants.proxy.model.setCurrentLayersSolvent(currentIndex)
-                    }
-                    model: ExGlobals.Constants.proxy.material.materialsName
-                    onModelChanged: {
-                        currentIndex = indexOfValue(surfactantModel.solvent)
-                    }
-                    Component.onCompleted: {
-                        currentIndex = indexOfValue(surfactantModel.solvent)
-                    }
-                }
-            }
-
-            onCurrentIndexChanged: {
-                ExGlobals.Constants.proxy.model.currentLayersIndex = surfactantTable.currentIndex
-            }
-
-        }
-
-        EaElements.GroupBox {
             visible: (currentItemsType == 'Surfactant Layer') ? true : false
-            spacing: EaStyle.Sizes.fontPixelSize * 0.5
-            collapsible: true
-            collapsed: true
-
-            title: qsTr('Chemical Constraints')
-            Row {
-                EaElements.CheckBox {
-                    checked: false
-                    id: apm_check
-                    text: qsTr("Area-per-molecule")
-                    ToolTip.text: qsTr("Checking this box will ensure that the area-per-molecule of the head and tail layers is the same")
-                    onCheckedChanged: ExGlobals.Constants.proxy.model.constrainApm = checked
-                }
-                EaElements.CheckBox {
-                    checked: false
-                    id: conformal
-                    text: qsTr("Conformal roughness")
-                    ToolTip.text: qsTr("Checking this box will ensure that the interfacial roughness is the same for all interfaces of the surfactant")
-                    onCheckedChanged: ExGlobals.Constants.proxy.model.conformalRoughness = checked
-                }
-            }
-            
-            Row {
-                EaElements.CheckBox {
-                    checked: false
-                    id: solvent_rough
-                    text: qsTr("Constrain roughness to item")
-                    enabled: conformal.checked
-                    ToolTip.text: qsTr("Checking this box allows another item to be selected and the conformal roughness will be constrained to this")
-                    onCheckedChanged: checked ? ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(solvent_rough_item.currentText) : ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(null)
-                }
-                EaElements.ComboBox {
-                    id: solvent_rough_item
-                    enabled: solvent_rough.checked
-                    onActivated: {
-                        ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(null) 
-                        ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(currentText)
-                    }
-                    model: ExGlobals.Constants.proxy.model.itemsNamesConstrain
-                }
-            }
         }
-        
-        EaComponents.TableView {
-            visible: (currentItemsType == 'Repeating Multi-layer') ||  (currentItemsType == 'Multi-layer') ? true : false
+
+        ExSample.SurfactantGroup{
+            visible: (currentItemsType == 'Surfactant Layer') ? true : false
+        } 
+
+        ExSample.MultiLayerTable{
             id: layersTable
-            defaultInfoText: qsTr("No Layers Added")
-
-            // Table model
-
-            model: XmlListModel {
-                property int layersIndex: ExGlobals.Constants.proxy.model.currentLayersIndex + 1
-
-                xml: ExGlobals.Constants.proxy.model.layersAsXml
-                query: `/root/item[${itemsTable.currentIndex + 1}]/layers/item`
-
-                XmlRole { name: "thick"; query: "thickness/value/number()" }
-                XmlRole { name: "rough"; query: "roughness/value/number()" }
-                XmlRole { name: "materialid"; query: "material/name/string()"}
-            }
-
-            // Table rows
-
-            delegate: EaComponents.TableViewDelegate {
-                property var layersModel: model
-
-                EaComponents.TableViewLabel {
-                    width: EaStyle.Sizes.fontPixelSize * 2.3
-                    headerText: "No."
-                    text: model.index + 1
-                }
-
-                EaComponents.TableViewComboBox{
-                    horizontalAlignment: Text.AlignLeft
-                    width: EaStyle.Sizes.fontPixelSize * 9.8
-                    headerText: "Material"
-                    onActivated: {
-                        ExGlobals.Constants.proxy.model.setCurrentLayersMaterial(currentIndex)
-                    }
-                    model: ExGlobals.Constants.proxy.material.materialsName
-                    onModelChanged: {
-                        currentIndex = indexOfValue(layersModel.materialid)
-                    }
-                    Component.onCompleted: {
-                        currentIndex = indexOfValue(layersModel.materialid)
-                    }
-                }
-
-                EaComponents.TableViewTextInput {
-                    horizontalAlignment: Text.AlignHCenter
-                    width: EaStyle.Sizes.fontPixelSize * 10.0
-                    headerText: "Thickness/Å"
-                    text: (isNaN(layersModel.thick)) ? '--' : layersModel.thick.toFixed(2)
-                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersThickness(text)
-                }
-
-                EaComponents.TableViewTextInput {
-                    horizontalAlignment: Text.AlignHCenter
-                    width: EaStyle.Sizes.fontPixelSize * 10.0
-                    headerText: "Upper Roughness/Å"
-                    text: (isNaN(layersModel.rough)) ? '--' : layersModel.rough.toFixed(2)
-                    onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
-                } 
-
-                EaComponents.TableViewButton {
-                    id: deleteRowColumn
-                    headerText: "Del." //"\uf2ed"
-                    fontIcon: "minus-circle"
-                    ToolTip.text: qsTr("Remove this item")
-                    onClicked: ExGlobals.Constants.proxy.model.removeLayers(layersTable.currentIndex)
-                }
-
-            }
-
-            onCurrentIndexChanged: {
-                ExGlobals.Constants.proxy.model.currentLayersIndex = layersTable.currentIndex
-            }
-
+            visible: (currentItemsType == 'Repeating Multi-layer') ||  (currentItemsType == 'Multi-layer') ? true : false
         }
 
         Row {

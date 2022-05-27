@@ -13,6 +13,67 @@ import Gui.Components 1.0 as ExComponents
 
 EaComponents.SideBarColumn {
 
+    EaElements.GroupBox{
+        title: qsTr("Select model/dataset pair")
+        collapsible: true
+        collapsed: false
+
+        EaComponents.TableView {
+            id: dataTable
+
+            defaultInfoText: qsTr("No Experiments Loaded")
+
+            // Table model
+
+            model: XmlListModel {
+                xml: ExGlobals.Constants.proxy.data.experimentDataAsXml
+                query: "/root/item"
+
+                XmlRole { name: "label"; query: "name/string()" }
+                XmlRole { name: "color"; query: "color/string()" }
+                XmlRole { name: "model_name"; query: "model_name/string()"}
+            }
+
+            // Table rows
+
+            delegate: EaComponents.TableViewDelegate {
+                property var dataModel: model
+
+                EaComponents.TableViewLabel {
+                    width: EaStyle.Sizes.fontPixelSize * 2.5
+                    headerText: "No."
+                    text: model.index + 1
+                }
+
+                EaComponents.TableViewLabel {
+                    horizontalAlignment: Text.AlignLeft
+                    width: EaStyle.Sizes.fontPixelSize * 16.5
+                    headerText: "Label"
+                    text: model.label
+                }
+
+                EaComponents.TableViewLabel {
+                    horizontalAlignment: Text.AlignLeft
+                    width: EaStyle.Sizes.fontPixelSize * 12.5
+                    headerText: "Model"
+                    text: model.model_name
+                    // editable: false
+                }
+
+                EaComponents.TableViewLabel {
+                    headerText: "Color"
+                    backgroundColor: model.color
+                }
+
+            }
+            onCurrentIndexChanged: {
+                ExGlobals.Constants.proxy.data.currentDataIndex = dataTable.currentIndex
+            }
+
+        }
+    }
+    
+
     EaElements.GroupBox {
         id: groupBox
 

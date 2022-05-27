@@ -146,9 +146,10 @@ class ProjectProxy(QObject):
         projectPath = self.currentProjectPath
         project_save_filepath = os.path.join(projectPath, 'project.json')
         materials_in_model = []
-        for i in self.parent._model_proxy._model.structure:
-            for j in i.layers:
-                materials_in_model.append(j.material)
+        for i in self.parent._model_proxy._model:
+            for j in i.structure:
+                for k in j.layers:
+                    materials_in_model.append(k.material)
         materials_not_in_model = []
         for i in self.parent._material_proxy._materials:
             if i not in materials_in_model:

@@ -32,7 +32,7 @@ Row {
         width: elementWidth()
         anchors.verticalCenter: parent.verticalCenter
         units: ""
-        text: ExGlobals.Constants.proxy.simulation.backgroundAsObj.bkg
+        text: ExGlobals.Constants.proxy.simulation.backgroundAsObj.bkg.toExponential(3)
         onEditingFinished: updateParameters()
     }
 

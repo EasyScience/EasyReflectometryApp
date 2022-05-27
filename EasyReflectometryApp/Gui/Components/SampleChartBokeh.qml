@@ -7,10 +7,10 @@ import Gui.Globals 1.0 as ExGlobals
 
 EaCharts.BaseBokeh {
     calculatedData: ExGlobals.Constants.proxy.plotting1d.bokehPureDataObj
-    sldData: ExGlobals.Constants.proxy.plotting1d.bokehSldDataObj
+    sldData: ExGlobals.Constants.proxy.plotting1d.bokehSampleSldDataObj
 
     plotRanges: ExGlobals.Constants.proxy.plotting1d.analysisPlotRangesObj
-    sldPlotRanges: ExGlobals.Constants.proxy.plotting1d.sldPlotRangesObj
+    sldPlotRanges: ExGlobals.Constants.proxy.plotting1d.sampleSldPlotRangesObj
 
     xMainAxisTitle: "q (Å⁻¹)"
     yMainAxisTitle: {

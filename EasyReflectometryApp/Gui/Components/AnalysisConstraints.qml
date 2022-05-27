@@ -17,7 +17,7 @@ EaComponents.TableView  {
     // Table model
 
     model: XmlListModel {
-        ///xml: ExGlobals.Constants.proxy.constraintsListAsXml
+        xml: ExGlobals.Constants.proxy.parameter.constraintsAsXml
 
         query: "/root/item"
 
@@ -68,7 +68,7 @@ EaComponents.TableView  {
             id: valueColumn
             horizontalAlignment: Text.AlignRight
             width: EaStyle.Sizes.fontPixelSize * 4
-            text: model.value.toFixed(4)
+            text: model.value.toFixed(2)
         }
 
         EaComponents.TableViewLabel {
@@ -91,7 +91,7 @@ EaComponents.TableView  {
             width: EaStyle.Sizes.fontPixelSize * 3
             headerText: "Use"
             checked: model.enabled
-            onToggled: ExGlobals.Constants.proxy.toggleConstraintByIndex(model.index, checked)
+            onToggled: ExGlobals.Constants.proxy.parameter.toggleConstraintByIndex(model.index, checked)
         }
 
         EaComponents.TableViewButton {
@@ -99,7 +99,7 @@ EaComponents.TableView  {
             headerText: "Del." //"\uf2ed"
             fontIcon: "minus-circle"
             ToolTip.text: qsTr("Remove this constraint")
-            onClicked: ExGlobals.Constants.proxy.removeConstraintByIndex(model.index)
+            onClicked: ExGlobals.Constants.proxy.parameter.removeConstraintByIndex(model.number-1)
         }
     }
 

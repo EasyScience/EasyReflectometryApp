@@ -223,6 +223,7 @@ EaComponents.ApplicationWindow {
 
         // Experiment page
         EaComponents.ContentPage {
+            id: experiment
             defaultInfo: ExGlobals.Constants.proxy.data.experimentLoaded ? "" : qsTr("No Experiments Loaded")
 
             mainContent: EaComponents.MainContent {
@@ -256,6 +257,7 @@ EaComponents.ApplicationWindow {
 
         // Analysis page
         EaComponents.ContentPage {
+            id: analysis
             mainContent: EaComponents.MainContent {
                 tabs: [
                     EaElements.TabButton {

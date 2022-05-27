@@ -22,18 +22,22 @@ class PyQmlProxy(QObject):
     # SIGNALS
     dummySignal = Signal()
     sampleChanged = Signal()
+    layersSelectionChanged = Signal()
+    layersChanged = Signal()
+    itemsChanged = Signal()
+    layersMaterialsChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self._interface = InterfaceFactory()
+        self._interface = [InterfaceFactory()]
 
         # Proxies
         self._project_proxy = ProjectProxy(self)
-        self._data_proxy = DataProxy(self)
-        self._simulation_proxy = SimulationProxy(self)
         self._material_proxy = MaterialProxy(self)
         self._model_proxy = ModelProxy(self)
+        self._data_proxy = DataProxy(self)
+        self._simulation_proxy = SimulationProxy(self)
         self._calculator_proxy = CalculatorProxy(self)
         self._parameter_proxy = ParameterProxy(self)
         self._fitter_proxy = FitterProxy(self)
@@ -43,15 +47,28 @@ class PyQmlProxy(QObject):
         self._undoredo_proxy = UndoRedoProxy(self)
 
         # Sample Connections
-        self.sampleChanged.connect(self._material_proxy._onMaterialsChanged)
+        self.layersMaterialsChanged.connect(self._model_proxy._onLayersChanged)
+        self.layersSelectionChanged.connect(self._model_proxy._onLayersChanged)
+        self.layersChanged.connect(self._model_proxy._onLayersChanged)
+        self.layersChanged.connect(self._parameter_proxy._onParametersChanged)
+        self.layersChanged.connect(self._simulation_proxy._onCalculatedDataChanged)
+        self._material_proxy.materialsChanged.connect(self._parameter_proxy._onParametersChanged)
+        self._model_proxy.itemsNameChanged.connect(self._parameter_proxy._onParametersChanged)
+        self.itemsChanged.connect(self._model_proxy._onItemsChanged)
+
+        self._material_proxy._setMaterialsAsXml()
+        self._model_proxy._onLayersChanged()
+        self._model_proxy._onItemsChanged()
+        self._simulation_proxy._onSimulationParametersChanged()
+
+        self.sampleChanged.connect(self._material_proxy._setMaterialsAsXml)
         self.sampleChanged.connect(self._model_proxy._onLayersChanged)
-        self._model_proxy.layersChanged.connect(self._model_proxy._onLayersChanged)
         self.sampleChanged.connect(self._model_proxy._onItemsChanged)
         self.sampleChanged.connect(
             self._simulation_proxy._onSimulationParametersChanged)
         self.sampleChanged.connect(self._parameter_proxy._onParametersChanged)
+        self.layersChanged.connect(self._fitter_proxy._onSampleChanged)
         self.sampleChanged.connect(self._simulation_proxy._onCalculatedDataChanged)
-        self._model_proxy.layersChanged.connect(self._simulation_proxy._onCalculatedDataChanged)
         self.sampleChanged.connect(self._undoredo_proxy.undoRedoChanged)
 
         # Screen recorder

@@ -23,6 +23,7 @@ pyobjc-core = { version = '^7.1', platform = 'darwin' }
 pyobjc-framework-cocoa = { version = '^7.1', platform = 'darwin' }
 matplotlib = "^3.4.2"
 pint = "^0.17"
+dicttoxml2 = "^2.0.0"
 # easyScience
 EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'develop' }
 easyAppLogic = { git = 'https://github.com/easyScience/easyAppLogic.git', rev = 'easyreflectometry' }

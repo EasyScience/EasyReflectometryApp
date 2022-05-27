@@ -16,7 +16,7 @@ class MinimizerProxy(QObject):
         self.parent = parent
 
         self._current_minimizer_method_index = 0
-        self._current_minimizer_method_name = self.parent._fitter_proxy.eFitter.available_methods(
+        self._current_minimizer_method_name = self.parent._fitter_proxy.eFitter.easy_f.available_methods(
         )[0]
         self.currentMinimizerChanged.connect(self._onCurrentMinimizerChanged)
 
@@ -26,11 +26,11 @@ class MinimizerProxy(QObject):
 
     @Property('QVariant', notify=dummySignal)
     def minimizerNames(self):
-        return self.parent._fitter_proxy.eFitter.available_engines
+        return self.parent._fitter_proxy.eFitter.easy_f.available_engines
 
     @Property(int, notify=currentMinimizerChanged)
     def currentMinimizerIndex(self):
-        current_name = self.parent._fitter_proxy.eFitter.current_engine.name
+        current_name = self.parent._fitter_proxy.eFitter.easy_f.current_engine.name
         return self.minimizerNames.index(current_name)
 
     @currentMinimizerIndex.setter
@@ -39,7 +39,7 @@ class MinimizerProxy(QObject):
         if self.currentMinimizerIndex == new_index:
             return
         new_name = self.minimizerNames[new_index]
-        self.parent._fitter_proxy.eFitter.switch_engine(new_name)
+        self.parent._fitter_proxy.eFitter.easy_f.switch_engine(new_name)
         self.currentMinimizerChanged.emit()
 
     @Property(int, notify=currentMinimizerMethodChanged)
@@ -71,7 +71,7 @@ class MinimizerProxy(QObject):
 
     def _onCurrentMinimizerChanged(self):
         idx = 0
-        minimizer_name = self.parent._fitter_proxy.eFitter.current_engine.name
+        minimizer_name = self.parent._fitter_proxy.eFitter.easy_f.current_engine.name
         if minimizer_name == 'lmfit':
             idx = self.minimizerMethodNames.index('leastsq')
         elif minimizer_name == 'bumps':
