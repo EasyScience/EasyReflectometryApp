@@ -106,6 +106,10 @@ class ModelProxy(QObject):
     def modelList(self):
         return [i.name for i in self._model]
 
+    @Property(list, notify=modelsNameChanged)
+    def modelListAll(self):
+        return ['Quick filter', 'Materials'] + [i.name for i in self._model]
+
     @modelList.setter
     @property_stack_deco
     def modelList(self):

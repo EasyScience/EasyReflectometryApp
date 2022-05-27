@@ -83,20 +83,31 @@ EaComponents.SideBarColumn {
 
         // Filter parameters widget
         Row {
-            spacing: EaStyle.Sizes.fontPixelSize * 0.5
+            spacing: EaStyle.Sizes.fontPixelSize
 
             Column {
-                EaElements.Label {
-                    visible: false
-                    enabled: false
-                    text: qsTr("Filter by text")
+                EaElements.ComboBox {
+                    width: EaStyle.Sizes.sideBarContentWidth
+                    model: ExGlobals.Constants.proxy.model.modelListAll
+                    onActivated: {
+                        if (currentValue == 'Quick filter'){
+                            filterCriteriaField.text = ''
+                        } else {
+                            if (currentValue == 'Materials') {
+                                filterCriteriaField.text = 'SLD'
+                            } else {
+                                filterCriteriaField.text = currentValue
+                            }
+                        }
+                    }
+                    Component.onCompleted: {
+                        currentIndex = 0
+                    }
                 }
 
                 EaElements.TextField {
                     id: filterCriteriaField
-
-                    width: EaStyle.Sizes.sideBarContentWidth //(EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 3
-
+                    width: EaStyle.Sizes.sideBarContentWidth
                     placeholderText: qsTr("Filter parameters")
 
                     onTextChanged: {
@@ -106,7 +117,6 @@ EaComponents.SideBarColumn {
                     }
                 }
             }
-
             Column {
                 visible: false
 

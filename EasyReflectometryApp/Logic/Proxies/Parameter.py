@@ -57,11 +57,11 @@ class ParameterProxy(QObject):
             if not par.enabled:
                 continue
 
-            if self._parameters_filter_criteria.lower() not in par_path.lower():
-                continue
-
             unit = '{:~P}'.format(par.unit)
             label = get_label(par_path)
+
+            if self._parameters_filter_criteria.lower() not in label.lower():
+                continue
             if label is None:
                 continue
             self._parameters_as_obj.append({
@@ -214,9 +214,6 @@ class ParameterProxy(QObject):
             if not par.enabled:
                 continue
 
-            if self._parameters_filter_criteria.lower() not in par_path.lower():
-                continue
-
             label = get_label(par_path)
             if label is None:
                 continue
@@ -314,7 +311,7 @@ def get_label(par_path: str) -> str:
     path_split = par_path.split('.')
     model = [(' ').join(path_split[0:1] + ['-'])]
     if path_split[-1][-3:] == 'sld':
-        label = (' ').join(model + par_path.split('.')[-2:])
+        label = (' ').join(par_path.split('.')[-2:])
         label = label[:-3] + 'SLD'
     elif path_split[-1] == 'thickness':
         label = (' ').join(model + par_path.split('.')[-2:])
