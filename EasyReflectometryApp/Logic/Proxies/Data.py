@@ -213,7 +213,6 @@ class DataProxy(QObject):
 
     def resetData(self):
         self._data = DataStore()
-        self.experiments = []
 
         self.experimentLoaded = False
         self.experimentSkipped = False

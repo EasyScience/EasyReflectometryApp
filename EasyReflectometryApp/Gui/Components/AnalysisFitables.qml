@@ -70,6 +70,15 @@ EaComponents.TableView {
             headerText: "Label"
             text: formatLabel(model.index, model.label)
             textFormat: Text.RichText
+            elide: Text.ElideRight
+            ToolTip.text: formatLabel(model.index, model.label)
+            ToolTip.visible: formatLabel(model.index, model.label) ? mac.containsMouse : false
+            MouseArea {
+                id: mac
+                anchors.fill: parent
+                hoverEnabled: true
+            }
+            ToolTip.delay: 500
         }
 
         EaComponents.TableViewTextInput {

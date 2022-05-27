@@ -54,6 +54,15 @@ EaComponents.TableView  {
                     deleteRowColumn.width) / 2
             headerText: "Constraint"
             text: model.dependentName
+            elide: Text.ElideRight
+            ToolTip.text: model.dependentName
+            ToolTip.visible: model.dependentName ? ma.containsMouse : false
+            MouseArea {
+                id: ma
+                anchors.fill: parent
+                hoverEnabled: true
+            }
+            ToolTip.delay: 500
         }
 
         EaComponents.TableViewLabel {
@@ -84,6 +93,15 @@ EaComponents.TableView  {
             horizontalAlignment: Text.AlignLeft
             width: dependentNameColumn.width
             text: model.independentName
+            elide: Text.ElideRight
+            ToolTip.text: model.independentName
+            ToolTip.visible: model.independentName ? mai.containsMouse : false
+            MouseArea {
+                id: mai
+                anchors.fill: parent
+                hoverEnabled: true
+            }
+            ToolTip.delay: 500
         }
 
         EaComponents.TableViewCheckBox {
