@@ -135,19 +135,28 @@ class DataProxy(QObject):
 
     @Property(float, notify=experimentChanged)
     def currentScaling(self):
-        model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
-        return self.parent._model_proxy._model[model_index].scale.raw_value
+        try:
+            model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+            return self.parent._model_proxy._model[model_index].scale.raw_value
+        except IndexError:
+            return 1
 
     @Property(float, notify=experimentChanged)
     def currentBackground(self):
-        model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
-        return self.parent._model_proxy._model[model_index].background.raw_value
+        try:
+            model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+            return self.parent._model_proxy._model[model_index].background.raw_value
+        except IndexError:
+            return 0
     
     @Property(float, notify=experimentChanged)
     def currentResolution(self):
-        model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
-        return self.parent._model_proxy._model[model_index].resolution.raw_value
-        
+        try:
+            model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+            return self.parent._model_proxy._model[model_index].resolution.raw_value
+        except IndexError:
+            return 0
+
     @Property(str, notify=experimentChanged)
     def currentDataName(self):
         return self._data[self.currentDataIndex].name 
