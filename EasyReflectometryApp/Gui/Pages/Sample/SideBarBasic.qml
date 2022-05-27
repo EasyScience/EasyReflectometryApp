@@ -47,19 +47,21 @@ EaComponents.SideBarColumn {
             delegate: EaComponents.TableViewDelegate {
 
                 EaComponents.TableViewLabel {
+                    id: colorLabel
                     headerText: "Color"
                     backgroundColor: model.color
                 }
 
                 EaComponents.TableViewTextInput {
                     horizontalAlignment: Text.AlignLeft
-                    width: EaStyle.Sizes.fontPixelSize * 12.5
+                    width: EaStyle.Sizes.sideBarContentWidth - (sldLabel.width + isldLabel.width + colorLabel.width + deleteRowColumn.width + 5 * EaStyle.Sizes.tableColumnSpacing)
                     headerText: "Name"
                     text: model.label
                     onEditingFinished: ExGlobals.Constants.proxy.material.setCurrentMaterialsName(text)
                 }
 
                 EaComponents.TableViewTextInput {
+                    id: sldLabel
                     horizontalAlignment: Text.AlignHCenter
                     width: EaStyle.Sizes.fontPixelSize * 8.5
                     headerText: "SLD/10<sup>-6</sup> Å<sup>-2</sup>"
@@ -68,6 +70,7 @@ EaComponents.SideBarColumn {
                 }
 
                 EaComponents.TableViewTextInput {
+                    id: isldLabel
                     horizontalAlignment: Text.AlignHCenter
                     width: EaStyle.Sizes.fontPixelSize * 8.5
                     headerText: "<i>i</i> SLD/10<sup>-6</sup> Å<sup>-2</sup>"
@@ -96,22 +99,42 @@ EaComponents.SideBarColumn {
             spacing: EaStyle.Sizes.fontPixelSize
 
             EaElements.SideBarButton {
-                // When this button is clicked, a new material should be added to the bottom of
-                // the material editor table
+                // This button should add a new item to the model editor.
                 enabled: true
+                width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 fontIcon: "plus-circle"
-                text: qsTr("Add a new material")
+                text: qsTr("Add item")
                 onClicked: ExGlobals.Constants.proxy.material.addNewMaterials()
             }
 
             EaElements.SideBarButton {
-                // This button should only be enabled when some material in the material editor table
-                // has been selected. If a material is selected and this button is clicked, the material
-                //should be deleted.
+                // When an item is selected, this button will be enabled to allow
+                // the selected item to be duplicated
                 enabled: (materialsTable.model.count > 0) ? true : false //When material is selected
+                width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 fontIcon: "clone"
-                text: qsTr("Duplicate selected material")
+                text: qsTr("Duplicate item")
                 onClicked: ExGlobals.Constants.proxy.material.duplicateSelectedMaterials()
+            }
+
+            EaElements.SideBarButton {
+                // When an item is selected and it is not at the top, 
+                // this button will be enabled to allow
+                // the selected item to be moved up
+                enabled: (materialsTable.model.count > 0 && materialsTable.currentIndex != 0) ? true : false//When item is selected
+                width: EaStyle.Sizes.tableRowHeight
+                fontIcon: "arrow-up"
+                onClicked: ExGlobals.Constants.proxy.material.moveSelectedMaterialsUp()
+            }
+
+            EaElements.SideBarButton {
+                // When an item is selected and it is not at the bottom, 
+                // this button will be enabled to allow
+                // the selected item to be moved down
+                enabled: (materialsTable.model.count > 0 && materialsTable.currentIndex + 1 != materialsTable.model.count) ? true : false//When item is selected
+                width: EaStyle.Sizes.tableRowHeight
+                fontIcon: "arrow-down"
+                onClicked: ExGlobals.Constants.proxy.material.moveSelectedMaterialsDown()
             }
         }
 
@@ -161,13 +184,14 @@ EaComponents.SideBarColumn {
                 property var modelsModel: model
 
                 EaComponents.TableViewLabel {
+                    id: colorLabel
                     headerText: "Color"
                     backgroundColor: model.color
                 }
 
                 EaComponents.TableViewTextInput {
                     horizontalAlignment: Text.AlignLeft
-                    width: EaStyle.Sizes.fontPixelSize * 29.8
+                    width: EaStyle.Sizes.sideBarContentWidth - (colorLabel.width + deleteRowColumn.width + 3 * EaStyle.Sizes.tableColumnSpacing)
                     headerText: "Label"
                     text: modelsModel.label
                     onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentModelsName(text)
@@ -205,8 +229,9 @@ EaComponents.SideBarColumn {
             EaElements.SideBarButton {
                 // This button should add a new item to the model editor.
                 enabled: true
+                width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 fontIcon: "plus-circle"
-                text: qsTr("Add a new model")
+                text: qsTr("Add model")
                 onClicked: ExGlobals.Constants.proxy.model.addNewModels()
             }
 
@@ -214,11 +239,31 @@ EaComponents.SideBarColumn {
                 // When an item is selected, this button will be enabled to allow
                 // the selected item to be duplicated
                 enabled: (modelTable.model.count > 0) ? true : false//When item is selected
+                width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 fontIcon: "clone"
-                text: qsTr("Duplicate selected model")
+                text: qsTr("Duplicate model")
                 onClicked: ExGlobals.Constants.proxy.model.duplicateSelectedModels()
             }
 
+            EaElements.SideBarButton {
+                // When an item is selected and it is not at the top, 
+                // this button will be enabled to allow
+                // the selected item to be moved up
+                enabled: (modelTable.model.count > 0 && modelTable.currentIndex != 0) ? true : false//When item is selected
+                width: EaStyle.Sizes.tableRowHeight
+                fontIcon: "arrow-up"
+                onClicked: ExGlobals.Constants.proxy.model.moveSelectedModelsUp()
+            }
+
+            EaElements.SideBarButton {
+                // When an item is selected and it is not at the bottom, 
+                // this button will be enabled to allow
+                // the selected item to be moved down
+                enabled: (modelTable.model.count > 0 && modelTable.currentIndex + 1 != modelTable.model.count) ? true : false//When item is selected
+                width: EaStyle.Sizes.tableRowHeight
+                fontIcon: "arrow-down"
+                onClicked: ExGlobals.Constants.proxy.model.moveSelectedModelsDown()
+            }
         }
     }
 
@@ -254,6 +299,7 @@ EaComponents.SideBarColumn {
                 property var itemsModel: model
 
                 EaComponents.TableViewLabel {
+                    id: colorLabel
                     width: EaStyle.Sizes.fontPixelSize * 2.5
                     headerText: "No."
                     text: model.index + 1
@@ -261,7 +307,7 @@ EaComponents.SideBarColumn {
 
                 EaComponents.TableViewTextInput {
                     horizontalAlignment: Text.AlignLeft
-                    width: EaStyle.Sizes.fontPixelSize * 16.5
+                    width: EaStyle.Sizes.sideBarContentWidth - (colorLabel.width + deleteRowColumn.width + layersType.width + 4 * EaStyle.Sizes.tableColumnSpacing)
                     headerText: "Label"
                     text: itemsModel.label
                     onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentItemsName(text)
@@ -309,8 +355,9 @@ EaComponents.SideBarColumn {
             EaElements.SideBarButton {
                 // This button should add a new item to the model editor.
                 enabled: true
+                width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 fontIcon: "plus-circle"
-                text: qsTr("Add a new item")
+                text: qsTr("Add item")
                 onClicked: ExGlobals.Constants.proxy.model.addNewItems()
             }
 
@@ -318,23 +365,19 @@ EaComponents.SideBarColumn {
                 // When an item is selected, this button will be enabled to allow
                 // the selected item to be duplicated
                 enabled: (itemsTable.model.count > 0) ? true : false//When item is selected
+                width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 fontIcon: "clone"
-                text: qsTr("Duplicate selected item")
+                text: qsTr("Duplicate item")
                 onClicked: ExGlobals.Constants.proxy.model.duplicateSelectedItems()
             }
-
-        }
-
-        Row {
-            spacing: EaStyle.Sizes.fontPixelSize
 
             EaElements.SideBarButton {
                 // When an item is selected and it is not at the top, 
                 // this button will be enabled to allow
                 // the selected item to be moved up
                 enabled: (itemsTable.model.count > 0 && itemsTable.currentIndex != 0) ? true : false//When item is selected
+                width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-up"
-                text: qsTr("Move item up")
                 onClicked: ExGlobals.Constants.proxy.model.moveSelectedItemsUp()
             }
 
@@ -343,11 +386,9 @@ EaComponents.SideBarColumn {
                 // this button will be enabled to allow
                 // the selected item to be moved down
                 enabled: (itemsTable.model.count > 0 && itemsTable.currentIndex + 1 != itemsTable.model.count) ? true : false//When item is selected
+                width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-down"
-                text: qsTr("Move item down")
-                onClicked: {
-                    ExGlobals.Constants.proxy.model.moveSelectedItemsDown()
-                }
+                onClicked: ExGlobals.Constants.proxy.model.moveSelectedItemsDown()
             }
 
         }
@@ -417,37 +458,32 @@ EaComponents.SideBarColumn {
             spacing: EaStyle.Sizes.fontPixelSize
 
             EaElements.SideBarButton {
+                width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 enabled: true
                 fontIcon: "plus-circle"
-                text: qsTr("Add a material layer")
-                onClicked: {
-                    ExGlobals.Constants.proxy.model.addNewLayers()
-                }
+                text: qsTr("Add layer")
+                onClicked: ExGlobals.Constants.proxy.model.addNewLayers()
             }
 
             EaElements.SideBarButton {
+                width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 enabled: (layersTable.model.count > 0) ? true : false //when item is selected
                 fontIcon: "clone"
-                text: qsTr("Duplicate selected item")
+                text: qsTr("Duplicate layer")
                 onClicked: ExGlobals.Constants.proxy.model.duplicateSelectedLayers()
             }
-        }
-
-        Row {
-            visible: (currentItemsType == 'Repeating Multi-layer') ||  (currentItemsType == 'Multi-layer') ? true : false
-            spacing: EaStyle.Sizes.fontPixelSize
 
             EaElements.SideBarButton {
+                width: EaStyle.Sizes.tableRowHeight
                 enabled: (layersTable.model.count > 0 && layersTable.currentIndex != 0) ? true : false//When item is selected
                 fontIcon: "arrow-up"
-                text: qsTr("Move layer up")
                 onClicked: ExGlobals.Constants.proxy.model.moveSelectedLayersUp()
             }
 
             EaElements.SideBarButton {
+                width: EaStyle.Sizes.tableRowHeight
                 enabled: (layersTable.model.count > 0 && layersTable.currentIndex + 1 != layersTable.model.count) ? true : false
                 fontIcon: "arrow-down"
-                text: qsTr("Move layer down")
                 onClicked: ExGlobals.Constants.proxy.model.moveSelectedLayersDown()
             }
         }

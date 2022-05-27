@@ -37,13 +37,14 @@ EaComponents.TableView {
 
         EaComponents.TableViewTextInput {
             horizontalAlignment: Text.AlignHCenter
-            width: EaStyle.Sizes.fontPixelSize * 7.0
+            width: EaStyle.Sizes.sideBarContentWidth - (thickLabel.width + roughLabel.width + solvLabel.width + apmLabel.width + solvMatLabel.width + 6 * EaStyle.Sizes.tableColumnSpacing)
             headerText: "Formula"
             text: surfactantModel.formula
             onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersChemStructure(text)
         }
 
         EaComponents.TableViewTextInput {
+            id: thickLabel
             horizontalAlignment: Text.AlignHCenter
             width: EaStyle.Sizes.fontPixelSize * 5.5
             headerText: "Thickness/Å"
@@ -53,6 +54,7 @@ EaComponents.TableView {
         }
 
         EaComponents.TableViewTextInput {
+            id: roughLabel
             horizontalAlignment: Text.AlignHCenter
             width: EaStyle.Sizes.fontPixelSize * 6.0
             headerText: "Roughness/Å"
@@ -62,8 +64,9 @@ EaComponents.TableView {
         }
 
         EaComponents.TableViewTextInput {
+            id: solvLabel
             horizontalAlignment: Text.AlignHCenter
-            width: EaStyle.Sizes.fontPixelSize * 6.0
+            width: EaStyle.Sizes.fontPixelSize * 4.5
             headerText: "Solvation"
             enabled: model.solvation_enabled == "True"
             text: (isNaN(surfactantModel.solvation)) ? '--' : surfactantModel.solvation.toFixed(2)
@@ -71,6 +74,7 @@ EaComponents.TableView {
         }
 
         EaComponents.TableViewTextInput {
+            id: apmLabel
             horizontalAlignment: Text.AlignHCenter
             width: EaStyle.Sizes.fontPixelSize * 4.0
             headerText: "APM/Å<sup>2</sup>"
@@ -80,6 +84,7 @@ EaComponents.TableView {
         }
 
         EaComponents.TableViewComboBox{
+            id: solvMatLabel
             horizontalAlignment: Text.AlignLeft
             width: EaStyle.Sizes.fontPixelSize * 6.5
             headerText: "Solvent"

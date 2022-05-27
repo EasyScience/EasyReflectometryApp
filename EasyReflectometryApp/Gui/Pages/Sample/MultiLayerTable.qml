@@ -32,6 +32,7 @@ EaComponents.TableView {
         property var layersModel: model
 
         EaComponents.TableViewLabel {
+            id: noLabel
             width: EaStyle.Sizes.fontPixelSize * 2.3
             headerText: "No."
             text: model.index + 1
@@ -39,7 +40,7 @@ EaComponents.TableView {
 
         EaComponents.TableViewComboBox{
             horizontalAlignment: Text.AlignLeft
-            width: EaStyle.Sizes.fontPixelSize * 9.8
+            width: EaStyle.Sizes.sideBarContentWidth - (thickLabel.width + roughLabel.width + noLabel.width + deleteRowColumn.width + 5 * EaStyle.Sizes.tableColumnSpacing)
             headerText: "Material"
             onActivated: {
                 ExGlobals.Constants.proxy.model.setCurrentLayersMaterial(currentIndex)
@@ -54,6 +55,7 @@ EaComponents.TableView {
         }
 
         EaComponents.TableViewTextInput {
+            id: thickLabel
             horizontalAlignment: Text.AlignHCenter
             width: EaStyle.Sizes.fontPixelSize * 10.0
             headerText: "Thickness/Å"
@@ -63,6 +65,7 @@ EaComponents.TableView {
         }
 
         EaComponents.TableViewTextInput {
+            id: roughLabel
             horizontalAlignment: Text.AlignHCenter
             width: EaStyle.Sizes.fontPixelSize * 10.0
             headerText: "Upper Roughness/Å"
@@ -76,7 +79,7 @@ EaComponents.TableView {
             headerText: "Del." //"\uf2ed"
             fontIcon: "minus-circle"
             ToolTip.text: qsTr("Remove this item")
-            enabled: layersModel.count > 1
+            enabled: layersTable.model.count > 1
             onClicked: ExGlobals.Constants.proxy.model.removeLayers(layersTable.currentIndex)
         }
 

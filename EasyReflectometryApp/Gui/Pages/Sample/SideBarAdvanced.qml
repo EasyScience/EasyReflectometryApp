@@ -16,7 +16,7 @@ EaComponents.SideBarColumn {
     property int dependentParCurrentIndex2: 0
 
     EaElements.GroupBox {
-        title: qsTr("Fitting constraints")
+        title: qsTr("Sample constraints")
         enabled: true
         last: false
 
