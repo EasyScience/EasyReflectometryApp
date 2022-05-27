@@ -796,7 +796,5 @@ class ModelProxy(QObject):
         return self._pure.interface.sld_profile()
 
     def resetModel(self):
-        self._model[self.currentModelIndex].structure = self._defaultStructure()
-        self._model = self._defaultModel(
-            structure=self._model[self.currentModelIndex].structure, interface=self.parent._interface
-        )
+        self._structure = self._defaultStructure()
+        self._model = Models.from_pars(self._defaultModel(structure=self._structure, interface=self.parent._interface[0]))

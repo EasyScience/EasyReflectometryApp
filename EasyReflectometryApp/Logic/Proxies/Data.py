@@ -159,8 +159,11 @@ class DataProxy(QObject):
 
     @Property(str, notify=experimentChanged)
     def currentDataName(self):
-        return self._data[self.currentDataIndex].name 
-
+        try:
+            return self._data[self.currentDataIndex].name 
+        except IndexError:
+            return None
+            
     # # #
     # Actions
     # # #

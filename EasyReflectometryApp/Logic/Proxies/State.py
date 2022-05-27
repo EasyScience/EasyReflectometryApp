@@ -89,4 +89,5 @@ class StateProxy(QObject):
         self.parent._simulation_proxy.resetSimulation()
         self.parent._plotting_1d_proxy._setMeasuredDataArrays(np.empty(0), np.empty(0))
         self.parent._model_proxy.modelChanged.emit()
+        self.parent.sampleChanged.emit()
         self.stateChanged.emit(False)
