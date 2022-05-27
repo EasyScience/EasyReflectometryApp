@@ -157,72 +157,11 @@ EaComponents.SideBarColumn {
 
     EaElements.GroupBox {
         title: qsTr("Simulation range")
-        visible: !ExGlobals.Constants.proxy.data.experimentLoaded ||
-                 ExGlobals.Constants.proxy.data.experimentSkipped
+        visible: ExGlobals.Constants.proxy.data.experimentSkipped
 
-        enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||
-                 ExGlobals.Constants.proxy.data.experimentSkipped 
+        enabled: ExGlobals.Constants.proxy.data.experimentSkipped 
 
         ExComponents.ExperimentSimulationSetup {}
-    }
-
-    EaElements.GroupBox {
-        title: qsTr("Resolution")
-        visible: !ExGlobals.Constants.proxy.data.experimentLoaded ||
-                 ExGlobals.Constants.proxy.data.experimentSkipped
-
-        enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||
-                 ExGlobals.Constants.proxy.data.experimentSkipped 
-
-        /*
-        Column {
-            Column {
-                spacing: EaStyle.Sizes.fontPixelSize * -0.5
-
-                EaElements.Label {
-                    enabled: false
-                    text: qsTr("Resolution type")
-                }
-
-                EaElements.ComboBox {
-                    width: EaStyle.Sizes.sideBarContentWidth
-                    model: ["Constant dq/q"]
-                }
-            }
-        }
-        */
-
-        ExComponents.ExperimentResolutionSetup {}
-    }
-
-    EaElements.GroupBox {
-        title: qsTr("Background")
-        last: true
-        visible: !ExGlobals.Constants.proxy.data.experimentLoaded ||
-                 ExGlobals.Constants.proxy.data.experimentSkipped
-
-        enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||
-                 ExGlobals.Constants.proxy.data.experimentSkipped 
-
-        /*
-        Column {
-            Column {
-                spacing: EaStyle.Sizes.fontPixelSize * -0.5
-
-                EaElements.Label {
-                    enabled: false
-                    text: qsTr("Background Type")
-                }
-
-                EaElements.ComboBox {
-                    width: EaStyle.Sizes.sideBarContentWidth
-                    model: ["Uniform"]
-                }
-            }
-        }
-        */
-
-        ExComponents.ExperimentBackgroundSetup {}
     }
 
     // Load experimental data file dialog
