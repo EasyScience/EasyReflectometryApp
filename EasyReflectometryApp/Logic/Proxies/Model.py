@@ -353,6 +353,28 @@ class ModelProxy(QObject):
         self.modelsNameChanged.emit()
         self.parent.sampleChanged.emit()
 
+    @Slot()
+    def moveSelectedModelsUp(self):
+        """
+        Move the currently selected model up.
+        """
+        i = self.currentModelIndex
+        self._model.insert(i-1, self._model.pop(i))
+        self._colors.insert(i-1, self._colors.pop(i))
+        self.modelsNameChanged.emit()
+        self.parent.sampleChanged.emit()
+
+    @Slot()
+    def moveSelectedModelsDown(self):
+        """
+        Move the currently selected model down.
+        """
+        i = self.currentModelIndex
+        self._model.insert(i+1, self._model.pop(i))
+        self._colors.insert(i+1, self._colors.pop(i))
+        self.modelsNameChanged.emit()
+        self.parent.sampleChanged.emit()
+
     @Slot(str)
     def removeModels(self, i: str):
         """

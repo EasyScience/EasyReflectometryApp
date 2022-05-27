@@ -54,7 +54,7 @@ EaComponents.ApplicationWindow {
         EaElements.ToolButton {
             enabled: ExGlobals.Variables.projectPageEnabled
             fontIcon: "backspace"
-            ToolTip.text: qsTr("Reset to initial state without project, phases and data")
+            ToolTip.text: qsTr("Reset to initial state without project, models and data")
             onClicked: resetStateDialog.open()
         }
 

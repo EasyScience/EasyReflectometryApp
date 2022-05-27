@@ -151,6 +151,26 @@ class MaterialProxy(QObject):
         self.materialsChanged.emit()
         self.parent.layersMaterialsChanged.emit()
 
+    @Slot()
+    def moveSelectedMaterialsUp(self):
+        """
+        Move the currently selected material up.
+        """
+        i = self.currentMaterialsIndex
+        self._materials.insert(i-1, self._materials.pop(i))
+        self.materialsChanged.emit()
+        self.parent.layersMaterialsChanged.emit()
+
+    @Slot()
+    def moveSelectedMaterialsDown(self):
+        """
+        Move the currently selected material down.
+        """
+        i = self.currentMaterialsIndex
+        self._materials.insert(i+1, self._materials.pop(i))
+        self.materialsChanged.emit()
+        self.parent.layersMaterialsChanged.emit()
+
     @Slot(str)
     def setCurrentMaterialsName(self, name: str):
         """

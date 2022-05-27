@@ -76,7 +76,7 @@ EaComponents.TableView  {
         EaComponents.TableViewLabel {
             id: valueColumn
             horizontalAlignment: Text.AlignRight
-            width: EaStyle.Sizes.fontPixelSize * 4
+            width: EaStyle.Sizes.fontPixelSize * 2
             text: model.value.toFixed(2)
         }
 

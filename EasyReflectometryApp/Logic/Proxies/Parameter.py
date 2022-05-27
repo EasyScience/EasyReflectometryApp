@@ -239,6 +239,7 @@ class ParameterProxy(QObject):
 
     def constraintsList(self):
         constraint_list = []
+        number = 0
         for index, constraint in enumerate(self.parent._model_proxy._model.constraints):
             if type(constraint) is ObjConstraint:
                 par = constraint.get_obj(constraint.independent_obj_ids)
@@ -259,7 +260,7 @@ class ParameterProxy(QObject):
             else:
                 print(f"Failed to get constraint: Unsupported type {type(constraint)}")
                 return
-            number = index + 1
+            number += 1
             par = constraint.get_obj(constraint.dependent_obj_ids)
             dependent_name = get_label(get_par_path(par, self.parent._model_proxy._model))
             enabled = int(constraint.enabled)
@@ -287,7 +288,6 @@ class ParameterProxy(QObject):
         dependent_obj_name = constraint.get_obj(constraint.dependent_obj_ids).name
         del independent_obj.user_constraints[dependent_obj_name] 
         self.parent.sampleChanged.emit()
-        self.parametersAsObjChanged.emit()
 
     @Slot(int, str)
     def toggleConstraintByIndex(self, index, enabled):

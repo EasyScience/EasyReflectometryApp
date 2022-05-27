@@ -95,6 +95,19 @@ class DataProxy(QObject):
         return experiment_data_as_obj
 
     @Slot(float)
+    def setScaling(self, new_scaling: float):
+        """
+        Sets the scale of the currently selected model.
+
+        :param new_scaling: New scaling value
+        """
+        model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+        if self.parent._model_proxy._model[model_index].scale.raw_value == new_scaling:
+            return
+        self.parent._model_proxy._model[model_index].scale = new_scaling
+        self.parent.layersChanged.emit()
+
+    @Slot(float)
     def setResolution(self, new_resolution: float):
         """
         Sets the resolution of the currently selected model.
@@ -119,6 +132,25 @@ class DataProxy(QObject):
             return
         self.parent._model_proxy._model[model_index].background = new_background
         self.parent.layersChanged.emit()
+
+    @Property(float, notify=experimentChanged)
+    def currentScaling(self):
+        model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+        return self.parent._model_proxy._model[model_index].scale.raw_value
+
+    @Property(float, notify=experimentChanged)
+    def currentBackground(self):
+        model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+        return self.parent._model_proxy._model[model_index].background.raw_value
+    
+    @Property(float, notify=experimentChanged)
+    def currentResolution(self):
+        model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+        return self.parent._model_proxy._model[model_index].resolution.raw_value
+        
+    @Property(str, notify=experimentChanged)
+    def currentDataName(self):
+        return self._data[self.currentDataIndex].name 
 
     # # #
     # Actions
