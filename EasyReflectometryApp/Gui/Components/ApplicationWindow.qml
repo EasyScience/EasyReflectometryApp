@@ -71,17 +71,17 @@ EaComponents.ApplicationWindow {
         },
 
         EaElements.ToolButton {
-            enabled: false
+            enabled: true
             fontIcon: "question-circle"
             ToolTip.text: qsTr("Get online help")
             onClicked: Qt.openUrlExternally(ExGlobals.Constants.appUrl)
         },
 
         EaElements.ToolButton {
-            enabled: false
+            enabled: true
             fontIcon: "bug"
             ToolTip.text: qsTr("Report a bug or issue")
-            onClicked: Qt.openUrlExternally(`${ExGlobals.Constants.appUrl}/issues`)
+            onClicked: Qt.openUrlExternally(`${ExGlobals.Constants.appGit}/issues/new`)
         }
 
     ]
