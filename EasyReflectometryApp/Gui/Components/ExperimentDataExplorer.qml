@@ -24,8 +24,6 @@ EaComponents.TableView {
         XmlRole { name: "label"; query: "name/string()" }
         XmlRole { name: "color"; query: "color/string()" }
         XmlRole { name: "model_index"; query: "model_index/number()" }
-        XmlRole { name: "resolution"; query: "resolution/number()" }
-        XmlRole { name: "background"; query: "background/number()" }
     }
 
     // Table rows
@@ -34,6 +32,7 @@ EaComponents.TableView {
         property var dataModel: model
 
         EaComponents.TableViewLabel {
+            id: noLabel
             width: EaStyle.Sizes.fontPixelSize * 2.5
             headerText: "No."
             text: model.index + 1
@@ -41,7 +40,8 @@ EaComponents.TableView {
 
         EaComponents.TableViewTextInput {
             horizontalAlignment: Text.AlignLeft
-            width: EaStyle.Sizes.fontPixelSize * 7
+            id: labelLabel
+            width: EaStyle.Sizes.fontPixelSize * 11
             headerText: "Label"
             text: model.label
             onEditingFinished: ExGlobals.Constants.proxy.data.setCurrentExperimentDatasetName(text)
@@ -49,8 +49,8 @@ EaComponents.TableView {
 
         EaComponents.TableViewComboBox {
             id: modelAccess
-            horizontalAlignment: Text.AlignHCenter
-            width: EaStyle.Sizes.fontPixelSize * 7
+            horizontalAlignment: Text.AlignLeft
+            width: EaStyle.Sizes.sideBarContentWidth - (noLabel.width + deleteRowColumn.width + colorLabel.width + labelLabel.width + 5 * EaStyle.Sizes.tableColumnSpacing)
             headerText: "Model"
             model: ExGlobals.Constants.proxy.model.modelList
             onActivated: {
@@ -61,23 +61,8 @@ EaComponents.TableView {
             }
         }
 
-        EaComponents.TableViewTextInput {
-            horizontalAlignment: Text.AlignHCenter
-            width: EaStyle.Sizes.fontPixelSize * 6
-            headerText: "Resolution/%"
-            text: model.resolution
-            onEditingFinished: ExGlobals.Constants.proxy.data.setResolution(text)
-        }
-
-        EaComponents.TableViewTextInput {
-            horizontalAlignment: Text.AlignHCenter
-            width: EaStyle.Sizes.fontPixelSize * 6
-            headerText: "Background"
-            text: model.background.toExponential(3)
-            onEditingFinished: ExGlobals.Constants.proxy.data.setBackground(text)
-        }
-
         EaComponents.TableViewLabel {
+            id: colorLabel
             headerText: "Color"
             //backgroundColor: model.color ? model.color : "transparent"
             backgroundColor: model.color

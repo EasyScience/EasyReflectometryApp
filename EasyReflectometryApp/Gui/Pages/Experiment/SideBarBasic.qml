@@ -104,6 +104,58 @@ EaComponents.SideBarColumn {
     // }
 
     EaElements.GroupBox {
+        title: qsTr(ExGlobals.Constants.proxy.data.currentDataName + " instrumental parameters")
+        visible: ExGlobals.Constants.proxy.data.experimentLoaded
+        collapsed: false
+        Row {
+            spacing: EaStyle.Sizes.fontPixelSize
+
+            EaComponents.TableViewLabel{
+                horizontalAlignment: Text.AlignRight
+                width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
+                text: qsTr("Scaling:")
+            }
+            EaElements.Parameter {
+                id: xMin
+                enabled: true
+                width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
+                units: ""
+                text: ExGlobals.Constants.proxy.data.currentScaling.toFixed(3)
+                onEditingFinished: ExGlobals.Constants.proxy.data.setScaling(text)
+            }
+
+            // Max
+            EaComponents.TableViewLabel{
+                horizontalAlignment: Text.AlignRight
+                width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
+                text: qsTr("Background:")
+            }
+            EaElements.Parameter {
+                id: xMax
+                width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
+                units: ""
+                text: ExGlobals.Constants.proxy.data.currentBackground.toExponential(2)
+                onEditingFinished: ExGlobals.Constants.proxy.data.setBackground(text)
+            }
+
+            // Step
+            EaComponents.TableViewLabel{
+                horizontalAlignment: Text.AlignRight
+                width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
+                text: qsTr("Resolution:")
+            }
+            EaElements.Parameter {
+                id: xStep
+                width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
+                units: "%"
+                text: ExGlobals.Constants.proxy.data.currentResolution.toFixed(2)
+                onEditingFinished: ExGlobals.Constants.proxy.data.setResolution(text)
+            }
+        }
+    }
+
+
+    EaElements.GroupBox {
         title: qsTr("Simulation range")
         visible: !ExGlobals.Constants.proxy.data.experimentLoaded ||
                  ExGlobals.Constants.proxy.data.experimentSkipped
