@@ -220,11 +220,3 @@ class DataProxy(QObject):
         self._experiment_data_as_xml = ""
         self.experimentDataAsXmlChanged.emit()
 
-    @Slot(str)
-    def setCurrentExperimentDatasetName(self, name):
-        if self._data.experiments[self.currentDataIndex].name == name:
-            return
-        self._data.experiments[self.currentDataIndex].name = name
-        # self.experimentDataAsObjChanged.emit()
-        # self.parent._project_proxy.projectInfoAsJson['experiments'] = name
-        # self.parent._project_proxy.projectInfoChanged.emit()
