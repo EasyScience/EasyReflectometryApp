@@ -9,7 +9,6 @@ from easyCore.Fitting.Constraints import ObjConstraint, NumericConstraint, Funct
 from easyCore import borg
 from easyCore import np
 from easyCore.Utils.classTools import generatePath
-from pytest import param
 
 
 class ParameterProxy(QObject):
