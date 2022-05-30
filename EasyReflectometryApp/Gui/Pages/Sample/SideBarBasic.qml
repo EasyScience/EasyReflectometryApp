@@ -103,7 +103,7 @@ EaComponents.SideBarColumn {
                 enabled: true
                 width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 fontIcon: "plus-circle"
-                text: qsTr("Add item")
+                text: qsTr("Add material")
                 onClicked: ExGlobals.Constants.proxy.material.addNewMaterials()
             }
 
@@ -113,7 +113,7 @@ EaComponents.SideBarColumn {
                 enabled: (materialsTable.model.count > 0) ? true : false //When material is selected
                 width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 fontIcon: "clone"
-                text: qsTr("Duplicate item")
+                text: qsTr("Duplicate material")
                 onClicked: ExGlobals.Constants.proxy.material.duplicateSelectedMaterials()
             }
 
@@ -124,6 +124,7 @@ EaComponents.SideBarColumn {
                 enabled: (materialsTable.model.count > 0 && materialsTable.currentIndex != 0) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-up"
+                ToolTip.text: qsTr("Move material up")
                 onClicked: ExGlobals.Constants.proxy.material.moveSelectedMaterialsUp()
             }
 
@@ -134,6 +135,7 @@ EaComponents.SideBarColumn {
                 enabled: (materialsTable.model.count > 0 && materialsTable.currentIndex + 1 != materialsTable.model.count) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-down"
+                ToolTip.text: qsTr("Move material down")
                 onClicked: ExGlobals.Constants.proxy.material.moveSelectedMaterialsDown()
             }
         }
@@ -252,6 +254,7 @@ EaComponents.SideBarColumn {
                 enabled: (modelTable.model.count > 0 && modelTable.currentIndex != 0) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-up"
+                ToolTip.text: qsTr("Move model up")
                 onClicked: ExGlobals.Constants.proxy.model.moveSelectedModelsUp()
             }
 
@@ -262,6 +265,7 @@ EaComponents.SideBarColumn {
                 enabled: (modelTable.model.count > 0 && modelTable.currentIndex + 1 != modelTable.model.count) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-down"
+                ToolTip.text: qsTr("Move model down")
                 onClicked: ExGlobals.Constants.proxy.model.moveSelectedModelsDown()
             }
         }
@@ -378,6 +382,7 @@ EaComponents.SideBarColumn {
                 enabled: (itemsTable.model.count > 0 && itemsTable.currentIndex != 0) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-up"
+                ToolTip.text: qsTr("Move item up")
                 onClicked: ExGlobals.Constants.proxy.model.moveSelectedItemsUp()
             }
 
@@ -388,6 +393,7 @@ EaComponents.SideBarColumn {
                 enabled: (itemsTable.model.count > 0 && itemsTable.currentIndex + 1 != itemsTable.model.count) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-down"
+                ToolTip.text: qsTr("Move item down")
                 onClicked: ExGlobals.Constants.proxy.model.moveSelectedItemsDown()
             }
 
@@ -477,6 +483,7 @@ EaComponents.SideBarColumn {
                 width: EaStyle.Sizes.tableRowHeight
                 enabled: (layersTable.model.count > 0 && layersTable.currentIndex != 0) ? true : false//When item is selected
                 fontIcon: "arrow-up"
+                ToolTip.text: qsTr("Move layer up")
                 onClicked: ExGlobals.Constants.proxy.model.moveSelectedLayersUp()
             }
 
@@ -484,6 +491,7 @@ EaComponents.SideBarColumn {
                 width: EaStyle.Sizes.tableRowHeight
                 enabled: (layersTable.model.count > 0 && layersTable.currentIndex + 1 != layersTable.model.count) ? true : false
                 fontIcon: "arrow-down"
+                ToolTip.text: qsTr("Move layer down")
                 onClicked: ExGlobals.Constants.proxy.model.moveSelectedLayersDown()
             }
         }
