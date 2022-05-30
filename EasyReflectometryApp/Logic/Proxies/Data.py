@@ -2,7 +2,7 @@ __author__ = 'github.com/arm61'
 
 import pathlib
 from os import path
-from dicttoxml2 import dicttoxml
+from dicttoxml import dicttoxml
 
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
