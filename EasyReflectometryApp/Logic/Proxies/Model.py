@@ -1,5 +1,6 @@
 __author__ = 'github.com/arm61'
 
+from ast import Mult
 from dicttoxml import dicttoxml
 
 from PySide2.QtCore import QObject, Signal, Property, Slot
@@ -13,6 +14,7 @@ from EasyReflectometry.sample.structure import Structure
 from EasyReflectometry.experiment.model import Model
 from EasyReflectometry.experiment.models import Models
 from EasyReflectometry.interface import InterfaceFactory
+from numpy import isin
 
 ITEM_LOOKUP = {'Multi-layer': MultiLayer, 'Repeating Multi-layer': RepeatingMultiLayer, 'Surfactant Layer': SurfactantLayer}
 COLORS =["#0173B2", "#DE8F05", "#029E73", "#D55E00", "#CC78BC", "#CA9161", "#FBAFE4", "#949494", "#ECE133", "#56B4E9"]
@@ -345,9 +347,17 @@ class ModelProxy(QObject):
     def duplicateSelectedModels(self):
         self.parent._interface.append(InterfaceFactory())
         structure_dict = self._model[self.currentModelIndex].structure.as_dict()
-        self._model.add_model(
-            self._defaultModel(Structure.from_dict(structure_dict), 
-                               interface=self.parent._interface[-1], 
+        new_structure = Structure.from_dict(structure_dict)
+        for i, ml in enumerate(new_structure):
+            if isinstance(ml, SurfactantLayer):
+                for j, layer in enumerate(ml.layers):
+                    layer.solvent = self._model[self.currentModelIndex].structure[i].layers[j].solvent
+            elif isinstance(ml, MultiLayer) or isinstance(ml, RepeatingMultiLayer):
+                for j, layer in enumerate(ml.layers):    
+                    layer.assign_material(self._model[self.currentModelIndex].structure[i].layers[j].material)
+        self._model.append(
+            self._defaultModel(new_structure, 
+                               interface=self.parent._interface[-1],
                                name=f"{self._model[self.currentModelIndex].name} Duplicate"))
         try:
             self._colors.append(list(set(COLORS).difference(self._colors))[0])
@@ -442,21 +452,33 @@ class ModelProxy(QObject):
         self._model[self.currentModelIndex].structure[0].layers[0].roughness.enabled = True
         self._model[self.currentModelIndex].structure[-1].layers[-1].thickness.enabled = True
         to_dup = self._model[self.currentModelIndex].structure[self.currentItemsIndex]
-        to_dup_layers = []
-        for i in to_dup.layers:
-            to_dup_layers.append(
-                Layer.from_pars(i.material,
-                                i.thickness.raw_value,
-                                i.roughness.raw_value,
-                                name=i.name,
-                                interface=self.parent._interface))
-        try:
-            self._model[self.currentModelIndex].add_item(
-                RepeatingMultiLayer.from_pars(*to_dup_layers,
-                                              to_dup.repetitions.raw_value,
-                                              name=to_dup.name))
-        except AttributeError:
-            self._model[self.currentModelIndex].add_item(MultiLayer.from_pars(*to_dup_layers, name=to_dup.name))
+        if isinstance(to_dup, RepeatingMultiLayer):
+            to_dup_layers = []
+            for i in to_dup.layers:
+                to_dup_layers.append(
+                    Layer.from_pars(i.material,
+                                    i.thickness.raw_value,
+                                    i.roughness.raw_value,
+                                    name=i.name,
+                                    interface=self.parent._interface))
+            dup_item = RepeatingMultiLayer.from_pars(*to_dup_layers, 
+                                                     to_dup.repetitions.raw_value,
+                                                     name=to_dup.name)
+        elif isinstance(to_dup, SurfactantLayer):
+            dup_item = SurfactantLayer.from_dict(to_dup.as_dict())
+            for i, layer in enumerate(dup_item.layers):
+                layer.solvent = to_dup.layers[i].solvent
+        elif isinstance(to_dup, MultiLayer):
+            to_dup_layers = []
+            for i in to_dup.layers:
+                to_dup_layers.append(
+                    Layer.from_pars(i.material,
+                                    i.thickness.raw_value,
+                                    i.roughness.raw_value,
+                                    name=i.name,
+                                    interface=self.parent._interface))
+            dup_item = MultiLayer.from_pars(*to_dup_layers, name=to_dup.name)
+        self._model[self.currentModelIndex].add_item(dup_item)
         self._model[self.currentModelIndex].structure[0].layers[0].thickness.enabled = False
         self._model[self.currentModelIndex].structure[0].layers[0].roughness.enabled = False
         self._model[self.currentModelIndex].structure[-1].layers[-1].thickness.enabled = False

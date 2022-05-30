@@ -61,9 +61,6 @@ class ParameterProxy(QObject):
                 continue
             if self._parameters_filter_criteria.lower() not in label.lower():
                 continue
-            if label in labels:
-                continue
-            labels.append(label)
             self._parameters_as_obj.append({
                 "id": str(par_id),
                 "number": par_index + 1,
