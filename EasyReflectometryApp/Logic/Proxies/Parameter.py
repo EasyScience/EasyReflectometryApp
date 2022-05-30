@@ -43,6 +43,7 @@ class ParameterProxy(QObject):
 
         par_ids, par_paths = generatePath(self.parent._model_proxy._model, True)
         pids = []
+        labels = []
         for par_index, par_path in enumerate(par_paths):
             par_id = par_ids[par_index]
             if par_id in pids:
@@ -52,18 +53,17 @@ class ParameterProxy(QObject):
             path_split = par_path.split('.')
             if path_split[-1] == 'repetitions' and par.raw_value == 1:
                 continue
-
             if not par.enabled:
                 continue
-
             unit = '{:~P}'.format(par.unit)
             label = get_label(par_path)
-
-            if label is not None:
-                if self._parameters_filter_criteria.lower() not in label.lower():
-                    continue
             if label is None:
                 continue
+            if self._parameters_filter_criteria.lower() not in label.lower():
+                continue
+            if label in labels:
+                continue
+            labels.append(label)
             self._parameters_as_obj.append({
                 "id": str(par_id),
                 "number": par_index + 1,
@@ -210,10 +210,8 @@ class ParameterProxy(QObject):
             path_split = par_path.split('.')
             if path_split[-1] == 'repetitions' and par.raw_value == 1:
                 continue
-
             if not par.enabled:
                 continue
-
             label = get_label(par_path)
             if label is None:
                 continue
@@ -233,6 +231,7 @@ class ParameterProxy(QObject):
         pars[independent_par_idx].user_constraints[pars[dependent_par_idx].name] = c
         c()
         self.parent.sampleChanged.emit()
+        self.parametersAsObjChanged.emit()
 
     def constraintsList(self):
         constraint_list = []
