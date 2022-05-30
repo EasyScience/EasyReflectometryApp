@@ -60,8 +60,9 @@ class ParameterProxy(QObject):
             unit = '{:~P}'.format(par.unit)
             label = get_label(par_path)
 
-            if self._parameters_filter_criteria.lower() not in label.lower():
-                continue
+            if label is not None:
+                if self._parameters_filter_criteria.lower() not in label.lower():
+                    continue
             if label is None:
                 continue
             self._parameters_as_obj.append({
