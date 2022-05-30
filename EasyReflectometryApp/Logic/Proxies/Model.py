@@ -76,7 +76,7 @@ class ModelProxy(QObject):
         structure[-1].layers[-1].thickness.enabled = False
         return structure
 
-    def _defaultModel(self, structure: Structure, interface=None, name="Model 1") -> Model:
+    def _defaultModel(self, structure: Structure, interface=None, name="Air-D2O-Si") -> Model:
         return Model.from_pars(structure, 1, 0, 0, interface=interface, name=name)
 
     # # #
@@ -332,7 +332,7 @@ class ModelProxy(QObject):
         self._model.add_model(
             self._defaultModel(self._defaultStructure(), 
                                interface=self.parent._interface[-1], 
-                               name=f"Model {len(self._model)+1:d}"))
+                               name="Air-D2O-Si"))
         try:
             self._colors.append(list(set(COLORS).difference(self._colors))[0])
         except IndexError:
