@@ -22,6 +22,7 @@ EaComponents.TableView  {
         query: "/root/item"
 
         XmlRole { name: "number"; query: "number/number()" }
+        XmlRole { name: "index"; query: "index/number()" }
         XmlRole { name: "dependentName"; query: "dependentName/string()" }
         XmlRole { name: "relationalOperator"; query: "relationalOperator/string()" }
         XmlRole { name: "value"; query: "value/number()" }
@@ -117,7 +118,7 @@ EaComponents.TableView  {
             headerText: "Del." //"\uf2ed"
             fontIcon: "minus-circle"
             ToolTip.text: qsTr("Remove this constraint")
-            onClicked: ExGlobals.Constants.proxy.parameter.removeConstraintByIndex(model.number-1)
+            onClicked: ExGlobals.Constants.proxy.parameter.removeConstraintByIndex(model.index-1)
         }
     }
 

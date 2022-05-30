@@ -259,6 +259,7 @@ class ParameterProxy(QObject):
             enabled = int(constraint.enabled)
             constraint_list.append(
                 {"number": number,
+                 "index": index + 1,
                  "dependentName": dependent_name,
                  "relationalOperator": relational_operator,
                  "value": value,
