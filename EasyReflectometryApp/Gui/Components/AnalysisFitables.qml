@@ -69,7 +69,6 @@ EaComponents.TableView {
                    fitColumn.width
             headerText: "Label"
             text: formatLabel(model.index, model.label)
-            textFormat: Text.RichText
             elide: Text.ElideRight
             ToolTip.text: formatLabel(model.index, model.label)
             ToolTip.visible: formatLabel(model.index, model.label) ? mac.containsMouse : false
