@@ -40,6 +40,7 @@ def extraDict():
     python_packages_path = os.path.dirname(pip.__path__[0]).replace('\\', '/')
 
     build_date = datetime.datetime.now().strftime('%d %b %Y')
+    date_for_qtifw = f'{dt.year}-{dt:%m}-{dt:%d}'  # e.g. 2021-06-03
 
     github_server_url = os.getenv('GITHUB_SERVER_URL', '')
     github_repo = os.getenv('GITHUB_REPOSITORY', '')
@@ -52,8 +53,15 @@ def extraDict():
     commit_sha_short = commit_sha[:6]
     commit_url = f'{github_repo_url}/commit/{commit_sha}'
 
+    app_version = getValue(conf(), 'tool.poetry.version')
+    release_tag = f'v{app_version}'
+    release_title = f'Version {app_version} ({build_date})'
+
     return { 'ci': { 'cache': { 'python_packages_path': python_packages_path },
                      'app': { 'info': { 'build_date': build_date,
+                                        'date_for_qtifw': date_for_qtifw,
+                                        'release_tag': release_tag,
+                                        'release_title': release_title,
                                         'branch_name': branch_name,
                                         'branch_url': branch_url,
                                         'commit_sha_short': commit_sha_short,
