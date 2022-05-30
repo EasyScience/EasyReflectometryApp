@@ -39,6 +39,7 @@ def getValue(d, element):
 def extraDict():
     python_packages_path = os.path.dirname(pip.__path__[0]).replace('\\', '/')
 
+    dt = datetime.datetime.now()
     build_date = datetime.datetime.now().strftime('%d %b %Y')
     date_for_qtifw = f'{dt.year}-{dt:%m}-{dt:%d}'  # e.g. 2021-06-03
 
