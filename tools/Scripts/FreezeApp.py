@@ -6,7 +6,7 @@ import importlib
 import glob
 import PySide2, shiboken2
 import refnx, refl1d, periodictable
-import easyCore, EasyReflectometry, easyAppGui, easyAppLogic
+import easyCore, EasyReflectometry, easyApp
 import Functions, Config
 from PyInstaller.__main__ import run as pyInstallerMain
 
@@ -34,8 +34,7 @@ def addedData():
             {'from': periodictable.__path__[0], 'to': 'periodictable'},
             {'from': easyCore.__path__[0], 'to': 'easyCore'},
             {'from': EasyReflectometry.__path__[0], 'to': 'EasyReflectometryLib'},
-            {'from': easyAppLogic.__path__[0], 'to': 'easyAppLogic'},
-            {'from': easyAppGui.__path__[0], 'to': 'easyAppGui'},
+            {'from': easyApp.__path__[0], 'to': 'easyApp'},
             {'from': 'utils.py', 'to': '.'},
             {'from': 'pyproject.toml', 'to': '.'}]
     # Add other missing libs

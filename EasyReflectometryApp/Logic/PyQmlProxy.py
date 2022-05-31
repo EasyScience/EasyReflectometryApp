@@ -117,6 +117,10 @@ class PyQmlProxy(QObject):
         return self._fitter_proxy
 
     @Property('QVariant', notify=dummySignal)
+    def fitting(self):
+        return self._fitter_proxy
+
+    @Property('QVariant', notify=dummySignal)
     def minimizer(self):
         return self._minimizer_proxy
 

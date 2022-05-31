@@ -3,10 +3,10 @@ import QtQuick.Controls 2.13
 import QtQuick.Dialogs 1.3 as Dialogs1
 import QtQuick.XmlListModel 2.13
 
-import easyAppGui.Style 1.0 as EaStyle
-import easyAppGui.Globals 1.0 as EaGlobals
-import easyAppGui.Elements 1.0 as EaElements
-import easyAppGui.Components 1.0 as EaComponents
+import easyApp.Gui.Style 1.0 as EaStyle
+import easyApp.Gui.Globals 1.0 as EaGlobals
+import easyApp.Gui.Elements 1.0 as EaElements
+import easyApp.Gui.Components 1.0 as EaComponents
 
 import Gui.Globals 1.0 as ExGlobals
 import Gui.Components 1.0 as ExComponents
@@ -244,13 +244,13 @@ EaComponents.ApplicationWindow {
 
             sideBar: EaComponents.SideBar {
                 tabs: [
-                    EaElements.TabButton { text: qsTr("Basic controls") } // ,
-                    // EaElements.TabButton { enabled: false; text: qsTr("Advanced controls") }
+                    EaElements.TabButton { text: qsTr("Basic controls") },
+                    EaElements.TabButton { text: qsTr("Advanced controls") }
                 ]
 
                 items: [
-                    ExExperimentPage.SideBarBasic {} //,
-                    // ExExperimentPage.SideBarAdvanced {}
+                    ExExperimentPage.SideBarBasic {},
+                    ExExperimentPage.SideBarAdvanced {}
                 ]
             }
         },

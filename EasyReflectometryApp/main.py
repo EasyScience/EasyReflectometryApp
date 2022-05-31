@@ -14,7 +14,7 @@ from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView  # to call
 
 # easyScience
 import utils
-import easyAppGui
+import easyApp
 from easyAppLogic.Translate import Translator
 from EasyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
 
@@ -50,7 +50,7 @@ def main():
     main_qml_path = QUrl.fromLocalFile(os.path.join(package_path, 'Gui', 'main.qml'))
     gui_path = str(QUrl.fromLocalFile(package_path).toString())
     app_icon_path = os.path.join(package_path, 'Gui', 'Resources', 'Logo', 'App.png')
-    easyAppGui_path = os.path.join(easyAppGui.__path__[0], '..')
+    easyApp_path = os.path.join(easyApp.__path__[0], '..')
 
     home_path = pathlib.Path.home()
     settings_path = str(home_path.joinpath(f'.{app_name}', 'settings.ini'))
@@ -85,7 +85,7 @@ def main():
     engine.rootContext().setContextProperty('_isTestMode', args.testmode)
 
     # Add paths to search for installed modules
-    engine.addImportPath(easyAppGui_path)
+    engine.addImportPath(easyApp_path)
     engine.addImportPath(gui_path)
 
     # Load the root QML file

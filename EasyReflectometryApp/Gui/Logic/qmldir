@@ -3,3 +3,4 @@ module Logic
 Helpers 1.0 Helpers.js
 PyQmlProxy 1.0 PyQmlProxy.js
 Paths 1.0 Paths.js
+Plotting 1.0 Plotting.js

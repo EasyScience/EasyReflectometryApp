@@ -2,9 +2,9 @@ import QtQuick 2.13
 import QtQuick.Controls 2.13
 import QtQuick.XmlListModel 2.13
 
-import easyAppGui.Style 1.0 as EaStyle
-import easyAppGui.Elements 1.0 as EaElements
-import easyAppGui.Components 1.0 as EaComponents
+import easyApp.Gui.Style 1.0 as EaStyle
+import easyApp.Gui.Elements 1.0 as EaElements
+import easyApp.Gui.Components 1.0 as EaComponents
 
 import Gui.Globals 1.0 as ExGlobals
 import Gui.Components 1.0 as ExComponents
@@ -249,11 +249,18 @@ EaComponents.SideBarColumn {
 
         EaElements.CheckBox {
             topPadding: 0
-            checked: ExGlobals.Constants.proxy.plotting1d.sampleSldXDataReversed
+            checked: ExGlobals.Constants.proxy.plotting1d.sldXDataReversed
             text: qsTr("Reverse SLD z-axis")
             ToolTip.text: qsTr("Checking this box will reverce the z-axis of the SLD plot")
-            onToggled: ExGlobals.Constants.proxy.plotting1d.reverseSampleSldXData()
+            onToggled: ExGlobals.Constants.proxy.plotting1d.reverseSldXData()
+        }
+
+        EaElements.CheckBox {
+            topPadding: 0
+            id: rq4
+            checked: ExGlobals.Constants.proxy.simulation.plotRQ4
+            text: qsTr("Show R(q)q^4")
+            onToggled: ExGlobals.Constants.proxy.simulation.setPlotRQ4()
         }
     }
-
 }

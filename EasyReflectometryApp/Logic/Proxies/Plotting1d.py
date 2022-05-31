@@ -37,8 +37,7 @@ class Plotting1dProxy(QObject):
     qtchartsBackgroundDataObjChanged = Signal()
 
     # Misc
-    sampleSldXDataReversedChanged = Signal()
-    analysisSldXDataReversedChanged = Signal()
+    sldXDataReversedChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -117,8 +116,7 @@ class Plotting1dProxy(QObject):
         self._qtcharts_background_data_obj = {}
 
         # Misc
-        self._sample_sld_x_data_reversed = False
-        self._analysis_sld_x_data_reversed = False
+        self._sld_x_data_reversed = False
 
     def clearFrontendState(self):
 
@@ -260,28 +258,18 @@ class Plotting1dProxy(QObject):
         return brush
 
     # Misc
-    @Property(bool, notify=sampleSldXDataReversedChanged)
-    def sampleSldXDataReversed(self):
-        return self._sample_sld_x_data_reversed
-
-    # Misc
-    @Property(bool, notify=analysisSldXDataReversedChanged)
-    def analysisSldXDataReversed(self):
-        return self._analysis_sld_x_data_reversed
+    @Property(bool, notify=sldXDataReversedChanged)
+    def sldXDataReversed(self):
+        return self._sld_x_data_reversed
 
     @Slot()
-    def reverseSampleSldXData(self):
+    def reverseSldXData(self):
         self._sample_sld_min_x, self._sample_sld_max_x = self._sample_sld_max_x, self._sample_sld_min_x
         self._setSampleSldPlotRanges()
-        self._sample_sld_x_data_reversed = not self._sample_sld_x_data_reversed
-        self.sampleSldXDataReversedChanged.emit()
-    
-    @Slot()
-    def reverseAnalysisSldXData(self):
         self._analysis_sld_min_x, self._analysis_sld_max_x = self._analysis_sld_max_x, self._analysis_sld_min_x
         self._setAnalysisSldPlotRanges()
-        self._analysis_sld_x_data_reversed = not self._analysis_sld_x_data_reversed
-        self.analysisSldXDataReversedChanged.emit()
+        self._sld_x_data_reversed = not self._sld_x_data_reversed
+        self.sldXDataReversedChanged.emit()
 
     # Public: Python backend
 
@@ -482,7 +470,7 @@ class Plotting1dProxy(QObject):
     def _setSampleSldDataRanges(self):
         self._sample_sld_min_x = Plotting1dProxy.arrayMin(self._sample_sld_xarray)
         self._sample_sld_max_x = Plotting1dProxy.arrayMax(self._sample_sld_xarray)
-        if self.sampleSldXDataReversed:
+        if self.sldXDataReversed:
             self._sample_sld_min_x, self._sample_sld_max_x = self._sample_sld_max_x, self._sample_sld_min_x
         self._sample_sld_min_y = Plotting1dProxy.arrayMin(self._sample_sld_yarray)
         self._sample_sld_max_y = Plotting1dProxy.arrayMax(self._sample_sld_yarray)
@@ -490,7 +478,7 @@ class Plotting1dProxy(QObject):
     def _setAnalysisSldDataRanges(self):
         self._analysis_sld_min_x = Plotting1dProxy.arrayMin(self._analysis_sld_xarray)
         self._analysis_sld_max_x = Plotting1dProxy.arrayMax(self._analysis_sld_xarray)
-        if self.analysisSldXDataReversed:
+        if self.sldXDataReversed:
             self._analysis_sld_min_x, self._analysis_sld_max_x = self._analysis_sld_max_x, self._analysis_sld_min_x
         self._analysis_sld_min_y = Plotting1dProxy.arrayMin(self._analysis_sld_yarray)
         self._analysis_sld_max_y = Plotting1dProxy.arrayMax(self._analysis_sld_yarray)
