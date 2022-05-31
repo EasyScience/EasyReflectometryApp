@@ -31,7 +31,7 @@ class SimulationProxy(QObject):
         self._q_range_as_obj = self._defaultQRange()
         self._experiment_parameters = None
         self._plot_rq4 = False
-        self._y_main_axis_title = 'R(q)calc'
+        self._y_main_axis_title = 'R(q)'
 
         # # #
         # Connections
@@ -74,9 +74,9 @@ class SimulationProxy(QObject):
     def setPlotRQ4(self):
         self._plot_rq4 = not self._plot_rq4
         if self._plot_rq4:
-            self._y_main_axis_title += ' x q^4'
+            self._y_main_axis_title += 'q⁴'
         else:
-            self._y_main_axis_title = 'R(q)calc'
+            self._y_main_axis_title = 'R(q)'
         self.calculatedDataChanged.emit()
 
     @Property('QVariant', notify=backgroundChanged)

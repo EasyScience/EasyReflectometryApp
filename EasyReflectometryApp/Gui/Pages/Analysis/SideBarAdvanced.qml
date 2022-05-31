@@ -149,7 +149,7 @@ EaComponents.SideBarColumn {
             topPadding: 0
             id: rq4
             checked: ExGlobals.Constants.proxy.simulation.plotRQ4
-            text: qsTr("Show R(q)q^4")
+            text: qsTr("Show R(q)q⁴")
             onToggled: ExGlobals.Constants.proxy.simulation.setPlotRQ4()
         }
     }
