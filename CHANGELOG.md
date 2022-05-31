@@ -11,6 +11,7 @@
 - Parameter quick filters [27a64b6](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/27a64b615d016713478817119e45133b4af50695)
 - Start using easyApp [5e38ef8](https://github.com/easyScience/EasyReflectometryApp/commit/5e38ef8bd6fa542edd89e3c687d3a84dcc803800)
 - Add plotting in R(q)q^4 [5e38ef8](https://github.com/easyScience/EasyReflectometryApp/commit/5e38ef8bd6fa542edd89e3c687d3a84dcc803800)
+- Make the plots colourful to match the model colours [225ac06](https://github.com/easyScience/EasyReflectometryApp/pull/81/commits/225ac06cd7a72ba91a71e1c339c774fa351f1802)
 
 ### Changes 0.0.4
 
