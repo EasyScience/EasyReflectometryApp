@@ -40,7 +40,7 @@ class SimulationProxy(QObject):
         self.qRangeChanged.connect(self._onSimulationParametersChanged)
 
         self.calculatedDataChanged.connect(self._onCalculatedDataChanged)
-        self.parent._data_proxy.experimentDataAdded.connect(self._onExperimentDataAdded)
+        self.parent._data_proxy.experimentChanged.connect(self._setExperimentalData)
 
     # # #
     # Defaults
@@ -84,7 +84,7 @@ class SimulationProxy(QObject):
         if self._resolution_as_obj == value:
             return
         self._resolution_as_obj = value
-        self.parent._model_proxy.model.resolution = float(
+        self.parent._model_proxy._model.resolution = float(
             self._resolution_as_obj['res'])
         self.simulationParametersChanged.emit()
         self.parent.sampleChanged.emit()
@@ -100,25 +100,26 @@ class SimulationProxy(QObject):
             return
         self._q_range_as_obj = value
         self.simulationParametersChanged.emit()
+        self.parent.sampleChanged.emit()
 
     # # #
     # Actions
     # # #
 
-    def _onExperimentDataAdded(self):
+    def _setExperimentalData(self):
         self.parent._plotting_1d_proxy.setMeasuredData(
-            self.parent._data_proxy._experiment_data.x,
-            self.parent._data_proxy._experiment_data.y,
-            self.parent._data_proxy._experiment_data.ye)
+            self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].x,
+            self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].y,
+            self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].ye)
         self._experiment_parameters = self._experimentDataParameters(
-            self.parent._data_proxy._experiment_data)
+            self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex])
         self.qRangeAsObj = json.dumps(self._experiment_parameters[0])
         self.backgroundAsObj = json.dumps(self._experiment_parameters[1])
 
-        self.parent._data_proxy.experimentDataAsObjChanged.emit()
-        self.parent._project_proxy.projectInfoAsJson[
-            'experiments'] = self.parent._data_proxy.experiments[0]['name']
-        self.parent._project_proxy.projectInfoChanged.emit()
+        self.parent._data_proxy.experimentDataAsXmlChanged.emit()
+        # self.parent._project_proxy.projectInfoAsJson[
+        #     'experiments'] = self.parent._data_proxy.experiments[0]['name']
+        # self.parent._project_proxy.projectInfoChanged.emit()
 
     def _onCalculatedDataChanged(self):
         self._updateCalculatedData()
@@ -136,24 +137,29 @@ class SimulationProxy(QObject):
         #     return
 
         #  THIS IS WHERE WE WOULD LOOK UP CURRENT EXP INDEX
-        sim = self.parent._data_proxy._data.simulations[0]
+        # sim = self.parent._data_proxy._data.experiments[0]
 
         # elif self.experimentSkipped:
         x_min = float(self._q_range_as_obj['x_min'])
         x_max = float(self._q_range_as_obj['x_max'])
         x_step = float(self._q_range_as_obj['x_step'])
-        sim.x = np.arange(x_min, x_max + x_step, x_step)
+        x = np.arange(x_min, x_max + x_step, x_step)
 
+        self.parent._plotting_1d_proxy.setPureData(x, self.parent._model_proxy.getPureModelReflectometry(x))
+        sld_profile = self.parent._model_proxy._pure.interface.sld_profile()
+        self.parent._plotting_1d_proxy.setSampleSldData(*sld_profile)
+        
+        model_index = 0
         if self.parent._data_proxy.experimentLoaded:
-            exp = self.parent._data_proxy._data.experiments[0]
-            sim.x = exp.x
+            exp = self.parent._data_proxy._data.experiments[self.parent._data_proxy.currentDataIndex]
+            x = exp.x
+            model_index = self.parent._model_proxy._model.index(self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].model)
 
-        sim.y = self.parent._interface.fit_func(sim.x)
-        sld_profile = self.parent._interface.sld_profile()
+        y = self.parent._interface[model_index].fit_func(x)
+        sld_profile = self.parent._interface[model_index].sld_profile()
 
-        self.parent._plotting_1d_proxy.setCalculatedData(sim.x, sim.y)
-        self.parent._plotting_1d_proxy.setPureData(sim.x, self.parent._model_proxy.getPureModelReflectometry(sim.x))
-        self.parent._plotting_1d_proxy.setSldData(*sld_profile)
+        self.parent._plotting_1d_proxy.setCalculatedData(x, y)
+        self.parent._plotting_1d_proxy.setAnalysisSldData(*sld_profile)
 
     def resetSimulation(self):
         self._background_as_obj = self._defaultBackground()

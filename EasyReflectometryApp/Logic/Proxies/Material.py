@@ -7,7 +7,6 @@ from matplotlib import cm, colors
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import borg
-from easyCore.Utils.UndoRedo import property_stack_deco
 
 from EasyReflectometry.sample.material import Material
 from EasyReflectometry.sample.materials import Materials
@@ -20,29 +19,30 @@ MAX_SLD = 15
 class MaterialProxy(QObject):
 
     materialsChanged = Signal()
-    materialsNameChanged = Signal()
-
+    materialsIndexChanged = Signal()
     materialsAsXmlChanged = Signal()
-    materialsAsObjChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
 
-        self._materials_as_obj = []
         self._materials_as_xml = ""
         self._materials = self._defaultMaterials()
 
-        self._current_materials_index = 1
-        self._current_materials_len = len(self._materials)
+        self._current_materials_index = 0
 
-        self.materialsChanged.connect(self._onCurrentMaterialsChanged)
+        self.materialsChanged.connect(self._setMaterialsAsXml)
 
     # # #
     # Defaults
     # # #
 
     def _defaultMaterials(self) -> Materials:
+        """
+        Default materials for EasyReflecometry.
+        
+        :return: Three materials; Air, D2O and Si.
+        """
         return Materials(Material.from_pars(0., 0., name='Air'),
                          Material.from_pars(6.335, 0., name='D2O'),
                          Material.from_pars(2.074, 0., name='Si'))
@@ -51,65 +51,55 @@ class MaterialProxy(QObject):
     # Setters and getters
     # # #
 
-    @Property('QVariant', notify=materialsAsObjChanged)
+    @property
     def materialsAsObj(self):
-        return self._materials_as_obj
-
-    def _setMaterialsAsObj(self):
-        self._materials_as_obj = []
+        """
+        :return: A list of the materials to be converted to XML.
+        """
+        _materials_as_obj = []
         for i in self._materials:
-            dictionary = i.as_dict(skip=['interface'])
+            dictionary = i.as_dict(skip=['interface', 'min', 'max', 'error', 'fixed', 'description', 'url'])
             dictionary['color'] = colors.rgb2hex(
                 COLOURMAP((dictionary['sld']['value'] - MIN_SLD) / (MAX_SLD - MIN_SLD)))
-            self._materials_as_obj.append(dictionary)
-        self.materialsAsObjChanged.emit()
+            _materials_as_obj.append(dictionary)
+        return _materials_as_obj
 
     @Property(str, notify=materialsAsXmlChanged)
     def materialsAsXml(self):
+        """
+        :return: The list of materials as XML.
+        """
         return self._materials_as_xml
 
-    @materialsAsXml.setter
-    @property_stack_deco
-    def materialsAsXml(self):
-        self.parent.sampleChanged.emit()
-
     def _setMaterialsAsXml(self):
-        self._materials_as_xml = dicttoxml(self._materials_as_obj).decode()
+        """
+        Sets the _materials_as_xml object. 
+        """
+        self._materials_as_xml = dicttoxml(self.materialsAsObj).decode()
         self.materialsAsXmlChanged.emit()
 
-    @Property(list, notify=materialsNameChanged)
+    @Property(list, notify=materialsChanged)
     def materialsName(self):
+        """
+        :return: A list of just the materials names
+        """
         return self._materials.names
 
-    @materialsName.setter
-    @property_stack_deco
-    def materialsName(self):
-        self.parent.sampleChanged.emit()
-
-    @Property(int, notify=materialsChanged)
+    @Property(int, notify=materialsIndexChanged)
     def currentMaterialsIndex(self):
+        """
+        :return: The index of the currently selected material.
+        """
         return self._current_materials_index
 
     @currentMaterialsIndex.setter
     def currentMaterialsIndex(self, new_index: int):
+        """
+        Sets the _current_materials_index integer.
+        """
         if self._current_materials_index == new_index or new_index == -1:
             return
         self._current_materials_index = new_index
-
-    # # #
-    # Actions
-    # # #
-
-    def _onMaterialsChanged(self):
-        for i in self.parent._model_proxy._model.structure:
-            for j in i.layers:
-                j.name = j.material.name + ' Layer'
-        self._setMaterialsAsObj()  # 0.025 s
-        self._setMaterialsAsXml()  # 0.065 s
-        self.parent._state_proxy.stateChanged.emit(True)
-
-    def _onCurrentMaterialsChanged(self):
-        self.parent.sampleChanged.emit()
 
     # # #
     # Slot
@@ -117,18 +107,24 @@ class MaterialProxy(QObject):
 
     @Slot()
     def addNewMaterials(self):
+        """
+        Add a new material.
+        """
         borg.stack.enabled = False
         self._materials.append(
             Material.from_pars(2.074,
                                0.000,
-                               name=f'Material {len(self._materials)+1}',
-                               interface=self.parent._interface))
+                               name=f'Si',
+                               interface=self.parent._interface[0]))
         borg.stack.enabled = True
-        self.materialsNameChanged.emit()
-        self.parent.sampleChanged.emit()
+        self.materialsChanged.emit()
+        self.parent.layersMaterialsChanged.emit()
 
     @Slot()
     def duplicateSelectedMaterials(self):
+        """
+        Duplicate the currently selected material.
+        """
         # if borg.stack.enabled:
         #    borg.stack.beginMacro('Loaded default material')
         borg.stack.enabled = False
@@ -138,10 +134,11 @@ class MaterialProxy(QObject):
         self._materials.append(
             Material.from_pars(to_dup.sld.raw_value,
                                to_dup.isld.raw_value,
-                               name=to_dup.name))
+                               name=to_dup.name,
+                               interface=self.parent._interface[0]))
         borg.stack.enabled = True
-        self.materialsNameChanged.emit()
-        self.parent.sampleChanged.emit()
+        self.materialsChanged.emit()
+        self.parent.layersMaterialsChanged.emit()
 
     @Slot(str)
     def removeMaterials(self, i: str):
@@ -149,55 +146,74 @@ class MaterialProxy(QObject):
         Remove a material from the materials list.
 
         :param i: Index of the material
-        :type i: str
         """
-        if len(self._materials) == 1:
-            self._materials = Materials.from_pars()
-        else:
-            del self._materials[int(i)]
-        self.materialsNameChanged.emit()
-        self.parent.sampleChanged.emit()
+        del self._materials[int(i)]
+        self.materialsChanged.emit()
+        self.parent.layersMaterialsChanged.emit()
+
+    @Slot()
+    def moveSelectedMaterialsUp(self):
+        """
+        Move the currently selected material up.
+        """
+        i = self.currentMaterialsIndex
+        self._materials.insert(i-1, self._materials.pop(i))
+        self.materialsChanged.emit()
+        self.parent.layersMaterialsChanged.emit()
+
+    @Slot()
+    def moveSelectedMaterialsDown(self):
+        """
+        Move the currently selected material down.
+        """
+        i = self.currentMaterialsIndex
+        self._materials.insert(i+1, self._materials.pop(i))
+        self.materialsChanged.emit()
+        self.parent.layersMaterialsChanged.emit()
 
     @Slot(str)
-    def setCurrentMaterialsName(self, name):
+    def setCurrentMaterialsName(self, name: str):
         """
         Sets the name of the currently selected material.
 
-        :param sld: New name
-        :type sld: str
+        :param sld: New material name
         """
         if self._materials[self.currentMaterialsIndex].name == name:
             return
         self._materials[self.currentMaterialsIndex].name = name
-        self.materialsNameChanged.emit()
-        self.parent.sampleChanged.emit()
+        self.materialsChanged.emit()
+        self.parent.layersMaterialsChanged.emit()
 
-    @Slot(str)
-    def setCurrentMaterialsSld(self, sld):
+    @Slot(float)
+    def setCurrentMaterialsSld(self, sld: float):
         """
         Sets the SLD of the currently selected material.
 
         :param sld: New SLD value
-        :type sld: float
         """
-        if self._materials[self.currentMaterialsIndex].sld == sld:
+        if self._materials[self.currentMaterialsIndex].sld.raw_value == sld:
             return
         self._materials[self.currentMaterialsIndex].sld = sld
-        self.parent.sampleChanged.emit()
+        self.materialsChanged.emit()
+        self.parent.layersChanged.emit()
 
-    @Slot(str)
-    def setCurrentMaterialsISld(self, isld):
+    @Slot(float)
+    def setCurrentMaterialsISld(self, isld: float):
         """
         Sets the iSLD of the currently selected material.
 
-        :param sld: New iSLD value
-        :type sld: float
+        :param isld: New iSLD value
         """
-        if self._materials[self.currentMaterialsIndex].isld == isld:
+        if self._materials[self.currentMaterialsIndex].isld.raw_value == isld:
             return
         self._materials[self.currentMaterialsIndex].isld = isld
-        self.parent.sampleChanged.emit()
+        self.materialsChanged.emit()
+        self.parent.layersChanged.emit()
 
     def resetMaterial(self):
+        """
+        Reset the materials to the default.
+        """
         self._materials = self.parent._material_proxy._defaultMaterials()
         self.materialsChanged.emit()
+        self.parent.layersChanged.emit()

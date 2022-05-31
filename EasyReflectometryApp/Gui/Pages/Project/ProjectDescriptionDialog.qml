@@ -15,7 +15,7 @@ EaComponents.ProjectDescriptionDialog {
     onProjectLocationChanged: ExGlobals.Constants.proxy.currentProjectPath = projectLocation
 
     onAccepted: {
-        ExGlobals.Constants.proxy.currentProjectPath = projectLocation
+        ExGlobals.Constants.proxy.project.currentProjectPath = projectLocation
         ExGlobals.Constants.proxy.project.createProject()
     }
 

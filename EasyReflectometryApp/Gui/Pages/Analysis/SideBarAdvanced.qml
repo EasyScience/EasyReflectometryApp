@@ -7,8 +7,10 @@ import easyAppGui.Elements 1.0 as EaElements
 import easyAppGui.Components 1.0 as EaComponents
 
 import Gui.Globals 1.0 as ExGlobals
+import Gui.Components 1.0 as ExComponents
 
 EaComponents.SideBarColumn {
+    
 
     EaElements.GroupBox {
         title: qsTr("Calculation")
@@ -137,10 +139,10 @@ EaComponents.SideBarColumn {
 
         EaElements.CheckBox {
             topPadding: 0
-            checked: ExGlobals.Constants.proxy.plotting1d.sldXDataReversed
+            checked: ExGlobals.Constants.proxy.plotting1d.analysisSldXDataReversed
             text: qsTr("Reverse SLD z-axis")
             ToolTip.text: qsTr("Checking this box will reverce the z-axis of the SLD plot")
-            onToggled: ExGlobals.Constants.proxy.plotting1d.reverseSldXData()
+            onToggled: ExGlobals.Constants.proxy.plotting1d.reverseAnalysisSldXData()
         }
     }
 

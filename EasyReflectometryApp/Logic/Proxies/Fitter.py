@@ -1,11 +1,14 @@
 __author__ = 'github.com/arm61'
 
 import sys
+from dicttoxml import dicttoxml
+from distutils.util import strtobool
 
 from PySide2.QtCore import Signal, QThread, QObject, Property, Slot
 
 from easyCore import borg
-from easyCore.Fitting.Fitting import Fitter as easyFitter
+
+from EasyReflectometry.fitting import Fitter as easyFitter
 
 
 class Fitter(QThread):
@@ -46,6 +49,7 @@ class FitterProxy(QObject):
     fitResultsChanged = Signal()
 
     stopFit = Signal()
+    sampleChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -54,8 +58,9 @@ class FitterProxy(QObject):
         self._fit_finished = True
         self._fit_results = self._defaultFitResults()
         self._fitter_thread = None
-        self.eFitter = easyFitter(self.parent._model_proxy._model,
-                                  self.parent._interface.fit_func)
+
+        self.eFitter = easyFitter([i for i in self.parent._model_proxy._model],
+                                  [i.fit_func for i in self.parent._interface])
 
         self.fitFinished.connect(self._onFitFinished)
         self.stopFit.connect(self.onStopFit)
@@ -119,43 +124,48 @@ class FitterProxy(QObject):
             borg.stack.endMacro()  # need this to close the undo stack properly
             return
         # macos is possibly problematic with MT, skip on this platform
-        if 'darwin' in sys.platform:
-            self.nonthreaded_fit()
-        else:
-            self.threaded_fit()
+        # if 'darwin' in sys.platform:
+        self.nonthreaded_fit()
+        # else:
+        #     self.threaded_fit()
 
     # # #
     # Methods
     # # #
 
     def nonthreaded_fit(self):
+        interfaces = [self.parent._interface[
+            self.parent._model_proxy._model.index(
+                i.model)].fit_func for i in self.parent._data_proxy._data] 
+        self.eFitter = easyFitter([i.model for i in self.parent._data_proxy._data],
+                                  interfaces)
         self.isFitFinished = False
-        exp_data = self.parent._data_proxy._data.experiments[0]
+        exp_data = self.parent._data_proxy._data.experiments
 
-        x = exp_data.x
-        y = exp_data.y
-        weights = 1 / exp_data.ye
+        x = [i.x for i in exp_data]
+        y = [i.y for i in exp_data]
+        weights = [1 / i.ye for i in exp_data]
         method = self.parent.minimizer._current_minimizer_method_name
 
-        res = self.eFitter.fit(x, y, weights=weights, method=method)
+        res = self.eFitter.easy_f.fit_lists(x, y, weights_list=weights, method=method)
         self._setFitResults(res)
 
-    def threaded_fit(self):
-        self.isFitFinished = False
-        exp_data = self.parent._data_proxy._data.experiments[0]
+    # def threaded_fit(self):
+    #     self.isFitFinished = False
+    #     exp_data = self.parent._data_proxy._data.experiments[0]
 
-        x = exp_data.x
-        y = exp_data.y
-        weights = 1 / exp_data.ye
-        method = self.parent.minimizer._current_minimizer_method_name
+    #     x = exp_data.x
+    #     y = exp_data.y
+    #     weights = 1 / exp_data.ye
+    #     method = self.parent.minimizer._current_minimizer_method_name
 
-        args = (x, y)
-        kwargs = {"weights": weights, "method": method}
-        self._fitter_thread = Fitter(self, self.eFitter, 'fit', *args, **kwargs)
-        self._fitter_thread.setTerminationEnabled(True)
-        self._fitter_thread.finished.connect(self._setFitResults)
-        self._fitter_thread.failed.connect(self._setFitResultsFailed)
-        self._fitter_thread.start()
+    #     args = (x, y)
+    #     kwargs = {"weights": weights, "method": method}
+    #     self._fitter_thread = Fitter(self, self.eFitter, 'fit', *args, **kwargs)
+    #     self._fitter_thread.setTerminationEnabled(True)
+    #     self._fitter_thread.finished.connect(self._setFitResults)
+    #     self._fitter_thread.failed.connect(self._setFitResultsFailed)
+    #     self._fitter_thread.start()
 
     def onStopFit(self):
         """
@@ -172,3 +182,8 @@ class FitterProxy(QObject):
 
     def stop_fit(self):
         self._fitter_thread.stop()
+
+    def _onSampleChanged(self):
+        self.sampleChanged.emit()
+
+    

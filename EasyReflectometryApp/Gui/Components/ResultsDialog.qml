@@ -36,7 +36,7 @@ EaElements.Dialog {
         EaElements.Label {
             enabled: gotResults
             text: gotResults
-                  ? `Goodness-of-fit (reduced \u03c7\u00b2): ${ExGlobals.Constants.proxy.fitter.fitResults.redchi2.toFixed(2)}`
+                  ? `Goodness-of-fit: ${ExGlobals.Constants.proxy.fitter.fitResults.GOF.toFixed(2)}`
                   : ""
         }
     }

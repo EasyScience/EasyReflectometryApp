@@ -7,6 +7,8 @@ from easyCore import np
 from easyCore.Utils.json import MSONable, MontyDecoder
 from collections.abc import Sequence
 
+from EasyReflectometry.experiment.model import Model
+
 T = TypeVar('T')
 
 
@@ -36,6 +38,9 @@ class DataStore(Sequence, MSONable):
 
     def __setitem__(self, key, value):
         self.items[key] = value
+
+    def __delitem__(self, key):
+        del self.items[key]
 
     def append(self, *args):
         self.items.append(*args)
@@ -71,14 +76,12 @@ class DataSet1D(MSONable):
                  y: Union[np.ndarray, list] = None,
                  ye: Union[np.ndarray, list] = None,
                  xe: Union[np.ndarray, list] = None,
-                 data_type: str = 'simulation',
+                 model: Model = None,
                  x_label: str = 'x',
                  y_label: str = 'y'):
 
-        if not isinstance(data_type, str):
-            raise AttributeError
-        self._datatype = None
-        self.data_type = data_type
+        self._model = model
+        self._model.background = np.min(y)
 
         if x is None:
             x = np.array([])
@@ -106,28 +109,21 @@ class DataSet1D(MSONable):
         self._color = None
 
     @property
-    def data_type(self) -> str:
-        if self._datatype == 'e':
-            r = 'experiment'
-        else:
-            r = 'simulation'
-        return r
+    def model(self):
+        return self._model
 
-    @data_type.setter
-    def data_type(self, data_type: str):
-        data_switch = data_type.lower()[0]
-        if data_switch == 's':
-            self._datatype = 's'
-        elif data_switch == 'e':
-            self._datatype = 'e'
+    @model.setter
+    def model(self, new_model):
+        self._model = new_model
+        self._model.background = np.min(self.y)
 
     @property
     def is_experiment(self) -> bool:
-        return self._datatype == 'e'
+        return self._model is not None
 
     @property
     def is_simulation(self) -> bool:
-        return self._datatype == 's'
+        return self._model is None
 
     def __repr__(self) -> str:
         return "1D DataStore of '{:s}' Vs '{:s}' with {} data points".format(self.x_label, self.y_label, len(self.x))

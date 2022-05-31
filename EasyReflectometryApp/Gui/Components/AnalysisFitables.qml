@@ -69,7 +69,15 @@ EaComponents.TableView {
                    fitColumn.width
             headerText: "Label"
             text: formatLabel(model.index, model.label)
-            textFormat: Text.RichText
+            elide: Text.ElideRight
+            ToolTip.text: formatLabel(model.index, model.label)
+            ToolTip.visible: formatLabel(model.index, model.label) ? mac.containsMouse : false
+            MouseArea {
+                id: mac
+                anchors.fill: parent
+                hoverEnabled: true
+            }
+            ToolTip.delay: 500
         }
 
         EaComponents.TableViewTextInput {
@@ -81,7 +89,11 @@ EaComponents.TableView {
                 if (model.label.endsWith('Background')) {
                     model.value.toExponential(3)
                 } else {
-                    model.value.toFixed(4)
+                    if (model.label.endsWith('background')) {
+                        model.value.toExponential(3)
+                    } else {
+                        model.value.toFixed(4)
+                    }
                 }
             }
             onEditingFinished: editParameterValue(model.id, text)
@@ -100,7 +112,17 @@ EaComponents.TableView {
             horizontalAlignment: Text.AlignRight
             width: EaStyle.Sizes.fontPixelSize * 3
             headerText: "Error  "
-            text: model.error === 0.0 || model.error > 999999 ? "" : model.error.toFixed(4) + "  "
+            text: {
+                if (model.label.endsWith('Background')) {
+                    model.error === 0.0 || model.error > 999999 ? "" : model.error.toExponential(3) + "  "
+                } else {
+                    if (model.label.endsWith('background')) {
+                        model.error === 0.0 || model.error > 999999 ? "" : model.error.toExponential(3) + "  "
+                    } else {
+                        model.error === 0.0 || model.error > 999999 ? "" : model.error.toFixed(4) + "  "
+                    }
+                }
+            }
         }
 
         EaComponents.TableViewTextInput {
@@ -174,10 +196,7 @@ EaComponents.TableView {
         if (index < 0 || typeof label === "undefined")
             return ""
 
-        const datasetName = ExGlobals.Constants.proxy.data.experimentDataAsObj[0].name
-
         // Modify current label
-        label = label.replace("Instrument.", `Instrument.${datasetName}.`)
         label = label.replace(".background.", ".")
         label = label.replace("Uiso.Uiso", "Uiso")
         label = label.replace("fract_", "fract.")
@@ -191,7 +210,6 @@ EaComponents.TableView {
 
         // Modify previous label to list
         let previousLabel = index > 0 ? fitablesModel.get(index - 1).label : ""
-        previousLabel = previousLabel.replace("Instrument.", `Instrument.${datasetName}.`)
         previousLabel = previousLabel.replace(".background.", ".")
         previousLabel = previousLabel.replace("Uiso.Uiso", "Uiso")
         previousLabel = previousLabel.replace("fract_", "fract.")

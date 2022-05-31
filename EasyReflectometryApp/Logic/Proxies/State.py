@@ -46,9 +46,9 @@ class StateProxy(QObject):
     def statusModelAsObj(self):
         obj = {
             "calculation":
-            self.parent._interface.current_interface_name,
+            self.parent._interface[0].current_interface_name,
             "minimization":
-            f'{self.parent._fitter_proxy.eFitter.current_engine.name} ({self.parent._minimizer_proxy._current_minimizer_method_name})'
+            f'{self.parent._fitter_proxy.eFitter.easy_f.current_engine.name} ({self.parent._minimizer_proxy._current_minimizer_method_name})'
         }
         self._status_model = obj
         return obj
@@ -57,12 +57,12 @@ class StateProxy(QObject):
     def statusModelAsXml(self):
         model = [{
             "label": "Calculation",
-            "value": self.parent._interface.current_interface_name
+            "value": self.parent._interface[0].current_interface_name
         }, {
             "label":
             "Minimization",
             "value":
-            f'{self.parent._fitter_proxy.eFitter.current_engine.name} ({self.parent._minimizer_proxy._current_minimizer_method_name})'
+            f'{self.parent._fitter_proxy.eFitter.easy_f.current_engine.name} ({self.parent._minimizer_proxy._current_minimizer_method_name})'
         }]
         xml = dicttoxml(model, attr_type=False)
         xml = xml.decode()
@@ -89,4 +89,5 @@ class StateProxy(QObject):
         self.parent._simulation_proxy.resetSimulation()
         self.parent._plotting_1d_proxy._setMeasuredDataArrays(np.empty(0), np.empty(0))
         self.parent._model_proxy.modelChanged.emit()
+        self.parent.sampleChanged.emit()
         self.stateChanged.emit(False)

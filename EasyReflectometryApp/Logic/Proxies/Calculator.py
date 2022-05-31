@@ -22,11 +22,11 @@ class CalculatorProxy(QObject):
 
     @Property('QVariant', notify=dummySignal)
     def calculatorNames(self):
-        return self.parent._interface.available_interfaces
+        return self.parent._interface[0].available_interfaces[:1]
 
     @Property(int, notify=calculatorChanged)
     def currentCalculatorIndex(self):
-        return self.calculatorNames.index(self.parent._interface.current_interface_name)
+        return self.calculatorNames.index(self.parent._interface[0].current_interface_name)
 
     @currentCalculatorIndex.setter
     @property_stack_deco('Calculation engine change')
@@ -34,9 +34,10 @@ class CalculatorProxy(QObject):
         if self.currentCalculatorIndex == new_index:
             return
         new_name = self.calculatorNames[new_index]
+
         self.parent._model_proxy._model.switch_interface(new_name)
         self.parent._fitter_proxy.eFitter.initialize(self.parent._model_proxy._model,
-                                                      self.parent._interface.fit_func)
+                                                      self.parent._interface[0].fit_func)
         self.calculatorChanged.emit()
 
     # # #

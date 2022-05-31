@@ -2,7 +2,13 @@
 
 ### Changes 0.0.5
 
-- Fix the reset state button []()
+- Addition of multiple contrast support [091abe1](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/091abe1b727c7b9e1f1b60ed1327d79ef318dd8e)
+- Saving and loading fixed [598e7f3](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/598e7f36ef5feb6263ed015e13002528c15b03b9)
+- Enabling parameter-parameter constraints to be defined [82e3821](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/82e382141e8e5b469e89fe42ca397c21bd194fcc)
+- Clean up of the sample interface [3907bde](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/3907bde69d608be6b82051c60bb7a304f04f0002)
+- Enabling the docs and bug reporting buttons [7d29276](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/7d292761e96860b5b8ce74365174e38f79bbaf80)
+- Fix the reset state button [a1db4ac](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/a1db4ac10bbd5f90c764f28336cbfecb26671a03)
+- Parameter quick filters [27a64b6](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/27a64b615d016713478817119e45133b4af50695)
 
 ### Changes 0.0.4
 

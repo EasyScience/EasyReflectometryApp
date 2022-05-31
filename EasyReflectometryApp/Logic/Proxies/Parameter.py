@@ -2,8 +2,9 @@ __author__ = 'github.com/arm61'
 
 from typing import Union
 from dicttoxml import dicttoxml
-
+from distutils.util import strtobool
 from PySide2.QtCore import QObject, Signal, Property, Slot
+from easyCore.Fitting.Constraints import ObjConstraint, NumericConstraint, FunctionalConstraint
 
 from easyCore import borg
 from easyCore import np
@@ -42,6 +43,7 @@ class ParameterProxy(QObject):
 
         par_ids, par_paths = generatePath(self.parent._model_proxy._model, True)
         pids = []
+        labels = []
         for par_index, par_path in enumerate(par_paths):
             par_id = par_ids[par_index]
             if par_id in pids:
@@ -51,43 +53,13 @@ class ParameterProxy(QObject):
             path_split = par_path.split('.')
             if path_split[-1] == 'repetitions' and par.raw_value == 1:
                 continue
-
             if not par.enabled:
                 continue
-
-            if self._parameters_filter_criteria.lower() not in par_path.lower():
-                continue
-
-            label = par_path
             unit = '{:~P}'.format(par.unit)
-            if path_split[-1][-3:] == 'sld':
-                label = (' ').join(par_path.split('.')[-2:])
-                label = label[:-3] + 'SLD'
-            elif path_split[-1] == 'thickness':
-                label = (' ').join(par_path.split('.')[-2:])
-                label = label[:-9] + 'Thickness'
-            elif path_split[-1] == 'roughness':
-                label = (' ').join(par_path.split('.')[-2:])
-                label = label[:-9] + 'Roughness'
-            elif path_split[-1] == 'repetitions':
-                label = (' ').join(par_path.split('.')[-2:])
-                label = label[:-11] + 'Repetitions'
-            elif par_path == 'scale':
-                label = 'Instrumental Scaling'
-            elif par_path == 'background':
-                label = 'Instrumental Background'
-            elif par_path == 'resolution':
-                label = 'Resolution (dq/q)'
-                unit = '%'
-            elif path_split[-1] == 'solvation':
-                label = 'Fractional '
-                label += par_path.split('.')[-2].split('/')[1]
-                label += ' in '
-                label += par_path.split('.')[-2].split('/')[0]
-            elif path_split[-1] == 'area_per_molecule':
-                label = par_path.split('.')[-2].split('/')[0]
-                label = label + ' APM'
-            elif path_split[-1][:-5] == 'scattering_length': 
+            label = get_label(par_path)
+            if label is None:
+                continue
+            if self._parameters_filter_criteria.lower() not in label.lower():
                 continue
             self._parameters_as_obj.append({
                 "id": str(par_id),
@@ -211,3 +183,165 @@ class ParameterProxy(QObject):
         obj_id = int(obj_id)
         obj = borg.map.get_item_by_key(obj_id)
         return obj
+
+    # Constraints
+    @Slot(int, str, float, str, int)
+    def addConstraint(self, dependent_par_idx, relational_operator,
+                      value, arithmetic_operator, independent_par_idx):
+        if dependent_par_idx == -1 or value == "":
+            print("Failed to add constraint: Unsupported type")
+            return
+        # if independent_par_idx == -1:
+        #    print(f"Add constraint: {self.fitablesList()[dependent_par_idx]['label']}{relational_operator}{value}")
+        # else:
+        #    print(f"Add constraint: {self.fitablesList()[dependent_par_idx]['label']}{relational_operator}{value}{arithmetic_operator}{self.fitablesList()[independent_par_idx]['label']}")
+        pars = []
+        pids = []
+        par_ids, par_paths = generatePath(self.parent._model_proxy._model, True)
+        for par_index, par_path in enumerate(par_paths):
+            par_id = par_ids[par_index]
+            if par_id in pids:
+                continue
+            pids.append(par_id)
+            par = borg.map.get_item_by_key(par_id)
+            path_split = par_path.split('.')
+            if path_split[-1] == 'repetitions' and par.raw_value == 1:
+                continue
+            if not par.enabled:
+                continue
+            label = get_label(par_path)
+            if label is None:
+                continue
+            pars.append(par)
+        if arithmetic_operator != "" and independent_par_idx > -1:
+            c = ObjConstraint(pars[dependent_par_idx],
+                              str(float(value)) + arithmetic_operator,
+                              pars[independent_par_idx])
+        elif arithmetic_operator == "" and independent_par_idx == -1:
+            c = NumericConstraint(pars[dependent_par_idx],
+                                  relational_operator.replace("=", "=="),
+                                  float(value))
+        else:
+            print("Failed to add constraint: Unsupported type")
+            return
+        # print(c)
+        pars[independent_par_idx].user_constraints[pars[dependent_par_idx].name] = c
+        c()
+        self.parent.sampleChanged.emit()
+        self.parametersAsObjChanged.emit()
+
+    def constraintsList(self):
+        constraint_list = []
+        number = 0
+        for index, constraint in enumerate(self.parent._model_proxy._model.constraints):
+            if type(constraint) is ObjConstraint:
+                par = constraint.get_obj(constraint.independent_obj_ids)
+                independent_name = get_label(get_par_path(par, self.parent._model_proxy._model))
+                relational_operator = "="
+                if constraint.operator == '':
+                    continue
+                else:
+                    value = float(constraint.operator[:-1])
+                    arithmetic_operator = constraint.operator[-1]
+            elif type(constraint) is NumericConstraint:
+                independent_name = ""
+                relational_operator = constraint.operator.replace("==", "=")
+                value = constraint.value
+                arithmetic_operator = ""
+            elif type(constraint) is FunctionalConstraint:
+                continue
+            else:
+                print(f"Failed to get constraint: Unsupported type {type(constraint)}")
+                return
+            number += 1
+            par = constraint.get_obj(constraint.dependent_obj_ids)
+            dependent_name = get_label(get_par_path(par, self.parent._model_proxy._model))
+            enabled = int(constraint.enabled)
+            constraint_list.append(
+                {"number": number,
+                 "index": index + 1,
+                 "dependentName": dependent_name,
+                 "relationalOperator": relational_operator,
+                 "value": value,
+                 "arithmeticOperator": arithmetic_operator,
+                 "independentName": independent_name,
+                 "enabled": enabled}
+            )
+        return constraint_list
+
+    @Property(str, notify=parametersAsObjChanged)
+    def constraintsAsXml(self):
+        xml = dicttoxml(self.constraintsList(), attr_type=False)
+        xml = xml.decode()
+        return xml
+
+    @Slot(int)
+    def removeConstraintByIndex(self, index: int):
+        constraint = self.parent._model_proxy._model.constraints[index]
+        independent_obj = constraint.get_obj(constraint.independent_obj_ids)
+        dependent_obj_name = constraint.get_obj(constraint.dependent_obj_ids).name
+        del independent_obj.user_constraints[dependent_obj_name] 
+        self.parent.sampleChanged.emit()
+
+    @Slot(int, str)
+    def toggleConstraintByIndex(self, index, enabled):
+        constraint = self.parent._model_proxy._model.constraints[index]
+        independent_obj = constraint.get_obj(constraint.independent_obj_ids)
+        dependent_obj_name = constraint.get_obj(constraint.dependent_obj_ids).name
+        independent_obj.user_constraints[dependent_obj_name].enabled = bool(strtobool(enabled))
+        self.parent.sampleChanged.emit()
+
+    def removeAllConstraints(self):
+        for _ in range(len(self.eFitter.easy_f.fit_constraints())):
+            self.removeConstraintByIndex(0)
+        self.constraintsRemoved.emit()
+        self.sampleChanged.emit()
+
+def get_label(par_path: str) -> str:
+    """
+    Generate the label
+    
+    :param par_path: Path for the parameter.
+    
+    :return: The label.
+    """
+    path_split = par_path.split('.')
+    model = [(' ').join(path_split[0:1] + ['-'])]
+    if path_split[-1][-3:] == 'sld':
+        label = (' ').join(par_path.split('.')[-2:])
+        label = label[:-3] + 'SLD'
+    elif path_split[-1] == 'thickness':
+        label = (' ').join(model + par_path.split('.')[-2:])
+        label = label[:-9] + 'Thickness'
+    elif path_split[-1] == 'roughness':
+        label = (' ').join(model + par_path.split('.')[-2:])
+        label = label[:-9] + 'Roughness'
+    elif path_split[-1] == 'repetitions':
+        label = (' ').join(model + par_path.split('.')[-2:])
+        label = label[:-11] + 'Repetitions'
+    elif path_split[-1] =='scale':
+        label =  model[0] + ' Scaling'
+    elif path_split[-1] == 'background':
+        label =  model[0] + ' Background'
+    elif path_split[-1] == 'resolution':
+        label =  model[0] + ' Resolution (dq/q)'
+        unit = '%'
+    elif path_split[-1] == 'solvation':
+        label = model[0] + ' Fractional '
+        label += par_path.split('.')[-2].split('/')[1]
+        label += ' in '
+        label += par_path.split('.')[-2].split('/')[0]
+    elif path_split[-1] == 'area_per_molecule':
+        label = model[0] + ' ' + par_path.split('.')[-2].split('/')[0]
+        label = label + ' APM'
+    elif path_split[-1][:-5] == 'scattering_length': 
+        label = None
+    return label
+
+def get_par_path(par, model):
+    model_id = borg.map.convert_id(model)
+    elem = borg.map.convert_id(par)
+    route = borg.map.reverse_route(elem, model_id)
+    objs = [getattr(borg.map.get_item_by_key(r), "name") for r in route]
+    objs.reverse()
+    return ".".join(objs[1:]) 

@@ -13,6 +13,67 @@ import Gui.Components 1.0 as ExComponents
 
 EaComponents.SideBarColumn {
 
+    EaElements.GroupBox{
+        title: qsTr("Select model/dataset pair")
+        collapsible: true
+        collapsed: false
+
+        EaComponents.TableView {
+            id: dataTable
+
+            defaultInfoText: qsTr("No Experiments Loaded")
+
+            // Table model
+
+            model: XmlListModel {
+                xml: ExGlobals.Constants.proxy.data.experimentDataAsXml
+                query: "/root/item"
+
+                XmlRole { name: "label"; query: "name/string()" }
+                XmlRole { name: "color"; query: "color/string()" }
+                XmlRole { name: "model_name"; query: "model_name/string()"}
+            }
+
+            // Table rows
+
+            delegate: EaComponents.TableViewDelegate {
+                property var dataModel: model
+
+                EaComponents.TableViewLabel {
+                    width: EaStyle.Sizes.fontPixelSize * 2.5
+                    headerText: "No."
+                    text: model.index + 1
+                }
+
+                EaComponents.TableViewLabel {
+                    horizontalAlignment: Text.AlignLeft
+                    width: EaStyle.Sizes.fontPixelSize * 16.5
+                    headerText: "Label"
+                    text: model.label
+                }
+
+                EaComponents.TableViewLabel {
+                    horizontalAlignment: Text.AlignLeft
+                    width: EaStyle.Sizes.fontPixelSize * 12.5
+                    headerText: "Model"
+                    text: model.model_name
+                    // editable: false
+                }
+
+                EaComponents.TableViewLabel {
+                    headerText: "Color"
+                    backgroundColor: model.color
+                }
+
+            }
+            onCurrentIndexChanged: {
+                ExGlobals.Constants.proxy.data.currentDataIndex = dataTable.currentIndex
+            }
+
+        }
+    }
+    
+
     EaElements.GroupBox {
         id: groupBox
 
@@ -22,20 +83,31 @@ EaComponents.SideBarColumn {
 
         // Filter parameters widget
         Row {
-            spacing: EaStyle.Sizes.fontPixelSize * 0.5
+            spacing: EaStyle.Sizes.fontPixelSize
 
             Column {
-                EaElements.Label {
-                    visible: false
-                    enabled: false
-                    text: qsTr("Filter by text")
+                EaElements.ComboBox {
+                    width: EaStyle.Sizes.sideBarContentWidth
+                    model: ExGlobals.Constants.proxy.model.modelListAll
+                    onActivated: {
+                        if (currentValue == 'Quick filter'){
+                            filterCriteriaField.text = ''
+                        } else {
+                            if (currentValue == 'Materials') {
+                                filterCriteriaField.text = 'SLD'
+                            } else {
+                                filterCriteriaField.text = currentValue
+                            }
+                        }
+                    }
+                    Component.onCompleted: {
+                        currentIndex = 0
+                    }
                 }
 
                 EaElements.TextField {
                     id: filterCriteriaField
-
-                    width: EaStyle.Sizes.sideBarContentWidth //(EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 3
-
+                    width: EaStyle.Sizes.sideBarContentWidth
                     placeholderText: qsTr("Filter parameters")
 
                     onTextChanged: {
@@ -45,7 +117,6 @@ EaComponents.SideBarColumn {
                     }
                 }
             }
-
             Column {
                 visible: false
 

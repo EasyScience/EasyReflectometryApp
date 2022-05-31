@@ -9,8 +9,10 @@ from PySide2.QtCore import QObject, Signal, Property, Slot
 from easyCore import np
 from easyAppLogic.Utils.Utils import generalizePath
 
+from EasyReflectometryApp.Logic.DataStore import DataSet1D
 from EasyReflectometry.sample.materials import Materials
 from EasyReflectometry.experiment.model import Model
+from EasyReflectometry.experiment.models import Models
 
 
 class ProjectProxy(QObject):
@@ -40,8 +42,8 @@ class ProjectProxy(QObject):
             name="Example Project",
             # location=os.path.join(os.path.expanduser("~"), "Example Project"),
             short_description="reflectometry, 1D",
-            samples="Not loaded",
-            experiments="Not loaded",
+            # samples="Not loaded",
+            # experiments=DataStore(),
             modified=datetime.datetime.now().strftime("%d.%m.%Y %H:%M"))
 
     # # #
@@ -146,9 +148,10 @@ class ProjectProxy(QObject):
         projectPath = self.currentProjectPath
         project_save_filepath = os.path.join(projectPath, 'project.json')
         materials_in_model = []
-        for i in self.parent._model_proxy._model.structure:
-            for j in i.layers:
-                materials_in_model.append(j.material)
+        for i in self.parent._model_proxy._model:
+            for j in i.structure:
+                for k in j.layers:
+                    materials_in_model.append(k.material)
         materials_not_in_model = []
         for i in self.parent._material_proxy._materials:
             if i not in materials_in_model:
@@ -161,25 +164,27 @@ class ProjectProxy(QObject):
         }
 
         if self.parent._data_proxy._data.experiments:
-            experiments_x = self.parent._data_proxy._data.experiments[0].x
-            experiments_y = self.parent._data_proxy._data.experiments[0].y
-            experiments_ye = self.parent._data_proxy._data.experiments[0].ye
-            if self.parent._data_proxy._data.experiments[0].xe is not None:
-                experiments_xe = self.parent._data_proxy._data.experiments[0].xe
-                descr['experiments'] = [
-                    experiments_x, experiments_y, experiments_ye, experiments_xe
-                ]
-            else:
-                descr['experiments'] = [experiments_x, experiments_y, experiments_ye]
+            descr['experiments'] = [] 
+            descr['experiments_models'] = []
+            descr['experiments_names'] = []
+            for i in self.parent._data_proxy._data.experiments:
+                if self.parent._data_proxy._data.experiments[0].xe is not None:
+                    descr['experiments'].append([
+                        i.x, i.y, i.ye, i.xe
+                    ])
+                else:
+                    descr['experiments'].append([i.x, i.y, i.ye])
+                descr['experiments_models'].append(i.model.name)
+                descr['experiments_names'].append(i.name)
 
         descr['experiment_skipped'] = self.parent._data_proxy._experiment_skipped
         descr['project_info'] = self._project_info
 
-        descr['interface'] = self.parent._interface.current_interface_name
+        descr['interface'] = [i.current_interface_name for i in self.parent._interface]
 
         descr['minimizer'] = {
-            'engine': self.parent._fitter_proxy.eFitter.current_engine.name,
-            'method': self.parent._current_minimizer_method_name
+            'engine': self.parent._fitter_proxy.eFitter.easy_f.current_engine.name,
+            'method': self.parent._minimizer_proxy._current_minimizer_method_name
         }
 
         content_json = json.dumps(descr, indent=4, default=self.default)
@@ -213,41 +218,51 @@ class ProjectProxy(QObject):
             descr: dict = json.load(xml_file)
 
         interface_name = descr.get('interface', None)
-        if interface_name is not None:
-            old_interface_name = self.parent._interface.current_interface_name
-            if old_interface_name != interface_name:
-                self._interface.switch(interface_name)
+        for i, inter in enumerate(interface_name):
+            if inter is not None:
+                old_interface_name = self.parent._interface[i].current_interface_name
+                if old_interface_name != inter:
+                    self._interface[i].switch(inter)
 
-        self.parent._model_proxy._model = Model.from_dict(descr['model'])
-        for i in self.parent._model_proxy._model.structure:
-            for j in i.layers:
-                self.parent._material_proxy._materials.append(j.material)
+        self.parent._model_proxy._model = Models.from_dict(descr['model'])
+        self.parent._material_proxy._materials = Materials.from_pars()
+        c = 0
+        for i in self.parent._model_proxy._model:
+            for j in i.structure:
+                for k in j.layers:
+                    self.parent._material_proxy._materials.append(k.material)
+            i.interface = self.parent._interface[c]
+            c += 1
         for i in Materials.from_dict(descr['materials_not_in_model']):
             self.parent._material_proxy._materials.append(i)
-        self.parent._model_proxy._model.interface = self.parent._interface
-        self.parent.sampleChanged.emit()
 
         # experiment
         if 'experiments' in descr:
             self.parent._data_proxy.experimentLoaded = True
-            self.parent._data_proxy._data.experiments[0].x = np.array(
-                descr['experiments'][0])
-            self.parent._data_proxy._data.experiments[0].y = np.array(
-                descr['experiments'][1])
-            self.parent._data_proxy._data.experiments[0].ye = np.array(
-                descr['experiments'][2])
-            if len(descr['experiments']) == 4:
-                self.parent._data_proxy._data.experiments[0].xe = np.array(
-                    descr['experiments'][3])
-            else:
-                self.parent._data_proxy._data.experiments[0].xe = None
-            self._experiment_data = self.parent._data_proxy._data.experiments[0]
-            self.experiments = [{'name': descr['project_info']['experiments']}]
-            self.parent.setCurrentExperimentDatasetName(
-                descr['project_info']['experiments'])
+            for i, e in enumerate(descr['experiments']):
+                x = np.array(e[0])
+                y = np.array(e[1])
+                ye = np.array(e[2])
+                if len(e) == 4:
+                    xe = np.array(e[3])
+                else:
+                    xe = np.zeros_like(ye)
+                name = descr['experiments_names'][i]
+                model_name = descr['experiments_models'][i]
+                model = None
+                for i in self.parent._model_proxy._model:
+                    if i.name == model_name:
+                        model = i
+                        break
+                ds = DataSet1D(name=name, x=x, y=y, ye=ye, xe=xe, 
+                           model=model, 
+                           x_label='q (1/angstrom)', 
+                           y_label='Reflectivity')
+                self.parent._data_proxy._data.append(ds)
+            
             self.parent._data_proxy.experimentLoaded = True
             self.parent._data_proxy.experimentSkipped = False
-            self.parent.experimentDataAdded.emit()
+            self.parent._data_proxy.experimentChanged.emit()
             self.parent._parameter_proxy._onParametersChanged()
 
         else:
@@ -262,23 +277,21 @@ class ProjectProxy(QObject):
 
         # project info
         self.projectInfoAsJson = json.dumps(descr['project_info'])
+        self.parent.sampleChanged.emit()
 
         new_minimizer_settings = descr.get('minimizer', None)
         if new_minimizer_settings is not None:
             new_engine = new_minimizer_settings['engine']
             new_method = new_minimizer_settings['method']
-            new_engine_index = self.parent.minimizerNames.index(new_engine)
+            new_engine_index = self.parent._minimizer_proxy.minimizerNames.index(new_engine)
             self.currentMinimizerIndex = new_engine_index
-            print(self.parent.minimizerMethodNames)
             try:
-                new_method_index = self.parent.minimizerMethodNames.index(new_method)
+                new_method_index = self.parent._minimizer_proxy.minimizerMethodNames.index(new_method)
             except ValueError:
-                new_method_index = self.parent.minimizerMethodNames[0]
+                new_method_index = self.parent._minimizer_proxy.minimizerMethodNames[0]
             self.currentMinimizerMethodIndex = new_method_index
 
-        self.parent._fitting_proxy.eFitter.fit_object = self.parent._model_proxy._model
-
-        self.parent.resetUndoRedoStack()
+        self.parent._undoredo_proxy.resetUndoRedoStack()
 
         self.projectCreated = True
 
