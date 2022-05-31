@@ -87,12 +87,12 @@ EaComponents.TableView {
             headerText: "Value"
             text: {
                 if (model.label.endsWith('Background')) {
-                    model.value.toExponential(3)
+                    model.value.toExponential(2)
                 } else {
                     if (model.label.endsWith('background')) {
-                        model.value.toExponential(3)
+                        model.value.toExponential(2)
                     } else {
-                        model.value.toFixed(4)
+                        model.value.toFixed(3)
                     }
                 }
             }
@@ -102,8 +102,14 @@ EaComponents.TableView {
         EaComponents.TableViewLabel {
             id: unitColumn
             horizontalAlignment: Text.AlignLeft
-            width: EaStyle.Sizes.fontPixelSize * 2
-            text: model.unit
+            width: EaStyle.Sizes.fontPixelSize * 3.5
+            text: {
+                if (model.unit == '1/Å²') {
+                    '10⁻⁶/Å²'
+                } else {
+                    model.unit
+                }
+            }
             color: EaStyle.Colors.themeForegroundMinor
         }
 
@@ -111,15 +117,15 @@ EaComponents.TableView {
             id: errorColumn
             horizontalAlignment: Text.AlignRight
             width: EaStyle.Sizes.fontPixelSize * 4
-            headerText: "Error  "
+            headerText: "Error"
             text: {
                 if (model.label.endsWith('Background')) {
-                    model.error === 0.0 || model.error > 999999 ? "" : model.error.toExponential(3) + "  "
+                    model.error === 0.0 || model.error > 999999 ? "" : model.error.toExponential(2) 
                 } else {
                     if (model.label.endsWith('background')) {
-                        model.error === 0.0 || model.error > 999999 ? "" : model.error.toExponential(3) + "  "
+                        model.error === 0.0 || model.error > 999999 ? "" : model.error.toExponential(2)  
                     } else {
-                        model.error === 0.0 || model.error > 999999 ? "" : model.error.toFixed(4) + "  "
+                        model.error === 0.0 || model.error > 999999 ? "" : model.error.toFixed(3) 
                     }
                 }
             }
