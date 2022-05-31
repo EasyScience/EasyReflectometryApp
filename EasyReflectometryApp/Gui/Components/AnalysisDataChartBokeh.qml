@@ -19,6 +19,11 @@ ExComponents.BaseBokeh {
     xSldAxisTitle: "z (Å)"
     ySldAxisTitle: "SLD (10⁻⁶Å⁻²)"
 
+    calculatedLineColor: ExGlobals.Constants.proxy.data.experimentColor
+    sldLineColor: ExGlobals.Constants.proxy.data.experimentColor
+    measuredLineColor: ExGlobals.Constants.proxy.data.experimentColor
+    measuredAreaColor: ExGlobals.Constants.proxy.data.experimentColor
+
     Component.onCompleted: ExGlobals.Variables.analysisChart = this
 }
 

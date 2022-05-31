@@ -96,6 +96,10 @@ class ModelProxy(QObject):
         return _models_as_obj
 
     @Property(str, notify=modelsAsXmlChanged)
+    def modelColor(self):
+        return self._colors[self.currentModelIndex]
+
+    @Property(str, notify=modelsAsXmlChanged)
     def modelsAsXml(self):
         print('>>> itemsAsXml')
         return self._models_as_xml

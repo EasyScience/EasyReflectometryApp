@@ -13,4 +13,7 @@ ExComponents.BaseBokeh {
 
     xMainAxisTitle: "q (Å⁻¹)"
     yMainAxisTitle: ExGlobals.Constants.proxy.simulation.yMainAxisTitle
+
+    measuredLineColor: ExGlobals.Constants.proxy.data.experimentColor
+    measuredAreaColor: ExGlobals.Constants.proxy.data.experimentColor
 }
