@@ -401,6 +401,7 @@ class ModelProxy(QObject):
         :type i: str
         """
         self._model.remove_model(int(i))
+        del self._colors[int(i)]
         self.modelsNameChanged.emit()
         self.parent.sampleChanged.emit()
 
