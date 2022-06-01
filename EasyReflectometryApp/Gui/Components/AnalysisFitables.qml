@@ -105,7 +105,7 @@ EaComponents.TableView {
             width: EaStyle.Sizes.fontPixelSize * 3.5
             text: {
                 if (model.unit == '1/Å²') {
-                    '10⁻⁶/Å²'
+                    '10⁻⁶Å⁻²'
                 } else {
                     model.unit
                 }

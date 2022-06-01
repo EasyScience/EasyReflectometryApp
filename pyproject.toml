@@ -25,7 +25,8 @@ matplotlib = "^3.4.2"
 pint = "^0.17"
 # easyScience
 EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'develop' }
-easyApp = { git = 'https://github.com/easyScience/easyApp.git', rev = 'develop' }
+#easyApp = { git = 'https://github.com/easyScience/easyApp.git', rev = 'develop' }
+easyApp = { git = 'https://github.com/arm61/easyApp.git', rev = 'typo' }
 #EasyReflectometryLib = { path = '../EasyReflectometryLib'}
 #easyApp = { path = '../easyApp'}
 

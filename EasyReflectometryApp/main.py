@@ -37,7 +37,7 @@ def main():
                     help='run the application in test mode: run the tutorial, record a video and exit the application')
     args = parser.parse_args()
     if args.logtofile:
-        import easyApp.Logic.Logging
+        from easyApp.Logic import Logging
 
     # Paths
     app_name = CONFIG['tool']['poetry']['name']
