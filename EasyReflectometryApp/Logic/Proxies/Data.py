@@ -7,7 +7,7 @@ from dicttoxml import dicttoxml
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import np
-from easyAppLogic.Utils.Utils import generalizePath
+from easyApp.Logic.Utils.Utils import generalizePath
 
 from EasyReflectometryApp.Logic.DataStore import DataSet1D, DataStore
 

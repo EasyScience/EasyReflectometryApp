@@ -15,7 +15,7 @@ from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView  # to call
 # easyScience
 import utils
 import easyApp
-from easyAppLogic.Translate import Translator
+from easyApp.Logic.Translate import Translator
 from EasyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
 
 # Global vars
@@ -37,7 +37,7 @@ def main():
                     help='run the application in test mode: run the tutorial, record a video and exit the application')
     args = parser.parse_args()
     if args.logtofile:
-        import easyAppLogic.Logging
+        import easyApp.Logic.Logging
 
     # Paths
     app_name = CONFIG['tool']['poetry']['name']
