@@ -7,7 +7,7 @@ from dicttoxml import dicttoxml
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import np
-from easyAppLogic.Utils.Utils import generalizePath
+from easyApp.Logic.Utils.Utils import generalizePath
 
 from EasyReflectometryApp.Logic.DataStore import DataSet1D, DataStore
 
@@ -50,6 +50,12 @@ class DataProxy(QObject):
     def experimentNames(self):
         return [f'{i.model.name}/{i.name}' for i in self._data.experiments]
 
+    @Property(str, notify=experimentChanged)
+    def experimentColor(self):
+        model_index = 0
+        if self.experimentLoaded:
+            model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+        return self.parent._model_proxy._colors[model_index]
 
     @Property(bool, notify=experimentSkippedChanged)
     def experimentSkipped(self):

@@ -2,10 +2,10 @@ import QtQuick 2.13
 import QtQuick.Controls 2.13
 import QtQuick.XmlListModel 2.13
 
-import easyAppGui.Globals 1.0 as EaGlobals
-import easyAppGui.Style 1.0 as EaStyle
-import easyAppGui.Elements 1.0 as EaElements
-import easyAppGui.Components 1.0 as EaComponents
+import easyApp.Gui.Globals 1.0 as EaGlobals
+import easyApp.Gui.Style 1.0 as EaStyle
+import easyApp.Gui.Elements 1.0 as EaElements
+import easyApp.Gui.Components 1.0 as EaComponents
 
 import Gui.Globals 1.0 as ExGlobals
 
@@ -87,12 +87,12 @@ EaComponents.TableView {
             headerText: "Value"
             text: {
                 if (model.label.endsWith('Background')) {
-                    model.value.toExponential(3)
+                    model.value.toExponential(2)
                 } else {
                     if (model.label.endsWith('background')) {
-                        model.value.toExponential(3)
+                        model.value.toExponential(2)
                     } else {
-                        model.value.toFixed(4)
+                        model.value.toFixed(3)
                     }
                 }
             }
@@ -102,24 +102,30 @@ EaComponents.TableView {
         EaComponents.TableViewLabel {
             id: unitColumn
             horizontalAlignment: Text.AlignLeft
-            width: EaStyle.Sizes.fontPixelSize * 2
-            text: model.unit
+            width: EaStyle.Sizes.fontPixelSize * 3.5
+            text: {
+                if (model.unit == '1/Å²') {
+                    '10⁻⁶Å⁻²'
+                } else {
+                    model.unit
+                }
+            }
             color: EaStyle.Colors.themeForegroundMinor
         }
 
         EaComponents.TableViewLabel {
             id: errorColumn
             horizontalAlignment: Text.AlignRight
-            width: EaStyle.Sizes.fontPixelSize * 3
-            headerText: "Error  "
+            width: EaStyle.Sizes.fontPixelSize * 4
+            headerText: "Error"
             text: {
                 if (model.label.endsWith('Background')) {
-                    model.error === 0.0 || model.error > 999999 ? "" : model.error.toExponential(3) + "  "
+                    model.error === 0.0 || model.error > 999999 ? "" : model.error.toExponential(2) 
                 } else {
                     if (model.label.endsWith('background')) {
-                        model.error === 0.0 || model.error > 999999 ? "" : model.error.toExponential(3) + "  "
+                        model.error === 0.0 || model.error > 999999 ? "" : model.error.toExponential(2)  
                     } else {
-                        model.error === 0.0 || model.error > 999999 ? "" : model.error.toFixed(4) + "  "
+                        model.error === 0.0 || model.error > 999999 ? "" : model.error.toFixed(3) 
                     }
                 }
             }

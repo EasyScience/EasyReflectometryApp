@@ -25,10 +25,9 @@ matplotlib = "^3.4.2"
 pint = "^0.17"
 # easyScience
 EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'develop' }
-easyAppLogic = { git = 'https://github.com/easyScience/easyAppLogic.git', rev = 'easyreflectometry' }
-easyAppGui = { git = 'https://github.com/easyScience/easyAppGui.git', rev = 'easyreflectometry' }
+easyApp = { git = 'https://github.com/easyScience/easyApp.git', rev = 'develop' }
 #EasyReflectometryLib = { path = '../EasyReflectometryLib'}
-#easyAppGui = { path = '../easyAppGui'}
+#easyApp = { path = '../easyApp'}
 
 #[tool.poetry.dev-dependencies]
 # PyInstaller

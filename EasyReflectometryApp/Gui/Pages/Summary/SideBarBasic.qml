@@ -4,10 +4,10 @@ import QtQuick.Dialogs 1.3 as QtQuickDialogs1
 import Qt.labs.settings 1.0
 import QtWebEngine 1.10
 
-import easyAppGui.Style 1.0 as EaStyle
-import easyAppGui.Elements 1.0 as EaElements
-import easyAppGui.Components 1.0 as EaComponents
-import easyAppGui.Logic 1.0 as EaLogic
+import easyApp.Gui.Style 1.0 as EaStyle
+import easyApp.Gui.Elements 1.0 as EaElements
+import easyApp.Gui.Components 1.0 as EaComponents
+import easyApp.Gui.Logic 1.0 as EaLogic
 
 import Gui.Globals 1.0 as ExGlobals
 import Gui.Pages.Summary 1.0 as ExSummaryPage

@@ -2,11 +2,11 @@ import QtQuick 2.14
 import QtQuick.Controls 2.14
 import QtQuick.XmlListModel 2.14
 
-import easyAppGui.Globals 1.0 as EaGlobals
-import easyAppGui.Style 1.0 as EaStyle
-import easyAppGui.Elements 1.0 as EaElements
-import easyAppGui.Components 1.0 as EaComponents
-import easyAppGui.Logic 1.0 as EaLogic
+import easyApp.Gui.Globals 1.0 as EaGlobals
+import easyApp.Gui.Style 1.0 as EaStyle
+import easyApp.Gui.Elements 1.0 as EaElements
+import easyApp.Gui.Components 1.0 as EaComponents
+import easyApp.Gui.Logic 1.0 as EaLogic
 
 import Gui.Globals 1.0 as ExGlobals
 import Gui.Components 1.0 as ExComponents
@@ -85,38 +85,38 @@ EaComponents.SideBarColumn {
         Row {
             spacing: EaStyle.Sizes.fontPixelSize
 
-            Column {
-                EaElements.ComboBox {
-                    width: EaStyle.Sizes.sideBarContentWidth
-                    model: ExGlobals.Constants.proxy.model.modelListAll
-                    onActivated: {
-                        if (currentValue == 'Quick filter'){
-                            filterCriteriaField.text = ''
+            // Column {
+            EaElements.ComboBox {
+                width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 2
+                model: ExGlobals.Constants.proxy.model.modelListAll
+                onActivated: {
+                    if (currentValue == 'Quick filter'){
+                        filterCriteriaField.text = ''
+                    } else {
+                        if (currentValue == 'Materials') {
+                            filterCriteriaField.text = 'SLD'
                         } else {
-                            if (currentValue == 'Materials') {
-                                filterCriteriaField.text = 'SLD'
-                            } else {
-                                filterCriteriaField.text = currentValue
-                            }
+                            filterCriteriaField.text = currentValue
                         }
                     }
-                    Component.onCompleted: {
-                        currentIndex = 0
-                    }
                 }
-
-                EaElements.TextField {
-                    id: filterCriteriaField
-                    width: EaStyle.Sizes.sideBarContentWidth
-                    placeholderText: qsTr("Filter parameters")
-
-                    onTextChanged: {
-                        exampleFilterCriteria.currentIndex = exampleFilterCriteria.indexOfValue(text)
-                        namesFilterCriteria.currentIndex = namesFilterCriteria.indexOfValue(text)
-                        ExGlobals.Constants.proxy.parameter.setParametersFilterCriteria(text)
-                    }
+                Component.onCompleted: {
+                    currentIndex = 0
                 }
             }
+
+            EaElements.TextField {
+                id: filterCriteriaField
+                width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 2
+                placeholderText: qsTr("Filter parameters")
+
+                onTextChanged: {
+                    exampleFilterCriteria.currentIndex = exampleFilterCriteria.indexOfValue(text)
+                    namesFilterCriteria.currentIndex = namesFilterCriteria.indexOfValue(text)
+                    ExGlobals.Constants.proxy.parameter.setParametersFilterCriteria(text)
+                }
+            }
+            // }
             Column {
                 visible: false
 

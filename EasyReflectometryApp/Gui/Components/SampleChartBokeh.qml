@@ -1,11 +1,11 @@
 import QtQuick 2.13
 
-import easyAppGui.Style 1.0 as EaStyle
-import easyAppGui.Charts 1.0 as EaCharts
+import easyApp.Gui.Style 1.0 as EaStyle
 
+import Gui.Components 1.0 as ExComponents
 import Gui.Globals 1.0 as ExGlobals
 
-EaCharts.BaseBokeh {
+ExComponents.BaseBokeh {
     calculatedData: ExGlobals.Constants.proxy.plotting1d.bokehPureDataObj
     sldData: ExGlobals.Constants.proxy.plotting1d.bokehSampleSldDataObj
 
@@ -13,13 +13,12 @@ EaCharts.BaseBokeh {
     sldPlotRanges: ExGlobals.Constants.proxy.plotting1d.sampleSldPlotRangesObj
 
     xMainAxisTitle: "q (Å⁻¹)"
-    yMainAxisTitle: {
-        let title = 'R(q)calc'
-        if (hasMeasuredData) title = 'R(q)meas, R(q)calc'
-        return title
-    }
+    yMainAxisTitle: ExGlobals.Constants.proxy.simulation.yMainAxisTitle
     xSldAxisTitle: "z (Å)"
     ySldAxisTitle: "SLD (10⁻⁶Å⁻²)"
+    
+    calculatedLineColor: ExGlobals.Constants.proxy.model.modelColor
+    sldLineColor: ExGlobals.Constants.proxy.model.modelColor
 
     Component.onCompleted: ExGlobals.Variables.analysisChart = this
 }

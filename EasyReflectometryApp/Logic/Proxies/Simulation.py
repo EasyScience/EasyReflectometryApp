@@ -2,7 +2,7 @@ __author__ = 'github.com/arm61'
 
 import json
 
-from PySide2.QtCore import QObject, Signal, Property
+from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import np
 
@@ -30,6 +30,8 @@ class SimulationProxy(QObject):
         self._resolution_as_obj = self._defaultResolution()
         self._q_range_as_obj = self._defaultQRange()
         self._experiment_parameters = None
+        self._plot_rq4 = False
+        self._y_main_axis_title = 'R(q)'
 
         # # #
         # Connections
@@ -40,6 +42,7 @@ class SimulationProxy(QObject):
         self.qRangeChanged.connect(self._onSimulationParametersChanged)
 
         self.calculatedDataChanged.connect(self._onCalculatedDataChanged)
+        self.calculatedDataChanged.connect(self._setExperimentalData)
         self.parent._data_proxy.experimentChanged.connect(self._setExperimentalData)
 
     # # #
@@ -58,6 +61,23 @@ class SimulationProxy(QObject):
     # # #
     # Setters and getters
     # # #
+
+    @Property(bool, notify=simulationParametersChanged)
+    def plotRQ4(self):
+        return self._plot_rq4
+
+    @Property(str, notify=calculatedDataChanged)
+    def yMainAxisTitle(self):
+        return self._y_main_axis_title
+
+    @Slot()
+    def setPlotRQ4(self):
+        self._plot_rq4 = not self._plot_rq4
+        if self._plot_rq4:
+            self._y_main_axis_title += 'q⁴'
+        else:
+            self._y_main_axis_title = 'R(q)'
+        self.calculatedDataChanged.emit()
 
     @Property('QVariant', notify=backgroundChanged)
     def backgroundAsObj(self):
@@ -107,19 +127,24 @@ class SimulationProxy(QObject):
     # # #
 
     def _setExperimentalData(self):
-        self.parent._plotting_1d_proxy.setMeasuredData(
-            self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].x,
-            self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].y,
-            self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].ye)
-        self._experiment_parameters = self._experimentDataParameters(
-            self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex])
-        self.qRangeAsObj = json.dumps(self._experiment_parameters[0])
-        self.backgroundAsObj = json.dumps(self._experiment_parameters[1])
+        if len(self.parent._data_proxy._data) > 0:
+            x = self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].x
+            if self._plot_rq4:
+                y = self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].y * x ** 4
+                ye = self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].ye * x ** 4
+            else: 
+                y = self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].y
+                ye = self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].ye
+            self.parent._plotting_1d_proxy.setMeasuredData(x, y, ye)
+            self._experiment_parameters = self._experimentDataParameters(
+                self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex])
+            self.qRangeAsObj = json.dumps(self._experiment_parameters[0])
+            self.backgroundAsObj = json.dumps(self._experiment_parameters[1])
 
-        self.parent._data_proxy.experimentDataAsXmlChanged.emit()
-        # self.parent._project_proxy.projectInfoAsJson[
-        #     'experiments'] = self.parent._data_proxy.experiments[0]['name']
-        # self.parent._project_proxy.projectInfoChanged.emit()
+            self.parent._data_proxy.experimentDataAsXmlChanged.emit()
+            # self.parent._project_proxy.projectInfoAsJson[
+            #     'experiments'] = self.parent._data_proxy.experiments[0]['name']
+            # self.parent._project_proxy.projectInfoChanged.emit()
 
     def _onCalculatedDataChanged(self):
         self._updateCalculatedData()
@@ -145,7 +170,10 @@ class SimulationProxy(QObject):
         x_step = float(self._q_range_as_obj['x_step'])
         x = np.arange(x_min, x_max + x_step, x_step)
 
-        self.parent._plotting_1d_proxy.setPureData(x, self.parent._model_proxy.getPureModelReflectometry(x))
+        if self._plot_rq4:
+            self.parent._plotting_1d_proxy.setPureData(x, self.parent._model_proxy.getPureModelReflectometry(x) * x ** 4)
+        else:
+            self.parent._plotting_1d_proxy.setPureData(x, self.parent._model_proxy.getPureModelReflectometry(x))
         sld_profile = self.parent._model_proxy._pure.interface.sld_profile()
         self.parent._plotting_1d_proxy.setSampleSldData(*sld_profile)
         
@@ -156,6 +184,8 @@ class SimulationProxy(QObject):
             model_index = self.parent._model_proxy._model.index(self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].model)
 
         y = self.parent._interface[model_index].fit_func(x)
+        if self._plot_rq4:
+            y *= (x ** 4)
         sld_profile = self.parent._interface[model_index].sld_profile()
 
         self.parent._plotting_1d_proxy.setCalculatedData(x, y)

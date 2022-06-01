@@ -10,6 +10,9 @@ ExperimentDataChartQtCharts 1.0 ExperimentDataChartQtCharts.qml
 AnalysisDataChartQtCharts 1.0 AnalysisDataChartQtCharts.qml
 AnalysisDataChartBokeh 1.0 AnalysisDataChartBokeh.qml
 
+BaseBokeh 1.0 BaseBokeh.qml
+BasePlot 1.0 BasePlot.qml
+
 CloseDialog 1.0 CloseDialog.qml
 
 # Sidebar components
