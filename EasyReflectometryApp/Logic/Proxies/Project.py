@@ -6,6 +6,9 @@ import json
 
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+
 from easyCore import np
 from easyApp.Logic.Utils.Utils import generalizePath
 
@@ -20,7 +23,7 @@ class ProjectProxy(QObject):
     dummySignal = Signal()
     projectCreatedChanged = Signal()
     projectInfoChanged = Signal()
-    htmlExportingFinished = Signal()
+    htmlExportingFinished = Signal(bool, str)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -326,10 +329,48 @@ class ProjectProxy(QObject):
             success = True
         except IOError:
             success = False
-        finally:
-            self.htmlExportingFinished.emit(success, filepath)
+        self.htmlExportingFinished.emit(success, filepath)
 
     def resetProject(self):
         self._project_created = False 
         self._project_info = self._defaultProjectInfo()
         self.projectInfoChanged.emit()
+
+    @Slot(str, float, float)
+    def savePlot(self, filename: str, figsize_x: float, figsize_y: float):
+        fig = plt.figure(figsize=(figsize_x / 2.54, figsize_y / 2.54), constrained_layout=True)
+        gs = gridspec.GridSpec(1, 2, figure=fig)
+        ax1 = fig.add_subplot(gs[0, 0])
+        ax2 = fig.add_subplot(gs[0, 1])
+        ax1.set_xlabel('$q$/Å$^{-1}$')
+        if self.parent._simulation_proxy._plot_rq4:
+            ax1.set_ylabel('$R(q)q^4$/Å$^{-4}$')
+        else:
+            ax1.set_ylabel('$R(q)$')
+        ax2.set_xlabel('$z$/Å')
+        ax2.set_ylabel('SLD($z$)/$10^{-6}$Å$^{-2}$')
+        data = self.parent._data_proxy._data
+        min_x = np.min(data[0].x)
+        max_x = np.max(data[0].x)
+        for i, d in enumerate(data):
+            model_index = self.parent._model_proxy._model.index(d.model)
+            color = self.parent._model_proxy._colors[model_index]
+            y = self.parent._interface.fit_func(d.x, d.model.uid)
+            if self.parent._simulation_proxy._plot_rq4:
+                ax1.errorbar(d.x, (d.y * d.x ** 4) * 10 ** i, (d.ye * d.x ** 4) * 10 ** i, marker='.', ls='', color=color)
+                ax1.plot(d.x, (y * d.x ** 4) * 10 ** i, ls='-', color='k', zorder=10)
+            else:
+                ax1.errorbar(d.x, d.y * 10 ** i, d.ye * 10 ** i, marker='.', ls='', color=color)
+                ax1.plot(d.x, y * 10 ** i, ls='-', color='k', zorder=10)
+            sld_profile = self.parent._interface.sld_profile(d.model.uid)
+            ax2.plot(sld_profile[0], sld_profile[1] + 10 * i, color=color, ls='-')
+            if np.min(d.x) < min_x:
+                min_x = np.min(d.x)
+            if np.max(d.x) > max_x:
+                max_x = np.max(d.x)
+        ax1.set_yscale('log')
+        difference = min_x - 0
+        ax1.set_xlim(0, max_x + difference)
+        fig.savefig(filename)
+        plt.close()
+        self.htmlExportingFinished.emit(True, filename)
