@@ -8,6 +8,7 @@ from PySide2.QtCore import QObject, Signal, Property, Slot
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import matplotlib.backends.backend_pdf
 
 from easyCore import np
 from easyApp.Logic.Utils.Utils import generalizePath
@@ -339,7 +340,7 @@ class ProjectProxy(QObject):
     @Slot(str, float, float)
     def savePlot(self, filename: str, figsize_x: float, figsize_y: float):
         fig = self.make_plot(filename, figsize_x, figsize_y)
-        fig.savefig(filename)
+        fig.savefig(filename, dpi=600)
         plt.close()
         self.htmlExportingFinished.emit(True, filename)
 
