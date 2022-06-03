@@ -368,10 +368,10 @@ class ProjectProxy(QObject):
                 y = self.parent._interface.fit_func(d.x, d.model.uid)
                 if self.parent._simulation_proxy._plot_rq4:
                     ax1.errorbar(d.x, (d.y * d.x ** 4) * 10 ** i, (d.ye * d.x ** 4) * 10 ** i, marker='', ls='', color=color, alpha=0.5)
-                    ax1.plot(d.x, (y * d.x ** 4) * 10 ** i, ls='-', color=color, zorder=10)
+                    ax1.plot(d.x, (y * d.x ** 4) * 10 ** i, ls='-', color=color, zorder=10, label=d.name)
                 else:
                     ax1.errorbar(d.x, d.y * 10 ** i, d.ye * 10 ** i, marker='', ls='', color=color, alpha=0.5)
-                    ax1.plot(d.x, y * 10 ** i, ls='-', color=color, zorder=10)
+                    ax1.plot(d.x, y * 10 ** i, ls='-', color=color, zorder=10, label=d.name)
                 sld_profile = self.parent._interface.sld_profile(d.model.uid)
                 ax2.plot(sld_profile[0], sld_profile[1] + 10 * i, color=color, ls='-')
             ax1.set_yscale('log')
@@ -385,10 +385,11 @@ class ProjectProxy(QObject):
                 color = self.parent._model_proxy._colors[i]
                 y = self.parent._interface.fit_func(x, m.uid)
                 if self.parent._simulation_proxy._plot_rq4:
-                    ax1.plot(x, (y * d.x ** 4) * 10 ** i, ls='-', color=color, zorder=10)
+                    ax1.plot(x, (y * d.x ** 4) * 10 ** i, ls='-', color=color, zorder=10, label=m.name)
                 else:
-                    ax1.plot(x, y * 10 ** i, ls='-', color=color, zorder=10)
+                    ax1.plot(x, y * 10 ** i, ls='-', color=color, zorder=10, label=m.name)
                 sld_profile = self.parent._interface.sld_profile(m.uid)
                 ax2.plot(sld_profile[0], sld_profile[1] + 10 * i, color=color, ls='-')
             ax1.set_yscale('log')
+        ax1.legend()
         return fig
