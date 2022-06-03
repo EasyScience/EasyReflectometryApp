@@ -135,6 +135,13 @@ EaComponents.SideBarColumn {
         ToolTip.visible: hovered
         ToolTip.delay: 500
 
+        EaElements.SideBarButton { 
+            wide: true
+            fontIcon: "magic"
+            text: qsTr("Open in matplotlib")
+
+            onClicked: ExGlobals.Constants.proxy.project.showPlot(reportLocationField2.text, xSizeField.text, ySizeField.text)
+        }
         // Name-Format 
         Row {
             spacing: EaStyle.Sizes.fontPixelSize * 1.5
@@ -223,6 +230,7 @@ EaComponents.SideBarColumn {
                 }
             }
         }
+        
         Row {
             spacing: EaStyle.Sizes.fontPixelSize * 0.5
 
@@ -234,7 +242,7 @@ EaComponents.SideBarColumn {
                     width: locationLabel2.width
                     anchors.verticalCenter: parent.verticalCenter
                     horizontalAlignment: TextInput.AlignRight
-                    text: qsTr("x-Size")
+                    text: qsTr("Width")
                 }
 
                 EaElements.Parameter {
@@ -256,7 +264,7 @@ EaComponents.SideBarColumn {
                     width: locationLabel2.width
                     anchors.verticalCenter: parent.verticalCenter
                     horizontalAlignment: TextInput.AlignRight
-                    text: qsTr("y-Size")
+                    text: qsTr("Height")
                 }
 
                 EaElements.Parameter {
@@ -275,7 +283,7 @@ EaComponents.SideBarColumn {
         EaElements.SideBarButton { 
             wide: true
             fontIcon: "chart-line"
-            text: qsTr("Export plots")
+            text: qsTr("Export quick plot")
 
             onClicked: ExGlobals.Constants.proxy.project.savePlot(reportLocationField2.text, xSizeField.text, ySizeField.text)
         }
