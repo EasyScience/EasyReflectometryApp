@@ -46,7 +46,7 @@ class StateProxy(QObject):
     def statusModelAsObj(self):
         obj = {
             "calculation":
-            self.parent._interface[0].current_interface_name,
+            self.parent._interface.current_interface_name,
             "minimization":
             f'{self.parent._fitter_proxy.eFitter.easy_f.current_engine.name} ({self.parent._minimizer_proxy._current_minimizer_method_name})'
         }
@@ -57,7 +57,7 @@ class StateProxy(QObject):
     def statusModelAsXml(self):
         model = [{
             "label": "Calculation",
-            "value": self.parent._interface[0].current_interface_name
+            "value": self.parent._interface.current_interface_name
         }, {
             "label":
             "Minimization",

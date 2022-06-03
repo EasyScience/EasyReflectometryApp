@@ -30,7 +30,7 @@ class PyQmlProxy(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self._interface = [InterfaceFactory()]
+        self._interface = InterfaceFactory()
 
         # Proxies
         self._project_proxy = ProjectProxy(self)

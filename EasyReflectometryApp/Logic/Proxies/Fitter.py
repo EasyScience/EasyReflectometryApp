@@ -60,7 +60,7 @@ class FitterProxy(QObject):
         self._fitter_thread = None
 
         self.eFitter = easyFitter([i for i in self.parent._model_proxy._model],
-                                  [i.fit_func for i in self.parent._interface])
+                                  [self.parent._interface.fit_func for i in self.parent._model_proxy._model])
 
         self.fitFinished.connect(self._onFitFinished)
         self.stopFit.connect(self.onStopFit)
@@ -134,9 +134,7 @@ class FitterProxy(QObject):
     # # #
 
     def nonthreaded_fit(self):
-        interfaces = [self.parent._interface[
-            self.parent._model_proxy._model.index(
-                i.model)].fit_func for i in self.parent._data_proxy._data] 
+        interfaces = [self.parent._interface.fit_func for i in self.parent._data_proxy._data] 
         self.eFitter = easyFitter([i.model for i in self.parent._data_proxy._data],
                                   interfaces)
         self.isFitFinished = False
