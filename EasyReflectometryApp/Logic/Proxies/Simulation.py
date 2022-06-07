@@ -174,19 +174,19 @@ class SimulationProxy(QObject):
             self.parent._plotting_1d_proxy.setPureData(x, self.parent._model_proxy.getPureModelReflectometry(x) * x ** 4)
         else:
             self.parent._plotting_1d_proxy.setPureData(x, self.parent._model_proxy.getPureModelReflectometry(x))
-        sld_profile = self.parent._model_proxy._pure.interface.sld_profile()
+        sld_profile = self.parent._model_proxy._pure.interface.sld_profile(self.parent._model_proxy._pure.uid)
         self.parent._plotting_1d_proxy.setSampleSldData(*sld_profile)
         
-        model_index = 0
+        to_use = self.parent._model_proxy._model[self.parent._model_proxy.currentModelIndex]
         if self.parent._data_proxy.experimentLoaded:
             exp = self.parent._data_proxy._data.experiments[self.parent._data_proxy.currentDataIndex]
             x = exp.x
-            model_index = self.parent._model_proxy._model.index(self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].model)
+            to_use = self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].model
 
-        y = self.parent._interface[model_index].fit_func(x)
+        y = self.parent._interface.fit_func(x, to_use.uid)
         if self._plot_rq4:
             y *= (x ** 4)
-        sld_profile = self.parent._interface[model_index].sld_profile()
+        sld_profile = self.parent._interface.sld_profile(to_use.uid)
 
         self.parent._plotting_1d_proxy.setCalculatedData(x, y)
         self.parent._plotting_1d_proxy.setAnalysisSldData(*sld_profile)

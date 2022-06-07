@@ -115,7 +115,7 @@ class MaterialProxy(QObject):
             Material.from_pars(2.074,
                                0.000,
                                name=f'Si',
-                               interface=self.parent._interface[0]))
+                               interface=self.parent._interface))
         borg.stack.enabled = True
         self.materialsChanged.emit()
         self.parent.layersMaterialsChanged.emit()
@@ -135,7 +135,7 @@ class MaterialProxy(QObject):
             Material.from_pars(to_dup.sld.raw_value,
                                to_dup.isld.raw_value,
                                name=to_dup.name,
-                               interface=self.parent._interface[0]))
+                               interface=self.parent._interface))
         borg.stack.enabled = True
         self.materialsChanged.emit()
         self.parent.layersMaterialsChanged.emit()

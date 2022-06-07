@@ -41,12 +41,13 @@ class ModelProxy(QObject):
         self._items_as_xml = ""
         self._layers_as_xml = ""
         self._structure = self._defaultStructure()
-        self._model = Models.from_pars(self._defaultModel(structure=self._structure, interface=parent._interface[0]))
+        self._model = Models.from_pars(self._defaultModel(structure=self._structure, interface=parent._interface))
         self._colors = [COLORS[0]]
 
-        self._current_layers_index = 1
-        self._current_items_index = 1
+        self._current_layers_index = 0
+        self._current_items_index = 0
         self._current_model_index = 0
+        self._pure_interface = InterfaceFactory()
 
     # # #
     # Defaults
@@ -324,7 +325,7 @@ class ModelProxy(QObject):
                     j.name = j.material.name + ' Layer'
         self._setLayersAsXml()
         structure_dict = self._model[self.currentModelIndex].structure.as_dict()
-        self._pure = Model.from_pars(Structure.from_dict(structure_dict), 1, 0, 0, interface=InterfaceFactory())
+        self._pure = Model.from_pars(Structure.from_dict(structure_dict), 1, 0, 0, interface=self._pure_interface)
 
     # # #
     # Slots
@@ -334,10 +335,11 @@ class ModelProxy(QObject):
 
     @Slot()
     def addNewModels(self):
-        self.parent._interface.append(InterfaceFactory())
+        # self.parent._interface.append(InterfaceFactory())
         self._model.add_model(
             self._defaultModel(self._defaultStructure(), 
-                               interface=self.parent._interface[-1], 
+                            #    interface=self.parent._interface[-1], 
+                               interface=self.parent._interface, 
                                name="Air-D2O-Si"))
         try:
             self._colors.append(list(set(COLORS).difference(self._colors))[0])
@@ -349,7 +351,7 @@ class ModelProxy(QObject):
 
     @Slot()
     def duplicateSelectedModels(self):
-        self.parent._interface.append(InterfaceFactory())
+        # self.parent._interface.append(InterfaceFactory())
         structure_dict = self._model[self.currentModelIndex].structure.as_dict()
         new_structure = Structure.from_dict(structure_dict)
         for i, ml in enumerate(new_structure):
@@ -361,7 +363,8 @@ class ModelProxy(QObject):
                     layer.assign_material(self._model[self.currentModelIndex].structure[i].layers[j].material)
         self._model.append(
             self._defaultModel(new_structure, 
-                               interface=self.parent._interface[-1],
+                            #    interface=self.parent._interface[-1],
+                               interface=self.parent._interface,
                                name=f"{self._model[self.currentModelIndex].name} Duplicate"))
         try:
             self._colors.append(list(set(COLORS).difference(self._colors))[0])
@@ -821,11 +824,11 @@ class ModelProxy(QObject):
     # # #
 
     def getPureModelReflectometry(self, x):
-        return self._pure.interface.fit_func(x)
+        return self._pure.interface.fit_func(x, self._pure.uid)
         
     def getPureModelSld(self):
-        return self._pure.interface.sld_profile()
+        return self._pure.interface.sld_profile(self._pure.uid)
 
     def resetModel(self):
         self._structure = self._defaultStructure()
-        self._model = Models.from_pars(self._defaultModel(structure=self._structure, interface=self.parent._interface[0]))
+        self._model = Models.from_pars(self._defaultModel(structure=self._structure, interface=self.parent._interface))
