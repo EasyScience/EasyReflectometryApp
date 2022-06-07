@@ -12,6 +12,9 @@
 - Start using easyApp [5e38ef8](https://github.com/easyScience/EasyReflectometryApp/commit/5e38ef8bd6fa542edd89e3c687d3a84dcc803800)
 - Add plotting in R(q)q^4 [5e38ef8](https://github.com/easyScience/EasyReflectometryApp/commit/5e38ef8bd6fa542edd89e3c687d3a84dcc803800)
 - Make the plots colourful to match the model colours [225ac06](https://github.com/easyScience/EasyReflectometryApp/pull/81/commits/225ac06cd7a72ba91a71e1c339c774fa351f1802)
+- Disable the fitting button if no parameters are `fixed == False` [45be44c](https://github.com/easyScience/EasyReflectometryApp/pull/90/commits/45be44c35cdfefa6e311929cdf2ab4a0512b88f6)
+- Saving plots to a single pdf [da7eba6](https://github.com/easyScience/EasyReflectometryApp/pull/89/commits/da7eba6c2acc23dd9b04d2fc5b51e3421e913820)
+- Remove the colour from the materials as it isn't used [7a40613](https://github.com/easyScience/EasyReflectometryApp/pull/88/commits/7a40613d07a021f0440a46105843f9fabe945430)
 
 ### Changes 0.0.4
 
