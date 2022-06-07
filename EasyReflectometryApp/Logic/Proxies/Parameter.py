@@ -23,6 +23,7 @@ class ParameterProxy(QObject):
         self.parent = parent
 
         self._parameters_as_obj = []
+        self._n_fit = False
         self._parameters_as_xml = ""
 
         self._parameters_filter_criteria = ""
@@ -38,12 +39,17 @@ class ParameterProxy(QObject):
     def parametersAsObj(self):
         return self._parameters_as_obj
 
+    @Property(bool, notify=parametersAsObjChanged)
+    def nFit(self):
+        return self._n_fit
+
     def _setParametersAsObj(self):
         self._parameters_as_obj.clear()
 
         par_ids, par_paths = generatePath(self.parent._model_proxy._model, True)
         pids = []
         labels = []
+        self._n_fit = False
         for par_index, par_path in enumerate(par_paths):
             par_id = par_ids[par_index]
             if par_id in pids:
@@ -61,6 +67,8 @@ class ParameterProxy(QObject):
                 continue
             if self._parameters_filter_criteria.lower() not in label.lower():
                 continue
+            if not par.fixed: 
+                self._n_fit = True
             self._parameters_as_obj.append({
                 "id": str(par_id),
                 "number": par_index + 1,
