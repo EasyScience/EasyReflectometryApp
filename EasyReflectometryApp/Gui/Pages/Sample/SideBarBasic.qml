@@ -48,8 +48,9 @@ EaComponents.SideBarColumn {
 
                 EaComponents.TableViewLabel {
                     id: colorLabel
-                    headerText: "Color"
-                    backgroundColor: model.color
+                    width: EaStyle.Sizes.fontPixelSize * 2.5
+                    headerText: "No."
+                    text: model.index + 1
                 }
 
                 EaComponents.TableViewTextInput {
@@ -63,7 +64,7 @@ EaComponents.SideBarColumn {
                 EaComponents.TableViewTextInput {
                     id: sldLabel
                     horizontalAlignment: Text.AlignHCenter
-                    width: EaStyle.Sizes.fontPixelSize * 8.5
+                    width: EaStyle.Sizes.fontPixelSize * 9.5
                     headerText: "SLD/10<sup>-6</sup> Å<sup>-2</sup>"
                     text: model.sld.toFixed(3)
                     onEditingFinished: ExGlobals.Constants.proxy.material.setCurrentMaterialsSld(text)
@@ -72,7 +73,7 @@ EaComponents.SideBarColumn {
                 EaComponents.TableViewTextInput {
                     id: isldLabel
                     horizontalAlignment: Text.AlignHCenter
-                    width: EaStyle.Sizes.fontPixelSize * 8.5
+                    width: EaStyle.Sizes.fontPixelSize * 9.5
                     headerText: "<i>i</i> SLD/10<sup>-6</sup> Å<sup>-2</sup>"
                     text: model.isld.toFixed(3)
                     onEditingFinished: ExGlobals.Constants.proxy.material.setCurrentMaterialsISld(text)
