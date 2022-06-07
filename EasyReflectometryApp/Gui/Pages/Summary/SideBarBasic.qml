@@ -17,7 +17,6 @@ EaComponents.SideBarColumn {
     EaElements.GroupBox {
         title: qsTr("Export report")
         collapsible: false
-        last: true
 
         // Name-Format
         Row {
@@ -41,7 +40,7 @@ EaComponents.SideBarColumn {
                     horizontalAlignment: TextInput.AlignLeft
                     placeholderText: qsTr("Enter report file name here")
 
-                    Component.onCompleted: text = 'report'
+                    Component.onCompleted: text = 'Report'
                 }
             }
 
@@ -112,7 +111,7 @@ EaComponents.SideBarColumn {
         EaElements.SideBarButton {
             wide: true
             fontIcon: "download"
-            text: qsTr("Export")
+            text: qsTr("Export report")
 
             onClicked: {
                 if (reportFormatField.currentValue === 'html') {
@@ -128,11 +127,184 @@ EaComponents.SideBarColumn {
         Component.onCompleted: ExGlobals.Variables.exportReportGroup = this
     }
 
+    EaElements.GroupBox {
+        title: qsTr("Export plots")
+        collapsible: false
+        last: true
+        ToolTip.text: qsTr("Output the plots as a pdf or png image")
+        ToolTip.visible: hovered
+        ToolTip.delay: 500
+
+        EaElements.SideBarButton { 
+            wide: true
+            fontIcon: "magic"
+            text: qsTr("Open in matplotlib")
+
+            onClicked: ExGlobals.Constants.proxy.project.showPlot(reportLocationField2.text, xSizeField.text, ySizeField.text)
+        }
+        // Name-Format 
+        Row {
+            spacing: EaStyle.Sizes.fontPixelSize * 1.5
+
+            Row {
+                spacing: EaStyle.Sizes.fontPixelSize * 0.5
+
+                EaElements.Label {
+                    enabled: false
+                    width: locationLabel2.width
+                    anchors.verticalCenter: parent.verticalCenter
+                    horizontalAlignment: TextInput.AlignRight
+                    text: qsTr("Name")
+                }
+
+                EaElements.TextField {
+                    id: reportNameField2
+
+                    width: EaStyle.Sizes.sideBarContentWidth - locationLabel2.width - formatLabel2.width - reportFormatField2.width - EaStyle.Sizes.fontPixelSize * 2.5
+                    horizontalAlignment: TextInput.AlignLeft
+                    placeholderText: qsTr("Enter figure file name here")
+
+                    Component.onCompleted: text = 'Plots'
+                }
+            }
+
+            Row {
+                spacing: EaStyle.Sizes.fontPixelSize * 0.5
+
+                EaElements.Label {
+                    id: formatLabel2
+                    enabled: false
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("Format")
+                }
+
+                EaElements.ComboBox {
+                    id: reportFormatField2
+
+                    topInset: 0
+                    bottomInset: 0
+                    width: EaStyle.Sizes.fontPixelSize * 10
+
+                    textRole: "text"
+                    valueRole: "value"
+                    model: [
+                        { value: 'pdf', text: qsTr("PDF") },
+                        { value: 'png', text: qsTr("PNG") }                   
+                         ]
+                }
+            }
+
+        }
+        // Location
+        Row {
+            spacing: EaStyle.Sizes.fontPixelSize * 0.5
+
+            EaElements.Label {
+                id: locationLabel2
+
+                enabled: false
+                anchors.verticalCenter: parent.verticalCenter
+                text: qsTr("Location")
+            }
+
+            EaElements.TextField {
+                id: reportLocationField2
+
+                width: EaStyle.Sizes.sideBarContentWidth - locationLabel2.width - EaStyle.Sizes.fontPixelSize * 0.5
+                rightPadding: chooseButton.width
+                horizontalAlignment: TextInput.AlignLeft
+
+                placeholderText: qsTr("Enter output location here")
+                text: EaLogic.Utils.urlToLocalFile(reportParentDirDialog2.folder + '/' + reportNameField2.text + '.' + reportFormatField2.currentValue)
+
+                EaElements.ToolButton {
+                    id: chooseButton2
+
+                    anchors.right: parent.right
+
+                    showBackground: false
+                    fontIcon: "folder-open"
+                    ToolTip.text: qsTr("Choose figure parent directory")
+
+                    onClicked: reportParentDirDialog2.open()
+                }
+            }
+        }
+        
+        Row {
+            spacing: EaStyle.Sizes.fontPixelSize * 0.5
+
+            Row {
+                spacing: EaStyle.Sizes.fontPixelSize * 0.5
+
+                EaElements.Label {
+                    enabled: false
+                    width: locationLabel2.width
+                    anchors.verticalCenter: parent.verticalCenter
+                    horizontalAlignment: TextInput.AlignRight
+                    text: qsTr("Width")
+                }
+
+                EaElements.Parameter {
+                    id: xSizeField
+
+                    width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 1.5) / 2 - locationLabel2.width 
+                    horizontalAlignment: TextInput.AlignLeft
+                    units: 'cm'
+
+                    Component.onCompleted: text = '16'
+                }
+            }
+
+            Row {
+                spacing: EaStyle.Sizes.fontPixelSize * 0.5
+
+                EaElements.Label {
+                    enabled: false
+                    width: locationLabel2.width
+                    anchors.verticalCenter: parent.verticalCenter
+                    horizontalAlignment: TextInput.AlignRight
+                    text: qsTr("Height")
+                }
+
+                EaElements.Parameter {
+                    id: ySizeField
+
+                    width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 1.5) / 2 - locationLabel2.width 
+                    horizontalAlignment: TextInput.AlignLeft
+                    units: 'cm'
+
+                    Component.onCompleted: text = '12'
+                }
+            }
+
+        }
+        
+        EaElements.SideBarButton { 
+            wide: true
+            fontIcon: "chart-line"
+            text: qsTr("Export quick plot")
+
+            onClicked: ExGlobals.Constants.proxy.project.savePlot(reportLocationField2.text, xSizeField.text, ySizeField.text)
+        }
+    }
+
     // Directory dialog
     QtQuickDialogs1.FileDialog {
         id: reportParentDirDialog
 
         title: qsTr("Choose report parent directory")
+        selectFolder: true
+        selectMultiple: false
+
+        folder: ExGlobals.Constants.proxy.project.currentProjectPath
+    }
+
+    // Directory dialog
+    QtQuickDialogs1.FileDialog {
+        id: reportParentDirDialog2
+
+        title: qsTr("Choose figure output parent directory")
         selectFolder: true
         selectMultiple: false
 

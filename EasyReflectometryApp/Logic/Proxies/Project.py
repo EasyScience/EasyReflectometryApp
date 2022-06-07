@@ -6,6 +6,10 @@ import json
 
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+import matplotlib.backends.backend_pdf
+
 from easyCore import np
 from easyApp.Logic.Utils.Utils import generalizePath
 
@@ -20,7 +24,7 @@ class ProjectProxy(QObject):
     dummySignal = Signal()
     projectCreatedChanged = Signal()
     projectInfoChanged = Signal()
-    htmlExportingFinished = Signal()
+    htmlExportingFinished = Signal(bool, str)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -326,10 +330,67 @@ class ProjectProxy(QObject):
             success = True
         except IOError:
             success = False
-        finally:
-            self.htmlExportingFinished.emit(success, filepath)
+        self.htmlExportingFinished.emit(success, filepath)
 
     def resetProject(self):
         self._project_created = False 
         self._project_info = self._defaultProjectInfo()
         self.projectInfoChanged.emit()
+
+    @Slot(str, float, float)
+    def savePlot(self, filename: str, figsize_x: float, figsize_y: float):
+        fig = self.make_plot(filename, figsize_x, figsize_y)
+        fig.savefig(filename, dpi=600)
+        plt.close()
+        self.htmlExportingFinished.emit(True, filename)
+
+    @Slot(str, float, float)
+    def showPlot(self, filename: str, figsize_x: float, figsize_y: float):
+        fig = self.make_plot(filename, figsize_x, figsize_y)
+        plt.show()
+
+    def make_plot(self, filename: str, figsize_x: float, figsize_y: float):
+        fig = plt.figure(figsize=(figsize_x / 2.54, figsize_y / 2.54), constrained_layout=True)
+        gs = gridspec.GridSpec(1, 2, figure=fig)
+        ax1 = fig.add_subplot(gs[0, 0])
+        ax2 = fig.add_subplot(gs[0, 1])
+        ax1.set_xlabel('$q$/Å$^{-1}$')
+        if self.parent._simulation_proxy._plot_rq4:
+            ax1.set_ylabel('$R(q)q^4$/Å$^{-4}$')
+        else:
+            ax1.set_ylabel('$R(q)$')
+        ax2.set_xlabel('$z$/Å')
+        ax2.set_ylabel('SLD($z$)/$10^{-6}$Å$^{-2}$')
+        data = self.parent._data_proxy._data
+        if len(data) != 0:
+            for i, d in enumerate(data):
+                model_index = self.parent._model_proxy._model.index(d.model)
+                color = self.parent._model_proxy._colors[model_index]
+                y = self.parent._interface.fit_func(d.x, d.model.uid)
+                if self.parent._simulation_proxy._plot_rq4:
+                    ax1.errorbar(d.x, (d.y * d.x ** 4) * 10 ** i, (d.ye * d.x ** 4) * 10 ** i, marker='', ls='', color=color, alpha=0.5)
+                    ax1.plot(d.x, (y * d.x ** 4) * 10 ** i, ls='-', color=color, zorder=10, label=d.name)
+                else:
+                    ax1.errorbar(d.x, d.y * 10 ** i, d.ye * 10 ** i, marker='', ls='', color=color, alpha=0.5)
+                    ax1.plot(d.x, y * 10 ** i, ls='-', color=color, zorder=10, label=d.name)
+                sld_profile = self.parent._interface.sld_profile(d.model.uid)
+                ax2.plot(sld_profile[0], sld_profile[1] + 10 * i, color=color, ls='-')
+            ax1.set_yscale('log')
+        else:
+            x_min = float(self.parent._simulation_proxy._q_range_as_obj['x_min'])
+            x_max = float(self.parent._simulation_proxy._q_range_as_obj['x_max'])
+            x_step = float(self.parent._simulation_proxy._q_range_as_obj['x_step'])
+            x = np.arange(x_min, x_max + x_step, x_step)
+            model = self.parent._model_proxy._model
+            for i, m in enumerate(model):
+                color = self.parent._model_proxy._colors[i]
+                y = self.parent._interface.fit_func(x, m.uid)
+                if self.parent._simulation_proxy._plot_rq4:
+                    ax1.plot(x, (y * d.x ** 4) * 10 ** i, ls='-', color=color, zorder=10, label=m.name)
+                else:
+                    ax1.plot(x, y * 10 ** i, ls='-', color=color, zorder=10, label=m.name)
+                sld_profile = self.parent._interface.sld_profile(m.uid)
+                ax2.plot(sld_profile[0], sld_profile[1] + 10 * i, color=color, ls='-')
+            ax1.set_yscale('log')
+        ax1.legend()
+        return fig
