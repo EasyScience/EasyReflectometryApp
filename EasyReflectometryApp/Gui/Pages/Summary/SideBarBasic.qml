@@ -232,7 +232,7 @@ EaComponents.SideBarColumn {
         }
         
         Row {
-            spacing: EaStyle.Sizes.fontPixelSize * 0.5
+            spacing: EaStyle.Sizes.fontPixelSize * 1.5
 
             Row {
                 spacing: EaStyle.Sizes.fontPixelSize * 0.5
@@ -248,7 +248,7 @@ EaComponents.SideBarColumn {
                 EaElements.Parameter {
                     id: xSizeField
 
-                    width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 1.5) / 2 - locationLabel2.width 
+                    width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2.5) / 2 - locationLabel2.width 
                     horizontalAlignment: TextInput.AlignLeft
                     units: 'cm'
 
@@ -270,14 +270,13 @@ EaComponents.SideBarColumn {
                 EaElements.Parameter {
                     id: ySizeField
 
-                    width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 1.5) / 2 - locationLabel2.width 
+                    width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2.5) / 2 - locationLabel2.width 
                     horizontalAlignment: TextInput.AlignLeft
                     units: 'cm'
 
                     Component.onCompleted: text = '12'
                 }
             }
-
         }
         
         EaElements.SideBarButton { 
