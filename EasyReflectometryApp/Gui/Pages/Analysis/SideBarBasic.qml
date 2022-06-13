@@ -2,16 +2,77 @@ import QtQuick 2.14
 import QtQuick.Controls 2.14
 import QtQuick.XmlListModel 2.14
 
-import easyAppGui.Globals 1.0 as EaGlobals
-import easyAppGui.Style 1.0 as EaStyle
-import easyAppGui.Elements 1.0 as EaElements
-import easyAppGui.Components 1.0 as EaComponents
-import easyAppGui.Logic 1.0 as EaLogic
+import easyApp.Gui.Globals 1.0 as EaGlobals
+import easyApp.Gui.Style 1.0 as EaStyle
+import easyApp.Gui.Elements 1.0 as EaElements
+import easyApp.Gui.Components 1.0 as EaComponents
+import easyApp.Gui.Logic 1.0 as EaLogic
 
 import Gui.Globals 1.0 as ExGlobals
 import Gui.Components 1.0 as ExComponents
 
 EaComponents.SideBarColumn {
+
+    EaElements.GroupBox{
+        title: qsTr("Select model/dataset pair")
+        collapsible: true
+        collapsed: false
+
+        EaComponents.TableView {
+            id: dataTable
+
+            defaultInfoText: qsTr("No Experiments Loaded")
+
+            // Table model
+
+            model: XmlListModel {
+                xml: ExGlobals.Constants.proxy.data.experimentDataAsXml
+                query: "/root/item"
+
+                XmlRole { name: "label"; query: "name/string()" }
+                XmlRole { name: "color"; query: "color/string()" }
+                XmlRole { name: "model_name"; query: "model_name/string()"}
+            }
+
+            // Table rows
+
+            delegate: EaComponents.TableViewDelegate {
+                property var dataModel: model
+
+                EaComponents.TableViewLabel {
+                    width: EaStyle.Sizes.fontPixelSize * 2.5
+                    headerText: "No."
+                    text: model.index + 1
+                }
+
+                EaComponents.TableViewLabel {
+                    horizontalAlignment: Text.AlignLeft
+                    width: EaStyle.Sizes.fontPixelSize * 16.5
+                    headerText: "Label"
+                    text: model.label
+                }
+
+                EaComponents.TableViewLabel {
+                    horizontalAlignment: Text.AlignLeft
+                    width: EaStyle.Sizes.fontPixelSize * 12.5
+                    headerText: "Model"
+                    text: model.model_name
+                    // editable: false
+                }
+
+                EaComponents.TableViewLabel {
+                    headerText: "Color"
+                    backgroundColor: model.color
+                }
+
+            }
+            onCurrentIndexChanged: {
+                ExGlobals.Constants.proxy.data.currentDataIndex = dataTable.currentIndex
+            }
+
+        }
+    }
+    
 
     EaElements.GroupBox {
         id: groupBox
@@ -22,30 +83,40 @@ EaComponents.SideBarColumn {
 
         // Filter parameters widget
         Row {
-            spacing: EaStyle.Sizes.fontPixelSize * 0.5
+            spacing: EaStyle.Sizes.fontPixelSize
 
-            Column {
-                EaElements.Label {
-                    visible: false
-                    enabled: false
-                    text: qsTr("Filter by text")
-                }
-
-                EaElements.TextField {
-                    id: filterCriteriaField
-
-                    width: EaStyle.Sizes.sideBarContentWidth //(EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 3
-
-                    placeholderText: qsTr("Filter parameters")
-
-                    onTextChanged: {
-                        exampleFilterCriteria.currentIndex = exampleFilterCriteria.indexOfValue(text)
-                        namesFilterCriteria.currentIndex = namesFilterCriteria.indexOfValue(text)
-                        ExGlobals.Constants.proxy.parameter.setParametersFilterCriteria(text)
+            // Column {
+            EaElements.ComboBox {
+                width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 2
+                model: ExGlobals.Constants.proxy.model.modelListAll
+                onActivated: {
+                    if (currentValue == 'Quick filter'){
+                        filterCriteriaField.text = ''
+                    } else {
+                        if (currentValue == 'Materials') {
+                            filterCriteriaField.text = 'SLD'
+                        } else {
+                            filterCriteriaField.text = currentValue
+                        }
                     }
+                }
+                Component.onCompleted: {
+                    currentIndex = 0
                 }
             }
 
+            EaElements.TextField {
+                id: filterCriteriaField
+                width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 2
+                placeholderText: qsTr("Filter parameters")
+
+                onTextChanged: {
+                    exampleFilterCriteria.currentIndex = exampleFilterCriteria.indexOfValue(text)
+                    namesFilterCriteria.currentIndex = namesFilterCriteria.indexOfValue(text)
+                    ExGlobals.Constants.proxy.parameter.setParametersFilterCriteria(text)
+                }
+            }
+            // }
             Column {
                 visible: false
 
@@ -186,7 +257,7 @@ EaComponents.SideBarColumn {
         // Start fitting button
         EaElements.SideBarButton {
             wide: true
-            enabled: ExGlobals.Constants.proxy.data.experimentLoaded && ExGlobals.Constants.proxy.fitter.isFitFinished
+            enabled: ExGlobals.Constants.proxy.data.experimentLoaded && ExGlobals.Constants.proxy.fitter.isFitFinished && ExGlobals.Constants.proxy.parameter.nFit
             fontIcon: "play-circle"
             text: qsTr("Start fitting")
             onClicked: ExGlobals.Constants.proxy.fitter.fit()

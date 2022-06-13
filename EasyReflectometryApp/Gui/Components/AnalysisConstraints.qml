@@ -2,10 +2,10 @@ import QtQuick 2.13
 import QtQuick.Controls 2.13
 import QtQuick.XmlListModel 2.13
 
-import easyAppGui.Globals 1.0 as EaGlobals
-import easyAppGui.Style 1.0 as EaStyle
-import easyAppGui.Elements 1.0 as EaElements
-import easyAppGui.Components 1.0 as EaComponents
+import easyApp.Gui.Globals 1.0 as EaGlobals
+import easyApp.Gui.Style 1.0 as EaStyle
+import easyApp.Gui.Elements 1.0 as EaElements
+import easyApp.Gui.Components 1.0 as EaComponents
 
 import Gui.Globals 1.0 as ExGlobals
 
@@ -17,11 +17,12 @@ EaComponents.TableView  {
     // Table model
 
     model: XmlListModel {
-        ///xml: ExGlobals.Constants.proxy.constraintsListAsXml
+        xml: ExGlobals.Constants.proxy.parameter.constraintsAsXml
 
         query: "/root/item"
 
         XmlRole { name: "number"; query: "number/number()" }
+        XmlRole { name: "index"; query: "index/number()" }
         XmlRole { name: "dependentName"; query: "dependentName/string()" }
         XmlRole { name: "relationalOperator"; query: "relationalOperator/string()" }
         XmlRole { name: "value"; query: "value/number()" }
@@ -54,6 +55,15 @@ EaComponents.TableView  {
                     deleteRowColumn.width) / 2
             headerText: "Constraint"
             text: model.dependentName
+            elide: Text.ElideRight
+            ToolTip.text: model.dependentName
+            ToolTip.visible: model.dependentName ? ma.containsMouse : false
+            MouseArea {
+                id: ma
+                anchors.fill: parent
+                hoverEnabled: true
+            }
+            ToolTip.delay: 500
         }
 
         EaComponents.TableViewLabel {
@@ -67,8 +77,8 @@ EaComponents.TableView  {
         EaComponents.TableViewLabel {
             id: valueColumn
             horizontalAlignment: Text.AlignRight
-            width: EaStyle.Sizes.fontPixelSize * 4
-            text: model.value.toFixed(4)
+            width: EaStyle.Sizes.fontPixelSize * 2
+            text: model.value.toFixed(2)
         }
 
         EaComponents.TableViewLabel {
@@ -84,6 +94,15 @@ EaComponents.TableView  {
             horizontalAlignment: Text.AlignLeft
             width: dependentNameColumn.width
             text: model.independentName
+            elide: Text.ElideRight
+            ToolTip.text: model.independentName
+            ToolTip.visible: model.independentName ? mai.containsMouse : false
+            MouseArea {
+                id: mai
+                anchors.fill: parent
+                hoverEnabled: true
+            }
+            ToolTip.delay: 500
         }
 
         EaComponents.TableViewCheckBox {
@@ -91,7 +110,7 @@ EaComponents.TableView  {
             width: EaStyle.Sizes.fontPixelSize * 3
             headerText: "Use"
             checked: model.enabled
-            onToggled: ExGlobals.Constants.proxy.toggleConstraintByIndex(model.index, checked)
+            onToggled: ExGlobals.Constants.proxy.parameter.toggleConstraintByIndex(model.index, checked)
         }
 
         EaComponents.TableViewButton {
@@ -99,7 +118,7 @@ EaComponents.TableView  {
             headerText: "Del." //"\uf2ed"
             fontIcon: "minus-circle"
             ToolTip.text: qsTr("Remove this constraint")
-            onClicked: ExGlobals.Constants.proxy.removeConstraintByIndex(model.index)
+            onClicked: ExGlobals.Constants.proxy.parameter.removeConstraintByIndex(model.index-1)
         }
     }
 

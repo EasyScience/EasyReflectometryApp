@@ -2,11 +2,11 @@ import QtQuick 2.13
 import QtQuick.Controls 2.13
 import QtWebEngine 1.10
 
-import easyAppGui.Style 1.0 as EaStyle
-import easyAppGui.Animations 1.0 as EaAnimations
-import easyAppGui.Elements 1.0 as EaElements
-import easyAppGui.Components 1.0 as EaComponents
-import easyAppGui.Logic 1.0 as EaLogic
+import easyApp.Gui.Style 1.0 as EaStyle
+import easyApp.Gui.Animations 1.0 as EaAnimations
+import easyApp.Gui.Elements 1.0 as EaElements
+import easyApp.Gui.Components 1.0 as EaComponents
+import easyApp.Gui.Logic 1.0 as EaLogic
 
 import Gui.Logic 1.0 as ExLogic
 import Gui.Globals 1.0 as ExGlobals
@@ -14,7 +14,7 @@ import Gui.Globals 1.0 as ExGlobals
 Item {
     id: container
 
-    property bool isFitting: typeof ExGlobals.Constants.proxy.fitter.fitResults.redchi2 !== 'undefined'
+    property bool isFitting: typeof ExGlobals.Constants.proxy.fitter.fitResults.GOF !== 'undefined'
     property string htmlBackground: EaStyle.Colors.contentBackground
     property int chartWidth: 520
 
@@ -29,8 +29,8 @@ Item {
 
     // Data chart
 
-    property string dataChartLibVersion: EaLogic.Plotting.bokehInfo().version
-    property string dataChartLibUrl: EaLogic.Plotting.bokehInfo().url
+    property string dataChartLibVersion: ExLogic.Plotting.bokehInfo().version
+    property string dataChartLibUrl: ExLogic.Plotting.bokehInfo().url
 
     property int dataChartWidth: chartWidth
     property int dataChartHeight: chartWidth
@@ -144,7 +144,7 @@ Item {
 
     property string headScripts: {
         const list = [
-                  EaLogic.Plotting.bokehHeadScripts(),
+                  ExLogic.Plotting.bokehHeadScripts(),
                   //ExGlobals.Variables.bokehStructureChart.headScript
               ]
         return list.join('\n')
@@ -346,7 +346,7 @@ Item {
 
     property string head: {
         const list = [
-                  EaLogic.Plotting.headCommon(),
+                  ExLogic.Plotting.headCommon(),
                   headScripts,
                   headStyle
               ]
@@ -356,7 +356,7 @@ Item {
     property string structureChart: ''
 
     property string dataChart:
-        EaLogic.Plotting.bokehChart(
+        ExLogic.Plotting.bokehChart(
             // data
             {
                 measured: ExGlobals.Constants.proxy.plotting1d.bokehMeasuredDataObj,
@@ -499,7 +499,7 @@ Item {
                   // projectSection + '\n',
                   softwareSection + '\n',
                   // structureSection + '\n',
-                  analysisSection + '\n',
+                //   analysisSection + '\n',
                   parametersSection
               ]
               return list.join('\n')

@@ -2,11 +2,11 @@ import QtQuick 2.14
 import QtQuick.Controls 2.14
 import QtQuick.Dialogs 1.3 as Dialogs1
 
-import easyAppGui.Globals 1.0 as EaGlobals
-import easyAppGui.Style 1.0 as EaStyle
-import easyAppGui.Elements 1.0 as EaElements
-import easyAppGui.Components 1.0 as EaComponents
-import easyAppGui.Logic 1.0 as EaLogic
+import easyApp.Gui.Globals 1.0 as EaGlobals
+import easyApp.Gui.Style 1.0 as EaStyle
+import easyApp.Gui.Elements 1.0 as EaElements
+import easyApp.Gui.Components 1.0 as EaComponents
+import easyApp.Gui.Logic 1.0 as EaLogic
 
 import Gui.Globals 1.0 as ExGlobals
 import Gui.Components 1.0 as ExComponents
@@ -24,7 +24,7 @@ EaComponents.SideBarColumn {
             spacing: EaStyle.Sizes.fontPixelSize
 
             EaElements.SideBarButton {
-                enabled: !ExGlobals.Constants.proxy.data.experimentLoaded
+                enabled: true
 
                 fontIcon: "upload"
                 text: qsTr("Import data from local drive")
@@ -48,122 +48,120 @@ EaComponents.SideBarColumn {
         Component.onCompleted: ExGlobals.Variables.experimentalDataGroup = this
     }
 
+    // EaElements.GroupBox {
+    //     title: qsTr("Instrument and experiment type")
+    //     enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||
+    //              ExGlobals.Constants.proxy.data.experimentSkipped
+
+    //     Column {
+
+    //         Row {
+    //             spacing: EaStyle.Sizes.fontPixelSize
+
+    //             Column {
+    //                 spacing: EaStyle.Sizes.fontPixelSize * -0.5
+
+    //                 EaElements.Label {
+    //                     enabled: false
+    //                     text: qsTr("Facility")
+    //                 }
+
+    //                 EaElements.ComboBox {
+    //                     width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2 ) / 3
+    //                     model: ["Unknown"]
+    //                 }
+    //             }
+
+    //             Column {
+    //                 spacing: EaStyle.Sizes.fontPixelSize * -0.5
+
+    //                 EaElements.Label {
+    //                     enabled: false
+    //                     text: qsTr("Instrument")
+    //                 }
+
+    //                 EaElements.ComboBox {
+    //                     width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2 ) / 3
+    //                     model: ["Unknown"]
+    //                 }
+    //             }
+
+    //             Column {
+    //                 spacing: EaStyle.Sizes.fontPixelSize * -0.5
+
+    //                 EaElements.Label {
+    //                     enabled: false
+    //                     text: qsTr("Configuration")
+    //                 }
+
+    //                 EaElements.ComboBox {
+    //                     width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2 ) / 3
+    //                     model: ["Unknown"]
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
     EaElements.GroupBox {
-        title: qsTr("Instrument and experiment type")
-        enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||
-                 ExGlobals.Constants.proxy.data.experimentSkipped
+        title: qsTr(ExGlobals.Constants.proxy.data.currentDataName + " instrumental parameters")
+        visible: ExGlobals.Constants.proxy.data.experimentLoaded
+        collapsed: false
+        Row {
+            spacing: EaStyle.Sizes.fontPixelSize
 
-        Column {
+            EaComponents.TableViewLabel{
+                horizontalAlignment: Text.AlignRight
+                width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
+                text: qsTr("Scaling:")
+            }
+            EaElements.Parameter {
+                id: xMin
+                enabled: true
+                width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
+                units: ""
+                text: ExGlobals.Constants.proxy.data.currentScaling.toFixed(3)
+                onEditingFinished: ExGlobals.Constants.proxy.data.setScaling(text)
+            }
 
-            Row {
-                spacing: EaStyle.Sizes.fontPixelSize
+            // Max
+            EaComponents.TableViewLabel{
+                horizontalAlignment: Text.AlignRight
+                width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
+                text: qsTr("Background:")
+            }
+            EaElements.Parameter {
+                id: xMax
+                width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
+                units: ""
+                text: ExGlobals.Constants.proxy.data.currentBackground.toExponential(2)
+                onEditingFinished: ExGlobals.Constants.proxy.data.setBackground(text)
+            }
 
-                Column {
-                    spacing: EaStyle.Sizes.fontPixelSize * -0.5
-
-                    EaElements.Label {
-                        enabled: false
-                        text: qsTr("Facility")
-                    }
-
-                    EaElements.ComboBox {
-                        width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2 ) / 3
-                        model: ["Unknown"]
-                    }
-                }
-
-                Column {
-                    spacing: EaStyle.Sizes.fontPixelSize * -0.5
-
-                    EaElements.Label {
-                        enabled: false
-                        text: qsTr("Instrument")
-                    }
-
-                    EaElements.ComboBox {
-                        width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2 ) / 3
-                        model: ["Unknown"]
-                    }
-                }
-
-                Column {
-                    spacing: EaStyle.Sizes.fontPixelSize * -0.5
-
-                    EaElements.Label {
-                        enabled: false
-                        text: qsTr("Configuration")
-                    }
-
-                    EaElements.ComboBox {
-                        width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize * 2 ) / 3
-                        model: ["Unknown"]
-                    }
-                }
+            // Step
+            EaComponents.TableViewLabel{
+                horizontalAlignment: Text.AlignRight
+                width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
+                text: qsTr("Resolution:")
+            }
+            EaElements.Parameter {
+                id: xStep
+                width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
+                units: "%"
+                text: ExGlobals.Constants.proxy.data.currentResolution.toFixed(2)
+                onEditingFinished: ExGlobals.Constants.proxy.data.setResolution(text)
             }
         }
     }
 
+
     EaElements.GroupBox {
-        title: ExGlobals.Constants.proxy.data.experimentLoaded ?
-                   qsTr("Measured range") :
-                   qsTr("Simulation range")
-        enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||
-                 ExGlobals.Constants.proxy.data.experimentSkipped
+        title: qsTr("Simulation range")
+        visible: ExGlobals.Constants.proxy.data.experimentSkipped
+
+        enabled: ExGlobals.Constants.proxy.data.experimentSkipped 
 
         ExComponents.ExperimentSimulationSetup {}
-    }
-
-    EaElements.GroupBox {
-        title: qsTr("Resolution")
-        enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||
-                 ExGlobals.Constants.proxy.data.experimentSkipped
-
-        /*
-        Column {
-            Column {
-                spacing: EaStyle.Sizes.fontPixelSize * -0.5
-
-                EaElements.Label {
-                    enabled: false
-                    text: qsTr("Resolution type")
-                }
-
-                EaElements.ComboBox {
-                    width: EaStyle.Sizes.sideBarContentWidth
-                    model: ["Constant dq/q"]
-                }
-            }
-        }
-        */
-
-        ExComponents.ExperimentResolutionSetup {}
-    }
-
-    EaElements.GroupBox {
-        title: qsTr("Background")
-        last: true
-        enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||
-                 ExGlobals.Constants.proxy.data.experimentSkipped
-
-        /*
-        Column {
-            Column {
-                spacing: EaStyle.Sizes.fontPixelSize * -0.5
-
-                EaElements.Label {
-                    enabled: false
-                    text: qsTr("Background Type")
-                }
-
-                EaElements.ComboBox {
-                    width: EaStyle.Sizes.sideBarContentWidth
-                    model: ["Uniform"]
-                }
-            }
-        }
-        */
-
-        ExComponents.ExperimentBackgroundSetup {}
     }
 
     // Load experimental data file dialog

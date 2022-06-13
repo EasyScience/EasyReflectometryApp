@@ -1,7 +1,7 @@
 import QtQuick 2.14
 import QtQuick.Controls 2.14
 
-import easyAppGui.Elements 1.0 as EaElements
+import easyApp.Gui.Elements 1.0 as EaElements
 
 import Gui.Globals 1.0 as ExGlobals
 

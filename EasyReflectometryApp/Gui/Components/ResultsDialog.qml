@@ -1,9 +1,9 @@
 import QtQuick 2.13
 import QtQuick.Controls 2.13
 
-import easyAppGui.Globals 1.0 as EaGlobals
-import easyAppGui.Style 1.0 as EaStyle
-import easyAppGui.Elements 1.0 as EaElements
+import easyApp.Gui.Globals 1.0 as EaGlobals
+import easyApp.Gui.Style 1.0 as EaStyle
+import easyApp.Gui.Elements 1.0 as EaElements
 
 import Gui.Globals 1.0 as ExGlobals
 
@@ -36,7 +36,7 @@ EaElements.Dialog {
         EaElements.Label {
             enabled: gotResults
             text: gotResults
-                  ? `Goodness-of-fit (reduced \u03c7\u00b2): ${ExGlobals.Constants.proxy.fitter.fitResults.redchi2.toFixed(2)}`
+                  ? `Goodness-of-fit: ${ExGlobals.Constants.proxy.fitter.fitResults.GOF.toFixed(2)}`
                   : ""
         }
     }

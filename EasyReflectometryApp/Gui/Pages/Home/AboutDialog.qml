@@ -1,7 +1,7 @@
 import QtQuick 2.13
 
-import easyAppGui.Globals 1.0 as EaGlobals
-import easyAppGui.Components 1.0 as EaComponents
+import easyApp.Gui.Globals 1.0 as EaGlobals
+import easyApp.Gui.Components 1.0 as EaComponents
 
 import Gui.Globals 1.0 as ExGlobals
 

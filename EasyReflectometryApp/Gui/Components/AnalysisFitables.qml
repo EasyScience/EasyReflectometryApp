@@ -2,10 +2,10 @@ import QtQuick 2.13
 import QtQuick.Controls 2.13
 import QtQuick.XmlListModel 2.13
 
-import easyAppGui.Globals 1.0 as EaGlobals
-import easyAppGui.Style 1.0 as EaStyle
-import easyAppGui.Elements 1.0 as EaElements
-import easyAppGui.Components 1.0 as EaComponents
+import easyApp.Gui.Globals 1.0 as EaGlobals
+import easyApp.Gui.Style 1.0 as EaStyle
+import easyApp.Gui.Elements 1.0 as EaElements
+import easyApp.Gui.Components 1.0 as EaComponents
 
 import Gui.Globals 1.0 as ExGlobals
 
@@ -69,7 +69,15 @@ EaComponents.TableView {
                    fitColumn.width
             headerText: "Label"
             text: formatLabel(model.index, model.label)
-            textFormat: Text.RichText
+            elide: Text.ElideRight
+            ToolTip.text: formatLabel(model.index, model.label)
+            ToolTip.visible: formatLabel(model.index, model.label) ? mac.containsMouse : false
+            MouseArea {
+                id: mac
+                anchors.fill: parent
+                hoverEnabled: true
+            }
+            ToolTip.delay: 500
         }
 
         EaComponents.TableViewTextInput {
@@ -79,9 +87,13 @@ EaComponents.TableView {
             headerText: "Value"
             text: {
                 if (model.label.endsWith('Background')) {
-                    model.value.toExponential(3)
+                    model.value.toExponential(2)
                 } else {
-                    model.value.toFixed(4)
+                    if (model.label.endsWith('background')) {
+                        model.value.toExponential(2)
+                    } else {
+                        model.value.toFixed(3)
+                    }
                 }
             }
             onEditingFinished: editParameterValue(model.id, text)
@@ -90,17 +102,33 @@ EaComponents.TableView {
         EaComponents.TableViewLabel {
             id: unitColumn
             horizontalAlignment: Text.AlignLeft
-            width: EaStyle.Sizes.fontPixelSize * 2
-            text: model.unit
+            width: EaStyle.Sizes.fontPixelSize * 3.5
+            text: {
+                if (model.unit == '1/Å²') {
+                    '10⁻⁶Å⁻²'
+                } else {
+                    model.unit
+                }
+            }
             color: EaStyle.Colors.themeForegroundMinor
         }
 
         EaComponents.TableViewLabel {
             id: errorColumn
             horizontalAlignment: Text.AlignRight
-            width: EaStyle.Sizes.fontPixelSize * 3
-            headerText: "Error  "
-            text: model.error === 0.0 || model.error > 999999 ? "" : model.error.toFixed(4) + "  "
+            width: EaStyle.Sizes.fontPixelSize * 4
+            headerText: "Error"
+            text: {
+                if (model.label.endsWith('Background')) {
+                    model.error === 0.0 || model.error > 999999 ? "" : model.error.toExponential(2) 
+                } else {
+                    if (model.label.endsWith('background')) {
+                        model.error === 0.0 || model.error > 999999 ? "" : model.error.toExponential(2)  
+                    } else {
+                        model.error === 0.0 || model.error > 999999 ? "" : model.error.toFixed(3) 
+                    }
+                }
+            }
         }
 
         EaComponents.TableViewTextInput {
@@ -174,10 +202,7 @@ EaComponents.TableView {
         if (index < 0 || typeof label === "undefined")
             return ""
 
-        const datasetName = ExGlobals.Constants.proxy.data.experimentDataAsObj[0].name
-
         // Modify current label
-        label = label.replace("Instrument.", `Instrument.${datasetName}.`)
         label = label.replace(".background.", ".")
         label = label.replace("Uiso.Uiso", "Uiso")
         label = label.replace("fract_", "fract.")
@@ -191,7 +216,6 @@ EaComponents.TableView {
 
         // Modify previous label to list
         let previousLabel = index > 0 ? fitablesModel.get(index - 1).label : ""
-        previousLabel = previousLabel.replace("Instrument.", `Instrument.${datasetName}.`)
         previousLabel = previousLabel.replace(".background.", ".")
         previousLabel = previousLabel.replace("Uiso.Uiso", "Uiso")
         previousLabel = previousLabel.replace("fract_", "fract.")

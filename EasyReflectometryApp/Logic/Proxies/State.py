@@ -4,6 +4,9 @@ from dicttoxml import dicttoxml
 
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
+from easyCore import np
+
+
 
 class StateProxy(QObject):
 
@@ -45,7 +48,7 @@ class StateProxy(QObject):
             "calculation":
             self.parent._interface.current_interface_name,
             "minimization":
-            f'{self.parent._fitter_proxy.eFitter.current_engine.name} ({self.parent._minimizer_proxy._current_minimizer_method_name})'
+            f'{self.parent._fitter_proxy.eFitter.easy_f.current_engine.name} ({self.parent._minimizer_proxy._current_minimizer_method_name})'
         }
         self._status_model = obj
         return obj
@@ -59,7 +62,7 @@ class StateProxy(QObject):
             "label":
             "Minimization",
             "value":
-            f'{self.parent._fitter_proxy.eFitter.current_engine.name} ({self.parent._minimizer_proxy._current_minimizer_method_name})'
+            f'{self.parent._fitter_proxy.eFitter.easy_f.current_engine.name} ({self.parent._minimizer_proxy._current_minimizer_method_name})'
         }]
         xml = dicttoxml(model, attr_type=False)
         xml = xml.decode()
@@ -78,12 +81,13 @@ class StateProxy(QObject):
 
     @Slot()
     def resetState(self):
-        pass
-        # Need to be reimplemented for EasyReflectometry
-        # self._project_info = self._defaultProjectInfo()
-        # self.projectCreated = False
-        # self.projectInfoChanged.emit()
-        # self._project_proxy.project_save_filepath = ""
-        # self.removeExperiment()
-        # self.resetUndoRedoStack()
-        # self.stateChanged.emit(False)
+        self.parent._project_proxy.resetProject()
+        self.parent._material_proxy.resetMaterial()
+        self.parent._model_proxy.resetModel()
+        self.parent._data_proxy.resetData()
+        self.parent._undoredo_proxy.resetUndoRedoStack()
+        self.parent._simulation_proxy.resetSimulation()
+        self.parent._plotting_1d_proxy._setMeasuredDataArrays(np.empty(0), np.empty(0))
+        self.parent._model_proxy.modelChanged.emit()
+        self.parent.sampleChanged.emit()
+        self.stateChanged.emit(False)

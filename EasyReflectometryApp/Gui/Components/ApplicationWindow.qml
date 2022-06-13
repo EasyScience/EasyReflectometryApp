@@ -3,10 +3,10 @@ import QtQuick.Controls 2.13
 import QtQuick.Dialogs 1.3 as Dialogs1
 import QtQuick.XmlListModel 2.13
 
-import easyAppGui.Style 1.0 as EaStyle
-import easyAppGui.Globals 1.0 as EaGlobals
-import easyAppGui.Elements 1.0 as EaElements
-import easyAppGui.Components 1.0 as EaComponents
+import easyApp.Gui.Style 1.0 as EaStyle
+import easyApp.Gui.Globals 1.0 as EaGlobals
+import easyApp.Gui.Elements 1.0 as EaElements
+import easyApp.Gui.Components 1.0 as EaComponents
 
 import Gui.Globals 1.0 as ExGlobals
 import Gui.Components 1.0 as ExComponents
@@ -52,11 +52,9 @@ EaComponents.ApplicationWindow {
         },
 
         EaElements.ToolButton {
-            enabled: ExGlobals.Constants.proxy.project.projectCreated ||
-                     ExGlobals.Constants.proxy.data.experimentSkipped ||
-                     ExGlobals.Constants.proxy.data.experimentLoaded
+            enabled: ExGlobals.Variables.projectPageEnabled
             fontIcon: "backspace"
-            ToolTip.text: qsTr("Reset to initial state without project, phases and data")
+            ToolTip.text: qsTr("Reset to initial state without project, models and data")
             onClicked: resetStateDialog.open()
         }
 
@@ -73,17 +71,17 @@ EaComponents.ApplicationWindow {
         },
 
         EaElements.ToolButton {
-            enabled: false
+            enabled: true
             fontIcon: "question-circle"
             ToolTip.text: qsTr("Get online help")
             onClicked: Qt.openUrlExternally(ExGlobals.Constants.appUrl)
         },
 
         EaElements.ToolButton {
-            enabled: false
+            enabled: true
             fontIcon: "bug"
             ToolTip.text: qsTr("Report a bug or issue")
-            onClicked: Qt.openUrlExternally(`${ExGlobals.Constants.appUrl}/issues`)
+            onClicked: Qt.openUrlExternally(`${ExGlobals.Constants.appGit}/issues/new`)
         }
 
     ]
@@ -225,13 +223,14 @@ EaComponents.ApplicationWindow {
 
         // Experiment page
         EaComponents.ContentPage {
+            id: experiment
             defaultInfo: ExGlobals.Constants.proxy.data.experimentLoaded ? "" : qsTr("No Experiments Loaded")
 
             mainContent: EaComponents.MainContent {
                 tabs: [
-                    EaElements.TabButton { text: qsTr("Plot view") },
-                    EaElements.TabButton { enabled: false; text: qsTr("Table view"); Component.onCompleted: ExGlobals.Variables.experimentTableTab = this },
-                    EaElements.TabButton { enabled: false; text: qsTr("Text View"); Component.onCompleted: ExGlobals.Variables.experimentCifTab = this }
+                    EaElements.TabButton { text: qsTr("Plot view") }//,
+                    // EaElements.TabButton { enabled: false; text: qsTr("Table view"); Component.onCompleted: ExGlobals.Variables.experimentTableTab = this },
+                    // EaElements.TabButton { enabled: false; text: qsTr("Text View"); Component.onCompleted: ExGlobals.Variables.experimentCifTab = this }
                 ]
 
                 items: [
@@ -245,19 +244,20 @@ EaComponents.ApplicationWindow {
 
             sideBar: EaComponents.SideBar {
                 tabs: [
-                    EaElements.TabButton { text: qsTr("Basic controls") } // ,
-                    // EaElements.TabButton { enabled: false; text: qsTr("Advanced controls") }
+                    EaElements.TabButton { text: qsTr("Basic controls") },
+                    EaElements.TabButton { text: qsTr("Advanced controls") }
                 ]
 
                 items: [
-                    ExExperimentPage.SideBarBasic {} //,
-                    // ExExperimentPage.SideBarAdvanced {}
+                    ExExperimentPage.SideBarBasic {},
+                    ExExperimentPage.SideBarAdvanced {}
                 ]
             }
         },
 
         // Analysis page
         EaComponents.ContentPage {
+            id: analysis
             mainContent: EaComponents.MainContent {
                 tabs: [
                     EaElements.TabButton {
@@ -365,7 +365,7 @@ EaComponents.ApplicationWindow {
 
         EaElements.Label {
             horizontalAlignment: Text.AlignHCenter
-            text: qsTr("Are you sure you want to reset the application to its\noriginal state without project, phases and data?\n\nThis operation cannot be undone.")
+            text: qsTr("Are you sure you want to reset the application to its\noriginal state without project, sample and data?\n\nThis operation cannot be undone.")
         }
 
         footer: EaElements.DialogButtonBox {

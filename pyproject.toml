@@ -6,7 +6,7 @@ build-backend = 'poetry.masonry.api'
 
 [tool.poetry]
 name = 'EasyReflectometry'
-version = '0.0.4-beta'
+version = '0.0.5-beta'
 description = 'Making reflectometry data analysis and modelling easy.'
 license = "BSD-3-Clause"
 authors = ['Andrew McCluskey', 'Andrew Sazonov', 'Simon Ward']
@@ -25,10 +25,9 @@ matplotlib = "^3.4.2"
 pint = "^0.17"
 # easyScience
 EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'main' }
-easyAppLogic = { git = 'https://github.com/easyScience/easyAppLogic.git', rev = 'easyreflectometry' }
-easyAppGui = { git = 'https://github.com/easyScience/easyAppGui.git', rev = 'easyreflectometry' }
+easyApp = { git = 'https://github.com/easyScience/easyApp.git', rev = 'develop' }
 #EasyReflectometryLib = { path = '../EasyReflectometryLib'}
-#easyAppGui = { path = '../easyAppGui'}
+#easyApp = { path = '../easyApp'}
 
 #[tool.poetry.dev-dependencies]
 # PyInstaller
@@ -36,7 +35,7 @@ easyAppGui = { git = 'https://github.com/easyScience/easyAppGui.git', rev = 'eas
 pyinstaller = { git = 'https://github.com/pyinstaller/pyinstaller.git', rev = 'develop' }
 pywin32-ctypes = { version = '^0.2.0', platform = 'win32' }
 pypiwin32 = { version = '^223', platform = 'win32' }
-pefile = { version = '^2019.4.18', platform = 'win32' }
+pefile = { version = '^2022.5.30', platform = 'win32' }
 # Misc
 toml = '^0.10.2'
 requests = '^2.25.1'

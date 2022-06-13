@@ -2,7 +2,7 @@ pragma Singleton
 
 import QtQuick 2.13
 
-import easyAppGui.Globals 1.0 as EaGlobals
+import easyApp.Gui.Globals 1.0 as EaGlobals
 import Gui.Logic 1.0 as ExLogic
 
 QtObject {
@@ -15,6 +15,7 @@ QtObject {
 
     readonly property string appLogo: logo('App.svg')
     readonly property string appUrl: EaGlobals.Variables.projectConfig.tool.poetry.homepage
+    readonly property string appGit: EaGlobals.Variables.projectConfig.tool.poetry.documentation
 
     readonly property string appVersion: EaGlobals.Variables.projectConfig.tool.poetry.version
     readonly property string appDate: remote ? EaGlobals.Variables.projectConfig.ci.app.info.build_date : new Date().toISOString().slice(0,10)

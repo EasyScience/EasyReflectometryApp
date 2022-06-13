@@ -1,5 +1,21 @@
 # CHANGELOG
 
+### Changes 0.0.5
+
+- Addition of multiple contrast support [091abe1](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/091abe1b727c7b9e1f1b60ed1327d79ef318dd8e)
+- Saving and loading fixed [598e7f3](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/598e7f36ef5feb6263ed015e13002528c15b03b9)
+- Enabling parameter-parameter constraints to be defined [82e3821](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/82e382141e8e5b469e89fe42ca397c21bd194fcc)
+- Clean up of the sample interface [3907bde](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/3907bde69d608be6b82051c60bb7a304f04f0002)
+- Enabling the docs and bug reporting buttons [7d29276](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/7d292761e96860b5b8ce74365174e38f79bbaf80)
+- Fix the reset state button [a1db4ac](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/a1db4ac10bbd5f90c764f28336cbfecb26671a03)
+- Parameter quick filters [27a64b6](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/27a64b615d016713478817119e45133b4af50695)
+- Start using easyApp [5e38ef8](https://github.com/easyScience/EasyReflectometryApp/commit/5e38ef8bd6fa542edd89e3c687d3a84dcc803800)
+- Add plotting in R(q)q^4 [5e38ef8](https://github.com/easyScience/EasyReflectometryApp/commit/5e38ef8bd6fa542edd89e3c687d3a84dcc803800)
+- Make the plots colourful to match the model colours [225ac06](https://github.com/easyScience/EasyReflectometryApp/pull/81/commits/225ac06cd7a72ba91a71e1c339c774fa351f1802)
+- Disable the fitting button if no parameters are `fixed == False` [45be44c](https://github.com/easyScience/EasyReflectometryApp/pull/90/commits/45be44c35cdfefa6e311929cdf2ab4a0512b88f6)
+- Saving plots to a single pdf [da7eba6](https://github.com/easyScience/EasyReflectometryApp/pull/89/commits/da7eba6c2acc23dd9b04d2fc5b51e3421e913820)
+- Remove the colour from the materials as it isn't used [7a40613](https://github.com/easyScience/EasyReflectometryApp/pull/88/commits/7a40613d07a021f0440a46105843f9fabe945430)
+
 ### Changes 0.0.4
 
 - Add min and max columns to the Analysis tab [da47432](https://github.com/easyScience/EasyReflectometryApp/commit/da47432db1bec0e16e587328a24c23bdd174c099)

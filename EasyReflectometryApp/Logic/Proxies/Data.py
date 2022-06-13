@@ -1,14 +1,17 @@
 __author__ = 'github.com/arm61'
 
 import pathlib
+from os import path
 from dicttoxml import dicttoxml
 
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import np
-from easyAppLogic.Utils.Utils import generalizePath
+from easyApp.Logic.Utils.Utils import generalizePath
 
 from EasyReflectometryApp.Logic.DataStore import DataSet1D, DataStore
+
+from EasyReflectometry.data import load
 
 
 class DataProxy(QObject):
@@ -16,8 +19,8 @@ class DataProxy(QObject):
     experimentSkippedChanged = Signal()
     experimentLoadedChanged = Signal()
 
-    experimentDataAdded = Signal()
-    experimentDataRemoved = Signal()
+    experimentChanged = Signal()
+    experimentRemoved = Signal()
 
     experimentDataAsXmlChanged = Signal()
     experimentDataAsObjChanged = Signal()
@@ -26,52 +29,33 @@ class DataProxy(QObject):
         super().__init__(parent)
         self.parent = parent
 
-        self._data = self._defaultData()
-        self._experiment_data = None
-        self.experiments = []
+        self._data = DataStore()
+
+        self._current_data_index = 0
 
         self._experiment_skipped = False
         self._experiment_loaded = False
         self._experiment_data_as_xml = ""
 
+        self.experimentRemoved.connect(self._setExperimentDataAsXml)
+        self.experimentChanged.connect(self._setExperimentDataAsXml)
         self.experimentLoadedChanged.connect(self._onExperimentLoadedChanged)
         self.experimentSkippedChanged.connect(self._onExperimentSkippedChanged)
-        self.experimentDataAsObjChanged.connect(self._onExperimentDataChanged)
-        self.experimentDataRemoved.connect(self._onExperimentDataRemoved)
-
-    # # #
-    # Defaults
-    # # #
-
-    def _defaultData(self):
-        x_min = 0.001
-        x_max = 0.3
-        x_step = 0.002
-        num_points = int((x_max - x_min) / x_step + 1)
-        x_data = np.linspace(x_min, x_max, num_points)
-
-        data = DataStore()
-
-        data.append(
-            DataSet1D(name='data',
-                      x=x_data,
-                      y=np.zeros_like(x_data),
-                      x_label='q (1/angstrom)',
-                      y_label='Reflectivity',
-                      data_type='experiment'))
-        data.append(
-            DataSet1D(name='{:s} engine'.format(
-                self.parent._interface.current_interface_name),
-                      x=x_data,
-                      y=np.zeros_like(x_data),
-                      x_label='q (1/angstrom)',
-                      y_label='Reflectivity',
-                      data_type='simulation'))
-        return data
 
     # # #
     # Setters and getters
     # # #
+
+    @Property(list, notify=experimentDataAsXmlChanged)
+    def experimentNames(self):
+        return [f'{i.model.name}/{i.name}' for i in self._data.experiments]
+
+    @Property(str, notify=experimentChanged)
+    def experimentColor(self):
+        model_index = 0
+        if self.experimentLoaded:
+            model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+        return self.parent._model_proxy._colors[model_index]
 
     @Property(bool, notify=experimentSkippedChanged)
     def experimentSkipped(self):
@@ -100,14 +84,92 @@ class DataProxy(QObject):
         return self._experiment_data_as_xml
 
     def _setExperimentDataAsXml(self):
-        self._experiment_data_as_xml = dicttoxml(self.experiments,
-                                                 attr_type=True).decode()
+        self._experiment_data_as_xml = dicttoxml(self.experimentDataAsObj).decode()
         self.experimentDataAsXmlChanged.emit()
 
     @Property('QVariant', notify=experimentDataAsObjChanged)
     def experimentDataAsObj(self):
-        return [{'name': experiment.name} for experiment in self._data.experiments]
+        experiment_data_as_obj = []
+        for experiment in self._data.experiments:
+            dictionary = {'name': experiment.name}
+            dictionary['model_index'] = self.parent._model_proxy._model.index(experiment.model)
+            dictionary['color'] = self.parent._model_proxy._colors[dictionary['model_index']]
+            dictionary['model_name'] = self.parent._model_proxy._model[dictionary['model_index']].name
+            dictionary['resolution'] = self.parent._model_proxy._model[dictionary['model_index']].resolution.raw_value 
+            dictionary['background'] = self.parent._model_proxy._model[dictionary['model_index']].background.raw_value
+            experiment_data_as_obj.append(dictionary)
+        return experiment_data_as_obj
 
+    @Slot(float)
+    def setScaling(self, new_scaling: float):
+        """
+        Sets the scale of the currently selected model.
+
+        :param new_scaling: New scaling value
+        """
+        model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+        if self.parent._model_proxy._model[model_index].scale.raw_value == new_scaling:
+            return
+        self.parent._model_proxy._model[model_index].scale = new_scaling
+        self.parent.layersChanged.emit()
+
+    @Slot(float)
+    def setResolution(self, new_resolution: float):
+        """
+        Sets the resolution of the currently selected model.
+
+        :param new_resolution: New resolution value
+        """
+        model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+        if self.parent._model_proxy._model[model_index].resolution.raw_value == new_resolution:
+            return
+        self.parent._model_proxy._model[model_index].resolution = new_resolution
+        self.parent.layersChanged.emit()
+
+    @Slot(float)
+    def setBackground(self, new_background: float):
+        """
+        Sets the background of the currently selected model.
+
+        :param new_background: New background value
+        """
+        model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+        if self.parent._model_proxy._model[model_index].background.raw_value == new_background:
+            return
+        self.parent._model_proxy._model[model_index].background = new_background
+        self.parent.layersChanged.emit()
+
+    @Property(float, notify=experimentChanged)
+    def currentScaling(self):
+        try:
+            model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+            return self.parent._model_proxy._model[model_index].scale.raw_value
+        except IndexError:
+            return 1
+
+    @Property(float, notify=experimentChanged)
+    def currentBackground(self):
+        try:
+            model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+            return self.parent._model_proxy._model[model_index].background.raw_value
+        except IndexError:
+            return 0
+    
+    @Property(float, notify=experimentChanged)
+    def currentResolution(self):
+        try:
+            model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
+            return self.parent._model_proxy._model[model_index].resolution.raw_value
+        except IndexError:
+            return 0
+
+    @Property(str, notify=experimentChanged)
+    def currentDataName(self):
+        try:
+            return self._data[self.currentDataIndex].name 
+        except IndexError:
+            return None
+            
     # # #
     # Actions
     # # #
@@ -132,40 +194,78 @@ class DataProxy(QObject):
 
     def _loadExperimentData(self, file_url):
         file_path = generalizePath(file_url)
-        data = self._data.experiments[0]
-        try:
-            data.x, data.y, data.ye, data.xe = np.loadtxt(file_path, unpack=True)
-        except ValueError:
-            data.x, data.y, data.ye = np.loadtxt(file_path, unpack=True)
-        return data
+        if file_path[-4:] == '.ort':
+            read_data = load(file_path)
+            for i, d in enumerate(read_data.dims):
+                x = read_data.coords[d].values
+                xe = np.sqrt(read_data.coords[d].variances)
+                y = read_data[f"R{d[2:]}"].values
+                ye = np.sqrt(read_data[f"R{d[2:]}"].variances)
+                name = f"{d[3:]}" 
+                ds = DataSet1D(name=name, x=x, y=y, ye=ye, xe=xe, 
+                               model=self.parent._model_proxy._model[0], 
+                               x_label='q (1/angstrom)', 
+                               y_label='Reflectivity')
+                self._data.append(ds)
+        else:
+            try:
+                x, y, ye, xe = np.loadtxt(file_path, unpack=True)
+            except ValueError:
+                x, y, ye = np.loadtxt(file_path, unpack=True)
+                xe = np.zeros_like(ye)
+            name = path.split(file_path)[-1].split('.')[0]
+            ds = DataSet1D(name=name, x=x, y=y, ye=ye, xe=xe, 
+                           model=self.parent._model_proxy._model[0], 
+                           x_label='q (1/angstrom)', 
+                           y_label='Reflectivity')
+            self._data.append(ds)
+
+    @Property(int, notify=experimentChanged)
+    def currentDataIndex(self):
+        return self._current_data_index
+
+    @currentDataIndex.setter
+    def currentDataIndex(self, new_index: int):
+        if self._current_data_index == new_index or new_index == -1:
+            return
+        self._current_data_index = new_index
+        self._onExperimentDataChanged()
+        self.experimentChanged.emit()
 
     # # #
     # Slots
     # # #
 
+    @Slot(int)
+    def setCurrentExperimentDatasetModel(self, model_index):
+        new_model = self.parent._model_proxy._model[model_index]
+        if self._data.experiments[self.currentDataIndex].model == new_model or model_index == -1:
+            return
+        self._data.experiments[self.currentDataIndex].model = new_model
+        # self._data.experiments[self.currentDataIndex]._color = self.parent._model_proxy._colors[model_index]
+        self.experimentChanged.emit()
+        self.parent.sampleChanged.emit()
+
     @Slot(str)
     def addExperimentDataFromOrt(self, file_url):
-        self._experiment_data = self._loadExperimentData(file_url)
-        self._data.experiments[0].name = pathlib.Path(file_url).stem
-        self.experiments = [{
-            'name': experiment.name
-        } for experiment in self._data.experiments]
+        self._loadExperimentData(file_url)
         self.experimentLoaded = True
         self.experimentSkipped = False
-        self.experimentDataAdded.emit()
+        self.experimentChanged.emit()
 
-    @Slot()
-    def removeExperiment(self):
-        self.experiments.clear()
+    @Slot(int)
+    def removeExperiment(self, idx):
+        del self._data[idx]
+        if len(self._data) == 0:
+            self.experimentLoaded = False
+            self.experimentSkipped = False
+        self.experimentRemoved.emit()
+
+    def resetData(self):
+        self._data = DataStore()
+
         self.experimentLoaded = False
         self.experimentSkipped = False
-        self.experimentDataRemoved.emit()
+        self._experiment_data_as_xml = ""
+        self.experimentDataAsXmlChanged.emit()
 
-    @Slot(str)
-    def setCurrentExperimentDatasetName(self, name):
-        if self._data.experiments[0].name == name:
-            return
-        self._data.experiments[0].name = name
-        self.experimentDataAsObjChanged.emit()
-        self.parent._project_proxy.projectInfoAsJson['experiments'] = name
-        self.parent._project_proxy.projectInfoChanged.emit()
