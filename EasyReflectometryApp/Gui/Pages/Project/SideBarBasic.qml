@@ -36,7 +36,10 @@ EaComponents.SideBarColumn {
                 fontIcon: "arrow-circle-right"
                 text: qsTr("Continue without a project")
 
-                onClicked: ExGlobals.Variables.samplePageEnabled = true
+                onClicked: {
+                    ExGlobals.Variables.samplePageEnabled = true
+                    ExGlobals.Variables.sampleTabButton.toggle()
+                }
                 Component.onCompleted: {
                     ExGlobals.Variables.continueWithoutProjectButton = this
                     ExGlobals.Constants.proxy.undoredo.resetUndoRedoStack()
