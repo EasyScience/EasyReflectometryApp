@@ -251,8 +251,16 @@ EaComponents.SideBarColumn {
             topPadding: 0
             checked: ExGlobals.Constants.proxy.plotting1d.sldXDataReversed
             text: qsTr("Reverse SLD z-axis")
-            ToolTip.text: qsTr("Checking this box will reverce the z-axis of the SLD plot")
+            ToolTip.text: qsTr("Checking this box will reverse the z-axis of the SLD plot")
             onToggled: ExGlobals.Constants.proxy.plotting1d.reverseSldXData()
+        }
+
+        EaElements.CheckBox {
+            topPadding: 0
+            checked: ExGlobals.Constants.proxy.plotting1d.xAxisType
+            text: qsTr("Logarithmic q-axis")
+            ToolTip.text: qsTr("Checking this box will make the q-axis logarithmic")
+            onToggled: ExGlobals.Constants.proxy.plotting1d.changeXAxisType()
         }
 
         EaElements.CheckBox {
