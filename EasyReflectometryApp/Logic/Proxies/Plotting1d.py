@@ -38,6 +38,7 @@ class Plotting1dProxy(QObject):
 
     # Misc
     sldXDataReversedChanged = Signal()
+    xAxisTypeChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -52,6 +53,7 @@ class Plotting1dProxy(QObject):
         self._measured_max_x = -999999
         self._measured_min_y = 999999
         self._measured_max_y = -999999
+        self._x_axis_type = False
 
         self._calculated_min_x = 999999
         self._calculated_max_x = -999999
@@ -270,6 +272,17 @@ class Plotting1dProxy(QObject):
         self._setAnalysisSldPlotRanges()
         self._sld_x_data_reversed = not self._sld_x_data_reversed
         self.sldXDataReversedChanged.emit()
+
+    @Property(bool, notify=xAxisTypeChanged)
+    def xAxisType(self):
+        return self._x_axis_type
+
+    @Slot()
+    def changeXAxisType(self):
+        self._x_axis_type = not self._x_axis_type
+        self._setAnalysisPlotRanges()
+        self._setExperimentPlotRanges()
+        self.xAxisTypeChanged.emit()
 
     # Public: Python backend
 
@@ -501,6 +514,10 @@ class Plotting1dProxy(QObject):
             'max_y':
             Plotting1dProxy.aroundY(self._yAxisMax(self._measured_max_y))
         }
+        if self._x_axis_type:
+            self._experiment_plot_ranges_obj['x_axis_type'] = 'log'
+        else:
+            self._experiment_plot_ranges_obj['x_axis_type'] = 'linear'
         self.experimentPlotRangesObjChanged.emit()
 
     def _setAnalysisPlotRanges(self):
@@ -519,6 +536,10 @@ class Plotting1dProxy(QObject):
             'min_y': Plotting1dProxy.aroundY(self._yAxisMin(min_y, max_y)),
             'max_y': Plotting1dProxy.aroundY(self._yAxisMax(max_y))
         }
+        if self._x_axis_type:
+            self._analysis_plot_ranges_obj['x_axis_type'] = 'log'
+        else:
+            self._analysis_plot_ranges_obj['x_axis_type'] = 'linear'
         self.analysisPlotRangesObjChanged.emit()
 
     def _setSampleSldPlotRanges(self):

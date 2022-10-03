@@ -10,7 +10,8 @@ class Plotting1d {
             max_x: 0.47,
             max_y: 1,
             min_x: 0.008,
-            min_y: 1e-7
+            min_y: 1e-7,
+            x_axis_type: 'log'
         }
     }
     get analysisPlotRangesObj() {
@@ -18,7 +19,8 @@ class Plotting1d {
             "max_x":0.47,
             "max_y":1,
             "min_x":0.008,
-            "min_y":1e-7
+            "min_y":1e-7,
+            "x_axis_type": 'log'
         }
     }
     get bokehMeasuredDataObj() {
