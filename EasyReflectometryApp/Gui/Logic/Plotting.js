@@ -174,6 +174,7 @@ function bokehCreateMainChart(data, specs) {
             `   }),`,
 
             `   y_axis_type: "log",`,
+            `   x_axis_type: "${data.ranges.x_axis_type}",`,
 
             `   x_axis_label: "${specs.xMainAxisTitle}",`,
             `   y_axis_label: "${specs.yMainAxisTitle}",`,
