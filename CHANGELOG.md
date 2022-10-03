@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### Changes 0.0.6
+
+- Automatic transition to Sample tab after "Continue without project [31dfe4d](https://github.com/easyScience/EasyReflectometryApp/commit/31dfe4d6e3b2823bcc5420d26573a6cf5e20bad7)
+
 ### Changes 0.0.5
 
 - Addition of multiple contrast support [091abe1](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/091abe1b727c7b9e1f1b60ed1327d79ef318dd8e)
