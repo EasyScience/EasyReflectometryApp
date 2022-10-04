@@ -2,6 +2,7 @@
 
 ### Changes 0.0.6
 
+- Enable plotting of reflectometry data with a logarithmic q-axes [6c26411](https://github.com/easyScience/EasyReflectometryApp/commit/6c26411c5a4d4f412ce475b16d64e0c46a040e55)
 - Automatic transition to Sample tab after "Continue without project [31dfe4d](https://github.com/easyScience/EasyReflectometryApp/commit/31dfe4d6e3b2823bcc5420d26573a6cf5e20bad7)
 
 ### Changes 0.0.5
