@@ -211,8 +211,13 @@ class DataProxy(QObject):
             try:
                 x, y, ye, xe = np.loadtxt(file_path, unpack=True)
             except ValueError:
-                x, y, ye = np.loadtxt(file_path, unpack=True)
-                xe = np.zeros_like(ye)
+                try:
+                    x, y, ye = np.loadtxt(file_path, unpack=True)
+                    xe = np.zeros_like(ye)
+                except ValueError:
+                    x, y, ye = np.loadtxt(file_path, delimiter=',', unpack=True)
+                    xe = np.zeros_like(ye)
+
             name = path.split(file_path)[-1].split('.')[0]
             ds = DataSet1D(name=name, x=x, y=y, ye=ye, xe=xe, 
                            model=self.parent._model_proxy._model[0], 
