@@ -6,8 +6,8 @@ import Gui.Components 1.0 as ExComponents
 import Gui.Globals 1.0 as ExGlobals
 
 ExComponents.BaseBokeh {
-    calculatedData: ExGlobals.Constants.proxy.plotting1d.bokehPureDataObj
-    sldData: ExGlobals.Constants.proxy.plotting1d.bokehSampleSldDataObj
+    calculatedData: ExGlobals.Constants.proxy.plotting1d.pureDataObj
+    sldData: ExGlobals.Constants.proxy.plotting1d.sampleSldDataObj
 
     plotRanges: ExGlobals.Constants.proxy.plotting1d.analysisPlotRangesObj
     sldPlotRanges: ExGlobals.Constants.proxy.plotting1d.sampleSldPlotRangesObj
