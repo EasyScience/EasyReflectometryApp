@@ -1,11 +1,10 @@
-__author__ = 'github.com/andrewsazonov'
+__author__ = 'github.com/arm61'
 
 import numpy as np
 
 from PySide2.QtCore import QObject, Qt, QPointF, Signal, Slot, Property
 from PySide2.QtGui import QImage, QBrush
 from PySide2.QtQml import QJSValue
-from PySide2.QtCharts import QtCharts
 
 
 class Plotting1dProxy(QObject):
@@ -25,16 +24,12 @@ class Plotting1dProxy(QObject):
     analysisSldPlotRangesObjChanged = Signal()
 
     # Data containers
-    bokehMeasuredDataObjChanged = Signal()
-    bokehCalculatedDataObjChanged = Signal()
-    bokehPureDataObjChanged = Signal()
-    bokehBackgroundDataObjChanged = Signal()
-    bokehSampleSldDataObjChanged = Signal()
-    bokehAnalysisSldDataObjChanged = Signal()
-
-    qtchartsMeasuredDataObjChanged = Signal()
-    qtchartsCalculatedDataObjChanged = Signal()
-    qtchartsBackgroundDataObjChanged = Signal()
+    measuredDataObjChanged = Signal()
+    calculatedDataObjChanged = Signal()
+    pureDataObjChanged = Signal()
+    backgroundDataObjChanged = Signal()
+    sampleSldDataObjChanged = Signal()
+    analysisSldDataObjChanged = Signal()
 
     # Misc
     sldXDataReversedChanged = Signal()
@@ -44,9 +39,8 @@ class Plotting1dProxy(QObject):
         super().__init__(parent)
 
         # Lib
-        self._libs = ['bokeh']#, 'qtcharts']
+        self._libs = ['bokeh']
         self._current_lib = 'bokeh'
-        self.currentLibChanged.connect(self.onCurrentLibChanged)
 
         # Ranges
         self._measured_min_x = 999999
@@ -106,16 +100,12 @@ class Plotting1dProxy(QObject):
         self._analysis_sld_plot_ranges_obj = {}
 
         # Data containers for GUI
-        self._bokeh_measured_data_obj = {}
-        self._bokeh_calculated_data_obj = {}
-        self._bokeh_pure_data_obj = {}
-        self._bokeh_background_data_obj = {}
-        self._bokeh_sample_sld_data_obj = {}
-        self._bokeh_analysis_sld_data_obj = {}
-
-        self._qtcharts_measured_data_obj = {}
-        self._qtcharts_calculated_data_obj = {}
-        self._qtcharts_background_data_obj = {}
+        self._measured_data_obj = {}
+        self._calculated_data_obj = {}
+        self._pure_data_obj = {}
+        self._background_data_obj = {}
+        self._sample_sld_data_obj = {}
+        self._analysis_sld_data_obj = {}
 
         # Misc
         self._sld_x_data_reversed = False
@@ -129,16 +119,12 @@ class Plotting1dProxy(QObject):
         self._analysis_sld_plot_ranges_obj = {}
 
         # Data containers for GUI
-        self._bokeh_measured_data_obj = {}
-        self._bokeh_calculated_data_obj = {}
-        self._bokeh_pure_data_obj = {}
-        self._bokeh_background_data_obj = {}
-        self._bokeh_sample_sld_data_obj = {}
-        self._bokeh_analysis_sld_data_obj = {}
-
-        self._qtcharts_measured_data_obj = {}
-        self._qtcharts_calculated_data_obj = {}
-        self._qtcharts_background_data_obj = {}
+        self._measured_data_obj = {}
+        self._calculated_data_obj = {}
+        self._pure_data_obj = {}
+        self._background_data_obj = {}
+        self._sample_sld_data_obj = {}
+        self._analysis_sld_data_obj = {}
 
         # Ranges
         self.experimentPlotRangesObjChanged.emit()
@@ -147,16 +133,12 @@ class Plotting1dProxy(QObject):
         self.analysisSldPlotRangesObjChanged.emit()
 
         # Data containers
-        self.bokehMeasuredDataObjChanged.emit()
-        self.bokehCalculatedDataObjChanged.emit()
-        self.bokehPureDataObjChanged.emit()
-        self.bokehBackgroundDataObjChanged.emit()
-        self.bokehSampleSldDataObjChanged.emit()
-        self.bokehAnalysisSldDataObjChanged.emit()
-
-        self.qtchartsMeasuredDataObjChanged.emit()
-        self.qtchartsCalculatedDataObjChanged.emit()
-        self.qtchartsBackgroundDataObjChanged.emit()
+        self.measuredDataObjChanged.emit()
+        self.calculatedDataObjChanged.emit()
+        self.pureDataObjChanged.emit()
+        self.backgroundDataObjChanged.emit()
+        self.sampleSldDataObjChanged.emit()
+        self.analysisSldDataObjChanged.emit()
 
     # Public: QML frontend
 
@@ -194,70 +176,29 @@ class Plotting1dProxy(QObject):
         return self._analysis_sld_plot_ranges_obj
 
     # Data containers for GUI
-    @Property('QVariant', notify=bokehMeasuredDataObjChanged)
-    def bokehMeasuredDataObj(self):
-        return self._bokeh_measured_data_obj
+    @Property('QVariant', notify=measuredDataObjChanged)
+    def measuredDataObj(self):
+        return self._measured_data_obj
 
-    @Property('QVariant', notify=bokehCalculatedDataObjChanged)
-    def bokehCalculatedDataObj(self):
-        return self._bokeh_calculated_data_obj
+    @Property('QVariant', notify=calculatedDataObjChanged)
+    def calculatedDataObj(self):
+        return self._calculated_data_obj
 
-    @Property('QVariant', notify=bokehPureDataObjChanged)
-    def bokehPureDataObj(self):
-        return self._bokeh_pure_data_obj
+    @Property('QVariant', notify=pureDataObjChanged)
+    def pureDataObj(self):
+        return self._pure_data_obj
 
-    @Property('QVariant', notify=bokehBackgroundDataObjChanged)
-    def bokehBackgroundDataObj(self):
-        return self._bokeh_background_data_obj
+    @Property('QVariant', notify=backgroundDataObjChanged)
+    def backgroundDataObj(self):
+        return self._background_data_obj
 
-    @Property('QVariant', notify=bokehSampleSldDataObjChanged)
-    def bokehSampleSldDataObj(self):
-        return self._bokeh_sample_sld_data_obj
+    @Property('QVariant', notify=sampleSldDataObjChanged)
+    def sampleSldDataObj(self):
+        return self._sample_sld_data_obj
 
-    @Property('QVariant', notify=bokehAnalysisSldDataObjChanged)
-    def bokehAnalysisSldDataObj(self):
-        return self._bokeh_analysis_sld_data_obj
-
-    @Property('QVariant', notify=qtchartsMeasuredDataObjChanged)
-    def qtchartsMeasuredDataObj(self):
-        return self._qtcharts_measured_data_obj
-
-    @Property('QVariant', notify=qtchartsCalculatedDataObjChanged)
-    def qtchartsCalculatedDataObj(self):
-        return self._qtcharts_calculated_data_obj
-
-    @Property('QVariant', notify=qtchartsBackgroundDataObjChanged)
-    def qtchartsBackgroundDataObj(self):
-        return self._qtcharts_background_data_obj
-
-    # QtCharts for GUI
-    @Slot('QVariant', 'QVariant')
-    def lineSeriesCustomReplace(self, line_series, points):
-        if not isinstance(line_series, (QtCharts.QLineSeries, QtCharts.QScatterSeries)):
-            return
-        if points is None:
-            return
-        if isinstance(points, QJSValue):
-            points = points.toVariant()
-        if isinstance(points, list):
-            line_series.replace(points)
-
-    @Slot(int, str, result='QBrush')
-    def verticalLine(self, size, color):
-        width = size
-        height = size
-        textureImage = QImage(width, height, QImage.Format_ARGB32)
-        # Transparent background
-        for row in range(height):
-            for column in range(width):
-                textureImage.setPixelColor(column, row, Qt.transparent)
-        # Vertical line
-        for row in range(height):
-            column = int(width / 2)
-            textureImage.setPixelColor(column, row, color)
-        brush = QBrush()
-        brush.setTextureImage(textureImage)
-        return brush
+    @Property('QVariant', notify=analysisSldDataObjChanged)
+    def analysisSldDataObj(self):
+        return self._analysis_sld_data_obj
 
     # Misc
     @Property(bool, notify=sldXDataReversedChanged)
@@ -291,57 +232,38 @@ class Plotting1dProxy(QObject):
         self._setMeasuredDataRanges()
         self._setExperimentPlotRanges()
         self._setAnalysisPlotRanges()
-        self._setBokehMeasuredDataObj()
-        if self.currentLib == 'qtcharts':
-            self._setQtChartsMeasuredDataObj()
+        self._setMeasuredDataObj()
 
     def setCalculatedData(self, xarray, yarray):
         self._setCalculatedDataArrays(xarray, yarray)
         self._setCalculatedDataRanges()
         self._setAnalysisPlotRanges()
         self._setAnalysisSldPlotRanges()
-        self._setBokehCalculatedDataObj()
-        if self.currentLib == 'qtcharts':
-            self._setQtChartsCalculatedDataObj()
+        self._setCalculatedDataObj()
 
     def setPureData(self, xarray, yarray):
         self._setPureDataArrays(xarray, yarray)
         self._setPureDataRanges()
         self._setAnalysisPlotRanges()
         self._setSampleSldPlotRanges()
-        self._setBokehPureDataObj()
-        # if self.currentLib == 'qtcharts':
-        #     self._setQtChartsCalculatedDataObj()
+        self._setPureDataObj()
 
     def setBackgroundData(self, xarray, yarray):
         self._setBackgroundDataArrays(xarray, yarray)
         if self._background_xarray.size:
-            self._setBokehBackgroundDataObj()
-            if self.currentLib == 'qtcharts':
-                self._setQtChartsBackgroundDataObj()
+            self._setBackgroundDataObj()
 
     def setSampleSldData(self, xarray, yarray):
         self._setSampleSldDataArrays(xarray, yarray)
         self._setSampleSldDataRanges()
         self._setSampleSldPlotRanges()
-        self._setBokehSampleSldDataObj()
-        if self.currentLib == 'qtcharts':
-            pass
+        self._setSampleSldDataObj()
 
     def setAnalysisSldData(self, xarray, yarray):
         self._setAnalysisSldDataArrays(xarray, yarray)
         self._setAnalysisSldDataRanges()
         self._setAnalysisSldPlotRanges()
-        self._setBokehAnalysisSldDataObj()
-        if self.currentLib == 'qtcharts':
-            pass
-
-    def onCurrentLibChanged(self):
-        if self.currentLib == 'qtcharts':
-            self._setQtChartsCalculatedDataObj()
-            self._setQtChartsBackgroundDataObj()
-            if self._measured_xarray.size:
-                self._setQtChartsMeasuredDataObj()
+        self._setAnalysisSldDataObj()
 
     # Private: data array setters
 
@@ -377,88 +299,58 @@ class Plotting1dProxy(QObject):
         self._background_xarray = xarray
         self._background_yarray = yarray
 
-    def _setBokehMeasuredDataObj(self):
-        self._bokeh_measured_data_obj = {
+    def _setMeasuredDataObj(self):
+        self._measured_data_obj = {
             'x': Plotting1dProxy.aroundX(self._measured_xarray),
             'y': Plotting1dProxy.aroundY(self._measured_yarray),
             'sy': Plotting1dProxy.aroundY(self._measured_syarray),
             'y_upper': Plotting1dProxy.aroundY(self._measured_yarray_upper),
             'y_lower': Plotting1dProxy.aroundY(self._measured_yarray_lower)
         }
-        self.bokehMeasuredDataObjChanged.emit()
+        self.measuredDataObjChanged.emit()
 
-    def _setBokehCalculatedDataObj(self):
-        self._bokeh_calculated_data_obj = {
+    def _setCalculatedDataObj(self):
+        self._calculated_data_obj = {
             'x': Plotting1dProxy.aroundX(self._calculated_xarray),
             'y': Plotting1dProxy.aroundY(self._calculated_yarray)
         }
-        self.bokehCalculatedDataObjChanged.emit()
+        self.calculatedDataObjChanged.emit()
 
-    def _setBokehPureDataObj(self):
-        self._bokeh_pure_data_obj = {
+    def _setPureDataObj(self):
+        self._pure_data_obj = {
             'x': Plotting1dProxy.aroundX(self._pure_xarray),
             'y': Plotting1dProxy.aroundY(self._pure_yarray)
         }
         print(self._pure_yarray)
-        self.bokehPureDataObjChanged.emit()
+        self.pureDataObjChanged.emit()
 
-    def _setBokehPureDataObj(self):
-        self._bokeh_pure_data_obj = {
+    def _setPureDataObj(self):
+        self._pure_data_obj = {
             'x': Plotting1dProxy.aroundX(self._pure_xarray),
             'y': Plotting1dProxy.aroundY(self._pure_yarray)
         }
-        self.bokehPureDataObjChanged.emit()
+        self.pureDataObjChanged.emit()
 
-    def _setBokehSampleSldDataObj(self):
-        self._bokeh_sample_sld_data_obj = {
+    def _setSampleSldDataObj(self):
+        self._sample_sld_data_obj = {
             'x': Plotting1dProxy.aroundX(self._sample_sld_xarray),
             'y': Plotting1dProxy.aroundY(self._sample_sld_yarray)
         }
-        self.bokehSampleSldDataObjChanged.emit()
+        self.sampleSldDataObjChanged.emit()
     
-    def _setBokehAnalysisSldDataObj(self):
-        self._bokeh_analysis_sld_data_obj = {
+    def _setAnalysisSldDataObj(self):
+        self._analysis_sld_data_obj = {
             'x': Plotting1dProxy.aroundX(self._analysis_sld_xarray),
             'y': Plotting1dProxy.aroundY(self._analysis_sld_yarray)
         }
-        self.bokehAnalysisSldDataObjChanged.emit()
+        self.analysisSldDataObjChanged.emit()
 
-    def _setBokehBackgroundDataObj(self):
-        self._bokeh_background_data_obj = {
+    def _setBackgroundDataObj(self):
+        self._background_data_obj = {
             'x': Plotting1dProxy.aroundX(self._background_xarray),
             'y': Plotting1dProxy.aroundY(self._background_yarray)
         }
-        self.bokehBackgroundDataObjChanged.emit()
-
-    def _setQtChartsMeasuredDataObj(self):
-        self._qtcharts_measured_data_obj = {
-            'xy':
-            Plotting1dProxy.arraysToPoints(self._measured_xarray,
-                                           self._measured_yarray),
-            'xy_upper':
-            Plotting1dProxy.arraysToPoints(self._measured_xarray,
-                                           self._measured_yarray_upper),
-            'xy_lower':
-            Plotting1dProxy.arraysToPoints(self._measured_xarray,
-                                           self._measured_yarray_lower)
-        }
-        self.qtchartsMeasuredDataObjChanged.emit()
-
-    def _setQtChartsCalculatedDataObj(self):
-        self._qtcharts_calculated_data_obj = {
-            'xy':
-            Plotting1dProxy.arraysToPoints(self._calculated_xarray,
-                                           self._calculated_yarray)
-        }
-        self.qtchartsCalculatedDataObjChanged.emit()
-
-    def _setQtChartsBackgroundDataObj(self):
-        self._qtcharts_background_data_obj = {
-            'xy':
-            Plotting1dProxy.arraysToPoints(self._background_xarray,
-                                           self._background_yarray)
-        }
-        self.qtchartsBackgroundDataObjChanged.emit()
+        self.backgroundDataObjChanged.emit()
 
     # Private: range setters
 

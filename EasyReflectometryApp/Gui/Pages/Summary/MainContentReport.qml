@@ -359,9 +359,9 @@ Item {
         ExLogic.Plotting.bokehChart(
             // data
             {
-                measured: ExGlobals.Constants.proxy.plotting1d.bokehMeasuredDataObj,
-                calculated: ExGlobals.Constants.proxy.plotting1d.bokehCalculatedDataObj,
-                sld: ExGlobals.Constants.proxy.plotting1d.bokehSldDataObj,
+                measured: ExGlobals.Constants.proxy.plotting1d.measuredDataObj,
+                calculated: ExGlobals.Constants.proxy.plotting1d.calculatedDataObj,
+                sld: ExGlobals.Constants.proxy.plotting1d.sldDataObj,
                 ranges: ExGlobals.Constants.proxy.plotting1d.analysisPlotRangesObj,
                 sldRanges: ExGlobals.Constants.proxy.plotting1d.sldPlotRangesObj,
 
