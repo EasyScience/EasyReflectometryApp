@@ -218,8 +218,9 @@ class DataProxy(QObject):
                 x, y, ye = data
                 xe = np.zeros_like(ye)
             else:
-                raise ValueError("The data must have at either 3 or 4 columns, \
-                                  and be tab or comma separated if not in the ORSO format")
+                msg = (" \nThe data must have at either 3 or 4 columns, "
+                        "and be tab or comma separated if not in the ORSO format")
+                raise ValueError(msg)
 
             name = path.split(file_path)[-1].split('.')[0]
             ds = DataSet1D(name=name, x=x, y=y, ye=ye, xe=xe, 
