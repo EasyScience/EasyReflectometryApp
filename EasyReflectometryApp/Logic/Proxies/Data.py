@@ -209,10 +209,19 @@ class DataProxy(QObject):
                 self._data.append(ds)
         else:
             try:
-                x, y, ye, xe = np.loadtxt(file_path, unpack=True)
+                data = np.loadtxt(file_path, unpack=True)
             except ValueError:
-                x, y, ye = np.loadtxt(file_path, unpack=True)
+                data = np.loadtxt(file_path, unpack=True, delimiter=',')
+            if data.shape[0] == 4:
+                x, y, ye, xe = data
+            elif data.shape[0] == 3:
+                x, y, ye = data
                 xe = np.zeros_like(ye)
+            else:
+                msg = (" \nThe data must have at either 3 or 4 columns, "
+                        "and be tab or comma separated if not in the ORSO format")
+                raise ValueError(msg)
+
             name = path.split(file_path)[-1].split('.')[0]
             ds = DataSet1D(name=name, x=x, y=y, ye=ye, xe=xe, 
                            model=self.parent._model_proxy._model[0], 
