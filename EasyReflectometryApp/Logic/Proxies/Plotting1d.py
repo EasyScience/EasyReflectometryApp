@@ -41,7 +41,6 @@ class Plotting1dProxy(QObject):
         # Lib
         self._libs = ['bokeh']
         self._current_lib = 'bokeh'
-        # self.currentLibChanged.connect(self.onCurrentLibChanged)
 
         # Ranges
         self._measured_min_x = 999999
