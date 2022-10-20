@@ -113,7 +113,7 @@ class Plotting1dProxy(QObject):
         # Misc
         self._sld_x_data_reversed = False
         self._scale_shown = False
-        self._bkg_shown = True 
+        self._bkg_shown = False 
     
     def clearFrontendState(self):
 
