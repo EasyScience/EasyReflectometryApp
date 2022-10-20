@@ -131,6 +131,9 @@ function bokehChart(data, specs) {
     if (data.hasCalculated) {
         chart.push(...bokehAddCalculatedDataToMainChart(data, specs))
     }
+    if (data.hasBackground) {
+        chart.push(...bokehAddBackgroundDataToMainChart(data, specs))
+    }
     chart.push(`charts.push([main_chart])`)
 
     // Sld chart (bottom)
@@ -276,6 +279,22 @@ function bokehAddVisibleYAxis(chart, specs) {
 
 // Bokeh data
 
+function bokehAddBackgroundDataToMainChart(data, specs) {
+    return [`main_source.data.x_bkg = [${data.background.x}]`,
+            `main_source.data.y_bkg = [${data.background.y}]`,
+
+            'const bkgLine = new Bokeh.Line({',
+            '    x: { field: "x_bkg" },',
+            '    y: { field: "y_bkg" },',
+            `    line_color: "${specs.backgroundLineColor}",`,
+            `    line_alpha: 0.5,`,
+            `    line_dash: [4, 2],`,
+            `    line_width: ${specs.backgroundLineWidth},`,
+            '})',
+
+            'main_chart.add_glyph(bkgLine, main_source)']
+}
+
 function bokehAddMeasuredDataToMainChart(data, specs) {
     return [`main_source.data.x_meas = [${data.measured.x}]`,
             `main_source.data.y_meas = [${data.measured.y}]`,
@@ -353,6 +372,7 @@ function bokehAddMainTooltip(data, specs) {
     const x_calc = bokehMainTooltipRow(EaStyle.Colors.themeForegroundDisabled, 'q', '@x_calc{0.00}')
     const y_meas = bokehMainTooltipRow(specs.measuredLineColor, 'meas', '@y_meas{0.00000000}', '&#177;&nbsp;@sy_meas{0.00000000}')
     const y_calc = bokehMainTooltipRow(specs.calculatedLineColor, 'calc', '@y_calc{0.00000000}')
+    const y_bkg = bokehMainTooltipRow(specs.backgroundLineColor, 'bkg', '@y_bkg{0.0}')
 
     let table = []
     table.push(...[`<div style="padding:2px">`, `<table>`, `<tbody>`])
@@ -368,6 +388,9 @@ function bokehAddMainTooltip(data, specs) {
     }
     if (data.hasCalculated) {
         table.push(...y_calc)
+    }
+    if (data.hasBackground) {
+        table.push(...y_bkg)
     }
     table.push(...[`</tbody>`, `</table>`, `</div>`])
 

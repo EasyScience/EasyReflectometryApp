@@ -12,6 +12,7 @@ Rectangle {
     property var measuredData: ({})
     property var calculatedData: ({})
     property var sldData: ({})
+    property var backgroundData: ({})
     property var plotRanges: ({})
     property var sldPlotRanges: ({})
 
@@ -23,6 +24,8 @@ Rectangle {
                                      && Object.keys(calculatedData).length
     property bool hasSldData: typeof sldData !== 'undefined'
                                      && Object.keys(sldData).length
+    property bool hasBackgroundData: typeof backgroundData !== 'undefined'
+                                     && Object.keys(backgroundData).length
     property bool hasPlotRangesData: typeof plotRanges !== 'undefined'
                                      && Object.keys(plotRanges).length
     property bool hasSldPlotRangesData: typeof sldPlotRanges !== 'undefined'
@@ -54,10 +57,12 @@ Rectangle {
     property color measuredAreaColor: measuredLineColor
     property color calculatedLineColor: EaStyle.Colors.chartForegrounds[1]
     property color sldLineColor: EaStyle.Colors.chartForegrounds[2]
+    property color backgroundLineColor: EaStyle.Colors.chartForegrounds[0]
 
     property int measuredLineWidth: 1
     property int calculatedLineWidth: 2
     property int sldLineWidth: 2
+    property int backgroundLineWidth: 1
 
     property int fontPixelSize: EaStyle.Sizes.fontPixelSize
 
