@@ -7,6 +7,7 @@ import Gui.Globals 1.0 as ExGlobals
 
 ExComponents.BaseBokeh {
     measuredData: ExGlobals.Constants.proxy.plotting1d.measuredDataObj
+    backgroundData: ExGlobals.Constants.proxy.plotting1d.backgroundDataObj
 
     plotRanges: ExGlobals.Constants.proxy.plotting1d.experimentPlotRangesObj
     sldPlotRanges: ExGlobals.Constants.proxy.plotting1d.sldPlotRangesObj

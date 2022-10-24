@@ -38,6 +38,14 @@ EaComponents.SideBarColumn {
             text: qsTr("Show R(q)q⁴")
             onToggled: ExGlobals.Constants.proxy.simulation.setPlotRQ4()
         }
+
+        EaElements.CheckBox {
+            topPadding: 0
+            id: bkg
+            checked: ExGlobals.Constants.proxy.plotting1d.bkgShown
+            text: qsTr("Show background level")
+            onToggled: ExGlobals.Constants.proxy.plotting1d.flipBkgShown()
+        }
     }
 
 }
