@@ -11,6 +11,7 @@ ExComponents.BaseBokeh {
     calculatedData: ExGlobals.Constants.proxy.plotting1d.calculatedDataObj
     sldData: ExGlobals.Constants.proxy.plotting1d.analysisSldDataObj
     backgroundData: ExGlobals.Constants.proxy.plotting1d.backgroundDataObj
+    scaleData: ExGlobals.Constants.proxy.plotting1d.scaleDataObj
 
     plotRanges: ExGlobals.Constants.proxy.plotting1d.analysisPlotRangesObj
     sldPlotRanges: ExGlobals.Constants.proxy.plotting1d.analysisSldPlotRangesObj

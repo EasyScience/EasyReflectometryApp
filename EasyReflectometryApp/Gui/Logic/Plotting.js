@@ -134,6 +134,9 @@ function bokehChart(data, specs) {
     if (data.hasBackground) {
         chart.push(...bokehAddBackgroundDataToMainChart(data, specs))
     }
+    if (data.hasScale) {
+        chart.push(...bokehAddScaleDataToMainChart(data, specs))
+    }
     chart.push(`charts.push([main_chart])`)
 
     // Sld chart (bottom)
@@ -288,11 +291,27 @@ function bokehAddBackgroundDataToMainChart(data, specs) {
             '    y: { field: "y_bkg" },',
             `    line_color: "${specs.backgroundLineColor}",`,
             `    line_alpha: 0.5,`,
-            `    line_dash: [4, 2],`,
+            `    line_dash: [6, 2],`,
             `    line_width: ${specs.backgroundLineWidth},`,
             '})',
 
             'main_chart.add_glyph(bkgLine, main_source)']
+}
+
+function bokehAddScaleDataToMainChart(data, specs) {
+    return [`main_source.data.x_scale = [${data.scale.x}]`,
+            `main_source.data.y_scale = [${data.scale.y}]`,
+
+            'const scaleLine = new Bokeh.Line({',
+            '    x: { field: "x_scale" },',
+            '    y: { field: "y_scale" },',
+            `    line_color: "${specs.scaleLineColor}",`,
+            `    line_alpha: 0.5,`,
+            `    line_dash: [2, 6],`,
+            `    line_width: ${specs.scaleLineWidth},`,
+            '})',
+
+            'main_chart.add_glyph(scaleLine, main_source)']
 }
 
 function bokehAddMeasuredDataToMainChart(data, specs) {
@@ -373,6 +392,7 @@ function bokehAddMainTooltip(data, specs) {
     const y_meas = bokehMainTooltipRow(specs.measuredLineColor, 'meas', '@y_meas{0.00000000}', '&#177;&nbsp;@sy_meas{0.00000000}')
     const y_calc = bokehMainTooltipRow(specs.calculatedLineColor, 'calc', '@y_calc{0.00000000}')
     const y_bkg = bokehMainTooltipRow(specs.backgroundLineColor, 'bkg', '@y_bkg{0.0}')
+    const y_scale = bokehMainTooltipRow(specs.scaleLineColor, 'scale', '@y_scale{0.0}')
 
     let table = []
     table.push(...[`<div style="padding:2px">`, `<table>`, `<tbody>`])
@@ -391,6 +411,9 @@ function bokehAddMainTooltip(data, specs) {
     }
     if (data.hasBackground) {
         table.push(...y_bkg)
+    }
+    if (data.hasScale) {
+        table.push(...y_scale)
     }
     table.push(...[`</tbody>`, `</table>`, `</div>`])
 

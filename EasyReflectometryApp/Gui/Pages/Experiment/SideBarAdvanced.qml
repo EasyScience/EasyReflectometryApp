@@ -41,6 +41,14 @@ EaComponents.SideBarColumn {
 
         EaElements.CheckBox {
             topPadding: 0
+            id: scale
+            checked: ExGlobals.Constants.proxy.plotting1d.scaleShown
+            text: qsTr("Show scale level")
+            onToggled: ExGlobals.Constants.proxy.plotting1d.flipScaleShown()
+        }
+
+        EaElements.CheckBox {
+            topPadding: 0
             id: bkg
             checked: ExGlobals.Constants.proxy.plotting1d.bkgShown
             text: qsTr("Show background level")
