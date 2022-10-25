@@ -6,7 +6,7 @@
 - Automatic transition to Sample tab after "Continue without project [31dfe4d](https://github.com/easyScience/EasyReflectometryApp/commit/31dfe4d6e3b2823bcc5420d26573a6cf5e20bad7)
 - Remove private repo access set from CI [f706d2a](https://github.com/easyScience/EasyReflectometryApp/pull/98/commits/f706d2af0aec333a9653616a1b88a7a51831d12c)
 - Modified the data loader to handle tab and comma separated datasets, as well as raising a type error if unable to load [20ca60b](https://github.com/easyScience/EasyReflectometryApp/pull/97/commits/20ca60b1fe65af0489fb68f835cf46da93f662fd)
-
+- Fixed bug in loading/saving of project 
 ### Changes 0.0.5
 
 - Addition of multiple contrast support [091abe1](https://github.com/easyScience/EasyReflectometryApp/pull/79/commits/091abe1b727c7b9e1f1b60ed1327d79ef318dd8e)
