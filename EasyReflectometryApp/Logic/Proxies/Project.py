@@ -20,7 +20,6 @@ from EasyReflectometry.experiment.models import Models
 
 
 class ProjectProxy(QObject):
-
     dummySignal = Signal()
     projectCreatedChanged = Signal()
     projectInfoChanged = Signal()
@@ -162,13 +161,13 @@ class ProjectProxy(QObject):
                 materials_not_in_model.append(i)
         descr = {
             'model':
-            self.parent._model_proxy._model.as_dict(skip=['interface']),
+                self.parent._model_proxy._model.as_dict(skip=['interface']),
             'materials_not_in_model':
-            Materials(*materials_not_in_model).as_dict(skip=['interface'])
+                Materials(*materials_not_in_model).as_dict(skip=['interface'])
         }
 
         if self.parent._data_proxy._data.experiments:
-            descr['experiments'] = [] 
+            descr['experiments'] = []
             descr['experiments_models'] = []
             descr['experiments_names'] = []
             for i in self.parent._data_proxy._data.experiments:
@@ -184,7 +183,7 @@ class ProjectProxy(QObject):
         descr['experiment_skipped'] = self.parent._data_proxy._experiment_skipped
         descr['project_info'] = self._project_info
 
-        descr['interface'] = [i.current_interface_name for i in self.parent._interface]
+        descr['interface'] = [self.parent._interface.current_interface_name]
 
         descr['minimizer'] = {
             'engine': self.parent._fitter_proxy.eFitter.easy_f.current_engine.name,
@@ -224,21 +223,21 @@ class ProjectProxy(QObject):
         interface_name = descr.get('interface', None)
         for i, inter in enumerate(interface_name):
             if inter is not None:
-                old_interface_name = self.parent._interface[i].current_interface_name
+                old_interface_name = self.parent._interface.current_interface_name
                 if old_interface_name != inter:
-                    self._interface[i].switch(inter)
+                    self.parent._interface.switch(inter)
 
         self.parent._model_proxy._model = Models.from_dict(descr['model'])
         self.parent._material_proxy._materials = Materials.from_pars()
         c = 0
-        for i in self.parent._model_proxy._model:
-            for j in i.structure:
-                for k in j.layers:
-                    self.parent._material_proxy._materials.append(k.material)
-            i.interface = self.parent._interface[c]
+        for model in self.parent._model_proxy._model:
+            for structure in model.structure:
+                for layer in structure.layers:
+                    self.parent._material_proxy._materials.append(layer.material)
+            model.interface = self.parent._interface
             c += 1
-        for i in Materials.from_dict(descr['materials_not_in_model']):
-            self.parent._material_proxy._materials.append(i)
+        for material in Materials.from_dict(descr['materials_not_in_model']):
+            self.parent._material_proxy._materials.append(material)
 
         # experiment
         if 'experiments' in descr:
@@ -258,12 +257,12 @@ class ProjectProxy(QObject):
                     if i.name == model_name:
                         model = i
                         break
-                ds = DataSet1D(name=name, x=x, y=y, ye=ye, xe=xe, 
-                           model=model, 
-                           x_label='q (1/angstrom)', 
-                           y_label='Reflectivity')
+                ds = DataSet1D(name=name, x=x, y=y, ye=ye, xe=xe,
+                               model=model,
+                               x_label='q (1/angstrom)',
+                               y_label='Reflectivity')
                 self.parent._data_proxy._data.append(ds)
-            
+
             self.parent._data_proxy.experimentLoaded = True
             self.parent._data_proxy.experimentSkipped = False
             self.parent._data_proxy.experimentChanged.emit()
@@ -271,7 +270,7 @@ class ProjectProxy(QObject):
 
         else:
             # delete existing experiment
-            self.parent.removeExperiment()
+            self.parent.data.removeExperiment()
             self.parent._data_proxy.experimentLoaded = False
             if descr['experiment_skipped']:
                 self.parent._data_proxy.experimentSkipped = True
@@ -333,7 +332,7 @@ class ProjectProxy(QObject):
         self.htmlExportingFinished.emit(success, filepath)
 
     def resetProject(self):
-        self._project_created = False 
+        self._project_created = False
         self._project_info = self._defaultProjectInfo()
         self.projectInfoChanged.emit()
 
@@ -368,7 +367,8 @@ class ProjectProxy(QObject):
                 color = self.parent._model_proxy._colors[model_index]
                 y = self.parent._interface.fit_func(d.x, d.model.uid)
                 if self.parent._simulation_proxy._plot_rq4:
-                    ax1.errorbar(d.x, (d.y * d.x ** 4) * 10 ** i, (d.ye * d.x ** 4) * 10 ** i, marker='', ls='', color=color, alpha=0.5)
+                    ax1.errorbar(d.x, (d.y * d.x ** 4) * 10 ** i, (d.ye * d.x ** 4) * 10 ** i, marker='', ls='',
+                                 color=color, alpha=0.5)
                     ax1.plot(d.x, (y * d.x ** 4) * 10 ** i, ls='-', color=color, zorder=10, label=d.name)
                 else:
                     ax1.errorbar(d.x, d.y * 10 ** i, d.ye * 10 ** i, marker='', ls='', color=color, alpha=0.5)

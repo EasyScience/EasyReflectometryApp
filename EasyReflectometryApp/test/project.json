@@ -1,0 +1,370 @@
+{
+    "model": {
+        "@module": "EasyReflectometry.experiment.models",
+        "@class": "Models",
+        "@version": "0.0.2",
+        "data": [
+            {
+                "@module": "EasyReflectometry.experiment.model",
+                "@class": "Model",
+                "@version": "0.0.2",
+                "structure": {
+                    "@module": "EasyReflectometry.sample.structure",
+                    "@class": "Structure",
+                    "@version": "0.0.2",
+                    "data": [
+                        {
+                            "@module": "EasyReflectometry.sample.items.multilayer",
+                            "@class": "MultiLayer",
+                            "@version": "0.0.2",
+                            "layers": {
+                                "@module": "EasyReflectometry.sample.layers",
+                                "@class": "Layers",
+                                "@version": "0.0.2",
+                                "data": [
+                                    {
+                                        "@module": "EasyReflectometry.sample.layer",
+                                        "@class": "Layer",
+                                        "@version": "0.0.2",
+                                        "material": {
+                                            "@module": "EasyReflectometry.sample.material",
+                                            "@class": "Material",
+                                            "@version": "0.0.2",
+                                            "sld": {
+                                                "@module": "easyCore.Objects.Variable",
+                                                "@class": "Parameter",
+                                                "@version": "0.2.2",
+                                                "name": "sld",
+                                                "value": 0.0,
+                                                "error": 0.0,
+                                                "min": -Infinity,
+                                                "max": Infinity,
+                                                "fixed": true,
+                                                "description": "The real scattering length density for a material in e-6 per squared angstrom.",
+                                                "url": "https://www.ncnr.nist.gov/resources/activation/",
+                                                "units": "1 / angstrom ** 2",
+                                                "@id": "21216712392155093533827456671516985894",
+                                                "enabled": true
+                                            },
+                                            "isld": {
+                                                "@module": "easyCore.Objects.Variable",
+                                                "@class": "Parameter",
+                                                "@version": "0.2.2",
+                                                "name": "isld",
+                                                "value": 0.0,
+                                                "error": 0.0,
+                                                "min": -Infinity,
+                                                "max": Infinity,
+                                                "fixed": true,
+                                                "description": "The imaginary scattering length density for a material in e-6 per squared angstrom.",
+                                                "url": "https://www.ncnr.nist.gov/resources/activation/",
+                                                "units": "1 / angstrom ** 2",
+                                                "@id": "32846293267289944896033714784201668107",
+                                                "enabled": true
+                                            },
+                                            "name": "Air",
+                                            "@id": "151442645455913207032179288443385326310"
+                                        },
+                                        "thickness": {
+                                            "@module": "easyCore.Objects.Variable",
+                                            "@class": "Parameter",
+                                            "@version": "0.2.2",
+                                            "name": "thickness",
+                                            "value": 0.0,
+                                            "error": 0.0,
+                                            "min": 0.0,
+                                            "max": Infinity,
+                                            "fixed": true,
+                                            "description": "The thickness of the layer in angstroms",
+                                            "url": "https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex",
+                                            "units": "angstrom",
+                                            "@id": "159914328257002544635287259869236004464",
+                                            "enabled": false
+                                        },
+                                        "roughness": {
+                                            "@module": "easyCore.Objects.Variable",
+                                            "@class": "Parameter",
+                                            "@version": "0.2.2",
+                                            "name": "roughness",
+                                            "value": 0.0,
+                                            "error": 0.0,
+                                            "min": 0.0,
+                                            "max": Infinity,
+                                            "fixed": true,
+                                            "description": "The interfacial roughness, Nevot-Croce, for the layer in angstroms.",
+                                            "url": "https://doi.org/10.1051/rphysap:01980001503076100",
+                                            "units": "angstrom",
+                                            "@id": "216158902937879093814701917957920898456",
+                                            "enabled": false
+                                        },
+                                        "name": "Air Layer",
+                                        "@id": "254380659088902483067903564552330943765"
+                                    }
+                                ],
+                                "@id": "88614015210179125774789284642265579068"
+                            },
+                            "name": "Superphase",
+                            "@id": "133600765068480994693404503822685009809"
+                        },
+                        {
+                            "@module": "EasyReflectometry.sample.items.multilayer",
+                            "@class": "MultiLayer",
+                            "@version": "0.0.2",
+                            "layers": {
+                                "@module": "EasyReflectometry.sample.layers",
+                                "@class": "Layers",
+                                "@version": "0.0.2",
+                                "data": [
+                                    {
+                                        "@module": "EasyReflectometry.sample.layer",
+                                        "@class": "Layer",
+                                        "@version": "0.0.2",
+                                        "material": {
+                                            "@module": "EasyReflectometry.sample.material",
+                                            "@class": "Material",
+                                            "@version": "0.0.2",
+                                            "sld": {
+                                                "@module": "easyCore.Objects.Variable",
+                                                "@class": "Parameter",
+                                                "@version": "0.2.2",
+                                                "name": "sld",
+                                                "value": 6.4,
+                                                "error": 0.0,
+                                                "min": -Infinity,
+                                                "max": Infinity,
+                                                "fixed": true,
+                                                "description": "The real scattering length density for a material in e-6 per squared angstrom.",
+                                                "url": "https://www.ncnr.nist.gov/resources/activation/",
+                                                "units": "1 / angstrom ** 2",
+                                                "@id": "18303730191821550071655285711762632007",
+                                                "enabled": true
+                                            },
+                                            "isld": {
+                                                "@module": "easyCore.Objects.Variable",
+                                                "@class": "Parameter",
+                                                "@version": "0.2.2",
+                                                "name": "isld",
+                                                "value": 0.0,
+                                                "error": 0.0,
+                                                "min": -Infinity,
+                                                "max": Infinity,
+                                                "fixed": true,
+                                                "description": "The imaginary scattering length density for a material in e-6 per squared angstrom.",
+                                                "url": "https://www.ncnr.nist.gov/resources/activation/",
+                                                "units": "1 / angstrom ** 2",
+                                                "@id": "152719724054304905769418000709238982834",
+                                                "enabled": true
+                                            },
+                                            "name": "D2O",
+                                            "@id": "128021324558601896483412068152180716273"
+                                        },
+                                        "thickness": {
+                                            "@module": "easyCore.Objects.Variable",
+                                            "@class": "Parameter",
+                                            "@version": "0.2.2",
+                                            "name": "thickness",
+                                            "value": 100.0,
+                                            "error": 0.0,
+                                            "min": 0.0,
+                                            "max": Infinity,
+                                            "fixed": true,
+                                            "description": "The thickness of the layer in angstroms",
+                                            "url": "https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex",
+                                            "units": "angstrom",
+                                            "@id": "107505515978239255163353969297594924549",
+                                            "enabled": true
+                                        },
+                                        "roughness": {
+                                            "@module": "easyCore.Objects.Variable",
+                                            "@class": "Parameter",
+                                            "@version": "0.2.2",
+                                            "name": "roughness",
+                                            "value": 3.0,
+                                            "error": 0.0,
+                                            "min": 0.0,
+                                            "max": Infinity,
+                                            "fixed": true,
+                                            "description": "The interfacial roughness, Nevot-Croce, for the layer in angstroms.",
+                                            "url": "https://doi.org/10.1051/rphysap:01980001503076100",
+                                            "units": "angstrom",
+                                            "@id": "234309498807073912478035280400751157863",
+                                            "enabled": true
+                                        },
+                                        "name": "D2O Layer",
+                                        "@id": "89985278117383998312654390443435590776"
+                                    }
+                                ],
+                                "@id": "316262464169565679997056314360883701200"
+                            },
+                            "name": "Multi-layer",
+                            "@id": "254109440072172184390949362210859692430"
+                        },
+                        {
+                            "@module": "EasyReflectometry.sample.items.multilayer",
+                            "@class": "MultiLayer",
+                            "@version": "0.0.2",
+                            "layers": {
+                                "@module": "EasyReflectometry.sample.layers",
+                                "@class": "Layers",
+                                "@version": "0.0.2",
+                                "data": [
+                                    {
+                                        "@module": "EasyReflectometry.sample.layer",
+                                        "@class": "Layer",
+                                        "@version": "0.0.2",
+                                        "material": {
+                                            "@module": "EasyReflectometry.sample.material",
+                                            "@class": "Material",
+                                            "@version": "0.0.2",
+                                            "sld": {
+                                                "@module": "easyCore.Objects.Variable",
+                                                "@class": "Parameter",
+                                                "@version": "0.2.2",
+                                                "name": "sld",
+                                                "value": 2.074,
+                                                "error": 0.0,
+                                                "min": -Infinity,
+                                                "max": Infinity,
+                                                "fixed": true,
+                                                "description": "The real scattering length density for a material in e-6 per squared angstrom.",
+                                                "url": "https://www.ncnr.nist.gov/resources/activation/",
+                                                "units": "1 / angstrom ** 2",
+                                                "@id": "302146059661701935981064665184418568128",
+                                                "enabled": true
+                                            },
+                                            "isld": {
+                                                "@module": "easyCore.Objects.Variable",
+                                                "@class": "Parameter",
+                                                "@version": "0.2.2",
+                                                "name": "isld",
+                                                "value": 0.0,
+                                                "error": 0.0,
+                                                "min": -Infinity,
+                                                "max": Infinity,
+                                                "fixed": true,
+                                                "description": "The imaginary scattering length density for a material in e-6 per squared angstrom.",
+                                                "url": "https://www.ncnr.nist.gov/resources/activation/",
+                                                "units": "1 / angstrom ** 2",
+                                                "@id": "28775829515568326358949346898305641971",
+                                                "enabled": true
+                                            },
+                                            "name": "Si",
+                                            "@id": "124196225452764066171695015277002119903"
+                                        },
+                                        "thickness": {
+                                            "@module": "easyCore.Objects.Variable",
+                                            "@class": "Parameter",
+                                            "@version": "0.2.2",
+                                            "name": "thickness",
+                                            "value": 0.0,
+                                            "error": 0.0,
+                                            "min": 0.0,
+                                            "max": Infinity,
+                                            "fixed": true,
+                                            "description": "The thickness of the layer in angstroms",
+                                            "url": "https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex",
+                                            "units": "angstrom",
+                                            "@id": "240937573375878579534012285516585139812",
+                                            "enabled": false
+                                        },
+                                        "roughness": {
+                                            "@module": "easyCore.Objects.Variable",
+                                            "@class": "Parameter",
+                                            "@version": "0.2.2",
+                                            "name": "roughness",
+                                            "value": 1.2,
+                                            "error": 0.0,
+                                            "min": 0.0,
+                                            "max": Infinity,
+                                            "fixed": true,
+                                            "description": "The interfacial roughness, Nevot-Croce, for the layer in angstroms.",
+                                            "url": "https://doi.org/10.1051/rphysap:01980001503076100",
+                                            "units": "angstrom",
+                                            "@id": "216841797944117837951848161549677308771",
+                                            "enabled": true
+                                        },
+                                        "name": "Si Layer",
+                                        "@id": "250730787832482747263112817444187079018"
+                                    }
+                                ],
+                                "@id": "188173475900560823117708591736938995822"
+                            },
+                            "name": "Subphase",
+                            "@id": "262161594015112914395385136217542290401"
+                        }
+                    ],
+                    "@id": "107174749166807940059064385052756524349"
+                },
+                "scale": {
+                    "@module": "easyCore.Objects.Variable",
+                    "@class": "Parameter",
+                    "@version": "0.2.2",
+                    "name": "scale",
+                    "value": 1.0,
+                    "error": 0.0,
+                    "min": 0,
+                    "max": Infinity,
+                    "fixed": true,
+                    "description": "Scaling of the reflectomety profile",
+                    "url": "https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex",
+                    "units": "dimensionless",
+                    "@id": "246668266806672788668535408165618469163",
+                    "enabled": true
+                },
+                "background": {
+                    "@module": "easyCore.Objects.Variable",
+                    "@class": "Parameter",
+                    "@version": "0.2.2",
+                    "name": "background",
+                    "value": 0.0,
+                    "error": 0.0,
+                    "min": 0.0,
+                    "max": Infinity,
+                    "fixed": true,
+                    "description": "Linear background to include in reflectometry data",
+                    "url": "https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex",
+                    "units": "dimensionless",
+                    "@id": "45785864189305274084744521083407633786",
+                    "enabled": true
+                },
+                "resolution": {
+                    "@module": "easyCore.Objects.Variable",
+                    "@class": "Parameter",
+                    "@version": "0.2.2",
+                    "name": "resolution",
+                    "value": 0.0,
+                    "error": 0.0,
+                    "min": 0.0,
+                    "max": 100.0,
+                    "fixed": true,
+                    "description": "Percentage constant dQ/Q resolution smearing.",
+                    "url": "https://github.com/reflectivity/edu_outreach/blob/master/refl_maths/paper.tex",
+                    "units": "dimensionless",
+                    "@id": "283773676653054351438305430004874295416",
+                    "enabled": true
+                },
+                "name": "Air-D2O-Si",
+                "@id": "150649013260515326982235820045392162944"
+            }
+        ],
+        "@id": "132595965766247963226740886532014979193"
+    },
+    "materials_not_in_model": {
+        "@module": "EasyReflectometry.sample.materials",
+        "@class": "Materials",
+        "@version": "0.0.2",
+        "data": [],
+        "@id": "165195559362457035277343941003872194030"
+    },
+    "experiment_skipped": false,
+    "project_info": {
+        "name": "test",
+        "short_description": "reflectometry, 1D",
+        "modified": "24.10.2022 17:02"
+    },
+    "interface": ["refnx"],
+    "minimizer": {
+        "engine": "lmfit",
+        "method": "least_squares"
+    }
+}
