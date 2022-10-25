@@ -1,3 +1,0 @@
-_name testy2
-_short_description 'reflectometry, 1D'
-_modified '25.10.2022 15:37'
