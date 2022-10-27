@@ -241,7 +241,7 @@ class ProjectProxy(QObject):
 
         # experiment
         if 'experiments' in descr:
-            self.parent._data_proxy.experimentLoaded = True
+            #self.parent._data_proxy.experimentLoaded = True
             for i, e in enumerate(descr['experiments']):
                 x = np.array(e[0])
                 y = np.array(e[1])
@@ -270,7 +270,11 @@ class ProjectProxy(QObject):
 
         else:
             # delete existing experiment
-            self.parent.data.removeExperiment()
+            try:
+                for index, data in enumerate(self.parent.data):
+                    data.removeExperiment(index)
+            except TypeError:
+                pass
             self.parent._data_proxy.experimentLoaded = False
             if descr['experiment_skipped']:
                 self.parent._data_proxy.experimentSkipped = True

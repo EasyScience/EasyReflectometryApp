@@ -263,9 +263,8 @@ class DataProxy(QObject):
         self.experimentChanged.emit()
 
     @Slot(int)
-    def removeExperiment(self):
-        for data in self._data:
-            del data
+    def removeExperiment(self, idx):
+        del self._data[idx]
         if len(self._data) == 0:
             self.experimentLoaded = False
             self.experimentSkipped = False
