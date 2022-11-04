@@ -4,17 +4,19 @@ on: [push, pull_request]
 
 jobs:
   build:
-    if: "!contains(github.event.head_commit.message, '[ci skip]')"
-
+    # If the build takes longer than 40 minutes
+    # it will stop. 
     timeout-minutes: 40
 
+    # Build for the following operating systems.
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
-        os: [macos-10.15, ubuntu-20.04, windows-2019]
+        os: [macos-11, ubuntu-20.04, windows-2019]
 
+    # Workflow starts here. 
     steps:
+      # Kill any existing workflow runs.
       - name: Cancel previous workflow runs
         uses: n1hility/cancel-previous-runs@v2
         with:
@@ -23,16 +25,19 @@ jobs:
       - name: Check-out repository
         uses: actions/checkout@v2
 
+      # Documentation of the need for these dependencies to come. 
+      # These dependencies may not be general.
       - name: Set up non-Python dependences (Linux)
         if: runner.os == 'Linux'
         run: |
            sudo apt-get -o Acquire::Retries=3 update
            sudo apt-get -o Acquire::Retries=3 install libxcb-xinerama0
            sudo apt-get -o Acquire::Retries=3 install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0
+           sudo apt-get -o Acquire::Retries=3 install libxcb-shape0
            sudo apt-get -o Acquire::Retries=3 install libpulse-mainloop-glib0
-        # sudo apt-get install libgfortran4
-        # echo "QT_DEBUG_PLUGINS=1" >> $GITHUB_ENV
 
+      # The choice of Python environment depends on the 
+      # underlying library version. 
       - name: Set up Python environment
         uses: actions/setup-python@v2
         with:
@@ -41,16 +46,19 @@ jobs:
       - name: Upgrade PIP
         run: python -m pip install --upgrade pip
 
-      - name: Declare env variables on push only
+      # When run on push the branch name is the branch reference
+      - name: Declare env variables on push
         if: github.event_name == 'push'
         shell: bash
         run: echo "BRANCH_NAME=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - name: Declare env variables on pull_request only
+      # When run on a pull request the branch name is the source branch
+      - name: Declare env variables on pull_request
         if: github.event_name == 'pull_request'
         shell: bash
         run: echo "BRANCH_NAME=$GITHUB_HEAD_REF" >> $GITHUB_ENV
 
+      # This populates the pyproject.toml with additional information
       - name: Add extra info to pyproject.toml
         run: |
           python -m pip install toml
@@ -70,8 +78,10 @@ jobs:
           echo "PYTHON_PACKAGES_PATH=$(python utils.py --get ci.cache.python_packages_path)" >> $GITHUB_ENV
           echo "GIT_INSTALL_URL=git+ssh://git@github.com/$GITHUB_REPOSITORY@${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
 
+      # Currently the dependencies are not cached.
+      # We should look at bringing this back. 
       - name: Cache dependencies
-        if: False  # disable caching
+        if: False # disable caching
         uses: actions/cache@v2
         id: cache
         with:
@@ -87,33 +97,35 @@ jobs:
       - name: Create venv and install Python dependences
         run: poetry install
 
+      # These are EasyDiffraction specific things that are installed from a custom pypi server.
+      # - name: Install extras # How to do it via poetry without pip?
+      #   run: poetry run pip install CFML GSASII --extra-index-url https://easyscience.github.io/pypi
+
       - name: Create freezed python app bundle
         run: poetry run python ${{ env.SCRIPTS_PATH }}/FreezeApp.py
 
       - name: Create offline and online app installers from freezed app bundle
         run: poetry run python ${{ env.SCRIPTS_PATH }}/MakeInstaller.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
 
-      - name: Sign the installer
-        run: poetry run python ${{ env.SCRIPTS_PATH }}/Signatures.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
+      # This is the screen recording stuff that is only used in EasyDiffraction currently.
+      # - name: Set up screen recording dependencies (macOS)
+      #   if: runner.os == 'macOS'
+      #   run: |
+      #     "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
+      #     system_profiler SPDisplaysDataType | grep Resolution
 
-      #- name: Set up screen recording dependencies (macOS)
-      #  if: runner.os == 'macOS'
-      #  run: |
-      #    "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
-      #    system_profiler SPDisplaysDataType | grep Resolution
+      # - name: Set up screen recording dependencies (Linux)
+      #   if: runner.os == 'Linux'
+      #   run: |
+      #     sudo apt-get install libxkbcommon-x11-0
+      #     Xvfb :0 -screen 0 1920x1080x24 -ac &
+      #     echo "DISPLAY=:0" >> $GITHUB_ENV
 
-      #- name: Set up screen recording dependencies (Linux)
-      #  if: runner.os == 'Linux'
-      #  run: |
-      #    sudo apt-get install libxkbcommon-x11-0
-      #    Xvfb :0 -screen 0 1920x1080x24 -ac &
-      #    echo "DISPLAY=:0" >> $GITHUB_ENV
-
-      #- name: Set up screen recording dependencies (Windows)
-      #  if: runner.os == 'Windows'
-      #  run: |
-      #    Set-DisplayResolution -Width 1920 -Height 1080 -Force
-      #    Get-DisplayResolution
+      # - name: Set up screen recording dependencies (Windows)
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #     Set-DisplayResolution -Width 1920 -Height 1080 -Force
+      #     Get-DisplayResolution
 
       - name: Make dir for .desktop file (Linux)
         if: runner.os == 'Linux'
@@ -126,11 +138,23 @@ jobs:
         if: runner.os != 'Windows'
         run: poetry run python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
 
-      #- name: Rename test videos
-      #  run: poetry run python ${{ env.SCRIPTS_PATH }}/CreateTestVideos.py ${{ env.BRANCH_NAME }}
+      # - name: Rename test videos
+      #   run: >
+      #     poetry run python ${{ env.SCRIPTS_PATH }}/RenameTestVideos.py
+      #     ${{ env.BRANCH_NAME }}
 
-      - name: Create zip archive of offline app installer
-        run: poetry run python ${{ env.SCRIPTS_PATH }}/ZipArtifacts.py ${{ env.BRANCH_NAME }}
+      # - name: Sign app installer
+      #   if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
+      #   run: >
+      #     poetry run python ${{ env.SCRIPTS_PATH }}/SignAppInstaller.py
+      #     ${{ env.BRANCH_NAME }}
+      #     ${{ secrets.MACOS_CERTIFICATE_ENCODED }} ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+      #     ${{ secrets.APPSTORE_NOTARIZATION_USERNAME }} ${{ secrets.APPSTORE_NOTARIZATION_PASSWORD }}
+
+      - name: Create zip archive of offline app installer for distribution
+        run: >
+          poetry run python ${{ env.SCRIPTS_PATH }}/ZipAppInstaller.py
+          ${{ env.BRANCH_NAME }}
 
       - name: Upload zipped offline app installer to GitHub releases
         if: github.event_name == 'push'
@@ -146,6 +170,37 @@ jobs:
           commit: ${{ env.BRANCH_NAME }}
           bodyFile: "RELEASE.md"
 
-      #- name: Upload online app installer to repository via FTP
-      #  if: github.event_name == 'push'
-      #  run: python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py ${{ env.BRANCH_NAME }} ${{ secrets.APP_REPO_FTP_PASSWORD }}
+      - name: Upload zipped offline app installer to GitHub releases (non-master branch)
+        if: github.event_name == 'push' && env.BRANCH_NAME != 'master'
+        uses: ncipollo/release-action@v1
+        with:
+          draft: true
+          prerelease: true
+          allowUpdates: true
+          replacesArtifacts: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "${{ env.DISTRIBUTION_PATH }}/*.zip,${{ env.DISTRIBUTION_PATH }}/*.mp4"
+          tag: ${{ env.BRANCH_NAME }}
+          name: ${{ env.BRANCH_NAME }}
+          bodyFile: "RELEASE.md"
+
+      - name: Upload zipped offline app installer to GitHub releases (master branch)
+        if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
+        uses: ncipollo/release-action@v1
+        with:
+          draft: true
+          prerelease: true
+          allowUpdates: true
+          replacesArtifacts: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "${{ env.DISTRIBUTION_PATH }}/*.zip"
+          tag: ${{ env.RELEASE_TAG }}
+          name: ${{ env.RELEASE_TITLE }}
+          bodyFile: "RELEASE.md"
+
+      # - name: Upload online app installer to repository via FTP
+      #   if: github.event_name == 'push'
+      #   run: >
+      #     poetry run python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py
+      #     ${{ env.BRANCH_NAME }}
+      #     ${{ secrets.APP_REPO_FTP_PASSWORD }}
