@@ -12,7 +12,7 @@ license = "BSD-3-Clause"
 authors = ['Andrew McCluskey', 'Andrew Sazonov', 'Simon Ward']
 readme = 'README.md'
 homepage = 'https://easyreflectometry.org'
-repository = 'https://easyscience.apptimity.com/'
+repository = 'https://download.easydiffraction.org/'
 documentation = 'https://github.com/easyScience/EasyReflectometryApp'
 include = ['CHANGELOG.md']
 packages = [ { include = 'EasyReflectometryApp' } ]
@@ -24,15 +24,15 @@ pyobjc-framework-cocoa = { version = '^7.1', platform = 'darwin' }
 matplotlib = "^3.4.2"
 pint = "^0.17"
 # easyScience
-#EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'develop' }
+EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'develop' }
 easyApp = { git = 'https://github.com/easyScience/easyApp.git', rev = 'develop' }
 #EasyReflectometryLib = { path = '../EasyReflectometryLib'}
 #easyApp = { path = '../easyApp'}
 
-#[tool.poetry.dev-dependencies]
+[tool.poetry.dev-dependencies]
 # PyInstaller
-#pyinstaller = '^4.2'
-pyinstaller = { git = 'https://github.com/pyinstaller/pyinstaller.git', rev = 'develop' }
+pyinstaller = '4.5.1'
+# pyinstaller = { git = 'https://github.com/pyinstaller/pyinstaller.git', rev = 'develop' }
 pywin32-ctypes = { version = '^0.2.0', platform = 'win32' }
 pypiwin32 = { version = '^223', platform = 'win32' }
 pefile = { version = '^2022.5.30', platform = 'win32' }
