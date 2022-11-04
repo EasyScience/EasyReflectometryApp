@@ -90,6 +90,11 @@ class Config():
         dir = os.path.join(dirs[self.os][dir_shortcut], self.app_name)
         return dir
 
+    def artifactsFileSuffix(self):
+        if self.branch_name != 'master' and self.branch_name is not None:
+            return f'_{self.branch_name}'
+        return ''
+        
     def setupZipPathShort(self):
         setup_zip_name = f'{self.setup_name}.zip'
         setup_zip_path = os.path.join(self.dist_dir, setup_zip_name)
