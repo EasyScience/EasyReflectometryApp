@@ -14,15 +14,24 @@ import Config
 CONFIG = Config.Config(sys.argv[1])
 
 
-def source():
+def source() -> str:
+    """
+    :return: Path to source executable that will be zipped.
+    """
     return CONFIG.setup_exe_path
 
 
-def destination():
+def destination() -> str:
+    """
+    :return: Path to destination for the zip.
+    """
     return CONFIG.setup_zip_path
 
 
 def zipAppInstaller():
+    """
+    Runs the zipping of the installer.
+    """
     Functions.zip(source(), destination())
 
 
