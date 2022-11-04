@@ -189,8 +189,12 @@ class SimulationProxy(QObject):
         sld_profile = self.parent._interface.sld_profile(to_use.uid)
 
         self.parent._plotting_1d_proxy.setCalculatedData(x, y)
-        self.parent._plotting_1d_proxy.setBackgroundData(x, np.ones_like(x) * to_use.background.raw_value)
-        self.parent._plotting_1d_proxy.setScaleData(x, np.ones_like(x) * to_use.scale.raw_value)
+        bkg = np.empty(x.size)
+        bkg.fill(to_use.background.raw_value)
+        self.parent._plotting_1d_proxy.setBackgroundData(x, bkg)
+        scale = np.empty(x.size)
+        scale.fill(to_use.scale.raw_value)
+        self.parent._plotting_1d_proxy.setScaleData(x, scale)
         self.parent._plotting_1d_proxy.setAnalysisSldData(*sld_profile)
 
     def resetSimulation(self):
