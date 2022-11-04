@@ -90,7 +90,7 @@ def addedData() -> List[str]:
     # Use the last element, since on certain conda installations
     # we get more than one entry
     site_packages_path = site.getsitepackages()[-1]
-    if 'missing_caculator_libs' in CONFIG['ci']['pyinstaller'].keys()
+    if 'missing_caculator_libs' in CONFIG['ci']['pyinstaller'].keys():
         missing_calculator_libs = CONFIG['ci']['pyinstaller']['missing_calculator_libs'][
             CONFIG.os]
         for lib_name in missing_calculator_libs:
