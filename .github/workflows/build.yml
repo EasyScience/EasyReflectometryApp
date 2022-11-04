@@ -156,20 +156,6 @@ jobs:
           poetry run python ${{ env.SCRIPTS_PATH }}/ZipAppInstaller.py
           ${{ env.BRANCH_NAME }}
 
-      - name: Upload zipped offline app installer to GitHub releases
-        if: github.event_name == 'push'
-        uses: ncipollo/release-action@v1
-        with:
-          draft: true
-          prerelease: true
-          allowUpdates: true
-          replacesArtifacts: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_*.zip,${{ env.DISTRIBUTION_PATH }}/tutorial_*.mp4"
-          tag: ${{ env.BRANCH_NAME }}
-          commit: ${{ env.BRANCH_NAME }}
-          bodyFile: "RELEASE.md"
-
       - name: Upload zipped offline app installer to GitHub releases (non-master branch)
         if: github.event_name == 'push' && env.BRANCH_NAME != 'master'
         uses: ncipollo/release-action@v1
@@ -198,9 +184,9 @@ jobs:
           name: ${{ env.RELEASE_TITLE }}
           bodyFile: "RELEASE.md"
 
-      # - name: Upload online app installer to repository via FTP
-      #   if: github.event_name == 'push'
-      #   run: >
-      #     poetry run python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py
-      #     ${{ env.BRANCH_NAME }}
-      #     ${{ secrets.APP_REPO_FTP_PASSWORD }}
+      - name: Upload online app installer to repository via FTP
+        if: github.event_name == 'push'
+        run: >
+          poetry run python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py
+          ${{ env.BRANCH_NAME }}
+          ${{ secrets.APP_REPO_FTP_PASSWORD }}
