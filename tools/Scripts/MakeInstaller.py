@@ -10,7 +10,6 @@ __version__ = '0.0.1'
 import os
 import sys
 import time
-from types import NoneType
 import requests
 import xml.dom.minidom
 import dephell_licenses
@@ -271,7 +270,7 @@ def appPackageXml() -> str:
 #        return pretty_xml
 
 
-def downloadQtInstallerFramework() -> NoneType:
+def downloadQtInstallerFramework():
     """
     Download Qt Installer Framework.
     """
@@ -280,7 +279,7 @@ def downloadQtInstallerFramework() -> NoneType:
                            destination=qtifwSetupDownloadDest())
 
 
-def osDependentPreparation() -> NoneType:
+def osDependentPreparation():
     """
     Prepare for the Qt Installer Framework installation dependent on the OS.
     """
@@ -294,7 +293,7 @@ def osDependentPreparation() -> NoneType:
         Functions.printNeutralMessage(f'No preparation needed for os {CONFIG.os}')
 
 
-def installQtInstallerFramework() -> NoneType:
+def installQtInstallerFramework():
     """
     Install the Qt Installer Framework.
     """
@@ -316,7 +315,7 @@ def installQtInstallerFramework() -> NoneType:
         Functions.printSuccessMessage(message)
 
 
-def createInstallerSourceDir() -> NoneType:
+def createInstallerSourceDir():
     """
     Create the installer source directory.
     """
@@ -400,7 +399,7 @@ def createInstallerSourceDir() -> NoneType:
         Functions.printSuccessMessage(message)
 
 
-def createOfflineInstaller() -> NoneType:
+def createOfflineInstaller():
     """
     Create the offline installer.
     """
@@ -420,7 +419,7 @@ def createOfflineInstaller() -> NoneType:
         Functions.printSuccessMessage(message)
 
 
-def createOnlineRepositoryLocally() -> NoneType:
+def createOnlineRepositoryLocally():
     """
     Locally build the online repository.
     """
@@ -438,7 +437,7 @@ def createOnlineRepositoryLocally() -> NoneType:
         Functions.printSuccessMessage(message)
 
 
-def addFilesToLocalRepository() -> NoneType:
+def addFilesToLocalRepository():
     """
     Add necessary files to the local repository.
     """

@@ -17,7 +17,7 @@ import Config
 CONFIG = Config.Config()
 
 
-def connect(ftp: ftplib.FTP, host: str, port: str) -> NoneType:
+def connect(ftp: ftplib.FTP, host: str, port: str):
     """
     Connect to the ftp server.
 
@@ -35,7 +35,7 @@ def connect(ftp: ftplib.FTP, host: str, port: str) -> NoneType:
         Functions.printSuccessMessage(message)
 
 
-def login(ftp: ftplib.FTP, user: str, password: str) -> NoneType:
+def login(ftp: ftplib.FTP, user: str, password: str):
     """
     ftp server login.
 
@@ -63,7 +63,7 @@ def winToLin(path) -> str:
     return path.replace('\\', '/')
 
 
-def makeDir(ftp: ftplib.FTP, path: str) -> NoneType:
+def makeDir(ftp: ftplib.FTP, path: str):
     """
     Make a directory on the ftp server.
 
@@ -84,7 +84,7 @@ def makeDir(ftp: ftplib.FTP, path: str) -> NoneType:
         Functions.printSuccessMessage(message)
 
 
-def uploadFile(ftp: ftplib.FTP, source: str, destination: str) -> NoneType:
+def uploadFile(ftp: ftplib.FTP, source: str, destination: str):
     """
     :param ftp: FTP object to interact with.
     :param source: Path to file to be uploaded.
@@ -107,7 +107,7 @@ def uploadFile(ftp: ftplib.FTP, source: str, destination: str) -> NoneType:
         Functions.printSuccessMessage(message)
 
 
-def uploadDir(ftp: ftplib.FTP, source: str, destination: str) -> NoneType:
+def uploadDir(ftp: ftplib.FTP, source: str, destination: str):
     """
     :param ftp: FTP object to interact with.
     :param source: Path to directory to be uploaded.
@@ -131,7 +131,7 @@ def uploadDir(ftp: ftplib.FTP, source: str, destination: str) -> NoneType:
         Functions.printSuccessMessage(message)
 
 
-def upload(ftp: ftplib.FTP, source: str, destination: str) -> NoneType:
+def upload(ftp: ftplib.FTP, source: str, destination: str):
     """
     :param ftp: FTP object to interact with.
     :param source: Path to be uploaded.
@@ -170,7 +170,7 @@ def pathExists(ftp: ftplib.FTP, path: str) -> bool:
         return True
 
 
-def removeDir(ftp: ftplib.FTP, path: str) -> NoneType:
+def removeDir(ftp: ftplib.FTP, path: str):
     """
     :param ftp: FTP object to interact with.
     :param source: Path for directory to be removed.
@@ -196,7 +196,7 @@ def removeDir(ftp: ftplib.FTP, path: str) -> NoneType:
         Functions.printSuccessMessage(message)
 
 
-def deploy() -> NoneType:
+def deploy():
     """
     Deploy the repository to the ftp server.
     """
