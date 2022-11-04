@@ -7,10 +7,11 @@ import Functions
 
 
 class Config():
-    def __init__(self):
+    def __init__(self, branch_name=None):
         # Main
         self.__dict__ = Functions.config()
         self.os = Functions.osName()
+        self.branch_name = branch_name
 
         # Application
         self.app_version = self.__dict__['tool']['poetry']['version']
@@ -37,6 +38,10 @@ class Config():
         self.setup_exe_path = os.path.join(self.dist_dir, self.setup_full_name)
         self.maintenancetool_file = os.path.join(self.__dict__['ci']['project']['subdirs']['certificates_path'],
                                                  self.__dict__['ci']['app']['setup']['maintenance_file'])
+
+        # Artifacts
+        self.setup_zip_path_short = self.setupZipPathShort()
+        self.setup_zip_path = self.setupZipPath()
 
         # Application repository
         self.repository_dir_suffix = self.__dict__['ci']['app']['setup']['repository_dir_suffix']
@@ -84,3 +89,17 @@ class Config():
         dir_shortcut = self.__dict__['ci']['app']['setup']['installation_dir_shortcut'][self.os]
         dir = os.path.join(dirs[self.os][dir_shortcut], self.app_name)
         return dir
+
+    def setupZipPathShort(self):
+        setup_zip_name = f'{self.setup_name}.zip'
+        setup_zip_path = os.path.join(self.dist_dir, setup_zip_name)
+        return setup_zip_path
+
+    def setupZipPath(self):
+        file_suffix = self.artifactsFileSuffix()
+        setup_zip_name = f'{self.setup_name}{file_suffix}.zip'
+        setup_zip_path = os.path.join(self.dist_dir, setup_zip_name)
+        return setup_zip_path
+
+if __name__ == "__main__":
+    Config()
