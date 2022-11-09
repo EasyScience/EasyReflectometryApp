@@ -162,7 +162,7 @@ https_mirrors = ['download.qt.io', 'ftp.fau.de/qtproject', 'mirrors.dotsrc.org/q
 base_path = 'official_releases/qt-installer-framework'
 file_name_base = 'QtInstallerFramework'
 file_platform = { macos = 'mac-x64', ubuntu = 'linux-x64', windows = 'win-x86' }
-file_ext = { macos = '.dmg', ubuntu = '.run', windows = '.exe' }
+file_ext = { macos = 'dmg', ubuntu = 'run', windows = 'exe' }
 installation_path = { macOS = '/Users/runner/Qt', Linux = '/home/runner/Qt', Windows = 'C:\Qt' }
 
 [ci.ffmpeg.macos]  # https://evermeet.cx/ffmpeg/ffmpeg-4.3.zip

@@ -27,7 +27,7 @@ def qtifwSetupFileName() -> str:
     file_name_base = CONFIG['ci']['qtifw']['setup']['file_name_base']
     file_platform = CONFIG['ci']['qtifw']['setup']['file_platform'][CONFIG.os]
     file_ext = CONFIG['ci']['qtifw']['setup']['file_ext'][CONFIG.os]
-    return f'{file_name_base}-{file_platform}-{file_version}{file_ext}'
+    return f'{file_name_base}-{file_platform}-{file_version}.{file_ext}'
 
 
 def qtifwSetupDownloadDest() -> str:
