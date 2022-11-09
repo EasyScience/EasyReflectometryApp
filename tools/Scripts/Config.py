@@ -22,7 +22,7 @@ class Config():
 
         # Application
         self.app_version = self.__dict__['tool']['poetry']['version']
-        self.app_name = self.__dict__['tool']['poetry']['name']
+        self.app_name = self.__dict__['release']['app_name']
         self.family_name = self.__dict__['release']['family_name']
         self.app_file_ext = self.__dict__['ci']['app']['setup']['file_ext'][self.os]
         self.app_full_name = f'{self.app_name}{self.app_file_ext}'

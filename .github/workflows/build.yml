@@ -101,11 +101,13 @@ jobs:
       # - name: Install extras # How to do it via poetry without pip?
       #   run: poetry run pip install CFML GSASII --extra-index-url https://easyscience.github.io/pypi
 
-      - name: Create frozed python app bundle
+      # Creates the frozen app bundle object.
+      - name: Create frozen python app bundle
         run: poetry run python ${{ env.SCRIPTS_PATH }}/FreezeApp.py
 
+      # Makes installers for the frozen appe bundle.
       - name: Create offline and online app installers from freezed app bundle
-        run: poetry run python ${{ env.SCRIPTS_PATH }}/MakeInstaller.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
+        run: poetry run python ${{ env.SCRIPTS_PATH }}/MakeInstaller.py 
 
       # This is the screen recording stuff that is only used in EasyDiffraction currently.
       # - name: Set up screen recording dependencies (macOS)

@@ -23,6 +23,7 @@ pyobjc-core = { version = '^7.1', platform = 'darwin' }
 pyobjc-framework-cocoa = { version = '^7.1', platform = 'darwin' }
 matplotlib = "^3.4.2"
 pint = "^0.17"
+
 # easyScience
 EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'develop' }
 easyApp = { git = 'https://github.com/easyScience/easyApp.git', rev = 'develop' }
@@ -103,7 +104,6 @@ user = 'u652432322.easyreflectometry_ci'
 prefix = 'download'
 remote_subdir = 'onlineRepository'
 user_repo = 'u652432322.easyreflectometry_repo'
-
 
 [ci.app.setup.build]
 # config
