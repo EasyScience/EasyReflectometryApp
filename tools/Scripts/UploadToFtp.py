@@ -10,7 +10,6 @@ __version__ = '0.0.1'
 import os
 import sys
 import ftplib
-from types import NoneType
 import Functions
 import Config
 
