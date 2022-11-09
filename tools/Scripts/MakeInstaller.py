@@ -84,6 +84,8 @@ def qtifwSetupExe() -> str:
     :return: Location of the Qt Installer Framework installer.
     """
     setup_name, _ = os.path.splitext(qtifwSetupFileName())
+    print(qtifwSetupFileName())
+    print(os.path.exists(qtifwSetupFileName()))
     d = {
         'macos': f'/Volumes/{setup_name}/{setup_name}.app/Contents/MacOS/{setup_name}',
         'ubuntu': qtifwSetupDownloadDest(),
@@ -302,11 +304,15 @@ def installQtInstallerFramework():
             f'QtInstallerFramework was already installed to {qtifwDirPath()}')
         return
     try:
+        print("Step 1")
         message = f'install QtInstallerFramework to {qtifwDirPath()}'
+        print("Step 2")
         silent_script = os.path.join(CONFIG.scripts_dir,
                                      CONFIG['ci']['scripts']['silent_install'])
+        print("Step 3")
         Functions.installSilently(installer=qtifwSetupExe(),
                                   silent_script=silent_script)
+        print("Step 4")
         time.sleep(10)
     except Exception as exception:
         Functions.printFailMessage(message, exception)
@@ -454,17 +460,10 @@ def addFilesToLocalRepository():
 
 
 if __name__ == "__main__":
-    print("Step 1")
     downloadQtInstallerFramework()
-    print("Step 2")
     osDependentPreparation()
-    print("Step 3")
     installQtInstallerFramework()
-    print("Step 4")
     createInstallerSourceDir()
-    print("Step 5")
     createOfflineInstaller()
-    print("Step 6")
     createOnlineRepositoryLocally()
-    print("Step 7")
     addFilesToLocalRepository()
