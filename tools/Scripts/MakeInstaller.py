@@ -156,7 +156,7 @@ def onlineRepositoryUrl() -> str:
     # prefix = CONFIG['ci']['app']['setup']['ftp']['prefix']
     # repo_subdir = CONFIG['ci']['app']['setup']['ftp']['repo_subdir']
     # return f'https://{prefix}.{host}/{repo_subdir}/{CONFIG.setup_os}'
-    return 'ftp://u652432322.repo:easyDiffraction123@download.' + \
+    return 'ftp://u652432322.easyreflectometry_repo:easyDiffraction123@download.' + \
         f'easydiffraction.org/{CONFIG.setup_os}'
 
 
