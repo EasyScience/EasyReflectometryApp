@@ -454,10 +454,17 @@ def addFilesToLocalRepository():
 
 
 if __name__ == "__main__":
+    print("Step 1")
     downloadQtInstallerFramework()
+    print("Step 2")
     osDependentPreparation()
+    print("Step 3")
     installQtInstallerFramework()
+    print("Step 4")
     createInstallerSourceDir()
+    print("Step 5")
     createOfflineInstaller()
+    print("Step 6")
     createOnlineRepositoryLocally()
+    print("Step 7")
     addFilesToLocalRepository()
