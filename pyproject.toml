@@ -89,7 +89,7 @@ file_ext = { macos = '.icns', ubuntu = '.png', windows = '.ico' }
 build_dir_suffix = 'Setup'
 repository_dir_suffix = 'Repos'
 os = { macos = 'macOS', ubuntu = 'Linux', windows = 'Windows' }  # Should be the same as GH actions ${{ runner.os }}
-arch = { macos = 'x86-64', ubuntu = 'x86-64', windows = 'x86-32' }
+arch = { macos = 'x64', ubuntu = 'x64', windows = 'x64' }
 file_ext = { macos = '.app', ubuntu = '', windows = '.exe' }
 maintenance_tool_suffix = 'MaintenanceTool'
 maintenance_file = 'signedmaintenancetool.exe'
