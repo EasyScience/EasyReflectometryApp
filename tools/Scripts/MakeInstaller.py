@@ -165,8 +165,8 @@ def installerConfigXml() -> str:
     :return: Installer configration as an xml string.
     """
     try:
-        message = "create ' + \
-            f'{CONFIG['ci']['app']['setup']['build']['config_xml']} content"
+        message = "create " + \
+            f"{CONFIG['ci']['app']['setup']['build']['config_xml']} content"
         app_url = CONFIG['tool']['poetry']['homepage']
         maintenance_tool_name = CONFIG['ci']['app']['setup']['maintenance_tool_suffix']
         config_control_script = CONFIG['ci']['scripts']['config_control']
