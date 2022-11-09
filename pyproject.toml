@@ -102,6 +102,8 @@ port = 21
 user = 'u652432322.easyreflectometry_ci'
 prefix = 'download'
 remote_subdir = 'onlineRepository'
+user_repo = 'u652432322.easyreflectometry_repo'
+
 
 [ci.app.setup.build]
 # config

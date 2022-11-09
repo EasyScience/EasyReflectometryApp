@@ -152,12 +152,11 @@ def onlineRepositoryUrl() -> str:
     """
     :return: Url of online repository.
     """
-    # host = CONFIG['ci']['app']['setup']['ftp']['host']
-    # prefix = CONFIG['ci']['app']['setup']['ftp']['prefix']
+    host = CONFIG['ci']['app']['setup']['ftp']['host']
+    user = CONFIG['ci']['app']['setup']['ftp']['user_repo']
     # repo_subdir = CONFIG['ci']['app']['setup']['ftp']['repo_subdir']
     # return f'https://{prefix}.{host}/{repo_subdir}/{CONFIG.setup_os}'
-    return 'ftp://u652432322.easyreflectometry_repo:easyDiffraction123@download.' + \
-        f'easydiffraction.org/{CONFIG.setup_os}'
+    return f'ftp://{user}:easyDiffraction123@download.{host}/{CONFIG.setup_os}'
 
 
 def installerConfigXml() -> str:
