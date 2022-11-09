@@ -96,9 +96,9 @@ maintenance_file = 'signedmaintenancetool.exe'
 installation_dir_shortcut = { macos = '@ApplicationsDir@', ubuntu = '@HomeDir@', windows = '@ApplicationsDirX86@' }
 
 [ci.app.setup.ftp]
-host = 'easyreflectometry.org'
+host = 'easydiffraction.org'
 port = 21
-user = 'u652432322.ci'
+user = 'u652432322.easyreflectometry_ci'
 prefix = 'download'
 remote_subdir = 'onlineRepository'
 
