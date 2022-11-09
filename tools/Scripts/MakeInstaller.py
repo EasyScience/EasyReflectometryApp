@@ -303,15 +303,11 @@ def installQtInstallerFramework():
             f'QtInstallerFramework was already installed to {qtifwDirPath()}')
         return
     try:
-        print("Step 1")
         message = f'install QtInstallerFramework to {qtifwDirPath()}'
-        print("Step 2")
         silent_script = os.path.join(CONFIG.scripts_dir,
                                      CONFIG['ci']['scripts']['silent_install'])
-        print("Step 3")
         Functions.installSilently(installer=qtifwSetupExe(),
                                   silent_script=silent_script)
-        print("Step 4")
         time.sleep(10)
     except Exception as exception:
         Functions.printFailMessage(message, exception)
