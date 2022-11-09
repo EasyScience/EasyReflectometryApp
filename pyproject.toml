@@ -160,7 +160,7 @@ manual_exclude = [ 'mfc*', 'msvcp*', 'VCRUNTIME*',
 version = '4.4.1'
 https_mirrors = ['download.qt.io', 'ftp.fau.de/qtproject', 'mirrors.dotsrc.org/qtproject']
 base_path = 'official_releases/qt-installer-framework'
-file_name_base = 'QtInstallerFramework-'
+file_name_base = 'QtInstallerFramework'
 file_platform = { macos = 'mac-x64', ubuntu = 'linux-x64', windows = 'win-x86' }
 file_ext = { macos = '.dmg', ubuntu = '.run', windows = '.exe' }
 installation_path = { macOS = '/Users/runner/Qt', Linux = '/home/runner/Qt', Windows = 'C:\Qt' }
