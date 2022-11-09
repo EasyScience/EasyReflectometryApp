@@ -184,7 +184,7 @@ def runPyInstaller():
     """
     try:
         message = 'freeze app'
-        main_py_path = os.path.join(CONFIG.package_name + 'App', 'main.py')
+        main_py_path = os.path.join(CONFIG.package_name, 'main.py')
         pyInstallerMain([
             # Application main file
             main_py_path,

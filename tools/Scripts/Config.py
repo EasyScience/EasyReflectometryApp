@@ -61,7 +61,7 @@ class Config():
             'repository_dir_suffix']
 
         # Project
-        self.package_name = self.__dict__['tool']['poetry']['name']
+        self.package_name = self.__dict__['tool']['poetry']['name'] + 'App'
         self.license_file = self.__dict__['ci']['project']['license_file']
 
     def __getitem__(self, key):
