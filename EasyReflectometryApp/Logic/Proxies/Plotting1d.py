@@ -28,15 +28,19 @@ class Plotting1dProxy(QObject):
     calculatedDataObjChanged = Signal()
     pureDataObjChanged = Signal()
     backgroundDataObjChanged = Signal()
+    scaleDataObjChanged = Signal()
     sampleSldDataObjChanged = Signal()
     analysisSldDataObjChanged = Signal()
 
     # Misc
     sldXDataReversedChanged = Signal()
+    scaleShownChanged = Signal()
+    bkgShownChanged = Signal()
     xAxisTypeChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.parent = parent
 
         # Lib
         self._libs = ['bokeh']
@@ -93,6 +97,9 @@ class Plotting1dProxy(QObject):
         self._background_xarray = np.empty(0)
         self._background_yarray = np.empty(0)
 
+        self._scale_xarray = np.empty(0)
+        self._scale_yarray = np.empty(0)
+
         # Ranges for GUI
         self._experiment_plot_ranges_obj = {}
         self._analysis_plot_ranges_obj = {}
@@ -104,12 +111,15 @@ class Plotting1dProxy(QObject):
         self._calculated_data_obj = {}
         self._pure_data_obj = {}
         self._background_data_obj = {}
+        self._scale_data_obj = {}
         self._sample_sld_data_obj = {}
         self._analysis_sld_data_obj = {}
 
         # Misc
         self._sld_x_data_reversed = False
-
+        self._scale_shown = False
+        self._bkg_shown = False 
+    
     def clearFrontendState(self):
 
         # Ranges for GUI
@@ -123,6 +133,7 @@ class Plotting1dProxy(QObject):
         self._calculated_data_obj = {}
         self._pure_data_obj = {}
         self._background_data_obj = {}
+        self._scale_data_obj = {}
         self._sample_sld_data_obj = {}
         self._analysis_sld_data_obj = {}
 
@@ -137,6 +148,7 @@ class Plotting1dProxy(QObject):
         self.calculatedDataObjChanged.emit()
         self.pureDataObjChanged.emit()
         self.backgroundDataObjChanged.emit()
+        self.scaleDataObjChanged.emit()
         self.sampleSldDataObjChanged.emit()
         self.analysisSldDataObjChanged.emit()
 
@@ -192,6 +204,10 @@ class Plotting1dProxy(QObject):
     def backgroundDataObj(self):
         return self._background_data_obj
 
+    @Property('QVariant', notify=scaleDataObjChanged)
+    def scaleDataObj(self):
+        return self._scale_data_obj
+
     @Property('QVariant', notify=sampleSldDataObjChanged)
     def sampleSldDataObj(self):
         return self._sample_sld_data_obj
@@ -205,6 +221,14 @@ class Plotting1dProxy(QObject):
     def sldXDataReversed(self):
         return self._sld_x_data_reversed
 
+    @Property(bool, notify=scaleShownChanged)
+    def scaleShown(self):
+        return self._scale_shown
+
+    @Property(bool, notify=bkgShownChanged)
+    def bkgShown(self):
+        return self._bkg_shown
+
     @Slot()
     def reverseSldXData(self):
         self._sample_sld_min_x, self._sample_sld_max_x = self._sample_sld_max_x, self._sample_sld_min_x
@@ -213,6 +237,18 @@ class Plotting1dProxy(QObject):
         self._setAnalysisSldPlotRanges()
         self._sld_x_data_reversed = not self._sld_x_data_reversed
         self.sldXDataReversedChanged.emit()
+
+    @Slot()
+    def flipScaleShown(self):
+        self._scale_shown = not self._scale_shown
+        self.parent._simulation_proxy._updateCalculatedData()
+        self.scaleShownChanged.emit()
+
+    @Slot()
+    def flipBkgShown(self):
+        self._bkg_shown = not self._bkg_shown
+        self.parent._simulation_proxy._updateCalculatedData()
+        self.bkgShownChanged.emit()
 
     @Property(bool, notify=xAxisTypeChanged)
     def xAxisType(self):
@@ -250,8 +286,11 @@ class Plotting1dProxy(QObject):
 
     def setBackgroundData(self, xarray, yarray):
         self._setBackgroundDataArrays(xarray, yarray)
-        if self._background_xarray.size:
-            self._setBackgroundDataObj()
+        self._setBackgroundDataObj()
+
+    def setScaleData(self, xarray, yarray):
+        self._setScaleDataArrays(xarray, yarray)
+        self._setScaleDataObj()
 
     def setSampleSldData(self, xarray, yarray):
         self._setSampleSldDataArrays(xarray, yarray)
@@ -299,6 +338,10 @@ class Plotting1dProxy(QObject):
         self._background_xarray = xarray
         self._background_yarray = yarray
 
+    def _setScaleDataArrays(self, xarray, yarray):
+        self._scale_xarray = xarray
+        self._scale_yarray = yarray
+
     def _setMeasuredDataObj(self):
         self._measured_data_obj = {
             'x': Plotting1dProxy.aroundX(self._measured_xarray),
@@ -321,7 +364,6 @@ class Plotting1dProxy(QObject):
             'x': Plotting1dProxy.aroundX(self._pure_xarray),
             'y': Plotting1dProxy.aroundY(self._pure_yarray)
         }
-        print(self._pure_yarray)
         self.pureDataObjChanged.emit()
 
     def _setPureDataObj(self):
@@ -346,11 +388,24 @@ class Plotting1dProxy(QObject):
         self.analysisSldDataObjChanged.emit()
 
     def _setBackgroundDataObj(self):
-        self._background_data_obj = {
-            'x': Plotting1dProxy.aroundX(self._background_xarray),
-            'y': Plotting1dProxy.aroundY(self._background_yarray)
-        }
+        if self.bkgShown:
+            self._background_data_obj = {
+                'x': Plotting1dProxy.aroundX(self._background_xarray),
+                'y': Plotting1dProxy.aroundY(self._background_yarray)
+            }
+        else:
+            self._background_data_obj = {}
         self.backgroundDataObjChanged.emit()
+
+    def _setScaleDataObj(self):
+        if self.scaleShown:
+            self._scale_data_obj = {
+                'x': Plotting1dProxy.aroundX(self._scale_xarray),
+                'y': Plotting1dProxy.aroundY(self._scale_yarray)
+            }
+        else:
+            self._scale_data_obj = {}
+        self.scaleDataObjChanged.emit()
 
     # Private: range setters
 
