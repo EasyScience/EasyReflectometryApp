@@ -61,7 +61,7 @@ Rectangle {
     property color calculatedLineColor: EaStyle.Colors.chartForegrounds[1]
     property color sldLineColor: EaStyle.Colors.chartForegrounds[2]
     property color backgroundLineColor: EaStyle.Colors.chartForegrounds[3]
-    property color scaleLineColor: EaStyle.Colors.chartForegrounds[4]
+    property color scaleLineColor: EaStyle.Colors.chartForegrounds[3]
 
     property int measuredLineWidth: 1
     property int calculatedLineWidth: 2
