@@ -62,9 +62,7 @@ class Config():
             'repository_dir_suffix']
 
         # Project
-        self.package_name = self.__dict__['tool']['poetry']['name'] + 'App'
-        if self.__dict__['tool']['poetry']['name'] == 'easyDiffractionApp': 
-            self.package_name = self.__dict__['tool']['poetry']['name']
+        self.package_name = self.__dict__['tool']['poetry']['name']
         self.license_file = self.__dict__['ci']['project']['license_file']
 
     def __getitem__(self, key):
@@ -89,14 +87,14 @@ class Config():
             }
         }
         dir_shortcut = self.__dict__['ci']['app']['setup']['installation_dir_shortcut'][self.os]
-        dir = os.path.join(dirs[self.os][dir_shortcut], self.app_name)
+        dir = os.path.join(dirs[self.os][dir_shortcut], self.package_name)
         return dir
 
     def installationDirForQtifw(self):
         dir_shortcut = self.__dict__['ci']['app']['setup']['installation_dir_shortcut'][self.os]
         if self.os == 'macos' and dir_shortcut == '@ApplicationsDir@':
             dir_shortcut = '/Applications'  # @ApplicationsDir@ = @ApplicationsDirUser@ [BUG in QTIFW?]
-        dir = os.path.join(dir_shortcut, self.app_name)
+        dir = os.path.join(dir_shortcut, self.package_name)
         return dir
 
     def artifactsFileSuffix(self):

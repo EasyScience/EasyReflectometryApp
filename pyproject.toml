@@ -5,7 +5,7 @@ requires = ['poetry>=1.0']
 build-backend = 'poetry.masonry.api'
 
 [tool.poetry]
-name = 'EasyReflectometry'
+name = 'EasyReflectometryApp'
 version = '0.0.5-beta'
 description = 'Making reflectometry data analysis and modelling easy.'
 license = "BSD-3-Clause"

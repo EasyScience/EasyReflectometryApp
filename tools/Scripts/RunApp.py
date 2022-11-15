@@ -24,9 +24,9 @@ def appExePath() -> str:
         os.path.join(CONFIG.installation_dir, CONFIG.app_full_name, 'Contents', 'MacOS',
                      CONFIG.app_name),
         'ubuntu':
-        os.path.join(CONFIG.installation_dir, CONFIG.app_full_name),
+        os.path.join(CONFIG.installation_dir, CONFIG.package_name, CONFIG.app_full_name),
         'windows':
-        os.path.join(CONFIG.installation_dir, CONFIG.app_full_name)
+        os.path.join(CONFIG.installation_dir, CONFIG.package_name, CONFIG.app_full_name)
     }
     return d[CONFIG.os]
 
