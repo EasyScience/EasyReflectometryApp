@@ -44,7 +44,7 @@ def runApp():
             Functions.run(appExePath(), *sys.argv[1:])
     except Exception as exception:
         Functions.printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         Functions.printSuccessMessage(message)
 

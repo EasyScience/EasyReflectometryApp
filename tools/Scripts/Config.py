@@ -55,6 +55,7 @@ class Config():
         # Artifacts
         self.setup_zip_path_short = self.setupZipPathShort()
         self.setup_zip_path = self.setupZipPath()
+        self.video_tutorial_path = self.videoTutorialPath()
 
         # Application repository
         self.repository_dir_suffix = self.__dict__['ci']['app']['setup'][
@@ -62,6 +63,8 @@ class Config():
 
         # Project
         self.package_name = self.__dict__['tool']['poetry']['name'] + 'App'
+        if self.__dict__['tool']['poetry']['name'] == 'easyDiffractionApp': 
+            self.package_name = self.__dict__['tool']['poetry']['name']
         self.license_file = self.__dict__['ci']['project']['license_file']
 
     def __getitem__(self, key):
@@ -111,6 +114,12 @@ class Config():
         setup_zip_name = f'{self.setup_name}{file_suffix}.zip'
         setup_zip_path = os.path.join(self.dist_dir, setup_zip_name)
         return setup_zip_path
+
+    def videoTutorialPath(self):
+        file_suffix = self.artifactsFileSuffix()
+        video_tutorial_name = f'tutorial_{self.setup_name}{file_suffix}.mp4'
+        video_tutorial_path = os.path.join(self.dist_dir, video_tutorial_name)
+        return video_tutorial_path
 
 
 if __name__ == "__main__":
