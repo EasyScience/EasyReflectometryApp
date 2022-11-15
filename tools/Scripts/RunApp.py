@@ -41,6 +41,7 @@ def runApp():
         if len(sys.argv) == 1:
             Functions.run(appExePath())
         else:
+            print(appExePath())
             Functions.run(appExePath(), *sys.argv[1:])
     except Exception as exception:
         Functions.printFailMessage(message, exception)
