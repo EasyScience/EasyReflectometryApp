@@ -27,6 +27,10 @@ class Config():
         self.app_file_ext = self.__dict__['ci']['app']['setup']['file_ext'][self.os]
         self.app_full_name = f'{self.app_name}{self.app_file_ext}'
 
+        # Project
+        self.package_name = self.__dict__['tool']['poetry']['name']
+        self.license_file = self.__dict__['ci']['project']['license_file']
+        
         # Directories
         self.scripts_dir = os.path.normpath(
             self.__dict__['ci']['project']['subdirs']['scripts'])
@@ -60,10 +64,6 @@ class Config():
         # Application repository
         self.repository_dir_suffix = self.__dict__['ci']['app']['setup'][
             'repository_dir_suffix']
-
-        # Project
-        self.package_name = self.__dict__['tool']['poetry']['name']
-        self.license_file = self.__dict__['ci']['project']['license_file']
 
     def __getitem__(self, key):
         return self.__dict__[key]
