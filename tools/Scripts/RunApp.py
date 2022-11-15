@@ -41,6 +41,8 @@ def runApp():
         if len(sys.argv) == 1:
             Functions.run(appExePath())
         else:
+            print(os.listdir())
+            print(os.listdir(CONFIG.installation_dir))
             print(appExePath())
             Functions.run(appExePath(), *sys.argv[1:])
     except Exception as exception:
