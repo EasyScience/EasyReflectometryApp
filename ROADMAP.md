@@ -150,7 +150,7 @@ Material layer that describes a gradient (with a couple of different function fo
 - [Add a material gradient item type](https://github.com/easyScience/EasyReflectometryLib/issues/53)
 - [Develop GUI object for material gradient type](https://github.com/easyScience/EasyReflectometryApp/issues/120)
 
-Using the [mixed model](#mixed-models) functionality, making it possible to define more than one surfactant in a layer. 
+Using the [mixed models](#mixed-area-models) functionality, making it possible to define more than one surfactant in a layer. 
 
 - [Add a mixed surfactant item type](https://github.com/easyScience/EasyReflectometryLib/issues/54)
 - [Develop GUI object for mixed surfactant item type](https://github.com/easyScience/EasyReflectometryApp/issues/121)
@@ -161,7 +161,7 @@ Initially the protein describe would be basic (linking potentially to the protei
 - [Add a bilayer with protein embedded item type](https://github.com/easyScience/EasyReflectometryLib/issues/55)
 - [Develop GUI object for bilayer with protein embedded type](https://github.com/easyScience/EasyReflectometryApp/issues/122)
 
-Using the [mixed model](#mixed-models) functionality, making it possible to define more than one phospholipid type in a bilayer.  
+Using the [mixed area models](#mixed-area-models) functionality, making it possible to define more than one phospholipid type in a bilayer.  
 
 - [Add a mixed bilayer item type](https://github.com/easyScience/EasyReflectometryLib/issues/56)
 - [Develop GUI object for mixed bilayer type](https://github.com/easyScience/EasyReflectometryApp/issues/123)
