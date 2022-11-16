@@ -1,6 +1,6 @@
 # Roadmap for EasyReflectometry
 
-This documents the planned roadmap for the EasyReflectometry project (containing both [EasyReflectometryApp]() and [EasyReflectometryLib]()) between now and the start of 2027. 
+This documents the planned roadmap for the EasyReflectometry project (containing both [EasyReflectometryApp](https://github.com/easyScience/EasyReflectometryApp) and [EasyReflectometryLib](https://github.com/easyScience/EasyReflectometryLib)) between now and the start of 2027. 
 Certain tasks may depend on other Easy-family projects (in particular EasyCore) which will be be noted, where relevant. 
 
 ```mermaid
@@ -18,7 +18,6 @@ gantt
     File IO :a3, after a1, 16w
     Video Tutorials :a4, after d3, 16w
     Ready for real users: milestone, m1, after a3, 2min
-    click a1 href "#user-experience-enhancement"
 
     section New functionality
     Mixed models :b1, after m1, 20w
