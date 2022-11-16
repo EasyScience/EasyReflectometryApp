@@ -22,7 +22,7 @@ gantt
     ESS integration :b2, after c2, 20w
     Bayesian analysis :b3, after b2, 30w
     Ready for first ESS instruments :milestone, m2, after b2, 2min
-    ESS Start of User Operation :milestone, m3, 2027-01, 2min
+    ESS Start of User Operation :milestone, m3, 2026-11, 2min
 
     section Hard Condensed Matter
     Magnetism support :c1, after m1, 52w
