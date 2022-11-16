@@ -9,6 +9,8 @@ gantt
     dateFormat  YYYY-MM
     axisFormat  %Y-%m
     todaymarker off
+    section Potential Float
+    Staffing dependant float :crit, after b3, 2026-11
 
     section General
     User experience enhancement :a1, 2022-12, 24w
@@ -16,6 +18,7 @@ gantt
     File IO :a3, after a1, 16w
     Video Tutorials :a4, after d3, 16w
     Ready for real users: milestone, m1, after a3, 2min
+    click a1 href "#user-experience-enhancement"
 
     section New functionality
     Mixed models :b1, after m1, 20w
@@ -34,7 +37,6 @@ gantt
     Mixed surfactant layer :d3, after b1, 8w
     Bilayer with embedded protein :d4, after c1, 16w
     Mixed bilayer item :d5, after c2, 8w
-
 ```
 
 Above we include a Gannt chart showing the roadmap. 
@@ -49,7 +51,7 @@ Issues that are general to EasyReflectometry (i.e. those related to interaction 
 The aim of this epic is to improve the user experience in EasyReflectometry. 
 Currently, there are a performance issues and user-unfriendly interfaces that should be improved. 
 This has the additional benefit of reducing technical debt. 
-This includes work such as improving visualisation and adding code signing. 
+This includes work such as improving visualisations and adding code signing. 
 
 <!-- #### EasyReflectometryApp issues
 
