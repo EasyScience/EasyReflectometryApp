@@ -3,7 +3,7 @@
 This documents the planned roadmap for the EasyReflectometry project (containing both [EasyReflectometryApp](https://github.com/easyScience/EasyReflectometryApp) and [EasyReflectometryLib](https://github.com/easyScience/EasyReflectometryLib)) between now and the start of 2027. 
 Certain tasks may depend on other Easy-family projects (in particular EasyCore) which will be be noted, where relevant. 
 
-*Note that this chart should only be used to understand the planned features and a vegue timeline for EasyReflectometry development*.
+*Note that this chart should only be used to understand the planned features and a vague timeline for EasyReflectometry development*.
 
 ```mermaid
 gantt
