@@ -63,6 +63,7 @@ This includes work such as improving visualisations and adding code signing.
 - [Fitter options](https://github.com/easyScience/EasyReflectometryApp/issues/32)
 - [Model description in the summary page](https://github.com/easyScience/EasyReflectometryApp/issues/28)
 - [Clearing the workspace doesn't reset the model name](https://github.com/easyScience/EasyReflectometryApp/issues/124)
+- [Rq^4 checkbox is inverted in the Experiment pane](https://github.com/easyScience/EasyReflectometryApp/issues/125)
 
 ### Resolution smearing
 
