@@ -11,8 +11,6 @@ gantt
     dateFormat  YYYY-MM
     axisFormat  %Y-%m
     todaymarker off
-    section Potential Float
-    Staffing dependant float :crit, after b3, 2026-11
 
     section General
     User experience enhancement :a1, 2022-12, 24w
