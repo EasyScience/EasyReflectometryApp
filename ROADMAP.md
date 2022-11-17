@@ -62,6 +62,7 @@ This includes work such as improving visualisations and adding code signing.
 - [Can't run installer version on linux - glibc mismatch?](https://github.com/easyScience/EasyReflectometryApp/issues/38)
 - [Fitter options](https://github.com/easyScience/EasyReflectometryApp/issues/32)
 - [Model description in the summary page](https://github.com/easyScience/EasyReflectometryApp/issues/28)
+- [Clearing the workspace doesn't reset the model name](https://github.com/easyScience/EasyReflectometryApp/issues/124)
 
 ### Resolution smearing
 
