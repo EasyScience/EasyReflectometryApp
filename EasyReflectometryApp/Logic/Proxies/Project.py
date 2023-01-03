@@ -185,6 +185,8 @@ class ProjectProxy(QObject):
 
         descr['interface'] = [self.parent._interface.current_interface_name]
 
+        descr['colors'] = self.parent._model_proxy._colors
+
         descr['minimizer'] = {
             'engine': self.parent._fitter_proxy.eFitter.easy_f.current_engine.name,
             'method': self.parent._minimizer_proxy._current_minimizer_method_name
@@ -227,6 +229,7 @@ class ProjectProxy(QObject):
                 if old_interface_name != inter:
                     self.parent._interface.switch(inter)
 
+        self.parent._model_proxy._colors = descr['colors']
         self.parent._model_proxy._model = Models.from_dict(descr['model'])
         self.parent._material_proxy._materials = Materials.from_pars()
         c = 0
