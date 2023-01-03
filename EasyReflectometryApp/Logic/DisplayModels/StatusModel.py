@@ -3,7 +3,6 @@ __author__ = 'github.com/andrewsazonov'
 from random import random
 
 from PySide2.QtCore import QPointF
-from PySide2.QtCharts import QtCharts
 
 
 class StatusModel:

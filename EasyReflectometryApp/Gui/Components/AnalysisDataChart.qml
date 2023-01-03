@@ -7,9 +7,11 @@ import Gui.Components 1.0 as ExComponents
 import Gui.Globals 1.0 as ExGlobals
 
 ExComponents.BaseBokeh {
-    measuredData: ExGlobals.Constants.proxy.plotting1d.bokehMeasuredDataObj
-    calculatedData: ExGlobals.Constants.proxy.plotting1d.bokehCalculatedDataObj
-    sldData: ExGlobals.Constants.proxy.plotting1d.bokehAnalysisSldDataObj
+    measuredData: ExGlobals.Constants.proxy.plotting1d.measuredDataObj
+    calculatedData: ExGlobals.Constants.proxy.plotting1d.calculatedDataObj
+    sldData: ExGlobals.Constants.proxy.plotting1d.analysisSldDataObj
+    backgroundData: ExGlobals.Constants.proxy.plotting1d.backgroundDataObj
+    scaleData: ExGlobals.Constants.proxy.plotting1d.scaleDataObj
 
     plotRanges: ExGlobals.Constants.proxy.plotting1d.analysisPlotRangesObj
     sldPlotRanges: ExGlobals.Constants.proxy.plotting1d.analysisSldPlotRangesObj

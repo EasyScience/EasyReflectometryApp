@@ -19,12 +19,16 @@ ExComponents.BasePlot {
         'ranges': plot.plotRanges,
         'sld': plot.sldData,
         'sldRanges': plot.sldPlotRanges,
+        'background': plot.backgroundData,
+        'scale': plot.scaleData,
 
         'hasMeasured': plot.hasMeasuredData,
         'hasCalculated': plot.hasCalculatedData,
         'hasSld': plot.hasSldData,
         'hasPlotRanges': plot.hasPlotRanges,
-        'hasSldPlotRanges': plot.hasSldPlotRangesData
+        'hasSldPlotRanges': plot.hasSldPlotRangesData,
+        'hasBackground': plot.hasBackgroundData,
+        'hasScale': plot.hasScaleData
     }
 
     property var chartSpecs: {
@@ -46,10 +50,14 @@ ExComponents.BasePlot {
         'measuredAreaColor': plot.measuredAreaColor,
         'calculatedLineColor': plot.calculatedLineColor,
         'sldLineColor': plot.sldLineColor,
+        'backgroundLineColor': plot.backgroundLineColor,
+        'scaleLineColor': plot.scaleLineColor,
 
         'measuredLineWidth': plot.measuredLineWidth,
         'calculatedLineWidth': plot.calculatedLineWidth,
         'sldLineWidth': plot.sldLineWidth,
+        'backgroundLineWidth': plot.backgroundLineWidth,
+        'scaleLineWidth': plot.scaleLineWidth,
 
         'fontPixelSize': plot.fontPixelSize
     }

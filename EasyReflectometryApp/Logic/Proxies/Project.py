@@ -45,8 +45,8 @@ class ProjectProxy(QObject):
             name="Example Project",
             # location=os.path.join(os.path.expanduser("~"), "Example Project"),
             short_description="reflectometry, 1D",
-            # samples="Not loaded",
-            # experiments=DataStore(),
+            samples="None",
+            experiments="None",
             modified=datetime.datetime.now().strftime("%d.%m.%Y %H:%M"))
 
     # # #
