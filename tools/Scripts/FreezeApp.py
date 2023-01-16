@@ -2,6 +2,7 @@ __author__ = "github.com/AndrewSazonov"
 __version__ = '0.0.1'
 
 import os, sys
+from typing import List
 import importlib
 import glob
 import PySide2, shiboken2
@@ -13,7 +14,12 @@ from PyInstaller.__main__ import run as pyInstallerMain
 
 CONFIG = Config.Config()
 
-def excludedModules():
+def excludedModules() -> List[str]:
+    """
+    Get excluded modules (both general and os-specific in a formatted list that can be unpacked.
+    
+    :return: Excluded modules.
+    """
     os_independent = CONFIG['ci']['pyinstaller']['auto_exclude']['all']
     os_dependent = CONFIG['ci']['pyinstaller']['auto_exclude'][CONFIG.os]
     formatted = []
@@ -35,7 +41,7 @@ def addedData():
             {'from': easyCore.__path__[0], 'to': 'easyCore'},
             {'from': EasyReflectometry.__path__[0], 'to': 'EasyReflectometryLib'},
             {'from': easyApp.__path__[0], 'to': 'easyApp'},
-            {'from': 'utils.py', 'to': '.'},
+            {'from': f'{CONFIG["project"]["name"]}/utils.py', 'to': '.'},
             {'from': 'pyproject.toml', 'to': '.'}]
     # Add other missing libs
     extras = CONFIG['ci']['pyinstaller']['missing_other_libraries'][CONFIG.os]
@@ -50,14 +56,17 @@ def addedData():
     return formatted
 
 def appIcon():
-    icon_dir = os.path.join(*CONFIG['ci']['app']['icon']['dir'])
-    icon_name = CONFIG['ci']['app']['icon']['file_name']
-    icon_ext = CONFIG['ci']['app']['icon']['file_ext'][CONFIG.os]
+    icon_dir = os.path.join(*CONFIG['ci']['icon']['dir'])
+    icon_name = CONFIG['ci']['icon']['file_name']
+    icon_ext = CONFIG['ci']['icon']['file_ext'][CONFIG.os]
     icon_path = os.path.join(CONFIG.package_name, icon_dir, f'{icon_name}{icon_ext}')
     icon_path = os.path.abspath(icon_path)
     return f'--icon={icon_path}'
 
 def copyMissingLibs():
+    """
+    Copy missing libraries from PySide2 to shiboken2.
+    """
     missing_files = CONFIG['ci']['pyinstaller']['missing_pyside2_files'][CONFIG.os]
     if len(missing_files) == 0:
         Functions.printNeutralMessage(f'No missing PySide2 libraries for {CONFIG.os}')
@@ -77,6 +86,9 @@ def copyMissingLibs():
         Functions.printSuccessMessage(message)
 
 def copyMissingPlugins():
+    """
+    Copy missing plugins from PySide2.
+    """
     missing_plugins = CONFIG['ci']['pyinstaller']['missing_pyside2_plugins'][CONFIG.os]
     if len(missing_plugins) == 0:
         Functions.printNeutralMessage(f'No missing PySide2 plugins for {CONFIG.os}')
@@ -103,7 +115,7 @@ def runPyInstaller():
         pyInstallerMain([
             main_py_path,                           # Application main file
             f'--name={CONFIG.app_name}',            # Name to assign to the bundled app and spec file (default: first script’s basename)
-            '--log-level', 'WARN',                  # LEVEL may be one of DEBUG, INFO, WARN, ERROR, CRITICAL (default: INFO).
+            '--log-level', 'INFO',                 # LEVEL may be one of DEBUG, INFO, WARN, ERROR, CRITICAL (default: INFO).
             '--noconfirm',                          # Replace output directory (default: SPECPATH/dist/SPECNAME) without asking for confirmation
             '--clean',                              # Clean PyInstaller cache and remove temporary files before building
             '--windowed',                           # Windows and Mac OS X: do not provide a console window for standard i/o.

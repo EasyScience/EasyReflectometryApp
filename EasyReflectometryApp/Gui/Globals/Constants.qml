@@ -9,15 +9,15 @@ QtObject {
     readonly property var proxy: typeof _pyQmlProxyObj !== "undefined" && _pyQmlProxyObj !== null ? _pyQmlProxyObj : new ExLogic.PyQmlProxy.PyQmlProxy()
     readonly property bool remote: typeof EaGlobals.Variables.projectConfig.ci.app.info !== 'undefined'
 
-    readonly property string appName: EaGlobals.Variables.projectConfig.tool.poetry.name
+    readonly property string appName: EaGlobals.Variables.projectConfig.project.appname
     readonly property string appPrefixName: "Easy"
     readonly property string appSuffixName: appName.replace(appPrefixName, "")
 
     readonly property string appLogo: logo('App.svg')
-    readonly property string appUrl: EaGlobals.Variables.projectConfig.tool.poetry.homepage
-    readonly property string appGit: EaGlobals.Variables.projectConfig.tool.poetry.documentation
+    readonly property string appUrl: EaGlobals.Variables.projectConfig.project.urls.homepage
+    readonly property string appGit: EaGlobals.Variables.projectConfig.project.urls.documentation
 
-    readonly property string appVersion: EaGlobals.Variables.projectConfig.tool.poetry.version
+    readonly property string appVersion: EaGlobals.Variables.projectConfig.project.version
     readonly property string appDate: remote ? EaGlobals.Variables.projectConfig.ci.app.info.build_date : new Date().toISOString().slice(0,10)
 
     readonly property string commit: remote ? EaGlobals.Variables.projectConfig.ci.app.info.commit_sha_short : ''

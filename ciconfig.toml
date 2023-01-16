@@ -1,0 +1,134 @@
+[icon]
+dir = [ "Gui", "Resources", "Logo",]
+file_name = "App"
+
+[setup]
+build_dir_suffix = "Setup"
+repository_dir_suffix = "Repos"
+maintenance_tool_suffix = "MaintenanceTool"
+maintenance_file = "signedmaintenancetool.exe"
+license_file = "LICENSE.md"
+
+[subdirs]
+scripts = "tools/Scripts"
+tutorials = "docs/UserManual/VideoTutorials"
+download = ".ci/download"
+screenshots = ".ci/screenshots"
+build = ".ci/build"
+distribution = ".ci/distribution"
+certificates_path = "Certificates"
+certificate_name = "ESS_cert"
+
+[scripts]
+silent_install = "SilentInstall.js"
+package_install = "InstallerInstallScript.js"
+config_control = "InstallerControlScript.js"
+config_style = "style.qss"
+
+[qtifw]
+version = "4.0.1"
+https_mirrors = [ "download.qt.io", "ftp.fau.de/qtproject", "mirrors.dotsrc.org/qtproject",]
+base_path = "official_releases/qt-installer-framework"
+file_name_base = "QtInstallerFramework-"
+
+[pyinstaller]
+manual_exclude = [ "mfc*", "msvcp*", "VCRUNTIME*", "*Qt*3D*", "*Qt*Bluetooth*", "*Qt*Bodymovin*", "*Qt*Gamepad*", "*Qt*Location*", "*Qt*Nfc*", "*Qt*Purchasing*", "*Qt*QuickParticles*", "*Qt*QuickShapes*", "*Qt*RemoteObjects*", "*Qt*Scxml*", "*Qt*Sensors*", "*Qt*Sql*", "*Qt*VirtualKeyboard*", "*Qt*Wayland*",]
+
+[ftp]
+host = "ftp.apptimity.com"
+port = 21
+user = "ed@easyscience.apptimity.com"
+remote_subdir = "app"
+
+[icon.file_ext]
+macos = ".icns"
+ubuntu = ".png"
+windows = ".ico"
+
+[setup.os]
+macos = "macOS"
+ubuntu = "Linux"
+windows = "Windows"
+
+[setup.arch]
+macos = "x86-64"
+ubuntu = "x86-64"
+windows = "x86-32"
+
+[setup.file_ext]
+macos = ".app"
+ubuntu = ""
+windows = ".exe"
+
+[setup.installation_dir_shortcut]
+macos = "@ApplicationsDir@"
+ubuntu = "@HomeDir@"
+windows = "@ApplicationsDirX86@"
+
+[setup.build]
+config_dir = "config"
+config_xml = "config.xml"
+packages_dir = "packages"
+data_subsubdir = "data"
+meta_subsubdir = "meta"
+package_xml = "package.xml"
+app_package_subdir = "app"
+
+[subdirs.docs]
+src = "docs"
+dest = "Documentation"
+
+[subdirs.examples]
+src = "examples"
+dest = "Examples"
+
+[qtifw.file_name_suffix]
+macos = "mac-x64"
+ubuntu = "linux-x64"
+windows = "win-x86"
+
+[qtifw.file_ext]
+macos = ".dmg"
+ubuntu = ".run"
+windows = ".exe"
+
+[qtifw.installation_path]
+macOS = "/Users/runner/Qt"
+Linux = "/home/runner/Qt"
+Windows = "C:\\Qt"
+
+[pyinstaller.separator]
+macos = ":"
+ubuntu = ":"
+windows = ";"
+
+[pyinstaller.dir_suffix]
+macos = ".app"
+ubuntu = ""
+windows = ""
+
+[pyinstaller.content_suffix]
+macos = "Contents/MacOS/"
+ubuntu = ""
+windows = ""
+
+[pyinstaller.missing_pyside2_files]
+macos = [ "libshiboken2.abi3.*.dylib",]
+ubuntu = []
+windows = [ "shiboken2.abi3.dll", "MSVCP140.dll",]
+
+[pyinstaller.missing_pyside2_plugins]
+macos = []
+ubuntu = [ "Qt/plugins/xcbglintegrations",]
+windows = []
+
+[pyinstaller.missing_other_libraries]
+macos = []
+ubuntu = []
+windows = [ "libs/libiomp5md.dll", "libs/opengl32.dll",]
+
+[pyinstaller.auto_exclude]
+macos = [ "_tkinter",]
+ubuntu = [ "_tkinter",]
+windows = [ "",]
+all = [ "lib2to3", "_bisect", "_codecs_cn", "_codecs_hk", "_codecs_iso2022", "_codecs_jp", "_codecs_kr", "_codecs_tw", "_curses", "_elementtree", "_hashlib", "_heapq", "_multibytecodec", "_multiprocessing", "_opcode", "_queue", "_opcode", "_uuid", "_win32sysloader", "grp", "readline", "termios",]

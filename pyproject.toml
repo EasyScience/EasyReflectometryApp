@@ -1,172 +1,66 @@
-# POETRY CONFIG
-
 [build-system]
-requires = ['poetry>=1.0']
-build-backend = 'poetry.masonry.api'
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.poetry]
-name = 'EasyReflectometry'
-version = '0.0.5-beta'
-description = 'Making reflectometry data analysis and modelling easy.'
+[project]
+name = "EasyReflectometryApp"
+appname = 'EasyReflectometry'
+version = "0.0.5-beta"
+description = "Making reflectometry data analysis and modelling easy."
+authors = [
+    {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"}, 
+    {name = "Andrew Sazonov"}, 
+    {name = "Simon Ward"}
+]
+maintainers = [
+    {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"}
+]
 license = "BSD-3-Clause"
-authors = ['Andrew McCluskey', 'Andrew Sazonov', 'Simon Ward']
-readme = 'README.md'
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+    "Development Status :: 3 - Alpha"
+]
+requires-python = ">=3.8,<3.11"
+dependencies = [
+    'pyobjc-core>=7.1; platform_system == "Darwin"',
+    'pyobjc-framework-cocoa>=7.1; platform_system == "Darwin"',
+    'matplotlib>=3.4.2',
+    'EasyReflectometryLib @ git+https://github.com/easyScience/EasyReflectometryLib.git@no_poetry',
+    'easyApp @ git+https://github.com/easyScience/easyApp.git@develop',
+    'toml>=0.10.2'
+]
+
+[project.optional-dependencies]
+dev = [
+    'pyinstaller @ git+https://github.com/pyinstaller/pyinstaller.git@develop',
+    'pywin32-ctypes>=0.2.0; platform_system == "win32"', 
+    'pypiwin32>=223; platform_system == "win32"',
+    'pefile>=2022.5.30; platform_system == "win32"',
+    'dephell_licenses>=0.1.7'
+]
+
+[project.urls]
 homepage = 'https://easyreflectometry.org'
-repository = 'https://easyscience.apptimity.com/'
-documentation = 'https://github.com/easyScience/EasyReflectometryApp'
-include = ['CHANGELOG.md']
-packages = [ { include = 'EasyReflectometryApp' } ]
+documentation = 'https://easyreflectometry.org'
 
-[tool.poetry.dependencies]
-python = '^3.9, <3.10'
-pyobjc-core = { version = '^7.1', platform = 'darwin' }
-pyobjc-framework-cocoa = { version = '^7.1', platform = 'darwin' }
-matplotlib = "^3.4.2"
-pint = "^0.17"
-# easyScience
-EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'develop' }
-easyApp = { git = 'https://github.com/easyScience/easyApp.git', rev = 'develop' }
-#EasyReflectometryLib = { path = '../EasyReflectometryLib'}
-#easyApp = { path = '../easyApp'}
+[project.scripts]
+EasyReflectometryApp = "EasyReflectometryApp.main:main"
 
-#[tool.poetry.dev-dependencies]
-# PyInstaller
-#pyinstaller = '^4.2'
-pyinstaller = { git = 'https://github.com/pyinstaller/pyinstaller.git', rev = 'develop' }
-pywin32-ctypes = { version = '^0.2.0', platform = 'win32' }
-pypiwin32 = { version = '^223', platform = 'win32' }
-pefile = { version = '^2022.5.30', platform = 'win32' }
-# Misc
-toml = '^0.10.2'
-requests = '^2.25.1'
-dephell_licenses = '^0.1.7'
-ffmpeg-python = '^0.2.0'
-mss = '^6.1.0'
-opencv-python = '4.5.1.48'
-#googletrans = "3.1.0a0"
-google-trans-new = "^1.1.9"
-gTTS = '^2.2.2'
+[project.gui-scripts]
+EasyReflectometryApp = "EasyReflectometryApp.main:main"
 
-[tool.poetry.scripts]
-EasyReflectometry = 'EasyReflectometryApp.main:main'
+[tool.hatch.metadata]
+allow-direct-references = true
 
-# CUSTOM CONFIG
+[tool.hatch.build]
+include = ['EasyReflectometryApp']
 
-[release]
-date_for_qtifw = '2021-06-08' # YYYY-MM-DD, e.g. 2021-05-30
-tag_template = 'v{VERSION}'
-title_template = 'Version {VERSION} ({DATE})'
-description_file = 'RELEASE.md'
-changelog_file = 'CHANGELOG.md'
+[tool.hatch.build.force-include]
+'pyproject.toml' = 'EasyReflectometryApp/pyproject.toml'
 
-[ci.project]
-license_file = 'LICENSE.md' # how to combine this with tool.poetry.license???
+[tool.coverage.run]
+source = ['EasyReflectometryApp']
 
-[ci.project.subdirs]
-scripts = 'tools/Scripts'
-docs = { src = 'docs', dest = 'Documentation' }
-examples = { src = 'examples', dest = 'Examples' }
-tutorials = 'docs/UserManual/VideoTutorials'
-download = '.ci/download'
-screenshots = '.ci/screenshots'
-build = '.ci/build'
-distribution = '.ci/distribution'
-certificates_path = 'Certificates'
-
-[ci.scripts]
-silent_install = 'SilentInstall.js'
-package_install = 'InstallerInstallScript.js'
-config_control = 'InstallerControlScript.js'
-config_style = 'style.qss'
-certificate_name = 'ESS_cert'
-
-[ci.app.icon]
-dir = ['Gui', 'Resources', 'Logo']
-file_name = 'App'
-file_ext = { macos = '.icns', ubuntu = '.png', windows = '.ico' }
-
-[ci.app.setup]
-build_dir_suffix = 'Setup'
-repository_dir_suffix = 'Repos'
-os = { macos = 'macOS', ubuntu = 'Linux', windows = 'Windows' }  # Should be the same as GH actions ${{ runner.os }}
-arch = { macos = 'x86-64', ubuntu = 'x86-64', windows = 'x86-32' }
-file_ext = { macos = '.app', ubuntu = '', windows = '.exe' }
-maintenance_tool_suffix = 'MaintenanceTool'
-maintenance_file = 'signedmaintenancetool.exe'
-installation_dir_shortcut = { macos = '@ApplicationsDir@', ubuntu = '@HomeDir@', windows = '@ApplicationsDirX86@' }
-
-[ci.app.setup.ftp]
-host = 'ftp.apptimity.com'
-port = 21
-user = 'ed@easyscience.apptimity.com'
-remote_subdir = 'app'
-
-[ci.app.setup.build]
-# config
-config_dir = 'config'
-config_xml = 'config.xml'
-# packages
-packages_dir = 'packages'
-data_subsubdir = 'data'
-meta_subsubdir = 'meta'
-package_xml = 'package.xml'
-# package: app
-app_package_subdir = 'app'
-# package: docs
-#docs_package_subdir = 'docs'
-#docs_package_subdir = 'docs'
-#docs_package_name = 'Documentation'
-#docs_package_description = 'Documentation: User manual, text and video tutorials'
-#docs_package_version = '2020.7.11'
-
-[ci.app.tutorials.video]
-fps = 25                # Frames per Second
-crf = 18                # Constant Rate Factor
-preset = 'slower'
-movflags = 'faststart'
-pix_fmt = 'yuv420p'     # Pixel format
-
-[ci.app.translations]
-dir = 'Gui/Resources/Translations'
-languages = [ { code = 'en', name = 'English' }, { code = 'fr', name = 'Française' }, { code = 'de', name = 'Deutsch' },
-              { code = 'es', name = 'Español' }, { code = 'it', name = 'Italiano' },  { code = 'pt', name = 'Português' },
-              { code = 'da', name = 'Dansk' },   { code = 'sv', name = 'Svenska' },   { code = 'pl', name = 'Polski' },
-              { code = 'ru', name = 'Русский' } ]
-
-[ci.app.audio]
-dir = 'Gui/Resources/Audio'
-
-[ci.poetry]
-venv_path = { macOS = '/Users/runner/Library/Caches/pypoetry/virtualenvs', Linux = '/home/runner/.cache/pypoetry/virtualenvs', Windows = 'C:\Users\runneradmin\AppData\Local\pypoetry\Cache\virtualenvs' }
-
-[ci.pyinstaller]
-separator = { macos = ':', ubuntu = ':', windows = ';' }
-dir_suffix = { macos = '.app', ubuntu = '', windows = '' }
-content_suffix = { macos = 'Contents/MacOS/', ubuntu = '', windows = '' }
-missing_pyside2_files = { macos = ['libshiboken2.abi3.*.dylib'], ubuntu = [], windows = ['shiboken2.abi3.dll', 'MSVCP140.dll'] }
-missing_pyside2_plugins = { macos = [], ubuntu = ['Qt/plugins/xcbglintegrations'], windows = [] } # EGL and GLX plugins
-missing_other_libraries = {macos = [], ubuntu = [], windows = ['libs/libiomp5md.dll', 'libs/opengl32.dll'] }
-auto_exclude = { macos = ['_tkinter'], ubuntu = ['_tkinter'], windows = [''], all = [ 'lib2to3', '_bisect',
-                '_codecs_cn', '_codecs_hk', '_codecs_iso2022', '_codecs_jp', '_codecs_kr', '_codecs_tw',
-                '_curses', '_elementtree', '_hashlib', '_heapq', '_multibytecodec', '_multiprocessing',
-                '_opcode', '_queue', '_opcode', '_uuid', '_win32sysloader', 'grp', 'readline', 'termios' ] }
-manual_exclude = [ 'mfc*', 'msvcp*', 'VCRUNTIME*',
-                   '*Qt*3D*', '*Qt*Bluetooth*', '*Qt*Bodymovin*', '*Qt*Gamepad*', '*Qt*Location*',
-                   '*Qt*Nfc*', '*Qt*Purchasing*', '*Qt*QuickParticles*', '*Qt*QuickShapes*', '*Qt*RemoteObjects*',
-                   '*Qt*Scxml*', '*Qt*Sensors*', '*Qt*Sql*', '*Qt*VirtualKeyboard*', '*Qt*Wayland*' ]
-
-[ci.qtifw.setup]
-version = '4.0.1'
-https_mirrors = ['download.qt.io', 'ftp.fau.de/qtproject', 'mirrors.dotsrc.org/qtproject']
-base_path = 'official_releases/qt-installer-framework'
-file_name_base = 'QtInstallerFramework-'
-file_name_suffix = { macos = 'mac-x64', ubuntu = 'linux-x64', windows = 'win-x86' }
-file_ext = { macos = '.dmg', ubuntu = '.run', windows = '.exe' }
-installation_path = { macOS = '/Users/runner/Qt', Linux = '/home/runner/Qt', Windows = 'C:\Qt' }
-
-[ci.ffmpeg.macos]  # https://evermeet.cx/ffmpeg/ffmpeg-4.3.zip
-version = '4.3.1'
-base_url = 'https://evermeet.cx/ffmpeg'
-file_name_base = 'ffmpeg-'
-file_ext = '.zip'
-exe = 'ffmpeg'

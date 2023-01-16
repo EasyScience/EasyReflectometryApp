@@ -13,9 +13,9 @@ import Signatures
 CONFIG = Config.Config()
 
 def qtifwSetupFileName():
-    file_name_base = CONFIG['ci']['qtifw']['setup']['file_name_base']
-    file_name_suffix = CONFIG['ci']['qtifw']['setup']['file_name_suffix'][CONFIG.os]
-    file_ext = CONFIG['ci']['qtifw']['setup']['file_ext'][CONFIG.os]
+    file_name_base = CONFIG['ci']['qtifw']['file_name_base']
+    file_name_suffix = CONFIG['ci']['qtifw']['file_name_suffix'][CONFIG.os]
+    file_ext = CONFIG['ci']['qtifw']['file_ext'][CONFIG.os]
     return f'{file_name_base}{file_name_suffix}{file_ext}'
 
 def qtifwSetupDownloadDest():
@@ -52,9 +52,9 @@ def urlOk(url):
         return False
 
 def qtifwSetupDownloadUrl():
-    repos = CONFIG['ci']['qtifw']['setup']['https_mirrors']
-    base_path = CONFIG['ci']['qtifw']['setup']['base_path']
-    qtifw_version = CONFIG['ci']['qtifw']['setup']['version']
+    repos = CONFIG['ci']['qtifw']['https_mirrors']
+    base_path = CONFIG['ci']['qtifw']['base_path']
+    qtifw_version = CONFIG['ci']['qtifw']['version']
     try:
         message = f'access Qt Installer Framework download url'
         for repo in repos:
@@ -81,7 +81,7 @@ def qtifwSetupExe():
 
 def qtifwDirPath():
     home_dir = os.path.expanduser('~')
-    qtifw_version = CONFIG['ci']['qtifw']['setup']['version']
+    qtifw_version = CONFIG['ci']['qtifw']['version']
     d = {
         'macos': f'{home_dir}/Qt/QtIFW-{qtifw_version}',
         'ubuntu': f'{home_dir}/Qt/QtIFW-{qtifw_version}',
@@ -90,31 +90,31 @@ def qtifwDirPath():
     return d[CONFIG.os]
 
 def setupBuildDirPath():
-    setup_build_dir_suffix = CONFIG['ci']['app']['setup']['build_dir_suffix']
+    setup_build_dir_suffix = CONFIG['ci']['setup']['build_dir_suffix']
     return os.path.join(CONFIG.build_dir, f'{CONFIG.app_name}{setup_build_dir_suffix}')
 
 def configDirPath():
-    return os.path.join(setupBuildDirPath(), CONFIG['ci']['app']['setup']['build']['config_dir'])
+    return os.path.join(setupBuildDirPath(), CONFIG['ci']['setup']['build']['config_dir'])
 
 def configXmlPath():
-    return os.path.join(configDirPath(), CONFIG['ci']['app']['setup']['build']['config_xml'])
+    return os.path.join(configDirPath(), CONFIG['ci']['setup']['build']['config_xml'])
 
 def packagesDirPath():
-    return os.path.join(setupBuildDirPath(), CONFIG['ci']['app']['setup']['build']['packages_dir'])
+    return os.path.join(setupBuildDirPath(), CONFIG['ci']['setup']['build']['packages_dir'])
 
 def localRepositoryDir():
-    repository_dir_suffix = CONFIG['ci']['app']['setup']['repository_dir_suffix']
+    repository_dir_suffix = CONFIG['ci']['setup']['repository_dir_suffix']
     return os.path.join(f'{CONFIG.app_name}{repository_dir_suffix}', CONFIG.setup_os)
 
 def remoteRepositoryDir():
-    remote_subdir_name = CONFIG['ci']['app']['setup']['ftp']['remote_subdir']
+    remote_subdir_name = CONFIG['ci']['ftp']['remote_subdir']
     return os.path.join(CONFIG.app_name, remote_subdir_name, CONFIG.setup_os)
 
 def installerConfigXml():
     try:
-        message = f"create {CONFIG['ci']['app']['setup']['build']['config_xml']} content"
-        app_url = CONFIG['tool']['poetry']['homepage']
-        maintenance_tool_suffix = CONFIG['ci']['app']['setup']['maintenance_tool_suffix']
+        message = f"create {CONFIG['ci']['setup']['build']['config_xml']} content"
+        app_url = CONFIG['project']['urls']['homepage']
+        maintenance_tool_suffix = CONFIG['ci']['setup']['maintenance_tool_suffix']
         maintenance_tool_name = maintenance_tool_suffix #f'{CONFIG.app_name}{maintenance_tool_suffix}'
         config_control_script = CONFIG['ci']['scripts']['config_control']
         config_style = CONFIG['ci']['scripts']['config_style']
@@ -166,11 +166,12 @@ def installerConfigXml():
 def appPackageXml():
     try:
         message = f"create app package content"
-        description = CONFIG['tool']['poetry']['description']
-        version = CONFIG['tool']['poetry']['version']
-        release_date = "2020-01-01" #datetime.datetime.strptime(config['release']['date'], "%d %b %Y").strftime("%Y-%m-%d")
+        description = CONFIG['project']['description']
+        version = CONFIG['project']['version']
+        import datetime
+        release_date = datetime.datetime.strptime(CONFIG['ci']['git']['build_date'], "%d %b %Y").strftime("%Y-%m-%d")
         package_install_script = CONFIG['ci']['scripts']['package_install']
-        license_id = CONFIG['tool']['poetry']['license']
+        license_id = CONFIG['project']['license']
         license_name = dephell_licenses.licenses.get_by_id(license_id).name.replace('"', "'")
         raw_xml = Functions.dict2xml({
             'Package': {
@@ -267,7 +268,7 @@ def prepareSignedMaintenanceTool():
         return
     try:
         message = 'copy and sign MaintenanceTool'
-        target_dir = CONFIG['ci']['project']['subdirs']['certificates_path']
+        target_dir = CONFIG['ci']['subdirs']['certificates_path']
         target_file = os.path.join(target_dir, "signedmaintenancetool.exe")
         # copy MaintenanceTool locally
         Functions.copyFile(os.path.join(qtifwDirPath(), "bin", "installerbase.exe" ), target_file)
@@ -293,10 +294,10 @@ def createInstallerSourceDir():
         Functions.copyFile(source=config_control_script_path, destination=configDirPath())
         Functions.copyFile(source=config_style_path, destination=configDirPath())
         # package: app
-        app_subdir_path =  os.path.join(packagesDirPath(), CONFIG['ci']['app']['setup']['build']['app_package_subdir'])
-        app_data_subsubdir_path =  os.path.join(app_subdir_path, CONFIG['ci']['app']['setup']['build']['data_subsubdir'])
-        app_meta_subsubdir_path =  os.path.join(app_subdir_path, CONFIG['ci']['app']['setup']['build']['meta_subsubdir'])
-        app_package_xml_path = os.path.join(app_meta_subsubdir_path, CONFIG['ci']['app']['setup']['build']['package_xml'])
+        app_subdir_path =  os.path.join(packagesDirPath(), CONFIG['ci']['setup']['build']['app_package_subdir'])
+        app_data_subsubdir_path =  os.path.join(app_subdir_path, CONFIG['ci']['setup']['build']['data_subsubdir'])
+        app_meta_subsubdir_path =  os.path.join(app_subdir_path, CONFIG['ci']['setup']['build']['meta_subsubdir'])
+        app_package_xml_path = os.path.join(app_meta_subsubdir_path, CONFIG['ci']['setup']['build']['package_xml'])
         package_install_script_src = os.path.join(CONFIG.scripts_dir, CONFIG['ci']['scripts']['package_install'])
         freezed_app_src = os.path.join(CONFIG.dist_dir, f"{CONFIG.app_name}{CONFIG['ci']['pyinstaller']['dir_suffix'][CONFIG.os]}")
         Functions.createDir(packagesDirPath())
@@ -318,8 +319,8 @@ def createInstallerSourceDir():
         #docs_data_subsubdir_path = os.path.join(docs_subdir_path, CONFIG['ci']['app']['setup']['build']['data_subsubdir'])
         #docs_meta_subsubdir_path = os.path.join(docs_subdir_path, CONFIG['ci']['app']['setup']['build']['meta_subsubdir'])
         #docs_package_xml_path = os.path.join(docs_meta_subsubdir_path, CONFIG['ci']['app']['setup']['build']['package_xml'])
-        docs_dir_src = CONFIG['ci']['project']['subdirs']['docs']['src']
-        docs_dir_dest = CONFIG['ci']['project']['subdirs']['docs']['dest']
+        docs_dir_src = CONFIG['ci']['subdirs']['docs']['src']
+        docs_dir_dest = CONFIG['ci']['subdirs']['docs']['dest']
         #Functions.createDir(docs_subdir_path)
         #Functions.createDir(docs_data_subsubdir_path)
         #Functions.createDir(docs_meta_subsubdir_path)

@@ -8,18 +8,18 @@ import argparse
 from PySide2.QtCore import QUrl
 from PySide2.QtWidgets import QApplication
 from PySide2.QtGui import Qt, QIcon
-from PySide2.QtQml import QQmlApplicationEngine, qmlRegisterType
+from PySide2.QtQml import QQmlApplicationEngine 
 from PySide2.QtWebEngine import QtWebEngine
-from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView  # to call hook-PySide2.QtWebEngineWidgets.py
 
 # easyScience
-import utils
+import EasyReflectometryApp
+from EasyReflectometryApp import utils
 import easyApp
-from easyApp.Logic.Translate import Translator
+# from easyApp.Logic.Translate import Translator
 from EasyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
 
 # Global vars
-CONFIG = utils.conf()
+CONFIG = utils.proj()
 
 
 class App(QApplication):
@@ -40,10 +40,10 @@ def main():
         from easyApp.Logic import Logging
 
     # Paths
-    app_name = CONFIG['tool']['poetry']['name']
-    current_path = os.path.dirname(sys.argv[0])
-
-    package_path = os.path.join(current_path, f'{app_name}App')
+    project_name = CONFIG['project']['name']
+    current_path = EasyReflectometryApp.__path__[0]
+    
+    package_path = os.path.join(current_path, f'{project_name}')
     if not os.path.exists(package_path):
         package_path = current_path
 
@@ -53,21 +53,17 @@ def main():
     easyApp_path = os.path.join(easyApp.__path__[0], '..')
 
     home_path = pathlib.Path.home()
-    settings_path = str(home_path.joinpath(f'.{app_name}', 'settings.ini'))
-
-    languages = CONFIG['ci']['app']['translations']['languages']
-    translations_dir = CONFIG['ci']['app']['translations']['dir']
-    translations_path = os.path.join(package_path, *translations_dir.split('/'))
+    settings_path = str(home_path.joinpath(f'.{project_name}', 'settings.ini'))
 
     # QtWebEngine
     QtWebEngine.initialize()
 
     # Application
     app = App(sys.argv)
-    app.setApplicationName(CONFIG['tool']['poetry']['name'])
-    app.setApplicationVersion(CONFIG['tool']['poetry']['version'])
-    app.setOrganizationName(CONFIG['tool']['poetry']['name'])
-    app.setOrganizationDomain(CONFIG['tool']['poetry']['name'])
+    app.setApplicationName(CONFIG['project']['appname'])
+    app.setApplicationVersion(CONFIG['project']['version'])
+    app.setOrganizationName(CONFIG['project']['appname'])
+    app.setOrganizationDomain(CONFIG['project']['appname'])
     app.setWindowIcon(QIcon(app_icon_path))
 
     # QML application engine
@@ -75,12 +71,10 @@ def main():
 
     # Python objects to be exposed to QML
     py_qml_proxy_obj = PyQmlProxy()
-    translator = Translator(app, engine, translations_path, languages)
 
     # Expose the Python objects to QML
     engine.rootContext().setContextProperty('_pyQmlProxyObj', py_qml_proxy_obj)
     engine.rootContext().setContextProperty('_settingsPath', settings_path)
-    engine.rootContext().setContextProperty('_translator', translator)
     engine.rootContext().setContextProperty('_projectConfig', CONFIG)
     engine.rootContext().setContextProperty('_isTestMode', args.testmode)
 
