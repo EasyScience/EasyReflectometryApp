@@ -125,7 +125,10 @@ jobs:
 
       - name: Run app in testmode, record screen and quit
         if: runner.os != 'Windows'
-        run: python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
+        run: | 
+          ls /home/runner/
+          ls /home/runner/EasyReflectometry/ 
+          python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
 
       # #- name: Rename test videos
       # #  run: poetry run python ${{ env.SCRIPTS_PATH }}/CreateTestVideos.py ${{ env.BRANCH_NAME }}
