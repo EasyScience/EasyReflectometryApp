@@ -35,7 +35,7 @@ EaElements.RemoteController {
         interval: 1000
         onTriggered: {
             startScreenRecording()
-            runAppInterfaceTutorial()
+            // runAppInterfaceTutorial()
             //runDataFittingTutorial()
             //runDataSimulationTutorial()
             stopScreenRecording()
@@ -77,11 +77,11 @@ EaElements.RemoteController {
             right: 3 * EaStyle.Sizes.fontPixelSize,
             bottom: 3 * EaStyle.Sizes.fontPixelSize
         }
-        ExGlobals.Constants.proxy.screenRecorder.startRecording(frame_rect, margin_rect)
+        // ExGlobals.Constants.proxy.screenRecorder.startRecording(frame_rect, margin_rect)
     }
 
     function stopScreenRecording() {
-        ExGlobals.Constants.proxy.screenRecorder.stopRecording()
+        // ExGlobals.Constants.proxy.screenRecorder.stopRecording()
         quitAppTimer.start()
     }
 
