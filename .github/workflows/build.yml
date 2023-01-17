@@ -15,14 +15,13 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-20.04]
-        # os: [macos-10.15, ubuntu-20.04, windows-2019]
+        os: [ubuntu-20.04, windows-2019, macos-10.15]
 
     steps:
-      # - name: Cancel previous workflow runs
-      #   uses: n1hility/cancel-previous-runs@v2
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cancel previous workflow runs
+        uses: n1hility/cancel-previous-runs@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check-out repository
         uses: actions/checkout@v2
@@ -34,7 +33,6 @@ jobs:
            sudo apt-get -y -o Acquire::Retries=3 install libxcb-xinerama0
            sudo apt-get -y -o Acquire::Retries=3 install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0
            sudo apt-get -y -o Acquire::Retries=3 install libpulse-mainloop-glib0
-          #  sudo apt-get -y -o Acquire::Retries=3 install libx11-xcb-dev
 
       - name: Set up Python environment
         uses: actions/setup-python@v2
