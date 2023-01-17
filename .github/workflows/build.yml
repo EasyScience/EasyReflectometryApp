@@ -2,9 +2,6 @@ name: build macOS, Linux, Windows
 
 on: [push, pull_request]
 
-env:
-  PROJECT_NAME: EasyReflectometryApp
-
 jobs:
   build:
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
@@ -58,20 +55,20 @@ jobs:
 
       - name: Add extra info to pyproject.toml
         run: |
-          python $PROJECT_NAME/utils.py --update
+          python utils.py --update
 
       # https://docs.github.com/en/actions/reference/environment-variables
       - name: Declare env variables on push and pull_request
         shell: bash
         run: |
-          echo "APP_NAME=$(python $PROJECT_NAME/utils.py --get project.appname)" >> $GITHUB_ENV
-          echo "RELEASE_TAG=$(python $PROJECT_NAME/utils.py --get ci.git.release_tag)" >> $GITHUB_ENV
-          echo "RELEASE_TITLE=$(python $PROJECT_NAME/utils.py --get ci.git.release_title)" >> $GITHUB_ENV
-          echo "SCRIPTS_PATH=$(python $PROJECT_NAME/utils.py --get ci.subdirs.scripts)" >> $GITHUB_ENV
-          echo "DISTRIBUTION_PATH=$(python $PROJECT_NAME/utils.py --get ci.subdirs.distribution)" >> $GITHUB_ENV
-          echo "DOWNLOAD_PATH=$(python $PROJECT_NAME/utils.py --get ci.subdirs.download)" >> $GITHUB_ENV
-          echo "QTIFW_PATH=$(python $PROJECT_NAME/utils.py --get ci.qtifw.installation_path.${{ runner.os }})" >> $GITHUB_ENV
-          echo "PYTHON_PACKAGES_PATH=$(python $PROJECT_NAME/utils.py --get ci.paths.python_packages_path)" >> $GITHUB_ENV
+          echo "APP_NAME=$(python utils.py --get project.appname)" >> $GITHUB_ENV
+          echo "RELEASE_TAG=$(python utils.py --get ci.git.release_tag)" >> $GITHUB_ENV
+          echo "RELEASE_TITLE=$(python utils.py --get ci.git.release_title)" >> $GITHUB_ENV
+          echo "SCRIPTS_PATH=$(python utils.py --get ci.subdirs.scripts)" >> $GITHUB_ENV
+          echo "DISTRIBUTION_PATH=$(python utils.py --get ci.subdirs.distribution)" >> $GITHUB_ENV
+          echo "DOWNLOAD_PATH=$(python utils.py --get ci.subdirs.download)" >> $GITHUB_ENV
+          echo "QTIFW_PATH=$(python utils.py --get ci.qtifw.installation_path.${{ runner.os }})" >> $GITHUB_ENV
+          echo "PYTHON_PACKAGES_PATH=$(python utils.py --get ci.paths.python_packages_path)" >> $GITHUB_ENV
           echo "GIT_INSTALL_URL=git+ssh://git@github.com/$GITHUB_REPOSITORY@${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
           cat $GITHUB_ENV
 

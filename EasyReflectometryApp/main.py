@@ -13,13 +13,21 @@ from PySide2.QtWebEngine import QtWebEngine
 
 # easyScience
 import EasyReflectometryApp
-from EasyReflectometryApp import utils
+import toml
 import easyApp
 # from easyApp.Logic.Translate import Translator
 from EasyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
 
 # Global vars
-CONFIG = utils.proj()
+def proj():
+    project_fname = 'pyproject.toml'
+    try:
+        return toml.load(os.path.join(os.path.split(__file__)[0], project_fname))
+    except FileNotFoundError:
+        up_directory = os.path.join(os.path.split(__file__)[0], '..') 
+        return toml.load(os.path.join(up_directory, project_fname)) 
+
+CONFIG = proj()
 
 
 class App(QApplication):
