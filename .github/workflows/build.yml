@@ -126,7 +126,7 @@ jobs:
       - name: Run app in testmode, record screen and quit
         if: runner.os != 'Windows'
         run: |
-          ls /opt/runner/
+          ls /home/runner/
           python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
 
       # #- name: Rename test videos
