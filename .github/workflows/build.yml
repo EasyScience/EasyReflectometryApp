@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-20.04]
+        os: [ubuntu-20.04, macos-10.15]
         # os: [macos-10.15, ubuntu-20.04, windows-2019]
 
     steps:
@@ -129,7 +129,7 @@ jobs:
           ls /
           ls /home/
           ls /home/runneradmin/
-          ls ~/.local/share/applications/
+          ls ~/.local/share/applications
           python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
 
       # #- name: Rename test videos
