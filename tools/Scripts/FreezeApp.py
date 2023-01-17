@@ -41,7 +41,7 @@ def addedData():
             {'from': easyCore.__path__[0], 'to': 'easyCore'},
             {'from': EasyReflectometry.__path__[0], 'to': 'EasyReflectometryLib'},
             {'from': easyApp.__path__[0], 'to': 'easyApp'},
-            {'from': f'{CONFIG["project"]["name"]}/utils.py', 'to': '.'},
+            {'from': 'utils.py', 'to': '.'},
             {'from': 'pyproject.toml', 'to': '.'}]
     # Add other missing libs
     extras = CONFIG['ci']['pyinstaller']['missing_other_libraries'][CONFIG.os]
