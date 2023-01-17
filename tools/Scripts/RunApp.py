@@ -10,7 +10,7 @@ CONFIG = Config.Config()
 def appExePath():
     d = {
         'macos': os.path.join(CONFIG.installation_dir, CONFIG.app_full_name, 'Contents', 'MacOS', CONFIG.app_name),
-        'ubuntu': os.path.join(CONFIG.installation_dir, CONFIG.app_name, CONFIG.app_full_name),
+        'ubuntu': os.path.join(CONFIG.installation_dir, CONFIG.app_full_name),
         'windows': os.path.join(CONFIG.installation_dir, CONFIG.app_name, CONFIG.app_full_name)
     }
     return d[CONFIG.os]
