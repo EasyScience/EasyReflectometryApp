@@ -120,10 +120,10 @@ def deploy():
     #    return
 
     password = sys.argv[2]
-    host = CONFIG['ci']['app']['setup']['ftp']['host']
-    port = CONFIG['ci']['app']['setup']['ftp']['port']
-    user = CONFIG['ci']['app']['setup']['ftp']['user']
-    remote_subdir_name = CONFIG['ci']['app']['setup']['ftp']['remote_subdir']
+    host = CONFIG['ci']['ftp']['host']
+    port = CONFIG['ci']['ftp']['port']
+    user = CONFIG['ci']['ftp']['user']
+    remote_subdir_name = CONFIG['ci']['ftp']['remote_subdir']
 
     local_repository_dir_name = f'{CONFIG.app_name}{CONFIG.repository_dir_suffix}'
     local_repository_dir_path = os.path.join(CONFIG.dist_dir, local_repository_dir_name, CONFIG.setup_os)
