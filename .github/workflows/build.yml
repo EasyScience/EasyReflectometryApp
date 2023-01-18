@@ -157,4 +157,4 @@ jobs:
 
       - name: Upload online app installer to repository via FTP
         if: github.event_name == 'push'
-        run: poetry run python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py ${{ env.BRANCH_NAME }} ${{ secrets.APP_REPO_FTP_PASSWORD }}
+        run: python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py ${{ env.BRANCH_NAME }} ${{ secrets.APP_REPO_FTP_PASSWORD }}
