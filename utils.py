@@ -15,12 +15,7 @@ def pyproject_toml():
     return os.path.join(os.path.split(__file__)[0], project_fname) 
 
 def proj():
-    project_fname = 'pyproject.toml'
-    try:
-        return toml.load(os.path.join(os.path.split(__file__)[0], project_fname))
-    except FileNotFoundError:
-        up_directory = os.path.join(os.path.split(__file__)[0], '..') 
-        return toml.load(os.path.join(up_directory, project_fname)) 
+    return toml.load(pyproject_toml())
 
 def keyPath():
     if len(sys.argv) < 2:
