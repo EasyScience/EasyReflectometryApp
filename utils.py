@@ -72,11 +72,10 @@ def extraDict():
 def extraToml():
     return toml.dumps(extraDict())
 
-def updateCiConfigToml():
-    with open(ciconfig_toml(), 'r') as f:
-        output_dict = toml.load(f)
+def updatePyProjectToml():
+    output_dict = proj()
     output_dict.update(extraDict())
-    with open(ciconfig_toml(), 'w') as f:
+    with open(pyproject_toml(), 'w') as f:
         toml.dump(output_dict, f)
 
 ### Main
@@ -90,7 +89,7 @@ def main():
         value = getValue(proj(), args.key)
         print(value)
     if args.update:
-        updateCiConfigToml()
+        updatePyProjectToml()
 
 if __name__ == '__main__':
     main()
