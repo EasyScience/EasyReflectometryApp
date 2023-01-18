@@ -92,11 +92,11 @@ jobs:
       # - name: Sign the installer
       #   run: python ${{ env.SCRIPTS_PATH }}/Signatures.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
 
-      # #- name: Set up screen recording dependencies (macOS)
-      # #  if: runner.os == 'macOS'
-      # #  run: |
-      # #    "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
-      # #    system_profiler SPDisplaysDataType | grep Resolution
+      - name: Set up screen recording dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
+          system_profiler SPDisplaysDataType | grep Resolution
 
       - name: Set up screen recording dependencies (Linux)
         if: runner.os == 'Linux'
@@ -119,9 +119,7 @@ jobs:
         run: python ${{ env.SCRIPTS_PATH }}/InstallApp.py
 
       - name: Run app in testmode, record screen and quit
-        # if: runner.os != 'Windows'
-        run: |
-          python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
+        run: python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
 
       # #- name: Rename test videos
       # #  run: poetry run python ${{ env.SCRIPTS_PATH }}/CreateTestVideos.py ${{ env.BRANCH_NAME }}
