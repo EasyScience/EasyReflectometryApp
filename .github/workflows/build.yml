@@ -105,11 +105,11 @@ jobs:
           Xvfb :0 -screen 0 1920x1080x24 -ac &
           echo "DISPLAY=:0" >> $GITHUB_ENV
 
-      # #- name: Set up screen recording dependencies (Windows)
-      # #  if: runner.os == 'Windows'
-      # #  run: |
-      # #    Set-DisplayResolution -Width 1920 -Height 1080 -Force
-      # #    Get-DisplayResolution
+      - name: Set up screen recording dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          Set-DisplayResolution -Width 1920 -Height 1080 -Force
+          Get-DisplayResolution
 
       - name: Make dir for .desktop file (Linux)
         if: runner.os == 'Linux'
@@ -119,7 +119,7 @@ jobs:
         run: python ${{ env.SCRIPTS_PATH }}/InstallApp.py
 
       - name: Run app in testmode, record screen and quit
-        if: runner.os != 'Windows'
+        # if: runner.os != 'Windows'
         run: |
           python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
 
