@@ -54,15 +54,15 @@ def extraDict():
     release_tag = f'v{app_version}'
     release_title = f'Version {app_version} ({build_date})'
 
-    return { 'paths': { 'python_packages_path': python_packages_path },
-            'git': { 'build_date': build_date,
-                'date_for_qtifw': date_for_qtifw,
-                'release_tag': release_tag,
-                'release_title': release_title,
-                'branch_name': branch_name,
-                'branch_url': branch_url,
-                'commit_sha_short': commit_sha_short,
-                'commit_url': commit_url } }
+    return {'ci': { 'paths': { 'python_packages_path': python_packages_path },
+                    'git': { 'build_date': build_date,
+                             'date_for_qtifw': date_for_qtifw,
+                             'release_tag': release_tag,
+                             'release_title': release_title,
+                             'branch_name': branch_name,
+                             'branch_url': branch_url,
+                             'commit_sha_short': commit_sha_short,
+                             'commit_url': commit_url } } }
 
 def extraToml():
     return toml.dumps(extraDict())
