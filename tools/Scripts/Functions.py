@@ -87,9 +87,6 @@ def installSilently(installer, silent_script):
 def project():
     return toml.load(os.path.join(os.getcwd(), 'pyproject.toml'))
 
-def config():
-    return toml.load(os.path.join(os.getcwd(), 'ciconfig.toml'))
-
 def osName():
     platform = sys.platform
     if platform.startswith('darwin'):

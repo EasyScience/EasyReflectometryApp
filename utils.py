@@ -10,18 +10,9 @@ import toml
 
 ### Get value from pyproject.toml
 
-
-def ciconfig_toml():
-    config_fname = 'ciconfig.toml'
-    return os.path.join(os.getcwd(), config_fname) 
-
 def pyproject_toml():
     project_fname = 'pyproject.toml'
     return os.path.join(os.path.split(__file__)[0], project_fname) 
-
-def conf():
-    config_fpath = ciconfig_toml()
-    return toml.load(config_fpath)
 
 def proj():
     project_fname = 'pyproject.toml'
@@ -30,11 +21,6 @@ def proj():
     except FileNotFoundError:
         up_directory = os.path.join(os.path.split(__file__)[0], '..') 
         return toml.load(os.path.join(up_directory, project_fname)) 
-
-def proj_conf():
-    p = proj()
-    p['ci'] = conf()
-    return p
 
 def keyPath():
     if len(sys.argv) < 2:
@@ -101,7 +87,7 @@ def main():
     parser.add_argument('-u', '--update', action='store_true', help='add extra info to the pyproject.toml')
     args = parser.parse_args()
     if args.key:
-        value = getValue(proj_conf(), args.key)
+        value = getValue(proj(), args.key)
         print(value)
     if args.update:
         updateCiConfigToml()
