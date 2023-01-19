@@ -41,7 +41,7 @@ jobs:
 
       - name: Install with dependencies
         run: |
-          pip install '.[dev]'
+          pip install '.[ci]'
 
       - name: Declare env variables on push only
         if: github.event_name == 'push'
