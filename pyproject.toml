@@ -148,7 +148,9 @@ manual_exclude = [ 'mfc*', 'msvcp*', 'VCRUNTIME*',
                    '*Qt*Scxml*', '*Qt*Sensors*', '*Qt*Sql*', '*Qt*VirtualKeyboard*', '*Qt*Wayland*' ]
 
 [ci.ftp]
-host = 'ftp.apptimity.com'
+host = 'easydiffraction.org'
 port = 21
-user = 'ed@easyscience.apptimity.com'
-remote_subdir = 'app'
+user = 'u652432322.easyreflectometry_ci'
+prefix = 'download'
+remote_subdir = 'onlineRepository'
+user_repo = 'u652432322.easyreflectometry_repo'
