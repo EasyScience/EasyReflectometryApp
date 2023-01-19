@@ -201,7 +201,7 @@ def appPackageXml():
 #        name = CONFIG['ci']['setup']['build']['docs_package_name']
 #        description = CONFIG['ci']['setup']['build']['docs_package_description']
 #        version = CONFIG['ci']['setup']['build']['docs_package_version']
-#        release_date = "2020-01-01" #datetime.datetime.strptime(config['release']['date'], "%d %b %Y").strftime("%Y-%m-%d")
+#        release_date = "2020-01-01" #datetime.datetime.strptime(config['ci']['setup']['date'], "%d %b %Y").strftime("%Y-%m-%d")
 #        raw_xml = Functions.dict2xml({
 #            'Package': {
 #                'DisplayName': f'{name} {version}',
@@ -299,10 +299,10 @@ def createInstallerSourceDir():
         Functions.createFile(path=app_package_xml_path, content=appPackageXml())
         Functions.copyFile(source=package_install_script_src, destination=app_meta_subsubdir_path)
         Functions.copyFile(source=CONFIG.license_file, destination=app_meta_subsubdir_path)
-        Functions.copyFile(source=CONFIG['release']['changelog_file'], destination=app_meta_subsubdir_path)
+        Functions.copyFile(source=CONFIG['ci']['setup']['changelog_file'], destination=app_meta_subsubdir_path)
         Functions.moveDir(source=freezed_app_src, destination=app_data_subsubdir_path)
         Functions.copyFile(source=CONFIG.license_file, destination=app_data_subsubdir_path)
-        Functions.copyFile(source=CONFIG['release']['changelog_file'], destination=app_data_subsubdir_path)
+        Functions.copyFile(source=CONFIG['ci']['setup']['changelog_file'], destination=app_data_subsubdir_path)
         # TODO: change the handling of failure in all methods in Functions.py so they bubble up exceptions
         # TODO: remove this platform conditional once the above is done
         if CONFIG.os == 'windows':
@@ -380,7 +380,7 @@ def addFilesToLocalRepository():
     try:
         message = 'add files to local repository'
         repository_dir_path = os.path.join(CONFIG.dist_dir, localRepositoryDir())
-        Functions.copyFile(source=CONFIG['release']['changelog_file'], destination=repository_dir_path)
+        Functions.copyFile(source=CONFIG['ci']['setup']['changelog_file'], destination=repository_dir_path)
     except Exception as exception:
         Functions.printFailMessage(message, exception)
         sys.exit(1)
