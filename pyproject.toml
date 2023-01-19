@@ -1,8 +1,12 @@
 [build-system]
+# Use hatch to build the application. 
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
+# Information about the EasyReflectometryApp project.
+# Note that while the project is called EasyReflectometryApp
+# the application itself is EasyReflectometry. 
 name = "EasyReflectometryApp"
 appname = 'EasyReflectometry'
 version = "0.0.5-beta"
@@ -122,6 +126,7 @@ file_name_base = 'QtInstallerFramework-'
 file_name_suffix = { macos = 'mac-x64', ubuntu = 'linux-x64', windows = 'win-x86' }
 file_ext = { macos = '.dmg', ubuntu = '.run', windows = '.exe' }
 installation_path = { macOS = '/Users/runner/Qt', Linux = '/home/runner/Qt', Windows = 'C:\Qt' }
+file_platform = { macos = 'macOS-x86_64', ubuntu = 'linux-x64', windows = 'windows-x86' }
 
 [ci.pyinstaller]
 separator = { macos = ':', ubuntu = ':', windows = ';' }
