@@ -215,7 +215,7 @@ def appPackageXml():
 #        pretty_xml = xml.dom.minidom.parseString(raw_xml).toprettyxml()
 #    except Exception as exception:
 #        Functions.printFailMessage(message, exception)
-#        sys.exit()
+#        sys.exit(1)
 #    else:
 #        Functions.printSuccessMessage(message)
 #        return pretty_xml
