@@ -286,9 +286,9 @@ def createInstallerSourceDir():
         Functions.copyFile(source=config_control_script_path, destination=configDirPath())
         Functions.copyFile(source=config_style_path, destination=configDirPath())
         # package: app
-        app_subdir_path =  os.path.join(packagesDirPath(), CONFIG['ci']['setup']['build']['app_package_subdir'])
-        app_data_subsubdir_path =  os.path.join(app_subdir_path, CONFIG['ci']['setup']['build']['data_subsubdir'])
-        app_meta_subsubdir_path =  os.path.join(app_subdir_path, CONFIG['ci']['setup']['build']['meta_subsubdir'])
+        app_subdir_path = os.path.join(packagesDirPath(), CONFIG['ci']['setup']['build']['app_package_subdir'])
+        app_data_subsubdir_path = os.path.join(app_subdir_path, CONFIG['ci']['setup']['build']['data_subsubdir'])
+        app_meta_subsubdir_path = os.path.join(app_subdir_path, CONFIG['ci']['setup']['build']['meta_subsubdir'])
         app_package_xml_path = os.path.join(app_meta_subsubdir_path, CONFIG['ci']['setup']['build']['package_xml'])
         package_install_script_src = os.path.join(CONFIG.scripts_dir, CONFIG['ci']['scripts']['package_install'])
         freezed_app_src = os.path.join(CONFIG.dist_dir, f"{CONFIG.app_name}{CONFIG['ci']['pyinstaller']['dir_suffix'][CONFIG.os]}")
