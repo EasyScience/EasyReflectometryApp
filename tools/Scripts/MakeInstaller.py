@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 easyDiffraction contributors <support@easydiffraction.org>
+# SPDX-License-Identifier: BSD-3-Clause
+# © 2021-2022 Contributors to the easyDiffraction project <https://github.com/easyScience/easyDiffractionApp>
+
 __author__ = "github.com/AndrewSazonov"
 __version__ = '0.0.1'
 
@@ -8,33 +12,20 @@ import xml.dom.minidom
 import dephell_licenses
 import Functions, Config
 import Signatures
+import datetime
 
 
 CONFIG = Config.Config()
 
 def qtifwSetupFileName():
+    file_version = CONFIG['ci']['qtifw']['version']
     file_name_base = CONFIG['ci']['qtifw']['file_name_base']
-    file_name_suffix = CONFIG['ci']['qtifw']['file_name_suffix'][CONFIG.os]
+    file_platform = CONFIG['ci']['qtifw']['file_platform'][CONFIG.os]
     file_ext = CONFIG['ci']['qtifw']['file_ext'][CONFIG.os]
-    return f'{file_name_base}{file_name_suffix}{file_ext}'
+    return f'{file_name_base}-{file_platform}-{file_version}.{file_ext}'
 
 def qtifwSetupDownloadDest():
     return os.path.join(CONFIG.download_dir, f'{qtifwSetupFileName()}')
-
-def urlOk(url):
-    try:
-        message = f'access url {url}'
-        status_code = requests.head(url, timeout=10).status_code
-        if status_code == 200:
-            Functions.printSuccessMessage(message)
-            return True
-        else:
-            message += f' with status: {status_code}'
-            Functions.printFailMessage(message)
-            return False
-    except Exception as exception:
-        Functions.printFailMessage(message, exception)
-        return False
 
 def urlOk(url):
     try:
@@ -65,7 +56,7 @@ def qtifwSetupDownloadUrl():
     except Exception as exception:
         message += f'from any of {repos}'
         Functions.printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         Functions.printSuccessMessage(message)
         return url
@@ -106,9 +97,12 @@ def localRepositoryDir():
     repository_dir_suffix = CONFIG['ci']['setup']['repository_dir_suffix']
     return os.path.join(f'{CONFIG.app_name}{repository_dir_suffix}', CONFIG.setup_os)
 
-def remoteRepositoryDir():
-    remote_subdir_name = CONFIG['ci']['ftp']['remote_subdir']
-    return os.path.join(CONFIG.app_name, remote_subdir_name, CONFIG.setup_os)
+def onlineRepositoryUrl():
+    host = CONFIG['ci']['ftp']['host']
+    prefix = CONFIG['ci']['ftp']['prefix']
+    repo_subdir = CONFIG['ci']['ftp']['repo_subdir']
+    #return f'https://{prefix}.{host}/{repo_subdir}/{CONFIG.setup_os}'
+    return f'ftp://u652432322.repo:easyDiffraction123@download.easydiffraction.org/{CONFIG.setup_os}'
 
 def installerConfigXml():
     try:
@@ -135,14 +129,14 @@ def installerConfigXml():
                 'WizardDefaultHeight': 600,
                 'StyleSheet': config_style,
                 'StartMenuDir': CONFIG.app_name,
-                'TargetDir': CONFIG.installation_dir,
+                'TargetDir': CONFIG.installation_dir_for_qtifw,
                 #'CreateLocalRepository': 'true',
                 #'SaveDefaultRepositories': 'false',
                 #'RepositorySettingsPageVisible': 'false',
                 'RemoteRepositories': {
                     'Repository': [
                         {
-                            'Url': f'http://easyscience.apptimity.com/{remoteRepositoryDir()}',
+                            'Url': onlineRepositoryUrl(),
                             'DisplayName': f'{CONFIG.app_name} {CONFIG.setup_os}_{CONFIG.setup_arch} repository',
                             'Enabled': 1,
                         }
@@ -158,7 +152,7 @@ def installerConfigXml():
         pretty_xml = xml.dom.minidom.parseString(raw_xml).toprettyxml()
     except Exception as exception:
         Functions.printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         Functions.printSuccessMessage(message)
         return pretty_xml
@@ -166,37 +160,34 @@ def installerConfigXml():
 def appPackageXml():
     try:
         message = f"create app package content"
-        description = CONFIG['project']['description']
-        version = CONFIG['project']['version']
-        import datetime
         release_date = datetime.datetime.strptime(CONFIG['ci']['git']['build_date'], "%d %b %Y").strftime("%Y-%m-%d")
-        package_install_script = CONFIG['ci']['scripts']['package_install']
-        license_id = CONFIG['project']['license']
+        license_id = CONFIG['project']['license'].replace('-only', '')
         license_name = dephell_licenses.licenses.get_by_id(license_id).name.replace('"', "'")
+        requires_root = 'false'
         raw_xml = Functions.dict2xml({
             'Package': {
                 'DisplayName': CONFIG.app_name,
-                'Description': description,
-                'Version': version,
+                'Description': CONFIG['project']['description'],
+                'Version': CONFIG.app_version,
                 'ReleaseDate': release_date,
                 'Default': 'true',
                 #'SortingPriority': 100,
                 'Essential': 'true',
                 'ForcedInstallation': 'true',
-                #'RequiresAdminRights': 'true',
+                'RequiresAdminRights': 'false',
                 'Licenses': {
                     'License': {
                         '@name': license_name,
                         '@file': CONFIG.license_file
                     }
                 },
-                'Script': package_install_script,
+                'Script': CONFIG['ci']['scripts']['package_install'],
             }
         })
         pretty_xml = xml.dom.minidom.parseString(raw_xml).toprettyxml()
     except Exception as exception:
         Functions.printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         Functions.printSuccessMessage(message)
         return pretty_xml
@@ -258,17 +249,16 @@ def installQtInstallerFramework():
         time.sleep(10)
     except Exception as exception:
         Functions.printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         Functions.printSuccessMessage(message)
-
 
 def prepareSignedMaintenanceTool():
     if CONFIG.setup_os != "Windows":
         return
     try:
         message = 'copy and sign MaintenanceTool'
-        target_dir = CONFIG['ci']['subdirs']['certificates_path']
+        target_dir = CONFIG['ci']['project']['subdirs']['certificates_path']
         target_file = os.path.join(target_dir, "signedmaintenancetool.exe")
         # copy MaintenanceTool locally
         Functions.copyFile(os.path.join(qtifwDirPath(), "bin", "installerbase.exe" ), target_file)
@@ -276,10 +266,9 @@ def prepareSignedMaintenanceTool():
         Signatures.sign_windows(file_to_sign=target_file, cert_pass=sys.argv[1])
     except Exception as exception:
         Functions.printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         Functions.printSuccessMessage(message)
-
 
 def createInstallerSourceDir():
     try:
@@ -294,10 +283,10 @@ def createInstallerSourceDir():
         Functions.copyFile(source=config_control_script_path, destination=configDirPath())
         Functions.copyFile(source=config_style_path, destination=configDirPath())
         # package: app
-        app_subdir_path =  os.path.join(packagesDirPath(), CONFIG['ci']['setup']['build']['app_package_subdir'])
-        app_data_subsubdir_path =  os.path.join(app_subdir_path, CONFIG['ci']['setup']['build']['data_subsubdir'])
-        app_meta_subsubdir_path =  os.path.join(app_subdir_path, CONFIG['ci']['setup']['build']['meta_subsubdir'])
-        app_package_xml_path = os.path.join(app_meta_subsubdir_path, CONFIG['ci']['setup']['build']['package_xml'])
+        app_subdir_path =  os.path.join(packagesDirPath(), CONFIG['ci']['app']['setup']['build']['app_package_subdir'])
+        app_data_subsubdir_path =  os.path.join(app_subdir_path, CONFIG['ci']['app']['setup']['build']['data_subsubdir'])
+        app_meta_subsubdir_path =  os.path.join(app_subdir_path, CONFIG['ci']['app']['setup']['build']['meta_subsubdir'])
+        app_package_xml_path = os.path.join(app_meta_subsubdir_path, CONFIG['ci']['app']['setup']['build']['package_xml'])
         package_install_script_src = os.path.join(CONFIG.scripts_dir, CONFIG['ci']['scripts']['package_install'])
         freezed_app_src = os.path.join(CONFIG.dist_dir, f"{CONFIG.app_name}{CONFIG['ci']['pyinstaller']['dir_suffix'][CONFIG.os]}")
         Functions.createDir(packagesDirPath())
@@ -307,38 +296,65 @@ def createInstallerSourceDir():
         Functions.createFile(path=app_package_xml_path, content=appPackageXml())
         Functions.copyFile(source=package_install_script_src, destination=app_meta_subsubdir_path)
         Functions.copyFile(source=CONFIG.license_file, destination=app_meta_subsubdir_path)
+        Functions.copyFile(source=CONFIG['release']['changelog_file'], destination=app_meta_subsubdir_path)
         Functions.moveDir(source=freezed_app_src, destination=app_data_subsubdir_path)
         Functions.copyFile(source=CONFIG.license_file, destination=app_data_subsubdir_path)
+        Functions.copyFile(source=CONFIG['release']['changelog_file'], destination=app_data_subsubdir_path)
         # TODO: change the handling of failure in all methods in Functions.py so they bubble up exceptions
         # TODO: remove this platform conditional once the above is done
         if CONFIG.os == 'windows':
             Functions.copyFile(source=CONFIG.maintenancetool_file, destination=app_data_subsubdir_path)
 
         # package: docs
-        #docs_subdir_path = os.path.join(packagesDirPath(), CONFIG['ci']['app']['setup']['build']['docs_package_subdir'])
-        #docs_data_subsubdir_path = os.path.join(docs_subdir_path, CONFIG['ci']['app']['setup']['build']['data_subsubdir'])
-        #docs_meta_subsubdir_path = os.path.join(docs_subdir_path, CONFIG['ci']['app']['setup']['build']['meta_subsubdir'])
-        #docs_package_xml_path = os.path.join(docs_meta_subsubdir_path, CONFIG['ci']['app']['setup']['build']['package_xml'])
-        docs_dir_src = CONFIG['ci']['subdirs']['docs']['src']
-        docs_dir_dest = CONFIG['ci']['subdirs']['docs']['dest']
-        #Functions.createDir(docs_subdir_path)
-        #Functions.createDir(docs_data_subsubdir_path)
-        #Functions.createDir(docs_meta_subsubdir_path)
-        #Functions.createFile(path=docs_package_xml_path, content=docsPackageXml())
-        #Functions.copyDir(source=docs_dir_src, destination=os.path.join(docs_data_subsubdir_path, 'Documentation'))
-        Functions.copyDir(source=docs_dir_src, destination=os.path.join(app_data_subsubdir_path, docs_dir_dest))
-        # # Currently there are no examples to copy
-        # # package: examples
-        # examples_dir_src = CONFIG['ci']['project']['subdirs']['examples']['src']
-        # examples_dir_dest = CONFIG['ci']['project']['subdirs']['examples']['dest']
-        # Functions.copyDir(source=examples_dir_src, destination=os.path.join(app_data_subsubdir_path, examples_dir_dest))
+        ##docs_subdir_path = os.path.join(packagesDirPath(), CONFIG['ci']['app']['setup']['build']['docs_package_subdir'])
+        ##docs_data_subsubdir_path = os.path.join(docs_subdir_path, CONFIG['ci']['app']['setup']['build']['data_subsubdir'])
+        ##docs_meta_subsubdir_path = os.path.join(docs_subdir_path, CONFIG['ci']['app']['setup']['build']['meta_subsubdir'])
+        ##docs_package_xml_path = os.path.join(docs_meta_subsubdir_path, CONFIG['ci']['app']['setup']['build']['package_xml'])
+        #docs_dir_src = CONFIG['ci']['project']['subdirs']['docs']['src']
+        #docs_dir_dest = CONFIG['ci']['project']['subdirs']['docs']['dest']
+        ##Functions.createDir(docs_subdir_path)
+        ##Functions.createDir(docs_data_subsubdir_path)
+        ##Functions.createDir(docs_meta_subsubdir_path)
+        ##Functions.createFile(path=docs_package_xml_path, content=docsPackageXml())
+        ##Functions.copyDir(source=docs_dir_src, destination=os.path.join(docs_data_subsubdir_path, 'Documentation'))
+        #Functions.copyDir(source=docs_dir_src, destination=os.path.join(app_data_subsubdir_path, docs_dir_dest))
+        # package: examples
+        #examples_dir_src = CONFIG['ci']['project']['subdirs']['examples']['src']
+        #examples_dir_dest = CONFIG['ci']['project']['subdirs']['examples']['dest']
+        #Functions.copyDir(source=examples_dir_src, destination=os.path.join(app_data_subsubdir_path, examples_dir_dest))
+        # TODO: change the handling of failure in all methods in Functions.py so they bubble up exceptions
+        # TODO: remove this platform conditional once the above is done
+        if CONFIG.os == 'windows':
+            Functions.copyFile(source=CONFIG.maintenancetool_file, destination=app_data_subsubdir_path)
     except Exception as exception:
         Functions.printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         Functions.printSuccessMessage(message)
 
-def createOnlineRepository():
+def createOfflineInstaller():
+    try:
+        message = 'create installer'
+        qtifw_bin_dir_path = os.path.join(qtifwDirPath(), 'bin')
+        qtifw_binarycreator_path = os.path.join(qtifw_bin_dir_path, 'binarycreator')
+        qtifw_installerbase_path = os.path.join(qtifw_bin_dir_path, 'installerbase')
+        setup_exe_path = os.path.join(CONFIG.dist_dir, CONFIG.setup_name)
+        Functions.run(
+            qtifw_binarycreator_path,
+            '--verbose',
+            '--offline-only',
+            '-c', configXmlPath(),
+            '-p', packagesDirPath(),
+            '-t', qtifw_installerbase_path,
+            setup_exe_path
+        )
+    except Exception as exception:
+        Functions.printFailMessage(message, exception)
+        sys.exit(1)
+    else:
+        Functions.printSuccessMessage(message)
+
+def createOnlineRepositoryLocally():
     try:
         message = 'create online repository'
         qtifw_bin_dir_path = os.path.join(qtifwDirPath(), 'bin')
@@ -353,32 +369,21 @@ def createOnlineRepository():
         )
     except Exception as exception:
         Functions.printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         Functions.printSuccessMessage(message)
 
-def createInstaller():
+def addFilesToLocalRepository():
     try:
-        message = 'create installer'
-        qtifw_bin_dir_path = os.path.join(qtifwDirPath(), 'bin')
-        qtifw_binarycreator_path = os.path.join(qtifw_bin_dir_path, 'binarycreator')
-        qtifw_installerbase_path = os.path.join(qtifw_bin_dir_path, 'installerbase')
-        setup_exe_path = os.path.join(CONFIG.dist_dir, CONFIG.setup_name)
-        Functions.run(
-            qtifw_binarycreator_path,
-            '--verbose',
-            #'--online-only',
-            '--offline-only',
-            '-c', configXmlPath(),
-            '-p', packagesDirPath(),
-            '-t', qtifw_installerbase_path,
-            setup_exe_path
-        )
+        message = 'add files to local repository'
+        repository_dir_path = os.path.join(CONFIG.dist_dir, localRepositoryDir())
+        Functions.copyFile(source=CONFIG['release']['changelog_file'], destination=repository_dir_path)
     except Exception as exception:
         Functions.printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         Functions.printSuccessMessage(message)
+
 
 if __name__ == "__main__":
     downloadQtInstallerFramework()
@@ -386,5 +391,6 @@ if __name__ == "__main__":
     installQtInstallerFramework()
     prepareSignedMaintenanceTool()
     createInstallerSourceDir()
-    createOnlineRepository()
-    createInstaller()
+    createOfflineInstaller()
+    createOnlineRepositoryLocally()
+    # addFilesToLocalRepository()
