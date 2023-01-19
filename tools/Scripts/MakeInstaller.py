@@ -239,7 +239,6 @@ def osDependentPreparation():
         Functions.printNeutralMessage(f'No preparation needed for os {CONFIG.os}')
 
 def installQtInstallerFramework():
-    print(qtifwDirPath())
     if os.path.exists(qtifwDirPath()):
         Functions.printNeutralMessage(f'QtInstallerFramework was already installed to {qtifwDirPath()}')
         return
@@ -397,4 +396,4 @@ if __name__ == "__main__":
     createInstallerSourceDir()
     createOfflineInstaller()
     createOnlineRepositoryLocally()
-    # addFilesToLocalRepository()
+    addFilesToLocalRepository()
