@@ -262,7 +262,7 @@ def prepareSignedMaintenanceTool():
         return
     try:
         message = 'copy and sign MaintenanceTool'
-        target_dir = CONFIG['ci']['project']['subdirs']['certificates_path']
+        target_dir = CONFIG['ci']['subdirs']['certificates_path']
         target_file = os.path.join(target_dir, "signedmaintenancetool.exe")
         # copy MaintenanceTool locally
         Functions.copyFile(os.path.join(qtifwDirPath(), "bin", "installerbase.exe" ), target_file)
