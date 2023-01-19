@@ -51,6 +51,7 @@ ci = [
 [project.urls]
 homepage = 'https://easyreflectometry.org'
 documentation = 'https://easyreflectometry.org'
+changelog = 'https://github.com/easyScience/EasyReflectometryApp/blob/main/CHANGELOG.md'
 
 [project.scripts]
 # This allows EasyReflectometry to be run from the command
@@ -100,6 +101,7 @@ maintenance_tool_suffix = 'MaintenanceTool'
 maintenance_file = 'signedmaintenancetool.exe'
 license_file = 'LICENSE.md'
 installation_dir_shortcut = { macos = '@ApplicationsDir@', ubuntu = '@HomeDir@', windows = '@ApplicationsDirX86@' }
+changelog_file = 'CHANGELOG.md'
 
 [ci.setup.build]
 config_dir = 'config'
