@@ -97,12 +97,15 @@ def localRepositoryDir():
     repository_dir_suffix = CONFIG['ci']['setup']['repository_dir_suffix']
     return os.path.join(f'{CONFIG.app_name}{repository_dir_suffix}', CONFIG.setup_os)
 
-def onlineRepositoryUrl():
+def onlineRepositoryUrl() -> str:
+    """
+    :return: Url of online repository.
+    """
     host = CONFIG['ci']['ftp']['host']
-    prefix = CONFIG['ci']['ftp']['prefix']
-    repo_subdir = CONFIG['ci']['ftp']['repo_subdir']
-    #return f'https://{prefix}.{host}/{repo_subdir}/{CONFIG.setup_os}'
-    return f'ftp://u652432322.repo:easyDiffraction123@download.easydiffraction.org/{CONFIG.setup_os}'
+    user = CONFIG['ci']['ftp']['user_repo']
+    # repo_subdir = CONFIG['ci']['setup']['ftp']['repo_subdir']
+    # return f'https://{prefix}.{host}/{repo_subdir}/{CONFIG.setup_os}'
+    return f'ftp://{user}:easyDiffraction123@download.{host}/{CONFIG.setup_os}'
 
 def installerConfigXml():
     try:
@@ -195,9 +198,9 @@ def appPackageXml():
 #def docsPackageXml():
 #    try:
 #        message = f"create docs package content"
-#        name = CONFIG['ci']['app']['setup']['build']['docs_package_name']
-#        description = CONFIG['ci']['app']['setup']['build']['docs_package_description']
-#        version = CONFIG['ci']['app']['setup']['build']['docs_package_version']
+#        name = CONFIG['ci']['setup']['build']['docs_package_name']
+#        description = CONFIG['ci']['setup']['build']['docs_package_description']
+#        version = CONFIG['ci']['setup']['build']['docs_package_version']
 #        release_date = "2020-01-01" #datetime.datetime.strptime(config['release']['date'], "%d %b %Y").strftime("%Y-%m-%d")
 #        raw_xml = Functions.dict2xml({
 #            'Package': {
@@ -236,6 +239,7 @@ def osDependentPreparation():
         Functions.printNeutralMessage(f'No preparation needed for os {CONFIG.os}')
 
 def installQtInstallerFramework():
+    print(qtifwDirPath())
     if os.path.exists(qtifwDirPath()):
         Functions.printNeutralMessage(f'QtInstallerFramework was already installed to {qtifwDirPath()}')
         return
@@ -283,10 +287,10 @@ def createInstallerSourceDir():
         Functions.copyFile(source=config_control_script_path, destination=configDirPath())
         Functions.copyFile(source=config_style_path, destination=configDirPath())
         # package: app
-        app_subdir_path =  os.path.join(packagesDirPath(), CONFIG['ci']['app']['setup']['build']['app_package_subdir'])
-        app_data_subsubdir_path =  os.path.join(app_subdir_path, CONFIG['ci']['app']['setup']['build']['data_subsubdir'])
-        app_meta_subsubdir_path =  os.path.join(app_subdir_path, CONFIG['ci']['app']['setup']['build']['meta_subsubdir'])
-        app_package_xml_path = os.path.join(app_meta_subsubdir_path, CONFIG['ci']['app']['setup']['build']['package_xml'])
+        app_subdir_path =  os.path.join(packagesDirPath(), CONFIG['ci']['setup']['build']['app_package_subdir'])
+        app_data_subsubdir_path =  os.path.join(app_subdir_path, CONFIG['ci']['setup']['build']['data_subsubdir'])
+        app_meta_subsubdir_path =  os.path.join(app_subdir_path, CONFIG['ci']['setup']['build']['meta_subsubdir'])
+        app_package_xml_path = os.path.join(app_meta_subsubdir_path, CONFIG['ci']['setup']['build']['package_xml'])
         package_install_script_src = os.path.join(CONFIG.scripts_dir, CONFIG['ci']['scripts']['package_install'])
         freezed_app_src = os.path.join(CONFIG.dist_dir, f"{CONFIG.app_name}{CONFIG['ci']['pyinstaller']['dir_suffix'][CONFIG.os]}")
         Functions.createDir(packagesDirPath())
@@ -296,20 +300,20 @@ def createInstallerSourceDir():
         Functions.createFile(path=app_package_xml_path, content=appPackageXml())
         Functions.copyFile(source=package_install_script_src, destination=app_meta_subsubdir_path)
         Functions.copyFile(source=CONFIG.license_file, destination=app_meta_subsubdir_path)
-        Functions.copyFile(source=CONFIG['release']['changelog_file'], destination=app_meta_subsubdir_path)
+        # Functions.copyFile(source=CONFIG['release']['changelog_file'], destination=app_meta_subsubdir_path)
         Functions.moveDir(source=freezed_app_src, destination=app_data_subsubdir_path)
         Functions.copyFile(source=CONFIG.license_file, destination=app_data_subsubdir_path)
-        Functions.copyFile(source=CONFIG['release']['changelog_file'], destination=app_data_subsubdir_path)
+        # Functions.copyFile(source=CONFIG['release']['changelog_file'], destination=app_data_subsubdir_path)
         # TODO: change the handling of failure in all methods in Functions.py so they bubble up exceptions
         # TODO: remove this platform conditional once the above is done
         if CONFIG.os == 'windows':
             Functions.copyFile(source=CONFIG.maintenancetool_file, destination=app_data_subsubdir_path)
 
         # package: docs
-        ##docs_subdir_path = os.path.join(packagesDirPath(), CONFIG['ci']['app']['setup']['build']['docs_package_subdir'])
-        ##docs_data_subsubdir_path = os.path.join(docs_subdir_path, CONFIG['ci']['app']['setup']['build']['data_subsubdir'])
-        ##docs_meta_subsubdir_path = os.path.join(docs_subdir_path, CONFIG['ci']['app']['setup']['build']['meta_subsubdir'])
-        ##docs_package_xml_path = os.path.join(docs_meta_subsubdir_path, CONFIG['ci']['app']['setup']['build']['package_xml'])
+        ##docs_subdir_path = os.path.join(packagesDirPath(), CONFIG['ci']['setup']['build']['docs_package_subdir'])
+        ##docs_data_subsubdir_path = os.path.join(docs_subdir_path, CONFIG['ci']['setup']['build']['data_subsubdir'])
+        ##docs_meta_subsubdir_path = os.path.join(docs_subdir_path, CONFIG['ci']['setup']['build']['meta_subsubdir'])
+        ##docs_package_xml_path = os.path.join(docs_meta_subsubdir_path, CONFIG['ci']['setup']['build']['package_xml'])
         #docs_dir_src = CONFIG['ci']['project']['subdirs']['docs']['src']
         #docs_dir_dest = CONFIG['ci']['project']['subdirs']['docs']['dest']
         ##Functions.createDir(docs_subdir_path)
