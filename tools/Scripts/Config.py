@@ -71,10 +71,10 @@ class Config():
             },
             'windows': {
                 '@HomeDir@': str(pathlib.Path.home()),
-                '@ApplicationsDir@': os.getenv('ProgramFiles'),
-                '@ApplicationsDirX86@': os.getenv('ProgramFiles(x86)')
-                # '@ApplicationsDir@': 'C:\\',
-                # '@ApplicationsDirX86@': 'C:\\'
+                # '@ApplicationsDir@': os.getenv('ProgramFiles'),
+                # '@ApplicationsDirX86@': os.getenv('ProgramFiles(x86)')
+                '@ApplicationsDir@': 'C:\\',
+                '@ApplicationsDirX86@': 'C:\\'
             }
         }
         dir_shortcut = self.__dict__['ci']['setup']['installation_dir_shortcut'][self.os]
