@@ -61,23 +61,29 @@ EasyReflectometryApp = "EasyReflectometryApp.main:main"
 EasyReflectometryApp = "EasyReflectometryApp.main:main"
 
 [tool.hatch.metadata]
+# This allows for local and git references in dependencies.
 allow-direct-references = true
 
 [tool.hatch.build]
 include = ['EasyReflectometryApp']
 
 [tool.hatch.build.force-include]
+# Ensuring the pyproject.toml is included at install.
 'pyproject.toml' = 'EasyReflectometryApp/pyproject.toml'
 
 [tool.coverage.run]
 source = ['EasyReflectometryApp']
 
 
-############################################
-############################################
-####### CI CONFIGURATION INFORMATION #######
-############################################
-############################################
+##########################################################
+##########################################################
+############## CI CONFIGURATION INFORMATION ##############
+##########################################################
+##########################################################
+
+# The content in this section is related to how the 
+# application is built on the Github action. Users of 
+# EasyReflectometry shouldn't worry about this content. 
 
 [ci.icon]
 dir = ['Gui', 'Resources', 'Logo']
