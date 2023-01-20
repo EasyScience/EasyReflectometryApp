@@ -155,6 +155,6 @@ jobs:
           name: ${{ env.RELEASE_TITLE }}
           bodyFile: "RELEASE.md"
 
-      - name: Upload online app installer to repository via FTP
-        if: github.event_name == 'push'
-        run: python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py ${{ env.BRANCH_NAME }} ${{ secrets.APP_REPO_FTP_PASSWORD }}
+      # - name: Upload online app installer to repository via FTP
+      #   if: github.event_name == 'push'
+      #   run: python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py ${{ env.BRANCH_NAME }} ${{ secrets.APP_REPO_FTP_PASSWORD }}
