@@ -131,11 +131,11 @@ config_control = 'InstallerControlScript.js'
 config_style = 'style.qss'
 
 [ci.qtifw]
-version = '4.1.0'
+version = '4.0.1'
 https_mirrors = ['download.qt.io', 'ftp.fau.de/qtproject', 'mirrors.dotsrc.org/qtproject']
 base_path = 'official_releases/qt-installer-framework'
 file_name_base = 'QtInstallerFramework'
-file_platform = { macos = 'macOS-x86_64', ubuntu = 'linux-x64', windows = 'windows-x86' }
+file_platform = { macos = 'mac-x64', ubuntu = 'linux-x64', windows = 'win-x86' }
 file_ext = { macos = 'dmg', ubuntu = 'run', windows = 'exe' }
 installation_path = { macOS = '/Users/runner/Qt', Linux = '/home/runner/Qt', Windows = 'C:\Qt' }
 
