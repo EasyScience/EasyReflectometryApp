@@ -132,7 +132,7 @@ def deploy():
     ftp = ftplib.FTP()
     connect(ftp, host, port)
     login(ftp, user, password)
-    removeDir(ftp, remote_repository_dir_path)
+    # removeDir(ftp, remote_repository_dir_path)
     upload(ftp, local_repository_dir_path, remote_subdir_name)
     ftp.quit()
 
