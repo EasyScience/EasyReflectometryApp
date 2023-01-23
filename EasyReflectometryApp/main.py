@@ -48,7 +48,7 @@ def main():
         from easyApp.Logic import Logging
 
     # Paths
-    project_name = CONFIG['project']['name']
+    project_name = CONFIG['project']['name'] + 'App'
     current_path = EasyReflectometryApp.__path__[0]
     
     package_path = os.path.join(current_path, f'{project_name}')
@@ -68,10 +68,10 @@ def main():
 
     # Application
     app = App(sys.argv)
-    app.setApplicationName(CONFIG['project']['appname'])
+    app.setApplicationName(CONFIG['project']['name'])
     app.setApplicationVersion(CONFIG['project']['version'])
-    app.setOrganizationName(CONFIG['project']['appname'])
-    app.setOrganizationDomain(CONFIG['project']['appname'])
+    app.setOrganizationName(CONFIG['project']['name'])
+    app.setOrganizationDomain(CONFIG['project']['name'])
     app.setWindowIcon(QIcon(app_icon_path))
 
     # QML application engine
