@@ -54,9 +54,22 @@ This said, the application project will be :mod:`EasyReflectometryApp` and shoul
 
     $ pip install EasyReflectometryApp
 
-If then run from the command line, it will still be necessary to 
+If then run from the command line, the application can be launched with the following. 
 
+.. code-block:: console
 
+    $ EasyReflectometry
+
+N.B. this is achieved by having the :code:`project.scripts` defined in the :code:`pyproject.toml`, `see here`_. 
+
+The local installer that is built by the continuous integration should not refer to :mod:`EasyReflectometryApp`, rather the name of the installer and also the application therein should be :code:`EasyReflectometry`. 
+We achieve this with the separate definition of a :code:`name` and an :code:`app_name` in the :code:`pyproject.toml`, `as shown here`_.
 
 Consequences
 ------------
+
+The primary consequence of this decision is that there is clarity in the naming structure of the EasyReflectometry application and Python library.
+This convention should be followed in future development and care taken not to deviate. 
+
+.. _see here: https://github.com/easyScience/EasyReflectometryApp/blob/8cb5f6ffe5c6b08fe67825c8b8e5ff5aa701b2e9/pyproject.toml#L57
+.. _as shown here: https://github.com/easyScience/EasyReflectometryApp/blob/8cb5f6ffe5c6b08fe67825c8b8e5ff5aa701b2e9/pyproject.toml#L10
