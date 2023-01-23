@@ -45,7 +45,8 @@ ci = [
     'pywin32-ctypes>=0.2.0; platform_system == "win32"', 
     'pypiwin32>=223; platform_system == "win32"',
     'pefile>=2022.5.30; platform_system == "win32"',
-    'dephell_licenses>=0.1.7'
+    'dephell_licenses>=0.1.7',
+    'scipy==1.6.1'
 ]
 
 [project.urls]
