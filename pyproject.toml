@@ -57,10 +57,10 @@ changelog = 'https://github.com/easyScience/EasyReflectometryApp/blob/main/CHANG
 [project.scripts]
 # This allows EasyReflectometry to be run from the command
 # line after being installed by pip. 
-EasyReflectometryApp = "EasyReflectometryApp.main:main"
+EasyReflectometry = "EasyReflectometryApp.main:main"
 
 [project.gui-scripts]
-EasyReflectometryApp = "EasyReflectometryApp.main:main"
+EasyReflectometry = "EasyReflectometryApp.main:main"
 
 [tool.hatch.metadata]
 # This allows for local and git references in dependencies.
