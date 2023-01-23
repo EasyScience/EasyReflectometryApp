@@ -86,8 +86,12 @@ jobs:
       - name: Create freezed python app bundle
         run: python ${{ env.SCRIPTS_PATH }}/FreezeApp.py
 
-      - name: Create offline and online app installers from freezed app bundle
+      - name: Create offline app installers from freezed app bundle
         run: python ${{ env.SCRIPTS_PATH }}/MakeInstaller.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
+
+      - name: Create online app installers from freezed app bundle
+        if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
+        run: python ${{ env.SCRIPTS_PATH }}/MakeOnlineInstaller.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
 
       # - name: Sign the installer
       #   run: python ${{ env.SCRIPTS_PATH }}/Signatures.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
@@ -156,5 +160,5 @@ jobs:
           bodyFile: "RELEASE.md"
 
       - name: Upload online app installer to repository via FTP
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
         run: python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py ${{ env.BRANCH_NAME }} ${{ secrets.APP_REPO_FTP_PASSWORD }}
