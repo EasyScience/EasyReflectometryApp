@@ -62,7 +62,7 @@ EaElements.RemoteController {
     Component.onCompleted: {
         if (EaGlobals.Variables.isTestMode) {
             print('*** TEST MODE ***')
-            Qt.quit()
+            runTestTutorialTimer.start()
         }
     }
 
