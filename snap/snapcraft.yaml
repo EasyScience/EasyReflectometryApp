@@ -1,0 +1,70 @@
+name: easyreflectometry
+summary: Making reflectometry data analysis and modelling easy.
+description: |
+   EasyReflectometry is a scientific software for modelling and analysis of reflectometry data.
+   Currently, EasyReflectometry covers single contrast measurements of layered structures.
+version: git
+grade: stable
+confinement: strict
+base: core20
+icon: resources/images/er_logo.svg
+architectures:
+    - build-on: [amd64]
+
+
+apps:
+
+    easyreflectometry:
+        command: bin/python3.9 $SNAP/EasyReflectometryApp/main.py
+        extensions: [gnome-3-38]
+        plugs: [network, x11, pulseaudio, opengl, home, ssh-keys]
+        environment:
+            DISABLE_WAYLAND: 1
+
+parts:
+    copy-stuff:
+        plugin: dump
+        source: .
+
+    build:
+        plugin: python
+        source: .
+        stage-packages:
+            - python3.9-venv
+            - libfreetype6
+            - libgomp1
+            - libpng16-16
+            - libxcb-xinerama0
+            - libxkbcommon0
+            - libxcb-render0
+            - libxcb-randr0
+            - libnss3
+            - unixodbc-dev
+            - libpq-dev
+            - libxcb-icccm4
+            - libxkbcommon-x11-0
+            - libxcb-xkb1
+            - libxcb-render-util0
+            - libxcb-shape0
+            - libspeechd2
+            - libxcb-image0
+            - libxcb-keysyms1
+            - libxcb-util1
+        build-packages:
+            - python3.9-venv
+            - python3.9-dev
+            - git-all
+        build-environment:
+            - SNAPCRAFT_PYTHON_INTERPRETER: python3.9
+              # python3.9 lives in $SNAPCRAFT_PART_INSTALL/bin
+            - PATH: $SNAPCRAFT_PART_INSTALL/bin:$PATH
+            - PYTHONPATH: ''
+        override-build: |
+          # Workaround a bug in snapcraft python plugin
+          # https://forum.snapcraft.io/t/build-a-snap-with-any-version-of-python-i-want/10420/8
+          rm -rf $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
+          ln -s /usr/lib/python3.9/distutils $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
+          mkdir -p $SNAPCRAFT_PART_INSTALL/usr/include/
+          ln -s /usr/include/python3.9 $SNAPCRAFT_PART_INSTALL/usr/include/python3.9
+          snapcraftctl build
+          python3.9 -m pip install -U .
