@@ -140,7 +140,7 @@ jobs:
           allowUpdates: true
           replacesArtifacts: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_*.zip,${{ env.DISTRIBUTION_PATH }}/tutorial_*.mp4"
+          artifacts: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_*.zip"
           tag: ${{ env.BRANCH_NAME }}
           name: ${{ env.BRANCH_NAME }}
           bodyFile: "RELEASE.md"

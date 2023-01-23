@@ -1,9 +1,6 @@
-# SPDX-FileCopyrightText: 2022 easyDiffraction contributors <support@easydiffraction.org>
+# SPDX-FileCopyrightText: 2022 EasyReflectometry contributors <support@EasyReflectometry.org>
 # SPDX-License-Identifier: BSD-3-Clause
-# © 2021-2022 Contributors to the easyDiffraction project <https://github.com/easyScience/easyDiffractionApp>
-
-__author__ = "github.com/AndrewSazonov"
-__version__ = '0.0.1'
+# © 2021-2022 Contributors to the EasyReflectometry project <https://github.com/easyScience/easyDiffractionApp>
 
 import os, sys
 import time
@@ -357,37 +354,6 @@ def createOfflineInstaller():
     else:
         Functions.printSuccessMessage(message)
 
-# def createOnlineRepositoryLocally():
-#     try:
-#         message = 'create online repository'
-#         qtifw_bin_dir_path = os.path.join(qtifwDirPath(), 'bin')
-#         qtifw_repogen_path = os.path.join(qtifw_bin_dir_path, 'repogen')
-#         repository_dir_path = os.path.join(CONFIG.dist_dir, localRepositoryDir())
-#         Functions.run(
-#             qtifw_repogen_path,
-#             '--verbose',
-#             '--update-new-components',
-#             '-p', packagesDirPath(),
-#             repository_dir_path
-#         )
-#     except Exception as exception:
-#         Functions.printFailMessage(message, exception)
-#         sys.exit(1)
-#     else:
-#         Functions.printSuccessMessage(message)
-
-# def addFilesToLocalRepository():
-#     try:
-#         message = 'add files to local repository'
-#         repository_dir_path = os.path.join(CONFIG.dist_dir, localRepositoryDir())
-#         Functions.copyFile(source=CONFIG['ci']['setup']['changelog_file'], destination=repository_dir_path)
-#     except Exception as exception:
-#         Functions.printFailMessage(message, exception)
-#         sys.exit(1)
-#     else:
-#         Functions.printSuccessMessage(message)
-
-
 if __name__ == "__main__":
     downloadQtInstallerFramework()
     osDependentPreparation()
@@ -395,5 +361,3 @@ if __name__ == "__main__":
     prepareSignedMaintenanceTool()
     createInstallerSourceDir()
     createOfflineInstaller()
-    # createOnlineRepositoryLocally()
-    # addFilesToLocalRepository()
