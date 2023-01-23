@@ -58,7 +58,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'EasyReflectometry Developer Documentation'
+project = 'EasyReflectometry developer'
 copyright = "2023, EasyReflectometry"
 author = "EasyReflectometry"
 
@@ -99,9 +99,10 @@ todo_include_todos = False
 # a list of builtin themes.
 #
 html_theme = 'sphinx_book_theme'
-html_logo = os.path.join('_static', 'logo.png')
+# html_logo = 'https://github.com/easyScience/EasyReflectometryLib/blob/main/docs/_static/logo.png?raw=true'
+html_title = f'EasyReflectometry Developer Documentation {version}'
 html_favicon = os.path.join('_static', 'favicon.ico')
-html_theme_options = {'logo_only': True}
+# html_theme_options = {'logo_only': True}
 html_baseurl = 'https://dev.easyreflectometry.org'
 
 # Theme options are theme-specific and customize the look and feel of a

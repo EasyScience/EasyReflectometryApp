@@ -1,5 +1,5 @@
-Developer Documentation
-=======================
+EasyReflectometry Developer Documentation
+=========================================
 
 This is the home of the EasyReflectometry developer documentation, covering both the `application`_ and the `Python library`_ that it is built on. 
 This is distinct from the `Python library documentation`_, which covers how to use the Python library and details the API. 
