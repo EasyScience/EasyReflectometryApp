@@ -2,6 +2,12 @@
 ADR0001: Item library basis
 ===========================
 
+Status: 
+Author: `Andrew R. McCluskey`_
+Reviewers:
+Date: 
+
+
 Context 
 -------
 
@@ -10,3 +16,6 @@ Decision
 
 Consequences
 ------------
+
+
+.. _Andrew R. McCluskey: https://github.com/arm61
