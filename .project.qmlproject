@@ -1,0 +1,40 @@
+import QmlProject 1.1
+
+Project {
+    mainFile: "EasyReflectometryApp/Gui/main.qml"
+
+    // List of module and plugin directories passed to QML runtime
+    importPaths: [
+        "EasyReflectometryApp",
+        "../easyAppGui",
+    ]
+
+    // Include .qml files from specified directory and its subdirectories
+    QmlFiles {
+        directory: "EasyReflectometryApp"
+    }
+    QmlFiles {
+        directory: "../easyAppGui"
+    }
+
+    // Include .js files from specified directory and its subdirectories
+    JavaScriptFiles {
+        directory: "EasyReflectometryApp"
+    }
+    JavaScriptFiles {
+        directory: "../easyAppGui"
+    }
+
+    // Include Module Definition Files (qmldir), as well as .ts and .qrc
+    // from specified directory and its subdirectories
+    Files {
+        filter: "qmldir;*.ts;*.qrc"
+        directory: "EasyReflectometryApp"
+        recursive: true
+    }
+    Files {
+        filter: "qmldir;*.ts;*.qrc"
+        directory: "../easyAppGui"
+        recursive: true
+    }
+}
