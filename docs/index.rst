@@ -16,6 +16,9 @@ Therefore, this will be where information for developers will be found, such as 
    :caption: Contents:
 
    building
+   adrs
+   ci
+   contributing
    
 
 
