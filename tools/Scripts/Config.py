@@ -14,7 +14,7 @@ class Config():
 
         # Application
         self.app_version = self.__dict__['project']['version']
-        self.app_name = self.__dict__['project']['appname']
+        self.app_name = self.__dict__['project']['name']
         self.app_file_ext = self.__dict__['ci']['setup']['file_ext'][self.os]
         self.app_full_name = f'{self.app_name}{self.app_file_ext}'
 
