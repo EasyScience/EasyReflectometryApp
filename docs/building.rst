@@ -1,8 +1,8 @@
 .. highlight:: shell
 
-========
-Building
-========
+==================================
+Building a development environment
+==================================
 
 The EasyReflectometry project consists of two packages; an application and a library. 
 To develop effectively for EasyReflectometry, we work on the :code:`develop` branch of both and then periodically merge to :code:`master` when a release is made. 
