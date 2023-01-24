@@ -3,6 +3,7 @@ import sys
 import pathlib
 import platform
 import argparse
+import darkdetect
 
 # PySide
 from PySide2.QtCore import QUrl
