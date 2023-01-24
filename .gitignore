@@ -45,3 +45,4 @@ temp.prm
 settings.ini*
 .ci/
 .idea/
+.vscode/
