@@ -44,6 +44,28 @@ The application can then be run (from within the appropriate Python environment)
 $ EasyReflectometry
 ```
 
+## VSCode 
+
+If you use VSCode as an IDE, it can be useful to have the ability to launch a "Run and Debug" session. 
+To achieve this, in the `EasyReflectometryApp` directory a file called `.vscode/launch.json` needs to be created with the following contents: 
+
+```json
+{
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "EasyReflectometryApp/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}
+```
+
+With this file in place, you should be able to "Run → Start Debugging" from the menu or press F5. 
+
 ## Additional requirements
 
 Some additional requirements exist that are operating system specific. 

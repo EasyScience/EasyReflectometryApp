@@ -13,5 +13,4 @@ hidden: True
 build
 adrs
 ci
-contri
 ```
