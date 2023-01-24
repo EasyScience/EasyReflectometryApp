@@ -131,20 +131,16 @@ jobs:
       - name: Create zip archive of offline app installer
         run: python ${{ env.SCRIPTS_PATH }}/ZipArtifacts.py ${{ env.BRANCH_NAME }}
 
-      - name: Upload zipped offline app installer to GitHub releases (non-master branch)
-        if: github.event_name == 'push' && env.BRANCH_NAME != 'master'
-        uses: ncipollo/release-action@v1
+      - uses: actions/upload-artifact@v3
         with:
-          draft: true
-          prerelease: true
-          allowUpdates: true
-          replacesArtifacts: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_*.zip"
-          tag: ${{ env.BRANCH_NAME }}
-          name: ${{ env.BRANCH_NAME }}
-          bodyFile: "RELEASE.md"
-
+          name: macOS
+          path: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_macOS_*.zip"
+      
+      - uses: actions/upload-artifact@v3
+        with:
+          name: windows
+          path: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_Windows_*.zip"
+      
       - name: Upload zipped offline app installer to GitHub releases (master branch)
         if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
         uses: ncipollo/release-action@v1
