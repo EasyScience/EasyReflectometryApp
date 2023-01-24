@@ -1,4 +1,4 @@
-name: Build executable
+name: Build Executable
 
 on: [push, pull_request]
 
@@ -27,28 +27,27 @@ jobs:
         with:
             python-version: 3.9
 
-      - name: Upgrade PIP
+      - name: Upgrade Pip
         run: python -m pip install --upgrade pip
 
-      - name: Install with EasyReflectometry dependencies
+      - name: Install with EasyReflectometry ci-dependencies
         run: pip install '.[ci]'
 
-      - name: Declare env variables on push only
+      - name: Define env variables (push only)
         if: github.event_name == 'push'
         shell: bash
         run: echo "BRANCH_NAME=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - name: Declare env variables on pull_request only
+      - name: Define env variables (PR only)
         if: github.event_name == 'pull_request'
         shell: bash
         run: echo "BRANCH_NAME=$GITHUB_HEAD_REF" >> $GITHUB_ENV
 
-      - name: Add extra info to pyproject.toml
+      - name: Add extra info related to git to pyproject.toml
         run: |
           python utils.py --update
 
-      # https://docs.github.com/en/actions/reference/environment-variables
-      - name: Declare env variables on push and pull_request
+      - name: Define env variables
         shell: bash
         run: |
           echo "APP_NAME=$(python utils.py --get project.name)" >> $GITHUB_ENV
@@ -60,20 +59,8 @@ jobs:
           echo "QTIFW_PATH=$(python utils.py --get ci.qtifw.installation_path.${{ runner.os }})" >> $GITHUB_ENV
           echo "PYTHON_PACKAGES_PATH=$(python utils.py --get ci.paths.python_packages_path)" >> $GITHUB_ENV
           echo "GIT_INSTALL_URL=git+ssh://git@github.com/$GITHUB_REPOSITORY@${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
-          cat $GITHUB_ENV
 
-      # - name: Cache dependencies
-      #   if: False  # disable caching
-      #   uses: actions/cache@v2
-      #   id: cache
-      #   with:
-      #     path: |
-      #       ${{ env.DOWNLOAD_PATH }}
-      #       ${{ env.QTIFW_PATH }}
-      #       ${{ env.PYTHON_PACKAGES_PATH }}
-      #     key: ${{ matrix.os }}-${{ hashFiles('pyproject.toml') }}
-
-      - name: Create freezed python app bundle
+      - name: Create frozen python app bundle
         run: python ${{ env.SCRIPTS_PATH }}/FreezeApp.py
 
       - name: Create offline app installers
@@ -86,18 +73,6 @@ jobs:
       # - name: Sign the installer
       #   run: python ${{ env.SCRIPTS_PATH }}/Signatures.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
 
-      - name: Set up screen recording dependencies (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
-          system_profiler SPDisplaysDataType | grep Resolution
-
-      - name: Set up screen recording dependencies (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          Set-DisplayResolution -Width 1920 -Height 1080 -Force
-          Get-DisplayResolution
-
       - name: Install app
         run: python ${{ env.SCRIPTS_PATH }}/InstallApp.py
 
@@ -107,21 +82,21 @@ jobs:
       - name: Create zip archive of offline app installer
         run: python ${{ env.SCRIPTS_PATH }}/ZipArtifacts.py ${{ env.BRANCH_NAME }}
 
-      - name: Upload installer to artifacts
+      - name: Upload installer to artifacts (macOS)
         uses: actions/upload-artifact@v3
         if: runner.os == 'macOS'
         with:
           name: macOS
           path: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_macOS_*.zip"
       
-      - name: Upload installer to artifacts
+      - name: Upload installer to artifacts (Windows)
         uses: actions/upload-artifact@v3
         if: runner.os == 'Windows'
         with:
           name: windows
           path: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_Windows_*.zip"
       
-      - name: Upload zipped offline app installer to GitHub releases (master branch)
+      - name: Upload zipped offline app installer to GitHub releases (master only)
         if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
         uses: ncipollo/release-action@v1
         with:
@@ -135,6 +110,6 @@ jobs:
           name: ${{ env.RELEASE_TITLE }}
           bodyFile: "RELEASE.md"
 
-      - name: Upload online app installer to repository via FTP
+      - name: Upload online app installer to repository via FTP (master only)
         if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
         run: python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py ${{ env.BRANCH_NAME }} ${{ secrets.APP_REPO_FTP_PASSWORD }}
