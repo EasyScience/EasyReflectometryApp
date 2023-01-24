@@ -52,7 +52,7 @@ This said, the application project will be :mod:`EasyReflectometryApp` and shoul
 
 .. code-block:: console
 
-    $ pip install EasyReflectometryApp
+    $ pip install EasyReflectometry
 
 If then run from the command line, the application can be launched with the following. 
 
