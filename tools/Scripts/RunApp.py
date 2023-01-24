@@ -7,7 +7,10 @@ import Functions, Config
 
 CONFIG = Config.Config()
 
-def appExePath():
+def appExePath() -> str:
+    """
+    :return: Application executable.
+    """
     d = {
         'macos': os.path.join(CONFIG.installation_dir, CONFIG.app_full_name, 'Contents', 'MacOS', CONFIG.app_name),
         'ubuntu': os.path.join(CONFIG.installation_dir, CONFIG.app_name, CONFIG.app_full_name),
@@ -16,6 +19,9 @@ def appExePath():
     return d[CONFIG.os]
 
 def runApp():
+    """
+    Runs the application. 
+    """
     Functions.printNeutralMessage(f'Installed application exe path: {appExePath()}')
     try:
         message = f'run {CONFIG.app_name}'

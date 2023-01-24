@@ -188,31 +188,6 @@ def appPackageXml():
         Functions.printSuccessMessage(message)
         return pretty_xml
 
-#def docsPackageXml():
-#    try:
-#        message = f"create docs package content"
-#        name = CONFIG['ci']['setup']['build']['docs_package_name']
-#        description = CONFIG['ci']['setup']['build']['docs_package_description']
-#        version = CONFIG['ci']['setup']['build']['docs_package_version']
-#        release_date = "2020-01-01" #datetime.datetime.strptime(config['ci']['setup']['date'], "%d %b %Y").strftime("%Y-%m-%d")
-#        raw_xml = Functions.dict2xml({
-#            'Package': {
-#                'DisplayName': f'{name} {version}',
-#                'Description': description,
-#                'Version': version,
-#                'ReleaseDate': release_date,
-#                'Default': 'true',
-#                'SortingPriority': 20,
-#            }
-#        })
-#        pretty_xml = xml.dom.minidom.parseString(raw_xml).toprettyxml()
-#    except Exception as exception:
-#        Functions.printFailMessage(message, exception)
-#        sys.exit(1)
-#    else:
-#        Functions.printSuccessMessage(message)
-#        return pretty_xml
-
 def downloadQtInstallerFramework():
     Functions.createDir(CONFIG.download_dir)
     Functions.downloadFile(
@@ -300,26 +275,6 @@ def createInstallerSourceDir():
         # TODO: remove this platform conditional once the above is done
         if CONFIG.os == 'windows':
             Functions.copyFile(source=CONFIG.maintenancetool_file, destination=app_data_subsubdir_path)
-
-        # package: docs
-        ##docs_subdir_path = os.path.join(packagesDirPath(), CONFIG['ci']['setup']['build']['docs_package_subdir'])
-        ##docs_data_subsubdir_path = os.path.join(docs_subdir_path, CONFIG['ci']['setup']['build']['data_subsubdir'])
-        ##docs_meta_subsubdir_path = os.path.join(docs_subdir_path, CONFIG['ci']['setup']['build']['meta_subsubdir'])
-        ##docs_package_xml_path = os.path.join(docs_meta_subsubdir_path, CONFIG['ci']['setup']['build']['package_xml'])
-        #docs_dir_src = CONFIG['ci']['project']['subdirs']['docs']['src']
-        #docs_dir_dest = CONFIG['ci']['project']['subdirs']['docs']['dest']
-        ##Functions.createDir(docs_subdir_path)
-        ##Functions.createDir(docs_data_subsubdir_path)
-        ##Functions.createDir(docs_meta_subsubdir_path)
-        ##Functions.createFile(path=docs_package_xml_path, content=docsPackageXml())
-        ##Functions.copyDir(source=docs_dir_src, destination=os.path.join(docs_data_subsubdir_path, 'Documentation'))
-        #Functions.copyDir(source=docs_dir_src, destination=os.path.join(app_data_subsubdir_path, docs_dir_dest))
-        # package: examples
-        #examples_dir_src = CONFIG['ci']['project']['subdirs']['examples']['src']
-        #examples_dir_dest = CONFIG['ci']['project']['subdirs']['examples']['dest']
-        #Functions.copyDir(source=examples_dir_src, destination=os.path.join(app_data_subsubdir_path, examples_dir_dest))
-        # TODO: change the handling of failure in all methods in Functions.py so they bubble up exceptions
-        # TODO: remove this platform conditional once the above is done
         if CONFIG.os == 'windows':
             Functions.copyFile(source=CONFIG.maintenancetool_file, destination=app_data_subsubdir_path)
     except Exception as exception:

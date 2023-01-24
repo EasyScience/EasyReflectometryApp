@@ -16,9 +16,7 @@ CONFIG = Config.Config()
 
 def excludedModules() -> List[str]:
     """
-    Get excluded modules (both general and os-specific in a formatted list that can be unpacked.
-    
-    :return: Excluded modules.
+    :return: Excluded modules (both general and os-specific) in a formatted list that can be unpacked.
     """
     os_independent = CONFIG['ci']['pyinstaller']['auto_exclude']['all']
     os_dependent = CONFIG['ci']['pyinstaller']['auto_exclude'][CONFIG.os]
@@ -31,8 +29,10 @@ def excludedModules() -> List[str]:
         formatted.append(module_name)
     return formatted
 
-def addedData():
-    #lib = CONFIG['ci']['pyinstaller']['libs'][CONFIG.os]
+def addedData() -> List[str]:
+    """
+    :return: Missing pakages that need no be added to the frozen app in a formatted list that can be unpacked.
+    """
     data = [{'from': CONFIG.package_name, 'to': CONFIG.package_name},
             #{'from': importlib.import_module(lib).__path__[0], 'to': lib},
             {'from': refnx.__path__[0], 'to': 'refnx'},
@@ -55,7 +55,10 @@ def addedData():
         formatted.append(f'--add-data={element["from"]}{separator}{element["to"]}')
     return formatted
 
-def appIcon():
+def appIcon() -> str:
+    """
+    :return: The path to the application icon.
+    """
     icon_dir = os.path.join(*CONFIG['ci']['icon']['dir'])
     icon_name = CONFIG['ci']['icon']['file_name']
     icon_ext = CONFIG['ci']['icon']['file_ext'][CONFIG.os]
@@ -109,18 +112,20 @@ def copyMissingPlugins():
         Functions.printSuccessMessage(message)
 
 def runPyInstaller():
+    """
+    Runs PyInstaller to create a frozen version of the application.
+    """
     try:
         message = 'freeze app'
         main_py_path = os.path.join(CONFIG.package_name, 'main.py')
         pyInstallerMain([
             main_py_path,                           # Application main file
             f'--name={CONFIG.app_name}',            # Name to assign to the bundled app and spec file (default: first script’s basename)
-            '--log-level', 'INFO',                 # LEVEL may be one of DEBUG, INFO, WARN, ERROR, CRITICAL (default: INFO).
+            '--log-level', 'INFO',                  # LEVEL may be one of DEBUG, INFO, WARN, ERROR, CRITICAL (default: INFO).
             '--noconfirm',                          # Replace output directory (default: SPECPATH/dist/SPECNAME) without asking for confirmation
             '--clean',                              # Clean PyInstaller cache and remove temporary files before building
             '--windowed',                           # Windows and Mac OS X: do not provide a console window for standard i/o.
             '--onedir',                             # Create a one-folder bundle containing an executable (default)
-            #'--specpath', workDirPath(),           # Folder to store the generated spec file (default: current directory)
             '--distpath', CONFIG.dist_dir,          # Where to put the bundled app (default: ./dist)
             '--workpath', CONFIG.build_dir,         # Where to put all the temporary work files, .log, .pyz and etc. (default: ./build)
             *excludedModules(),                     # Exclude modules
@@ -134,6 +139,9 @@ def runPyInstaller():
         Functions.printSuccessMessage(message)
 
 def excludeFiles():
+    """
+    Removes any files from the frozen app that should be removed.
+    """
     file_names = CONFIG['ci']['pyinstaller']['manual_exclude']
     if len(file_names) == 0:
         Functions.printNeutralMessage(f'No libraries to be excluded for {CONFIG.os}')

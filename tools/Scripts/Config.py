@@ -8,6 +8,9 @@ import Functions
 
 class Config():
     def __init__(self):
+        """
+        Populates the object from the pyproject.toml.
+        """
         # Main
         self.__dict__ = Functions.project()
         self.os = Functions.osName()
@@ -58,7 +61,10 @@ class Config():
         return self.__dict__[key]
 
     # https://doc.qt.io/qtinstallerframework/scripting.html
-    def installationDir(self):
+    def installationDir(self) -> str:
+        """
+        :return: Installation directory for the CI test of the installer.
+        """
         dirs = {
             'macos': {
                 '@HomeDir@': str(pathlib.Path.home()),
@@ -73,15 +79,16 @@ class Config():
                 '@HomeDir@': str(pathlib.Path.home()),
                 '@ApplicationsDir@': os.getenv('ProgramFiles'),
                 '@ApplicationsDirX86@': os.getenv('ProgramFiles(x86)')
-                # '@ApplicationsDir@': 'C:\\',
-                # '@ApplicationsDirX86@': 'C:\\'
             }
         }
         dir_shortcut = self.__dict__['ci']['setup']['installation_dir_shortcut'][self.os]
         dir = os.path.join(dirs[self.os][dir_shortcut], self.app_name)
         return dir
 
-    def installationDirForQtifw(self):
+    def installationDirForQtifw(self) -> str:
+        """
+        :return: Installation directory for the Qt installer framwork.
+        """
         dir_shortcut = self.__dict__['ci']['setup']['installation_dir_shortcut'][self.os]
         if self.os == 'macos' and dir_shortcut == '@ApplicationsDir@':
             dir_shortcut = '/Applications'  # @ApplicationsDir@ = @ApplicationsDirUser@ [BUG in QTIFW?]
