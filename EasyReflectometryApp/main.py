@@ -17,7 +17,7 @@ from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView  # to call
 import EasyReflectometryApp
 import toml
 import easyApp
-from easyApp.Logic.Maintenance import Updater
+# from easyApp.Logic.Maintenance import Updater
 # from easyApp.Logic.Translate import Translator
 from EasyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
 
@@ -95,7 +95,7 @@ def main():
     engine.rootContext().setContextProperty('_isSystemThemeDark', isDark)
 
     # Register types to be instantiated in QML
-    qmlRegisterType(Updater, 'easyApp.Logic.Maintenance', 1, 0, 'Updater')
+    # qmlRegisterType(Updater, 'easyApp.Logic.Maintenance', 1, 0, 'Updater')
 
     # Add paths to search for installed modules
     engine.addImportPath(easyApp_path)
