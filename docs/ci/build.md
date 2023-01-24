@@ -16,6 +16,17 @@ The `EasyReflectometryApp` building continuous integration is much more complex,
 - Building an executable installer, for Windows and macOS. 
 - Building a `snap` image, for use with Ubuntu-based Linux distributions.
 
+The first of these, is straightforward to achieve, by the same process as in `EasyReflectometryLib`. 
+The second is more complex and requires a multi-step [Github action](https://github.com/easyScience/EasyReflectometryApp/blob/main/.github/workflows/build_executable.yml). 
+This action performs the following steps: 
+
+1. A Python environment (currently 3.9) is set up and the [`ci` dependencies](https://github.com/easyScience/EasyReflectometryApp/blob/main/pyproject.toml) are intstalled. 
+2. A series of environment variables are set, mostly related to the git state at the time. These are used in the built app to give extra information regarding provenence. 
+3. The application bundle is then created and the installers are produced using [PyInstaller](https://pyinstaller.org/en/stable/). 
+4. These are installed on the build machines and the application is launched (and then quit), to test if the build is at least in part successful. 
+5. The installers are then made available for [testing](#testing) as Github artifacts of the action. 
+6. If the build is happening on the `master` branch, the installer is also added to a release.
+
 ### Testing
 
 #### Executables
