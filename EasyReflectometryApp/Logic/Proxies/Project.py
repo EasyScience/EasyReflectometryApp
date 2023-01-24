@@ -45,8 +45,8 @@ class ProjectProxy(QObject):
             name="Example Project",
             # location=os.path.join(os.path.expanduser("~"), "Example Project"),
             short_description="reflectometry, 1D",
-            # samples="Not loaded",
-            # experiments=DataStore(),
+            samples="None",
+            experiments="None",
             modified=datetime.datetime.now().strftime("%d.%m.%Y %H:%M"))
 
     # # #
@@ -232,13 +232,11 @@ class ProjectProxy(QObject):
         self.parent._model_proxy._colors = descr['colors']
         self.parent._model_proxy._model = Models.from_dict(descr['model'])
         self.parent._material_proxy._materials = Materials.from_pars()
-        c = 0
         for model in self.parent._model_proxy._model:
             for structure in model.structure:
                 for layer in structure.layers:
                     self.parent._material_proxy._materials.append(layer.material)
             model.interface = self.parent._interface
-            c += 1
         for material in Materials.from_dict(descr['materials_not_in_model']):
             self.parent._material_proxy._materials.append(material)
 

@@ -23,20 +23,23 @@ There are also built-in step-by-step user guides and video tutorials for new use
 
 Current main features of **EasyReflectometry**:
 
-- Support for the analysis of a single contrast of reflectometry data
-- Creation of materials to be used in structure from scattering length density
+- Support for the analysis of a single contrast of reflectometry data.
+- Creation of materials to be used in structure from scattering length density.
 - The ability to define repeating multi-layers of materials and refine these structures using [refnx](https://refnx.readthedocs.io/en/latest/) or [refl1d](https://refl1d.readthedocs.io/en/latest/). 
+- Growing support for flexible _item_ types, including chemically consistent models.
+- Ability to corefine multiple contrasts of reflectometry data.
 - Multiple minimization engines: [lmfit](https://lmfit.github.io/lmfit-py), [bumps](https://github.com/bumps/bumps) and [DFO-LS](https://github.com/numericalalgorithmsgroup/dfols) (including the differential evolution method).
 - Interactive HTML and standard PDF report generation.
-- Undo/redo for both parameter changes and fitting 
-- Saving and loading of projects
+- Undo/redo for both parameter changes and fitting.
+- Saving and loading of projects.
 
 Planned improvements / new functionality for **EasyReflectometry**:
 
-- Ability to corefine multiple contrasts of reflectometry data
-- Expansion of the flexible _item_ type to include chemical consistent models
-- Support for polarised reflectometry measurements
-- Reading of q-dependent resolution from a file
+- Support for magnetic structures and polarised reflectometry measurements.
+- Support for mixed model reflectometry datasets.
+- Reading of q-dependent resolution from a file.
+
+Full details of the future plans for EasyReflectometry is available in the [roadmap](./ROADMAP.md).
 
 ## Getting Started
 

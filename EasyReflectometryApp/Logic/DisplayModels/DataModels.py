@@ -3,7 +3,6 @@ __author__ = 'github.com/wardsimon'
 from random import random
 
 from PySide2.QtCore import QPointF
-from PySide2.QtCharts import QtCharts
 from EasyReflectometryApp.Logic.MatplotlibBackend import DisplayBridge
 
 

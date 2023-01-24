@@ -4,11 +4,9 @@ ApplicationWindow 1.0 ApplicationWindow.qml
 
 # Main content components
 
-ExperimentDataChartBokeh 1.0 ExperimentDataChartBokeh.qml
-ExperimentDataChartQtCharts 1.0 ExperimentDataChartQtCharts.qml
+ExperimentDataChart 1.0 ExperimentDataChart.qml
 
-AnalysisDataChartQtCharts 1.0 AnalysisDataChartQtCharts.qml
-AnalysisDataChartBokeh 1.0 AnalysisDataChartBokeh.qml
+AnalysisDataChart 1.0 AnalysisDataChart.qml
 
 BaseBokeh 1.0 BaseBokeh.qml
 BasePlot 1.0 BasePlot.qml
