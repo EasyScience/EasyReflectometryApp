@@ -61,7 +61,7 @@ jobs:
       - name: Declare env variables on push and pull_request
         shell: bash
         run: |
-          echo "APP_NAME=$(python utils.py --get project.appname)" >> $GITHUB_ENV
+          echo "APP_NAME=$(python utils.py --get project.name)" >> $GITHUB_ENV
           echo "RELEASE_TAG=$(python utils.py --get ci.git.release_tag)" >> $GITHUB_ENV
           echo "RELEASE_TITLE=$(python utils.py --get ci.git.release_title)" >> $GITHUB_ENV
           echo "SCRIPTS_PATH=$(python utils.py --get ci.subdirs.scripts)" >> $GITHUB_ENV
