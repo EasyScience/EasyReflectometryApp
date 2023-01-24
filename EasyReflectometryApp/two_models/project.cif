@@ -1,3 +1,0 @@
-_name two_models
-_short_description 'reflectometry, 1D'
-_modified '27.10.2022 15:03'
