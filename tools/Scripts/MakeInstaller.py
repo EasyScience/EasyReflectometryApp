@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2022 EasyReflectometry contributors <support@EasyReflectometry.org>
-# SPDX-License-Identifier: BSD-3-Clause
-# © 2021-2022 Contributors to the EasyReflectometry project <https://github.com/easyScience/easyDiffractionApp>
-
 import os, sys
 import time
 import requests

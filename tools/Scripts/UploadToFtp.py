@@ -1,13 +1,5 @@
-# SPDX-FileCopyrightText: 2022 easyDiffraction contributors <support@easydiffraction.org>
-# SPDX-License-Identifier: BSD-3-Clause
-# © 2021-2022 Contributors to the easyDiffraction project <https://github.com/easyScience/easyDiffractionApp>
-
-__author__ = "github.com/AndrewSazonov"
-__version__ = '0.0.1'
-
 import os, sys
 import ftplib
-import pathlib
 import Functions, Config
 
 
