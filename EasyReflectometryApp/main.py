@@ -85,6 +85,14 @@ def main():
     engine.rootContext().setContextProperty('_settingsPath', settings_path)
     engine.rootContext().setContextProperty('_projectConfig', CONFIG)
     engine.rootContext().setContextProperty('_isTestMode', args.testmode)
+    try:
+        isDark = darkdetect.isDark()
+    except FileNotFoundError:
+        isDark = False
+    engine.rootContext().setContextProperty('_isSystemThemeDark', isDark)
+
+    # Register types to be instantiated in QML
+    qmlRegisterType(Updater, 'easyApp.Logic.Maintenance', 1, 0, 'Updater')
 
     # Add paths to search for installed modules
     engine.addImportPath(easyApp_path)
