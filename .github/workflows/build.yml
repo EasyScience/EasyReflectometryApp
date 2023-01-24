@@ -1,4 +1,4 @@
-name: build macOS, Linux, Windows
+name: Build executable
 
 on: [push, pull_request]
 
@@ -29,18 +29,6 @@ jobs:
 
       - name: Upgrade PIP
         run: python -m pip install --upgrade pip
-
-      - name: Create and activate venv
-        if: runner.os == 'Windows'
-        run: |
-          python -m venv env
-          env\bin\activate
-
-      - name: Create and activate venv
-        if: runner.os == 'macOS'
-        run: |
-          python -m venv env
-          source env/bin/activate
 
       - name: Install with EasyReflectometry dependencies
         run: pip install '.[ci]'
