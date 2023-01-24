@@ -19,7 +19,7 @@ EaElements.Dialog {
         EaElements.Button {
             text: qsTr("Save and exit")
             onClicked: {
-                ExGlobals.Constants.proxy.saveProject()
+                ExGlobals.Constants.proxy.project.saveProject()
                 Qt.quit()
             }
         }
