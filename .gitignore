@@ -12,8 +12,8 @@
 # QtCreator CMake
 CMakeLists.txt.user*
 
-# Fortran
-fort.1
+# Docs 
+docs/_build
 
 # Python
 __pycache__

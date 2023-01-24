@@ -4,7 +4,7 @@ ADR0002: Design of continuous integration
 
 
 .. image:: https://img.shields.io/badge/status-draft-orange
-  :alt: Badge indicating that ADR0001 has been accepted.
+  :alt: Badge indicating that ADR0001 is in draft.
 .. image:: https://img.shields.io/badge/author-Andrew%20R.%20McCluskey-blue
   :alt: Badge indicating that ADR0001 was authored by Andrew R. McCluskey.
   :target: https://github.com/arm61
@@ -16,8 +16,33 @@ ADR0002: Design of continuous integration
 Context 
 -------
 
+In order to have EasyReflectometry (both as an application and a Python library) accessible to as many users as possible, it is important that the software can be installed as easily as possible. 
+For the Python library, this means that :mod:`EasyReflectometryLib` should be installable via PyPI with the command: 
+
+.. code-block:: console
+
+  $ pip install EasyReflectometryLib
+
+As is outlined in `ADR0001`_.
+:mod:`EasyReflectometryApp` should be installable, either via PyPI with a similar command or via an installer executable (or by :code:`snap` image). 
+These executables should be built for Windows, macOS, and Linux (ubuntu) and should include the same functionality in each and should be available to all. 
+
 Decision
 --------
 
+New releases of :mod:`EasyReflectometryLib` and :mod:`EasyReflectometryApp` should be uploaded to PyPI in an automated fashion, using an `appropriate Github action`_ with each **new release**. 
+Similarly, new executables and :code:`snap` image should be prepared in an automated fashion also using Github actions. 
+The details of the continuous integration for the executables will be documented within `these pages`_ and updated with any changes and any breakages documented.
+In future, the CI for the building of the :mod:`EasyReflectometryApp` may be removed from the main :mod:`EasyReflectometryApp` repository and moved to a new repository (under the :mod:`EasyScience` Github organisation), such that is may be used by other EasyApplications.
+The installers will be made available on the `easyreflectometry.org`_ main page for download by all interested users. 
+
 Consequences
 ------------
+
+The continuous integration of PyPI builds, executable installers, and :code:`snap` images should be completed (update when completed with git hash). 
+The executable installer and :code:`snap` continuous integration should be documented in these pages, and any changes updated (update when completed with git hash). 
+In future, we will investigate sharing this continuous integration across the :mod`EasyScience` organisation to include :mod:`EasyDiffraction`.
+
+.. _ADR0001: ./adr0001.html
+.. _appropriate Github action: https://github.com/easyScience/easyCore/blob/master/.github/workflows/python-publish.yml
+.. _these pages: /ci.html
