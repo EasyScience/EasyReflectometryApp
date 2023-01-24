@@ -31,8 +31,7 @@ jobs:
     - name: Install EasyReflectometry and dependencies
       run: |
         sudo apt install pandoc
-        pip install sphinx-book-theme
-        pip install .
+        pip install '.[docs]'
     - name: Build and Commit
       uses: sphinx-notes/pages@master
       with:
