@@ -59,7 +59,7 @@ EaComponents.TableView {
             horizontalAlignment: Text.AlignHCenter
             width: EaStyle.Sizes.fontPixelSize * 10.0
             headerText: "Thickness/Å"
-            enabled: model.thick_enabled == "True"
+            enabled: model.thick_enabled == "true"
             text: (isNaN(layersModel.thick)) ? '--' : layersModel.thick.toFixed(2)
             onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersThickness(text)
         }
@@ -69,7 +69,7 @@ EaComponents.TableView {
             horizontalAlignment: Text.AlignHCenter
             width: EaStyle.Sizes.fontPixelSize * 10.0
             headerText: "Upper Roughness/Å"
-            enabled: model.rough_enabled == "True"
+            enabled: model.rough_enabled == "true"
             text: (isNaN(layersModel.rough)) ? '--' : layersModel.rough.toFixed(2)
             onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
         } 
