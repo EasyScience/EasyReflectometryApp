@@ -46,3 +46,6 @@ settings.ini*
 .ci/
 .idea/
 .vscode/
+
+#Snap
+*.snap
