@@ -30,7 +30,7 @@ to use the directory where you have cloned `EasyReflectometryLib`, i.e.
 With this modification in place, you should then be able to install `EasyReflectometryApp`
 
 ```console
-$ git clone git@github.com:easyScience/EasyReflectometryApp.git
+$ git clone https://github.com/easyScience/EasyReflectometryApp.git
 $ cd EasyReflectometryApp
 $ git checkout develop
 $ pip install -e .
