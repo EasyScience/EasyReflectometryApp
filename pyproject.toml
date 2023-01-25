@@ -24,7 +24,7 @@ pyobjc-framework-cocoa = { version = '^7.1', platform = 'darwin' }
 matplotlib = "^3.4.2"
 pint = "^0.17"
 # easyScience
-EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'easycore-0.3.0' }
+EasyReflectometryLib = { git = 'https://github.com/easyScience/EasyReflectometryLib.git', rev = 'develop' }
 easyApp = { git = 'https://github.com/easyScience/easyApp.git', rev = 'io_serialize' }
 #EasyReflectometryLib = { path = '../EasyReflectometryLib'}
 #easyApp = { path = '../easyApp'}
