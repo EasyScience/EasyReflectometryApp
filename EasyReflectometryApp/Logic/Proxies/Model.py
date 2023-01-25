@@ -335,10 +335,8 @@ class ModelProxy(QObject):
 
     @Slot()
     def addNewModels(self):
-        # self.parent._interface.append(InterfaceFactory())
         self._model.add_model(
-            self._defaultModel(self._defaultStructure(), 
-                            #    interface=self.parent._interface[-1], 
+            self._defaultModel(self._defaultStructure(),
                                interface=self.parent._interface, 
                                name="Air-D2O-Si"))
         try:
@@ -351,7 +349,6 @@ class ModelProxy(QObject):
 
     @Slot()
     def duplicateSelectedModels(self):
-        # self.parent._interface.append(InterfaceFactory())
         structure_dict = self._model[self.currentModelIndex].structure.as_dict()
         new_structure = Structure.from_dict(structure_dict)
         for i, ml in enumerate(new_structure):
@@ -362,8 +359,7 @@ class ModelProxy(QObject):
                 for j, layer in enumerate(ml.layers):    
                     layer.assign_material(self._model[self.currentModelIndex].structure[i].layers[j].material)
         self._model.append(
-            self._defaultModel(new_structure, 
-                            #    interface=self.parent._interface[-1],
+            self._defaultModel(new_structure,
                                interface=self.parent._interface,
                                name=f"{self._model[self.currentModelIndex].name} Duplicate"))
         try:
