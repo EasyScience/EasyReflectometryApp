@@ -34,8 +34,6 @@
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Continuous integration" href="../ci.html" />
-    <link rel="prev" title="ADR0001: Item library basis" href="adr0001.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -87,30 +85,25 @@
   Contents:
  </span>
 </p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="../building.html">
    Building a development environment
   </a>
  </li>
- <li class="toctree-l1 current active has-children">
+ <li class="toctree-l1 has-children">
   <a class="reference internal" href="../adrs.html">
    ADRs
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
    <i class="fas fa-chevron-down">
    </i>
   </label>
-  <ul class="current">
+  <ul>
    <li class="toctree-l2">
     <a class="reference internal" href="adr0001.html">
-     ADR0001: Item library basis
-    </a>
-   </li>
-   <li class="toctree-l2 current active">
-    <a class="current reference internal" href="#">
-     ADR0002: Design of continuous integration
+     ADR0001: Naming structure
     </a>
    </li>
   </ul>
@@ -322,6 +315,8 @@ title="Print to PDF"
 <a class="reference external image-reference" href="https://github.com/arm61"><img alt="Badge indicating that ADR0001 was authored by Andrew R. McCluskey." src="https://img.shields.io/badge/author-Andrew%20R.%20McCluskey-blue" /></a>
 <section id="context">
 <h2>Context<a class="headerlink" href="#context" title="Permalink to this heading">#</a></h2>
+<p>In order to have EasyReflectometry (both as an application and a Python library) accessible to as many users as possible, it is important that the software can be installed as easily as possible.
+For the Python library, this means that EasyReflectometryLib should</p>
 </section>
 <section id="decision">
 <h2>Decision<a class="headerlink" href="#decision" title="Permalink to this heading">#</a></h2>
@@ -339,20 +334,6 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="adr0001.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">ADR0001: Item library basis</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="../ci.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Continuous integration</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
 </div>
             </footer>
         </div>

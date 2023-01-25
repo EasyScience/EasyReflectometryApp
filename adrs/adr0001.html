@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>ADR0001: Item library basis &#8212; EasyReflectometry Developer Documentation 0.0.1</title>
+    <title>ADR0001: Naming structure &#8212; EasyReflectometry Developer Documentation 0.0.1</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -34,7 +34,7 @@
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ADR0002: Design of continuous integration" href="adr0002.html" />
+    <link rel="next" title="Continuous integration" href="../ci.html" />
     <link rel="prev" title="ADRs" href="../adrs.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
@@ -105,12 +105,7 @@
   <ul class="current">
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
-     ADR0001: Item library basis
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="adr0002.html">
-     ADR0002: Design of continuous integration
+     ADR0001: Naming structure
     </a>
    </li>
   </ul>
@@ -266,6 +261,18 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#decision">
    Decision
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#easyreflectometrylib">
+     EasyReflectometryLib
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#easyreflectometryapp">
+     EasyReflectometryApp
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#consequences">
@@ -281,7 +288,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>ADR0001: Item library basis</h1>
+                <h1>ADR0001: Naming structure</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -300,6 +307,18 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#decision">
    Decision
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#easyreflectometrylib">
+     EasyReflectometryLib
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#easyreflectometryapp">
+     EasyReflectometryApp
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#consequences">
@@ -316,18 +335,54 @@ title="Print to PDF"
                 
               <div>
                 
-  <section id="adr0001-item-library-basis">
-<h1>ADR0001: Item library basis<a class="headerlink" href="#adr0001-item-library-basis" title="Permalink to this heading">#</a></h1>
-<img alt="Badge indicating that ADR0001 has been accepted." src="https://img.shields.io/badge/status-draft-orange" />
+  <section id="adr0001-naming-structure">
+<h1>ADR0001: Naming structure<a class="headerlink" href="#adr0001-naming-structure" title="Permalink to this heading">#</a></h1>
+<img alt="Badge indicating that ADR0001 is in draft." src="https://img.shields.io/badge/status-draft-orange" />
 <a class="reference external image-reference" href="https://github.com/arm61"><img alt="Badge indicating that ADR0001 was authored by Andrew R. McCluskey." src="https://img.shields.io/badge/author-Andrew%20R.%20McCluskey-blue" /></a>
 <section id="context">
 <h2>Context<a class="headerlink" href="#context" title="Permalink to this heading">#</a></h2>
+<p>The EasyReflectometry application and Python library should have a consistant naming structure, such that it is clear to all users what is being installed and how they can access different functionality once installed.
+It should be possible for the Python library to be installed without the installing the application and all of the names should be distinct.
+In this ADR, we outline this naming conventions.</p>
 </section>
 <section id="decision">
 <h2>Decision<a class="headerlink" href="#decision" title="Permalink to this heading">#</a></h2>
+<p>We will break this outline up into the Python library and the application.</p>
+<section id="easyreflectometrylib">
+<h3>EasyReflectometryLib<a class="headerlink" href="#easyreflectometrylib" title="Permalink to this heading">#</a></h3>
+<p>Starting from the lowest level, the Python library.
+The Python library project will be <code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometryLib</span></code> and therefore to install from PyPI will require the following command.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>EasyReflectometryLib
+</pre></div>
+</div>
+<p>However, once installed, it should be possible to access the Python library within a Python script as <code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometry</span></code>.
+Therefore, the following Python commands will return the Python library version number (which may not be the same as the application version number).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">EasyReflectometry</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">EasyReflectometry</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="go">&#39;0.0.2&#39; # This is the version number at time of writing</span>
+</pre></div>
+</div>
+</section>
+<section id="easyreflectometryapp">
+<h3>EasyReflectometryApp<a class="headerlink" href="#easyreflectometryapp" title="Permalink to this heading">#</a></h3>
+<p>The application will commonly be referred to by users are EasyReflectometry, and indeed it should be usable without the understanding that there is a Python library foundation.
+This said, the application project will be <code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometryApp</span></code> and should the application be installable via PyPI, the following command would be necessary.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>EasyReflectometry
+</pre></div>
+</div>
+<p>If then run from the command line, the application can be launched with the following.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>EasyReflectometry
+</pre></div>
+</div>
+<p>N.B. this is achieved by having the <code class="code docutils literal notranslate"><span class="pre">project.scripts</span></code> defined in the <code class="code docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, <a class="reference external" href="https://github.com/easyScience/EasyReflectometryApp/blob/8cb5f6ffe5c6b08fe67825c8b8e5ff5aa701b2e9/pyproject.toml#L57">see here</a>.</p>
+<p>The local installer that is built by the continuous integration should not refer to <code class="xref py py-mod docutils literal notranslate"><span class="pre">EasyReflectometryApp</span></code>, rather the name of the installer and also the application therein should be <code class="code docutils literal notranslate"><span class="pre">EasyReflectometry</span></code>.
+We achieve this with the separate definition of a <code class="code docutils literal notranslate"><span class="pre">name</span></code> and an <code class="code docutils literal notranslate"><span class="pre">app_name</span></code> in the <code class="code docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, <a class="reference external" href="https://github.com/easyScience/EasyReflectometryApp/blob/8cb5f6ffe5c6b08fe67825c8b8e5ff5aa701b2e9/pyproject.toml#L10">as shown here</a>.</p>
+</section>
 </section>
 <section id="consequences">
 <h2>Consequences<a class="headerlink" href="#consequences" title="Permalink to this heading">#</a></h2>
+<p>The primary consequence of this decision is that there is clarity in the naming structure of the EasyReflectometry application and Python library.
+This convention should be followed in future development and care taken not to deviate.</p>
 </section>
 </section>
 
@@ -346,10 +401,10 @@ title="Print to PDF"
             <p class="prev-next-title">ADRs</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="adr0002.html" title="next page">
+    <a class='right-next' id="next-link" href="../ci.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ADR0002: Design of continuous integration</p>
+        <p class="prev-next-title">Continuous integration</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
