@@ -8,7 +8,7 @@ With this in mind, the best way to build a development environment for EasyRefle
 ```console
 $ mamba create -y -n easy_refl python=3.9
 $ mamba activate easy_refl
-$ git clone git@github.com:easyScience/EasyReflectometryLib.git
+$ git clone https://github.com/easyScience/EasyReflectometryLib.git
 $ cd EasyReflectometryLib
 $ git checkout develop
 $ pip install -e .
