@@ -1,7 +1,7 @@
 # Development Env
 
 The EasyReflectometry project consists of two packages; an application and a library. 
-To develop effectively for EasyReflectometry, we work on the `develop` branch of both and then periodically merge to `master` when a release is made. 
+To develop effectively for EasyReflectometry, we work on the `develop` branch of both and then periodically merge to `main` when a release is made. 
 
 With this in mind, the best way to build a development environment for EasyReflectometry is as follows. 
 
