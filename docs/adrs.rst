@@ -11,7 +11,6 @@ This will likely grow in future and comments on these are welcome (via a `Github
    :maxdepth: 1
 
    adrs/adr0001
-   adrs/adr0002
 
 .. _record: https://adr.github.io
 .. _Github issue: https://github.com/easyScience/EasyReflectometryApp/issues/new

@@ -1,6 +1,6 @@
-=========================================
-ADR0002: Design of continuous integration
-=========================================
+===========================
+ADR0001: Item library basis
+===========================
 
 
 .. image:: https://img.shields.io/badge/status-draft-orange
@@ -15,9 +15,6 @@ ADR0002: Design of continuous integration
 
 Context 
 -------
-
-In order to have EasyReflectometry (both as an application and a Python library) accessible to as many users as possible, it is important that the software can be installed as easily as possible. 
-For the Python library, this means that EasyReflectometryLib should 
 
 Decision
 --------
