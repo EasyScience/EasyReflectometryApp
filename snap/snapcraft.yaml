@@ -11,22 +11,22 @@ icon: resources/images/er_logo.svg
 architectures:
     - build-on: [amd64]
 
+environment:
+    PYTHONPATH: $SNAP:$SNAP/usr/bin/python3.9:$PYTHONPATH
+    DISABLE_WAYLAND: 1
 
 apps:
-
     easyreflectometry:
-        command: bin/python3.9 $SNAP/EasyReflectometryApp/main.py
+        command: easy-reflectometry-wrapper
         extensions: [gnome-3-38]
-        plugs: [network, x11, pulseaudio, opengl, home, ssh-keys]
-        environment:
-            DISABLE_WAYLAND: 1
+        plugs: [network, x11, pulseaudio, opengl, home, ssh-keys, shmem]
 
 parts:
     copy-stuff:
         plugin: dump
         source: .
 
-    build:
+    build-application:
         plugin: python
         source: .
         stage-packages:
@@ -54,17 +54,38 @@ parts:
             - python3.9-venv
             - python3.9-dev
             - git-all
+            - pipenv
         build-environment:
             - SNAPCRAFT_PYTHON_INTERPRETER: python3.9
-              # python3.9 lives in $SNAPCRAFT_PART_INSTALL/bin
             - PATH: $SNAPCRAFT_PART_INSTALL/bin:$PATH
             - PYTHONPATH: ''
         override-build: |
-          # Workaround a bug in snapcraft python plugin
-          # https://forum.snapcraft.io/t/build-a-snap-with-any-version-of-python-i-want/10420/8
-          rm -rf $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
-          ln -s /usr/lib/python3.9/distutils $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
-          mkdir -p $SNAPCRAFT_PART_INSTALL/usr/include/
-          ln -s /usr/include/python3.9 $SNAPCRAFT_PART_INSTALL/usr/include/python3.9
-          snapcraftctl build
-          python3.9 -m pip install -U .
+            # Work around a bug in snapcraft python plugin / gnome 3.38 extension
+            # https://forum.snapcraft.io/t/build-a-snap-with-any-version-of-python-i-want/10420/8
+
+            rm -rf $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
+            cp -r /usr/lib/python3.9/distutils $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
+            mkdir -p $SNAPCRAFT_PART_INSTALL/usr/include/
+            cp -r /usr/include/python3.9 $SNAPCRAFT_PART_INSTALL/usr/include/python3.9
+
+            snapcraftctl build
+
+            pip install .
+
+            #mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+            echo "\$SNAP/bin/python3.9 \$SNAP/EasyReflectometryApp/main.py" > $SNAPCRAFT_PART_INSTALL/easy-reflectometry-wrapper
+            chmod +x $SNAPCRAFT_PART_INSTALL/easy-reflectometry-wrapper
+
+            # Apply shebang rewrite as done by snapcraft
+
+            find $SNAPCRAFT_PART_INSTALL/bin/ -maxdepth 1 -mindepth 1 -type f -executable -exec \
+            sed -i                                                                                \
+              "s|^#!${SNAPCRAFT_PART_INSTALL}/bin/python3.9$|#!/usr/bin/env python3|" {} \;
+
+            # debug
+            #find $SNAPCRAFT_PART_INSTALL/bin/ -maxdepth 1 -mindepth 1 -type f -executable -exec head -n 1 {} \;
+
+plugs:
+  shmem:
+    interface: shared-memory
+    private: true
