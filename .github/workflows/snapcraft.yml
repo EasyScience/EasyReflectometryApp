@@ -38,4 +38,3 @@ jobs:
         run: |
             snap run easyreflectometry &
             sleep 60
-            sudo snap stop easyreflectometry
