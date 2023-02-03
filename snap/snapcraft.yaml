@@ -3,7 +3,7 @@ summary: Making reflectometry data analysis and modelling easy.
 description: |
    EasyReflectometry is a scientific software for modelling and analysis of reflectometry data.
    Currently, EasyReflectometry covers single contrast measurements of layered structures.
-version: git
+adopt-info: build-application
 grade: stable
 confinement: strict
 base: core20
@@ -29,6 +29,11 @@ parts:
     build-application:
         plugin: python
         source: .
+
+        override-pull: |
+            snapcraftctl pull
+            snapcraftctl set-version "$(cat pyproject.toml | grep version | head -n 1 | awk -F'"' '$0=$2' | sed 's/ //g')"
+
         stage-packages:
             - python3.9-venv
             - libfreetype6
