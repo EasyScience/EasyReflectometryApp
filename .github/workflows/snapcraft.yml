@@ -27,6 +27,6 @@ jobs:
             sudo snap install --dangerous *.snap
       - name: Run snap
         run: |
-            snap run easyreflectometryapp &
-            sleep 100
-            killall easyreflectometryapp
+            snap run easyreflectometry &
+            sleep 60
+            killall easyreflectometry
