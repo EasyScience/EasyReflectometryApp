@@ -3,7 +3,7 @@ name: Build Snap Image
 on: [push, pull_request]
 
 jobs:
-  build:
+  build_snap:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -13,3 +13,20 @@ jobs:
       with:
         name: snap
         path: ${{ steps.snapcraft.outputs.snap }}
+
+  install_test:
+    runs-on: ubuntu-latest
+    needs: build_snap
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: snap
+          path: .
+      - name: Install snap
+        run: |
+            sudo snap install --dangerous *.snap
+      - name: Run snap
+        run: |
+            snap run easyreflectometryapp &
+            sleep 100
+            killall easyreflectometryapp
