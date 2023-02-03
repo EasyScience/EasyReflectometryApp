@@ -38,3 +38,34 @@ jobs:
         run: |
             snap run easyreflectometry &
             sleep 60
+
+  upload_snap:
+    runs-on: ubuntu-latest
+    needs: install_test
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: snap
+          path: .
+      
+      - name: Get branch names
+        id: branch-name
+        uses: tj-actions/branch-names@v6
+  
+      - name: Publish Develop Branch to snapcraft beta
+        if: steps.branch-name.outputs.current_branch == "develop"
+        uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+        with:
+          snap: ./*.snap
+          release: beta
+          
+      - name: Publish Main Branch to snapcraft stable
+        if: steps.branch-name.outputs.current_branch == "main"
+        uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+        with:
+          snap: ./*.snap
+          release: stable
