@@ -50,7 +50,8 @@ ci = [
 ]
 docs = [
     'sphinx>=4.5.0',
-    'pydata-sphinx-theme>=0.12.0'
+    'pydata-sphinx-theme>=0.12.0',
+    'myst_parser'
 ]
 
 [project.urls]
