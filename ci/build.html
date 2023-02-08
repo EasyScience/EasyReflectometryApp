@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Building &#8212; EasyReflectometry Dev Docs 0.0.1</title>
+    
+  <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="canonical" href="https://dev.easyreflectometry.org/ci/build.html" />
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Continuous Integration" href="../ci.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main">
+<div class="container-xl">
+
+    <a class="navbar-brand" href="../index.html">
+    
+      <p class="title">EasyReflectometry Dev Docs</p>
+    
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar-menu" class="col-lg-9 collapse navbar-collapse">
+      <ul id="navbar-main-elements" class="navbar-nav mr-auto">
+        
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../build.html">Development Env</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../adrs.html">ADRs</a>
+        </li>
+        
+        <li class="nav-item active">
+            <a class="nav-link" href="../ci.html">Continuous Integration</a>
+        </li>
+        
+        
+      </ul>
+
+
+      
+
+      <ul class="navbar-nav">
+        
+        
+      </ul>
+    </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+          <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+
+    <div class="bd-toc-item active">
+    
+  
+    <ul class="nav bd-sidenav">
+        
+        
+        
+        
+        
+        
+          
+            
+                <li class="active">
+                    <a href="">Building</a>
+                </li>
+            
+          
+        
+        
+      </ul>
+  
+  </nav>
+          </div>
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+              
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="nav section-nav flex-column">
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#easyreflectometrylib" class="nav-link">EasyReflectometryLib</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#easyreflectometryapp" class="nav-link">EasyReflectometryApp</a><ul class="nav section-nav flex-column">
+                
+        <li class="nav-item toc-entry toc-h3">
+            <a href="#testing" class="nav-link">Testing</a><ul class="nav section-nav flex-column">
+                
+        <li class="nav-item toc-entry toc-h4">
+            <a href="#executables" class="nav-link">Executables</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h4">
+            <a href="#snap-image" class="nav-link">snap image</a>
+        </li>
+    
+            </ul>
+        </li>
+    
+            </ul>
+        </li>
+    
+    </ul>
+</nav>
+
+
+              
+          </div>
+          
+
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="building">
+<h1>Building<a class="headerlink" href="#building" title="Permalink to this heading">¶</a></h1>
+<p>The aim of building the application and library is to create an accessible, either via PyPI, <code class="docutils literal notranslate"><span class="pre">snap</span></code>, or an executable installer, the EasyReflectometry application and library.</p>
+<section id="easyreflectometrylib">
+<h2><code class="docutils literal notranslate"><span class="pre">EasyReflectometryLib</span></code><a class="headerlink" href="#easyreflectometrylib" title="Permalink to this heading">¶</a></h2>
+<p>Based on <span class="xref myst">ADR0002</span>, the only expected method of installation for the Python library is via PyPI (or some other <code class="docutils literal notranslate"><span class="pre">pip</span></code> compatible approach).
+Therefore, the building of <code class="docutils literal notranslate"><span class="pre">EasyReflectometryLib</span></code> is achieved through relatively standard Github actions for pushing built Python modules to PyPI.
+This is achieved though common approaches, discussed in <a class="reference external" href="https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/">this PyPA documentation</a>, specifically the Github action defined in the <a class="reference external" href="https://github.com/easyScience/EasyReflectometryLib/blob/main/.github/workflows/python-publish.yml"><code class="docutils literal notranslate"><span class="pre">python-publish.yml</span></code> workflow</a>.</p>
+</section>
+<section id="easyreflectometryapp">
+<h2><code class="docutils literal notranslate"><span class="pre">EasyReflectometryApp</span></code><a class="headerlink" href="#easyreflectometryapp" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">EasyReflectometryApp</span></code> building continuous integration is much more complex, consisting of three individual processes:</p>
+<ul class="simple">
+<li><p>Pushing the Python package to PyPI, such that it may be installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p></li>
+<li><p>Building an executable installer, for Windows and macOS.</p></li>
+<li><p>Building a <code class="docutils literal notranslate"><span class="pre">snap</span></code> image, for use with Ubuntu-based Linux distributions.</p></li>
+</ul>
+<p>The first of these, is straightforward to achieve, by the same process as in <code class="docutils literal notranslate"><span class="pre">EasyReflectometryLib</span></code>.
+The second is more complex and requires a multi-step <a class="reference external" href="https://github.com/easyScience/EasyReflectometryApp/blob/main/.github/workflows/build_executable.yml">Github action</a>.
+This action performs the following steps:</p>
+<ol class="arabic simple">
+<li><p>A Python environment (currently 3.9) is set up and the <a class="reference external" href="https://github.com/easyScience/EasyReflectometryApp/blob/main/pyproject.toml"><code class="docutils literal notranslate"><span class="pre">ci</span></code> dependencies</a> are intstalled.</p></li>
+<li><p>A series of environment variables are set, mostly related to the git state at the time. These are used in the built app to give extra information regarding provenence.</p></li>
+<li><p>The application bundle is then created and the installers are produced using <a class="reference external" href="https://pyinstaller.org/en/stable/">PyInstaller</a>.</p></li>
+<li><p>These are installed on the build machines and the application is launched (and then quit), to test if the build is at least in part successful.</p></li>
+<li><p>The installers are then made available for <span class="xref myst">testing</span> as Github artifacts of the action.</p></li>
+<li><p>If the build is happening on the <code class="docutils literal notranslate"><span class="pre">master</span></code> branch, the installer is also added to a release.</p></li>
+</ol>
+<section id="testing">
+<h3>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">¶</a></h3>
+<section id="executables">
+<h4>Executables<a class="headerlink" href="#executables" title="Permalink to this heading">¶</a></h4>
+<p>The executables for Windows and macOS can be found in the artifacts of the Github action that ran.
+You can download the relevant execuatable and install this on your machine.
+Test out, locally, that the new functionality works as expected.</p>
+</section>
+<section id="snap-image">
+<h4><code class="docutils literal notranslate"><span class="pre">snap</span></code> image<a class="headerlink" href="#snap-image" title="Permalink to this heading">¶</a></h4>
+<p>To test the <code class="docutils literal notranslate"><span class="pre">snap</span></code> build, download the <code class="docutils literal notranslate"><span class="pre">.snap</span></code> image from the Github artifacts and run the following.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">snap install --devmode *.snap</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="../ci.html" title="previous page">Continuous Integration</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+
+    
+  <script src="../_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    <p>
+          &copy; Copyright 2023, EasyReflectometry.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

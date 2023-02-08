@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Development Env &#8212; EasyReflectometry Dev Docs 0.0.1</title>
+    
+  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="canonical" href="https://dev.easyreflectometry.org/build.html" />
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ADRs" href="adrs.html" />
+    <link rel="prev" title="EasyReflectometry" href="index.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main">
+<div class="container-xl">
+
+    <a class="navbar-brand" href="index.html">
+    
+      <p class="title">EasyReflectometry Dev Docs</p>
+    
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar-menu" class="col-lg-9 collapse navbar-collapse">
+      <ul id="navbar-main-elements" class="navbar-nav mr-auto">
+        
+        
+        <li class="nav-item active">
+            <a class="nav-link" href="">Development Env</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="adrs.html">ADRs</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="ci.html">Continuous Integration</a>
+        </li>
+        
+        
+      </ul>
+
+
+      
+
+      <ul class="navbar-nav">
+        
+        
+      </ul>
+    </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+          <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+
+    <div class="bd-toc-item active">
+    
+  
+    <ul class="nav bd-sidenav">
+        
+        
+          
+        
+        
+        
+        
+        
+        
+      </ul>
+  
+  </nav>
+          </div>
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+              
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="nav section-nav flex-column">
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#vscode" class="nav-link">VSCode</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#additional-requirements" class="nav-link">Additional requirements</a><ul class="nav section-nav flex-column">
+                
+        <li class="nav-item toc-entry toc-h3">
+            <a href="#linux" class="nav-link">Linux</a>
+        </li>
+    
+            </ul>
+        </li>
+    
+    </ul>
+</nav>
+
+
+              
+          </div>
+          
+
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="development-env">
+<h1>Development Env<a class="headerlink" href="#development-env" title="Permalink to this heading">¶</a></h1>
+<p>The EasyReflectometry project consists of two packages; an application and a library.
+To develop effectively for EasyReflectometry, we work on the <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch of both and then periodically merge to <code class="docutils literal notranslate"><span class="pre">main</span></code> when a release is made.</p>
+<p>With this in mind, the best way to build a development environment for EasyReflectometry is as follows.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mamba<span class="w"> </span>create<span class="w"> </span>-y<span class="w"> </span>-n<span class="w"> </span>easy_refl<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9
+<span class="gp">$ </span>mamba<span class="w"> </span>activate<span class="w"> </span>easy_refl
+<span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/easyScience/EasyReflectometryLib.git
+<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>EasyReflectometryLib
+<span class="gp">$ </span>git<span class="w"> </span>checkout<span class="w"> </span>develop
+<span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>../
+</pre></div>
+</div>
+<p>Then, to that you are working with your local version of <code class="docutils literal notranslate"><span class="pre">EasyReflectometryLib</span></code>, you want to change line 35 of the <code class="docutils literal notranslate"><span class="pre">EasyReflectometryApp</span></code> <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file from</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="s">&#39;EasyReflectometryLib @ git+https://github.com/easyScience/EasyReflectometryLib.git@develop&#39;</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>to use the directory where you have cloned <code class="docutils literal notranslate"><span class="pre">EasyReflectometryLib</span></code>, i.e.</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="s">&#39;EasyReflectometryLib @ file:///path/to/EasyReflectometryLib&#39;</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>With this modification in place, you should then be able to install <code class="docutils literal notranslate"><span class="pre">EasyReflectometryApp</span></code></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/easyScience/EasyReflectometryApp.git
+<span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>EasyReflectometryApp
+<span class="gp">$ </span>git<span class="w"> </span>checkout<span class="w"> </span>develop
+<span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+<p>Note, that the use of <code class="docutils literal notranslate"><span class="pre">mamba</span></code> is a personal choice, if you prefer building Python environments with <code class="docutils literal notranslate"><span class="pre">pyenv</span></code> that should also work.
+This will build, in-place, versions of both the application and the library.
+The application can then be run (from within the appropriate Python environment) with the following.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>EasyReflectometry
+</pre></div>
+</div>
+<section id="vscode">
+<h2>VSCode<a class="headerlink" href="#vscode" title="Permalink to this heading">¶</a></h2>
+<p>If you use VSCode as an IDE, it can be useful to have the ability to launch a “Run and Debug” session.
+To achieve this, in the <code class="docutils literal notranslate"><span class="pre">EasyReflectometryApp</span></code> directory a file called <code class="docutils literal notranslate"><span class="pre">.vscode/launch.json</span></code> needs to be created with the following contents:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Python: Current File&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;launch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;program&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EasyReflectometryApp/main.py&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;console&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integratedTerminal&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;justMyCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>With this file in place, you should be able to “Run → Start Debugging” from the menu or press F5.</p>
+</section>
+<section id="additional-requirements">
+<h2>Additional requirements<a class="headerlink" href="#additional-requirements" title="Permalink to this heading">¶</a></h2>
+<p>Some additional requirements exist that are operating system specific.</p>
+<section id="linux">
+<h3>Linux<a class="headerlink" href="#linux" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo apt install libxcb-xinerama0</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="index.html" title="previous page">EasyReflectometry</a>
+    <a class='right-next' id="next-link" href="adrs.html" title="next page">ADRs</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    <p>
+          &copy; Copyright 2023, EasyReflectometry.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
