@@ -1,6 +1,0 @@
-.. highlight:: shell
-
-======================
-Continuous integration
-======================
-

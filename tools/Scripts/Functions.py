@@ -56,7 +56,7 @@ def downloadFile(url, destination):
         open(destination, 'wb').write(file.content)
     except Exception as exception:
         printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         printSuccessMessage(message)
 
@@ -66,7 +66,7 @@ def attachDmg(file):
         run('hdiutil', 'attach', file)
     except Exception as exception:
         printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         printSuccessMessage(message)
 
@@ -80,11 +80,11 @@ def installSilently(installer, silent_script):
             )
     except Exception as exception:
         printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         printSuccessMessage(message)
 
-def config():
+def project():
     return toml.load(os.path.join(os.getcwd(), 'pyproject.toml'))
 
 def osName():
@@ -113,7 +113,7 @@ def setEnvironmentVariable(name, value):
         os.environ[name] = value
     except Exception as exception:
         printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         printSuccessMessage(message)
 
@@ -123,7 +123,7 @@ def addReadPermission(file):
         run('chmod', 'a+x', file)
     except Exception as exception:
         printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         printSuccessMessage(message)
 
@@ -137,7 +137,7 @@ def createFile(path, content):
             file.write(content)
     except Exception as exception:
         printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         printSuccessMessage(message)
 
@@ -151,7 +151,7 @@ def copyFile(source, destination):
         shutil.copy2(source, destination, follow_symlinks=True)
     except Exception as exception:
         printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         printSuccessMessage(message)
 
@@ -164,7 +164,7 @@ def removeFile(path):
         os.remove(path)
     except Exception as exception:
         printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         printSuccessMessage(message)
 
@@ -177,7 +177,7 @@ def createDir(path):
         os.mkdir(path)
     except Exception as exception:
         printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         printSuccessMessage(message)
 
@@ -191,7 +191,7 @@ def copyDir(source, destination):
         dir_util.copy_tree(source, destination)
     except Exception as exception:
         printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         printSuccessMessage(message)
 
@@ -205,7 +205,7 @@ def moveDir(source, destination):
         shutil.move(source, destination)
     except Exception as exception:
         printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         printSuccessMessage(message)
 
@@ -256,7 +256,7 @@ def unzip(archive_path, destination_dir):
             zip_ref.extractall(destination_dir)
     except Exception as exception:
         printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         printSuccessMessage(message)
 
@@ -271,7 +271,7 @@ def zip(source, destination):
     # Check if src exists
     if not os.path.exists(source):
         printFailMessage(f"zip file/directory (it doesn't exist): {source}")
-        sys.exit()
+        sys.exit(1)
         return
     # create a ZipFile object
     try:
@@ -293,10 +293,10 @@ def zip(source, destination):
                         zf.write(filepath, arcpath)
             else:
                 printFailMessage(message + ": It is a special file (socket, FIFO, device file)" )
-                sys.exit()
+                sys.exit(1)
     except Exception as exception:
         printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         printSuccessMessage(message)
 

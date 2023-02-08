@@ -1,19 +1,12 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Build Documentation
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the develop branch
   push:
     branches: [ main, develop ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build_documentation:
     runs-on: ubuntu-latest
     steps:
@@ -31,8 +24,7 @@ jobs:
     - name: Install EasyReflectometry and dependencies
       run: |
         sudo apt install pandoc
-        pip install sphinx-book-theme
-        pip install .
+        pip install '.[docs]'
     - name: Build and Commit
       uses: sphinx-notes/pages@master
       with:
