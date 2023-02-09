@@ -51,6 +51,11 @@ jobs:
       - name: Get branch names
         id: branch-name
         uses: tj-actions/branch-names@v6
+      
+      - name: Get snap filename
+        run: |
+          ls *.snap
+          echo "SNAP_FILENAME=$(ls *.snap)" >> $GITHUB_ENV
   
       - name: Publish Develop Branch to snapcraft beta
         if: steps.branch-name.outputs.current_branch == 'develop'
@@ -58,7 +63,7 @@ jobs:
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
         with:
-          snap: ./*.snap
+          snap: ${{ env.SNAP_FILENAME }}
           release: beta
           
       - name: Publish Main Branch to snapcraft stable
