@@ -54,7 +54,6 @@ jobs:
       
       - name: Get snap filename
         run: |
-          ls *.snap
           echo "SNAP_FILENAME=$(ls *.snap)" >> $GITHUB_ENV
   
       - name: Publish Develop Branch to snapcraft beta
@@ -72,5 +71,5 @@ jobs:
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
         with:
-          snap: ./*.snap
+          snap: ${{ env.SNAP_FILENAME }}
           release: stable
