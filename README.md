@@ -45,7 +45,7 @@ Full details of the future plans for EasyReflectometry is available in the [road
 
 ### Downloading
 
-[Download][31] the official **EasyReflectometry installer v0.0.5** for your operating system.
+[Download][31] the official **EasyReflectometry installer v0.0.6** for your operating system.
 
 ### Installing
 

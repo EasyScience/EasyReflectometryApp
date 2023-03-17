@@ -8,7 +8,7 @@ build-backend = "hatchling.build"
 # Note that while the project is called EasyReflectometryApp
 # the application itself is EasyReflectometry. 
 name = "EasyReflectometry"
-version = "0.0.5-beta"
+version = "0.0.6-beta"
 description = "Making reflectometry data analysis and modelling easy."
 authors = [
     {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"}, 
