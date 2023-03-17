@@ -43,7 +43,7 @@ def run(*args):
         args,
         capture_output=False,
         universal_newlines=True,    # converts the output to a string instead of a byte array.
-        check=True                  # forces the Python method to throw an exception if the underlying process encounters errors
+        #check=True                  # forces the Python method to throw an exception if the underlying process encounters errors
     )
 
 def downloadFile(url, destination):
