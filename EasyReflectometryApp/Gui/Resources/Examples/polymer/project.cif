@@ -1,0 +1,5 @@
+_name polymer
+_short_description 'reflectometry, 1D'
+_samples None
+_experiments None
+_modified '06.12.2022 16:23'

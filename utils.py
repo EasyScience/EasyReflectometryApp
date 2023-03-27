@@ -1,25 +1,21 @@
 import os
 import sys
 import pip
-import pathlib
 import datetime
+import sysconfig
 import argparse
+import toml
 
-try:
-    import toml
-except ImportError:
-    import pip
-    pip.main(['install', 'toml'])
-    import toml
 
 
 ### Get value from pyproject.toml
 
-def conf():
+def pyproject_toml():
     project_fname = 'pyproject.toml'
-    current_path = os.path.dirname(__file__)
-    project_fpath = os.path.join(current_path, project_fname)
-    return toml.load(project_fpath)
+    return os.path.join(os.path.split(__file__)[0], project_fname) 
+
+def proj():
+    return toml.load(pyproject_toml())
 
 def keyPath():
     if len(sys.argv) < 2:
@@ -54,29 +50,28 @@ def extraDict():
     commit_sha_short = commit_sha[:6]
     commit_url = f'{github_repo_url}/commit/{commit_sha}'
 
-    app_version = getValue(conf(), 'tool.poetry.version')
+    app_version = getValue(proj(), 'project.version')
     release_tag = f'v{app_version}'
     release_title = f'Version {app_version} ({build_date})'
 
-    return { 'ci': { 'cache': { 'python_packages_path': python_packages_path },
-                     'app': { 'info': { 'build_date': build_date,
-                                        'date_for_qtifw': date_for_qtifw,
-                                        'release_tag': release_tag,
-                                        'release_title': release_title,
-                                        'branch_name': branch_name,
-                                        'branch_url': branch_url,
-                                        'commit_sha_short': commit_sha_short,
-                                        'commit_url': commit_url } } } }
+    return { 'paths': { 'python_packages_path': python_packages_path },
+             'git': { 'build_date': build_date,
+                      'date_for_qtifw': date_for_qtifw,
+                      'release_tag': release_tag,
+                      'release_title': release_title,
+                      'branch_name': branch_name,
+                      'branch_url': branch_url,
+                      'commit_sha_short': commit_sha_short,
+                      'commit_url': commit_url } } 
 
 def extraToml():
     return toml.dumps(extraDict())
 
-def updatePyprojectToml():
-    with open('pyproject.toml', 'r', encoding='utf-8') as f:
-        pyproject_toml = f.read()
-    pyproject_toml += '\n' + extraToml()
-    with open('pyproject.toml', 'w', encoding='utf-8') as f:
-        f.write(pyproject_toml)
+def updatePyProjectToml():
+    output_dict = proj()
+    output_dict['ci'].update(extraDict())
+    with open(pyproject_toml(), 'w') as f:
+        toml.dump(output_dict, f)
 
 ### Main
 
@@ -86,10 +81,10 @@ def main():
     parser.add_argument('-u', '--update', action='store_true', help='add extra info to the pyproject.toml')
     args = parser.parse_args()
     if args.key:
-        value = getValue(conf(), args.key)
+        value = getValue(proj(), args.key)
         print(value)
     if args.update:
-        updatePyprojectToml()
+        updatePyProjectToml()
 
 if __name__ == '__main__':
     main()

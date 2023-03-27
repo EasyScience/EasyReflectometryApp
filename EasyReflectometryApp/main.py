@@ -3,6 +3,7 @@ import sys
 import pathlib
 import platform
 import argparse
+import darkdetect
 
 # PySide
 from PySide2.QtCore import QUrl
@@ -13,13 +14,23 @@ from PySide2.QtWebEngine import QtWebEngine
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView  # to call hook-PySide2.QtWebEngineWidgets.py
 
 # easyScience
-import utils
+import EasyReflectometryApp
+import toml
 import easyApp
-from easyApp.Logic.Translate import Translator
+# from easyApp.Logic.Maintenance import Updater
+# from easyApp.Logic.Translate import Translator
 from EasyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
 
 # Global vars
-CONFIG = utils.conf()
+def proj():
+    project_fname = 'pyproject.toml'
+    try:
+        return toml.load(os.path.join(os.path.split(__file__)[0], project_fname))
+    except FileNotFoundError:
+        up_directory = os.path.join(os.path.split(__file__)[0], '..') 
+        return toml.load(os.path.join(up_directory, project_fname)) 
+
+CONFIG = proj()
 
 
 class App(QApplication):
@@ -40,10 +51,10 @@ def main():
         from easyApp.Logic import Logging
 
     # Paths
-    app_name = CONFIG['tool']['poetry']['name']
-    current_path = os.path.dirname(sys.argv[0])
-
-    package_path = os.path.join(current_path, f'{app_name}App')
+    project_name = CONFIG['project']['name'] + 'App'
+    current_path = EasyReflectometryApp.__path__[0]
+    
+    package_path = os.path.join(current_path, f'{project_name}')
     if not os.path.exists(package_path):
         package_path = current_path
 
@@ -53,21 +64,17 @@ def main():
     easyApp_path = os.path.join(easyApp.__path__[0], '..')
 
     home_path = pathlib.Path.home()
-    settings_path = str(home_path.joinpath(f'.{app_name}', 'settings.ini'))
-
-    languages = CONFIG['ci']['app']['translations']['languages']
-    translations_dir = CONFIG['ci']['app']['translations']['dir']
-    translations_path = os.path.join(package_path, *translations_dir.split('/'))
+    settings_path = str(home_path.joinpath(f'.{project_name}', 'settings.ini'))
 
     # QtWebEngine
     QtWebEngine.initialize()
 
     # Application
     app = App(sys.argv)
-    app.setApplicationName(CONFIG['tool']['poetry']['name'])
-    app.setApplicationVersion(CONFIG['tool']['poetry']['version'])
-    app.setOrganizationName(CONFIG['tool']['poetry']['name'])
-    app.setOrganizationDomain(CONFIG['tool']['poetry']['name'])
+    app.setApplicationName(CONFIG['project']['name'])
+    app.setApplicationVersion(CONFIG['project']['version'])
+    app.setOrganizationName(CONFIG['project']['name'])
+    app.setOrganizationDomain(CONFIG['project']['name'])
     app.setWindowIcon(QIcon(app_icon_path))
 
     # QML application engine
@@ -75,14 +82,20 @@ def main():
 
     # Python objects to be exposed to QML
     py_qml_proxy_obj = PyQmlProxy()
-    translator = Translator(app, engine, translations_path, languages)
 
     # Expose the Python objects to QML
     engine.rootContext().setContextProperty('_pyQmlProxyObj', py_qml_proxy_obj)
     engine.rootContext().setContextProperty('_settingsPath', settings_path)
-    engine.rootContext().setContextProperty('_translator', translator)
     engine.rootContext().setContextProperty('_projectConfig', CONFIG)
     engine.rootContext().setContextProperty('_isTestMode', args.testmode)
+    try:
+        isDark = darkdetect.isDark()
+    except FileNotFoundError:
+        isDark = False
+    engine.rootContext().setContextProperty('_isSystemThemeDark', isDark)
+
+    # Register types to be instantiated in QML
+    # qmlRegisterType(Updater, 'easyApp.Logic.Maintenance', 1, 0, 'Updater')
 
     # Add paths to search for installed modules
     engine.addImportPath(easyApp_path)

@@ -147,10 +147,31 @@ EaComponents.SideBarColumn {
 
         EaElements.CheckBox {
             topPadding: 0
-            id: rq4
+            checked: ExGlobals.Constants.proxy.plotting1d.xAxisType
+            text: qsTr("Logarithmic q-axis")
+            ToolTip.text: qsTr("Checking this box will make the q-axis logarithmic")
+            onToggled: ExGlobals.Constants.proxy.plotting1d.changeXAxisType()
+        }
+
+        EaElements.CheckBox {
+            topPadding: 0
             checked: ExGlobals.Constants.proxy.simulation.plotRQ4
-            text: qsTr("Show R(q)q⁴")
+            text: qsTr("Show as R(q)q⁴")
             onToggled: ExGlobals.Constants.proxy.simulation.setPlotRQ4()
+        }
+
+        EaElements.CheckBox {
+            topPadding: 0
+            checked: ExGlobals.Constants.proxy.plotting1d.scaleShown
+            text: qsTr("Show scale level")
+            onToggled: ExGlobals.Constants.proxy.plotting1d.flipScaleShown()
+        }
+
+        EaElements.CheckBox {
+            topPadding: 0
+            checked: ExGlobals.Constants.proxy.plotting1d.bkgShown
+            text: qsTr("Show background level")
+            onToggled: ExGlobals.Constants.proxy.plotting1d.flipBkgShown()
         }
     }
 

@@ -7,7 +7,10 @@ import Functions, Config
 
 CONFIG = Config.Config()
 
-def setupExePath():
+def setupExePath() -> str:
+    """
+    :return: Path to the installer executable.
+    """
     d = {
         'macos': os.path.join(CONFIG.setup_full_name, 'Contents', 'MacOS', CONFIG.setup_name),
         'ubuntu': CONFIG.setup_full_name,
@@ -16,6 +19,9 @@ def setupExePath():
     return os.path.join(CONFIG.dist_dir, d[CONFIG.os])
 
 def runInstallerSilently():
+    """
+    Install the applcation. 
+    """
     try:
         message = f'install {CONFIG.app_name}'
         silent_script = CONFIG['ci']['scripts']['silent_install']
@@ -26,7 +32,7 @@ def runInstallerSilently():
         )
     except Exception as exception:
         Functions.printFailMessage(message, exception)
-        sys.exit()
+        sys.exit(1)
     else:
         Functions.printSuccessMessage(message)
 

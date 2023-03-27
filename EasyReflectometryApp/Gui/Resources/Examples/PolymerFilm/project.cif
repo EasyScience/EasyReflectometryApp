@@ -1,0 +1,5 @@
+_name PolymerFilm
+_short_description 'neutrons, solid/liquid, constant wavelength, Platypus@ANSTO'
+_samples None
+_experiments None
+_modified '06.12.2022 16:20'

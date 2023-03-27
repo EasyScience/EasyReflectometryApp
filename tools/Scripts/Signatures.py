@@ -8,10 +8,10 @@ import Functions
 CONFIG = Config.Config()
 
 app_name = CONFIG.app_name
-app_url = CONFIG['tool']['poetry']['homepage']
+app_url = CONFIG['project']['urls']['homepage']
 installer_exe_path = os.path.join(CONFIG.dist_dir, CONFIG.setup_full_name)
 
-certificates_dir_path = CONFIG['ci']['project']['subdirs']['certificates_path']
+certificates_dir_path = CONFIG['ci']['subdirs']['certificates_path']
 certificate_file_path = CONFIG.certificate_path
 certificates_zip_path = CONFIG.certificate_zip_path
 

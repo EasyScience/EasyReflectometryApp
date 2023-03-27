@@ -59,8 +59,7 @@ class FitterProxy(QObject):
         self._fit_results = self._defaultFitResults()
         self._fitter_thread = None
 
-        self.eFitter = easyFitter([i for i in self.parent._model_proxy._model],
-                                  [self.parent._interface.fit_func for i in self.parent._model_proxy._model])
+        self.eFitter = easyFitter(*[i for i in self.parent._model_proxy._model])
 
         self.fitFinished.connect(self._onFitFinished)
         self.stopFit.connect(self.onStopFit)
@@ -70,7 +69,7 @@ class FitterProxy(QObject):
     # # #
 
     def _defaultFitResults(self):
-        return {"success": None, "nvarys": None, "GOF": None, "redchi2": None}
+        return {"success": None, "nvarys": None, "chi2": None}
 
     # # #
     # Setters and getters
@@ -92,11 +91,17 @@ class FitterProxy(QObject):
         return self._fit_results
 
     def _setFitResults(self, res):
+        success = []
+        n_pars = []
+        chi2 = []
+        for r in res:
+            success.append(r.success)
+            n_pars.append(r.n_pars)
+            chi2.append(r.chi2)
         self._fit_results = {
-            "success": res.success,
-            "nvarys": res.n_pars,
-            "GOF": float(res.goodness_of_fit),
-            "redchi2": float(res.reduced_chi)
+            "success": all(success),
+            "nvarys": sum(n_pars),
+            "chi2": float(sum(chi2))
         }
         self.fitResultsChanged.emit()
         self.isFitFinished = True
@@ -134,9 +139,7 @@ class FitterProxy(QObject):
     # # #
 
     def nonthreaded_fit(self):
-        interfaces = [self.parent._interface.fit_func for i in self.parent._data_proxy._data] 
-        self.eFitter = easyFitter([i.model for i in self.parent._data_proxy._data],
-                                  interfaces)
+        self.eFitter = easyFitter(*[i.model for i in self.parent._data_proxy._data])
         self.isFitFinished = False
         exp_data = self.parent._data_proxy._data.experiments
 
@@ -145,7 +148,7 @@ class FitterProxy(QObject):
         weights = [1 / i.ye for i in exp_data]
         method = self.parent.minimizer._current_minimizer_method_name
 
-        res = self.eFitter.easy_f.fit_lists(x, y, weights_list=weights, method=method)
+        res = self.eFitter.easy_f.fit(x, y, weights=weights, method=method)
         self._setFitResults(res)
 
     # def threaded_fit(self):
