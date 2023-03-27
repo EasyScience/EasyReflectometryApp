@@ -46,7 +46,7 @@ ci = [
     'pypiwin32>=223; platform_system == "win32"',
     'pefile>=2022.5.30; platform_system == "win32"',
     'dephell_licenses>=0.1.7',
-    'scipy==1.6.1'
+    'scipy==1.10.1'
 ]
 docs = [
     'sphinx==4.5.0',
