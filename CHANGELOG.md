@@ -7,6 +7,12 @@
 - Remove private repo access set from CI [f706d2a](https://github.com/easyScience/EasyReflectometryApp/pull/98/commits/f706d2af0aec333a9653616a1b88a7a51831d12c)
 - Modified the data loader to handle tab and comma separated datasets, as well as raising a type error if unable to load [20ca60b](https://github.com/easyScience/EasyReflectometryApp/pull/97/commits/20ca60b1fe65af0489fb68f835cf46da93f662fd)
 - Fixed bug in loading/saving of project [7b49266](https://github.com/easyScience/EasyReflectometryApp/pull/104/commits/7b49266782ab056a763bd0929d022d16f6c2ff22)
+- Add scale and background lines to Experiment and Analysis plots [c646de8](https://github.com/easyScience/EasyReflectometryApp/commit/c646de81fffb309531b540cc6a972cb3fc2d02ea)
+- Update to use EasyCore-0.3.0 [751dd43](https://github.com/easyScience/EasyReflectometryApp/commit/751dd43b6cd9b1c9ad1b1cb0c2a6adb14703f20c)
+- Fix bug in saving project caused by stale proxy locations [4468e5c](https://github.com/easyScience/EasyReflectometryApp/commit/4468e5cb1b35d35676fa65c3f022f51e7e193407)
+- New continuous integration methodology [faa857d](https://github.com/easyScience/EasyReflectometryApp/commit/faa857df7e59bbe16388921ca720882cafdf1a2e)
+- Building of snapcast images [9e970d4](https://github.com/easyScience/EasyReflectometryApp/commit/9e970d4062b2efc07267e7202ea4db28cb836b44)
+
 
 ### Changes 0.0.5
 
