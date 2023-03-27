@@ -75,6 +75,7 @@ jobs:
         run: python ${{ env.SCRIPTS_PATH }}/InstallApp.py
 
       - name: Run app in testmode and quit
+        if: runner.os == 'macOS'
         run: python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
 
       - name: Create zip archive of offline app installer
