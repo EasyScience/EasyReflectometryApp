@@ -102,10 +102,10 @@ class ModelProxy(QObject):
 
     @Property(str, notify=modelsAsXmlChanged)
     def modelsAsXml(self):
-        print('>>> itemsAsXml')
         return self._models_as_xml
 
     def _setModelsAsXml(self):
+        print('>>> _setModelsAsXml')
         self._models_as_xml = dicttoxml(self.modelsAsObj).decode()
         self.modelsAsXmlChanged.emit()
 
@@ -137,7 +137,6 @@ class ModelProxy(QObject):
 
     @Property(str, notify=itemsAsXmlChanged)
     def itemsAsXml(self):
-        print('>>> itemsAsXml')
         return self._items_as_xml
 
     def _setItemsAsXml(self):
@@ -160,7 +159,6 @@ class ModelProxy(QObject):
 
     @Property(str, notify=layersAsXmlChanged)
     def layersAsXml(self):
-        print('>>> layersAsXml')
         return self._layers_as_xml
 
     def _setLayersAsXml(self):
@@ -294,19 +292,25 @@ class ModelProxy(QObject):
 
     @currentModelIndex.setter
     def currentModelIndex(self, new_index: int):
+        print('>>> currentModelIndex: ', new_index)
         if self._current_model_index == new_index or new_index == -1:
+            return
+        print('>>> currentModelIndex new_index: ', new_index)
+        if new_index >= len(self._model):
             return
         self._current_model_index = new_index
         self._onItemsChanged()
         self._onLayersChanged()
         self.modelsNameChanged.emit()
-        self.parent.sampleChanged.emit()
 
     # # #
     # Actions
     # # #
 
     def _onItemsChanged(self):
+        print('>>> _onItemsChanged')
+        if self.currentModelIndex >= len(self._model):
+            return
         for i in self._model[self.currentModelIndex].structure:
             for j in i.layers:
                 if i.type == 'Surfactant Layer':
@@ -317,6 +321,9 @@ class ModelProxy(QObject):
         self._setModelsAsXml()
 
     def _onLayersChanged(self):
+        print('>>> _onLayersChanged')
+        if self.currentModelIndex >= len(self._model):
+            return
         for i in self._model[self.currentModelIndex].structure:
             for j in i.layers:
                 if i.type == 'Surfactant Layer':
@@ -401,6 +408,9 @@ class ModelProxy(QObject):
         """
         self._model.remove_model(int(i))
         del self._colors[int(i)]
+        # watch out for gremlins
+        if self.currentModelIndex == int(i):
+            self.currentModelIndex = 0
         self.modelsNameChanged.emit()
         self.parent.sampleChanged.emit()
 
@@ -411,6 +421,7 @@ class ModelProxy(QObject):
         :param sld: New name
         :type sld: str
         """
+        print('>>> setCurrentModelsName: ', name)
         if self._model[self.currentModelIndex].name == name:
             return
         self._model[self.currentModelIndex].name = name
@@ -419,7 +430,9 @@ class ModelProxy(QObject):
 
     @Property(str, notify=modelsNameChanged)
     def currentModelsName(self):
-        return self._model[self.currentModelIndex].name 
+        if self.currentModelIndex >= len(self._model):
+            return ''
+        return self._model[self.currentModelIndex].name
 
 
     # # Items

@@ -185,6 +185,7 @@ class FitterProxy(QObject):
         self._fitter_thread.stop()
 
     def _onSampleChanged(self):
-        self.sampleChanged.emit()
+        print(">>> Sample changed")
+        self.sampleChanged.emit()  # this signal has no slots!
 
     

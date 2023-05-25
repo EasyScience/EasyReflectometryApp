@@ -75,6 +75,7 @@ class MaterialProxy(QObject):
         """
         Sets the _materials_as_xml object. 
         """
+        print(">>> _setMaterialsAsXml")
         self._materials_as_xml = dicttoxml(self.materialsAsObj).decode()
         self.materialsAsXmlChanged.emit()
 
