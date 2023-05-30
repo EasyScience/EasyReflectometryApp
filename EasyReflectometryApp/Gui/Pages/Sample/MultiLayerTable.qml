@@ -17,7 +17,8 @@ EaComponents.TableView {
         property int layersIndex: ExGlobals.Constants.proxy.model.currentLayersIndex + 1
 
         xml: ExGlobals.Constants.proxy.model.layersAsXml
-        query: `/root/item[${itemsTable.currentIndex + 1}]/layers/item`
+        // query: `/root/item[${itemsTable.currentIndex + 1}]/layers/item`
+        query: `/data/item/layers`
 
         XmlRole { name: "thick"; query: "thickness/value/number()" }
         XmlRole { name: "rough"; query: "roughness/value/number()" }

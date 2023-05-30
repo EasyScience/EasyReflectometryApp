@@ -1,12 +1,11 @@
 __author__ = 'github.com/arm61'
 
-from dicttoxml import dicttoxml
-
 from matplotlib import cm, colors
 
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import borg
+from easyCore.Utils.io.xml import XMLSerializer
 
 from EasyReflectometry.sample.material import Material
 from EasyReflectometry.sample.materials import Materials
@@ -76,7 +75,7 @@ class MaterialProxy(QObject):
         Sets the _materials_as_xml object. 
         """
         print(">>> _setMaterialsAsXml")
-        self._materials_as_xml = dicttoxml(self.materialsAsObj).decode()
+        self._materials_as_xml = XMLSerializer().encode({"item":self.materialsAsObj}, data_only=True)
         self.materialsAsXmlChanged.emit()
 
     @Property(list, notify=materialsChanged)

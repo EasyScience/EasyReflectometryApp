@@ -34,7 +34,7 @@ EaComponents.SideBarColumn {
                 property int materialsIndex: ExGlobals.Constants.proxy.material.currentMaterialsIndex + 1
 
                 xml: ExGlobals.Constants.proxy.material.materialsAsXml
-                query: "/root/item"
+                query: "/data/item"
 
                 XmlRole { name: "color"; query: "color/string()" }
                 XmlRole { name: "label"; query: "name/string()" }
@@ -176,7 +176,8 @@ EaComponents.SideBarColumn {
                 // property int itemsIndex: ExGlobals.Constants.proxy.model.currentItemsIndex + 1
 
                 xml: ExGlobals.Constants.proxy.model.modelsAsXml
-                query: "/root/item"
+                // query: "/root/item"
+                query: "/data/item"
 
                 XmlRole { name: "color"; query: "color/string()" }
                 XmlRole { name: "label"; query: "name/string()" }
@@ -292,7 +293,8 @@ EaComponents.SideBarColumn {
                 property int itemsIndex: ExGlobals.Constants.proxy.model.currentItemsIndex + 1
 
                 xml: ExGlobals.Constants.proxy.model.itemsAsXml
-                query: "/root/item"
+                // query: "/root/item"
+                query: "/data/item"
 
                 XmlRole { name: "label"; query: "name/string()" }
                 XmlRole { name: "type"; query: "type/string()" }

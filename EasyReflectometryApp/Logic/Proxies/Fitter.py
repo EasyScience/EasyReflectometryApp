@@ -1,8 +1,6 @@
 __author__ = 'github.com/arm61'
 
 import sys
-from dicttoxml import dicttoxml
-from distutils.util import strtobool
 
 from PySide2.QtCore import Signal, QThread, QObject, Property, Slot
 
