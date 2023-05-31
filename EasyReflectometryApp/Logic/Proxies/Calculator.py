@@ -35,7 +35,7 @@ class CalculatorProxy(QObject):
             return
         new_name = self.calculatorNames[new_index]
 
-        model = self.parent._model_proxy.currentModelIndex
+        model = self.parent._model_proxy._model[self.parent._model_proxy.currentModelIndex]
 
         if self.parent._data_proxy.experimentLoaded:
             model = self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].model
