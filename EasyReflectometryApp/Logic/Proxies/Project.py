@@ -341,6 +341,7 @@ class ProjectProxy(QObject):
     def resetProject(self):
         self._project_created = False
         self._project_info = self._defaultProjectInfo()
+        self.parent._model_proxy._setModelsAsXml()
         self.projectInfoChanged.emit()
 
     @Slot(str, float, float)
