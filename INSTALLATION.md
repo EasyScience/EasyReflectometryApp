@@ -19,13 +19,13 @@ If the relevant EasyReflectometry installation does not work on your system, the
   git clone https://github.com/easyScience/EasyReflectometryApp
   ```
 3. Go to **EasyReflectometryApp** directory
-4. Create virtual environment for **EasyReflectometryApp** and install its dependences using **poetry** 
+4. Create virtual environment for **EasyReflectometryApp** and install it and its dependences using **pip** 
   ```
-  poetry install
+  pip install .
   ```  
 5. Launch **EasyReflectometry** application using **poetry**
   ```
-  poetry run EasyReflectometry
+  python EasyReflectometryApp/main.py
   ```
 
 It is also possible to install [poetry within a conda](https://anaconda.org/conda-forge/poetry) environment [if you really need to](https://xkcd.com/1987/), but this is not recommended.
