@@ -17,8 +17,7 @@ EaComponents.TableView {
         property int layersIndex: ExGlobals.Constants.proxy.model.currentLayersIndex + 1
 
         xml: ExGlobals.Constants.proxy.model.layersAsXml
-        // query: `/root/item[${itemsTable.currentIndex + 1}]/layers/item`
-        query: `/data/item/layers`
+        query: `/data/item[${itemsTable.currentIndex + 1}]/layers`
 
         XmlRole { name: "thick"; query: "thickness/value/number()" }
         XmlRole { name: "rough"; query: "roughness/value/number()" }
@@ -60,7 +59,7 @@ EaComponents.TableView {
             horizontalAlignment: Text.AlignHCenter
             width: EaStyle.Sizes.fontPixelSize * 10.0
             headerText: "Thickness/Å"
-            enabled: model.thick_enabled == "true"
+            enabled: model.thick_enabled == "True"
             text: (isNaN(layersModel.thick)) ? '--' : layersModel.thick.toFixed(2)
             onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersThickness(text)
         }
@@ -70,7 +69,7 @@ EaComponents.TableView {
             horizontalAlignment: Text.AlignHCenter
             width: EaStyle.Sizes.fontPixelSize * 10.0
             headerText: "Upper Roughness/Å"
-            enabled: model.rough_enabled == "true"
+            enabled: model.rough_enabled == "True"
             text: (isNaN(layersModel.rough)) ? '--' : layersModel.rough.toFixed(2)
             onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
         } 

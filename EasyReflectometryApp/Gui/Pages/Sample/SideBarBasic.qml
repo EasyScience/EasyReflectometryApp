@@ -293,7 +293,6 @@ EaComponents.SideBarColumn {
                 property int itemsIndex: ExGlobals.Constants.proxy.model.currentItemsIndex + 1
 
                 xml: ExGlobals.Constants.proxy.model.itemsAsXml
-                // query: "/root/item"
                 query: "/data/item"
 
                 XmlRole { name: "label"; query: "name/string()" }

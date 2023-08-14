@@ -328,7 +328,6 @@ class ModelProxy(QObject):
         self._setModelsAsXml()
 
     def _onLayersChanged(self):
-        print('>>> _onLayersChanged')
         if self.currentModelIndex >= len(self._model):
             return
         for i in self._model[self.currentModelIndex].structure:
