@@ -86,6 +86,8 @@ This includes adding functionality for a ORSO model definition file (to be defin
 Short video tutorials to accompany example projects.
 These can be hosted on YouTube or similar and linked to from easyreflectometry.org.
 
+Also, create example project files based on existing notebooks. See: https://github.com/easyScience/EasyReflectometryApp/issues/159
+
 - [Create video tutorials to match the examples]()
 
 ### Mixed area models
