@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,13 +26,13 @@
 
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=127d00d4" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=c72506b3" />
     
   <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=8df938ec"></script>
+    <script src="../_static/documentation_options.js?v=f539c95a"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="canonical" href="https://dev.easyreflectometry.org/ci/build.html" />
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -168,16 +168,16 @@
               <div>
                 
   <section id="building">
-<h1>Building<a class="headerlink" href="#building" title="Permalink to this heading">¶</a></h1>
+<h1>Building<a class="headerlink" href="#building" title="Link to this heading">¶</a></h1>
 <p>The aim of building the application and library is to create an accessible, either via PyPI, <code class="docutils literal notranslate"><span class="pre">snap</span></code>, or an executable installer, the EasyReflectometry application and library.</p>
 <section id="easyreflectometrylib">
-<h2><code class="docutils literal notranslate"><span class="pre">EasyReflectometryLib</span></code><a class="headerlink" href="#easyreflectometrylib" title="Permalink to this heading">¶</a></h2>
+<h2><code class="docutils literal notranslate"><span class="pre">EasyReflectometryLib</span></code><a class="headerlink" href="#easyreflectometrylib" title="Link to this heading">¶</a></h2>
 <p>Based on <span class="xref myst">ADR0002</span>, the only expected method of installation for the Python library is via PyPI (or some other <code class="docutils literal notranslate"><span class="pre">pip</span></code> compatible approach).
 Therefore, the building of <code class="docutils literal notranslate"><span class="pre">EasyReflectometryLib</span></code> is achieved through relatively standard Github actions for pushing built Python modules to PyPI.
 This is achieved though common approaches, discussed in <a class="reference external" href="https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/">this PyPA documentation</a>, specifically the Github action defined in the <a class="reference external" href="https://github.com/easyScience/EasyReflectometryLib/blob/main/.github/workflows/python-publish.yml"><code class="docutils literal notranslate"><span class="pre">python-publish.yml</span></code> workflow</a>.</p>
 </section>
 <section id="easyreflectometryapp">
-<h2><code class="docutils literal notranslate"><span class="pre">EasyReflectometryApp</span></code><a class="headerlink" href="#easyreflectometryapp" title="Permalink to this heading">¶</a></h2>
+<h2><code class="docutils literal notranslate"><span class="pre">EasyReflectometryApp</span></code><a class="headerlink" href="#easyreflectometryapp" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">EasyReflectometryApp</span></code> building continuous integration is much more complex, consisting of three individual processes:</p>
 <ul class="simple">
 <li><p>Pushing the Python package to PyPI, such that it may be installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p></li>
@@ -196,15 +196,15 @@ This action performs the following steps:</p>
 <li><p>If the build is happening on the <code class="docutils literal notranslate"><span class="pre">master</span></code> branch, the installer is also added to a release.</p></li>
 </ol>
 <section id="testing">
-<h3>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">¶</a></h3>
+<h3>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h3>
 <section id="executables">
-<h4>Executables<a class="headerlink" href="#executables" title="Permalink to this heading">¶</a></h4>
+<h4>Executables<a class="headerlink" href="#executables" title="Link to this heading">¶</a></h4>
 <p>The executables for Windows and macOS can be found in the artifacts of the Github action that ran.
 You can download the relevant execuatable and install this on your machine.
 Test out, locally, that the new functionality works as expected.</p>
 </section>
 <section id="snap-image">
-<h4><code class="docutils literal notranslate"><span class="pre">snap</span></code> image<a class="headerlink" href="#snap-image" title="Permalink to this heading">¶</a></h4>
+<h4><code class="docutils literal notranslate"><span class="pre">snap</span></code> image<a class="headerlink" href="#snap-image" title="Link to this heading">¶</a></h4>
 <p>To test the <code class="docutils literal notranslate"><span class="pre">snap</span></code> build, download the <code class="docutils literal notranslate"><span class="pre">.snap</span></code> image from the Github artifacts and run the following.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">snap install --devmode *.snap</span>
 </pre></div>
@@ -238,7 +238,7 @@ Test out, locally, that the new functionality works as expected.</p>
   <div class="container">
     <p>
           &copy; Copyright 2023, EasyReflectometry.<br/>
-        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
     </p>
   </div>
 </footer>

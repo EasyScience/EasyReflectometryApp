@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,13 +26,13 @@
 
     
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=127d00d4" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=c72506b3" />
     
   <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=8df938ec"></script>
+    <script src="../_static/documentation_options.js?v=f539c95a"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="canonical" href="https://dev.easyreflectometry.org/adrs/adr0001.html" />
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -167,22 +167,22 @@
               <div>
                 
   <section id="adr0001-naming-structure">
-<h1>ADR0001: Naming structure<a class="headerlink" href="#adr0001-naming-structure" title="Permalink to this heading">¶</a></h1>
+<h1>ADR0001: Naming structure<a class="headerlink" href="#adr0001-naming-structure" title="Link to this heading">¶</a></h1>
 <p><img alt="Badge indicating that ADR0001 is accepted" src="https://img.shields.io/badge/status-accepted-green" />
 <a class="reference external" href="https://github.com/arm61"><img alt="Badge indicating that ADR0001 was authored by Andrew R. McCluskey." src="https://img.shields.io/badge/author-Andrew%20R.%20McCluskey-blue" /></a>
 <a class="reference external" href="https://github.com/rozyczko"><img alt="Badge indicating that ADR0001 was reviewed by Piotr Rozyczko" src="https://img.shields.io/badge/author-Piotr%20Rozyczko-red" /></a>
 <img alt="Badge indicating that ADR0001 was accepted on the 2023-01-25." src="https://img.shields.io/badge/date-2023--01--25-orange" /></p>
 <section id="context">
-<h2>Context<a class="headerlink" href="#context" title="Permalink to this heading">¶</a></h2>
+<h2>Context<a class="headerlink" href="#context" title="Link to this heading">¶</a></h2>
 <p>The EasyReflectometry application and Python library should have a consistant naming structure, such that it is clear to all users what is being installed and how they can access different functionality once installed.
 It should be possible for the Python library to be installed without the installing the application and all of the names should be distinct.
 In this ADR, we outline this naming conventions.</p>
 </section>
 <section id="decision">
-<h2>Decision<a class="headerlink" href="#decision" title="Permalink to this heading">¶</a></h2>
+<h2>Decision<a class="headerlink" href="#decision" title="Link to this heading">¶</a></h2>
 <p>We will break this outline up into the Python library and the application.</p>
 <section id="easyreflectometrylib">
-<h3>EasyReflectometryLib<a class="headerlink" href="#easyreflectometrylib" title="Permalink to this heading">¶</a></h3>
+<h3>EasyReflectometryLib<a class="headerlink" href="#easyreflectometrylib" title="Link to this heading">¶</a></h3>
 <p>Starting from the lowest level, the Python library.
 The Python library project will be <code class="docutils literal notranslate"><span class="pre">EasyReflectometryLib</span></code> and therefore to install from PyPI will require the following command.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>EasyReflectometryLib
@@ -197,7 +197,7 @@ Therefore, the following Python commands will return the Python library version 
 </div>
 </section>
 <section id="easyreflectometryapp">
-<h3>EasyReflectometryApp<a class="headerlink" href="#easyreflectometryapp" title="Permalink to this heading">¶</a></h3>
+<h3>EasyReflectometryApp<a class="headerlink" href="#easyreflectometryapp" title="Link to this heading">¶</a></h3>
 <p>The application will commonly be referred to by users are EasyReflectometry, and indeed it should be usable without the understanding that there is a Python library foundation.
 This said, the application project will be <code class="docutils literal notranslate"><span class="pre">EasyReflectometryApp</span></code> and should the application be installable via PyPI, the following command would be necessary.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>EasyReflectometry
@@ -211,7 +211,7 @@ This said, the application project will be <code class="docutils literal notrans
 </section>
 </section>
 <section id="consequences">
-<h2>Consequences<a class="headerlink" href="#consequences" title="Permalink to this heading">¶</a></h2>
+<h2>Consequences<a class="headerlink" href="#consequences" title="Link to this heading">¶</a></h2>
 <p>The primary consequence of this decision is that there is clarity in the naming structure of the EasyReflectometry application and Python library.
 This convention should be followed in future development and care taken not to deviate.</p>
 </section>
@@ -242,7 +242,7 @@ This convention should be followed in future development and care taken not to d
   <div class="container">
     <p>
           &copy; Copyright 2023, EasyReflectometry.<br/>
-        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.1.2.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.<br/>
     </p>
   </div>
 </footer>
