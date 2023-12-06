@@ -1,11 +1,11 @@
 __author__ = 'github.com/arm61'
 
 from ast import Mult
-from dicttoxml import dicttoxml
 
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import np, borg
+from easyCore.Utils.io.xml import XMLSerializer
 from easyCore.Utils.UndoRedo import property_stack_deco
 
 from EasyReflectometry.sample.layer import Layer
@@ -102,11 +102,11 @@ class ModelProxy(QObject):
 
     @Property(str, notify=modelsAsXmlChanged)
     def modelsAsXml(self):
-        print('>>> itemsAsXml')
         return self._models_as_xml
 
     def _setModelsAsXml(self):
-        self._models_as_xml = dicttoxml(self.modelsAsObj).decode()
+        print('>>> _setModelsAsXml')
+        self._models_as_xml = XMLSerializer().encode({"item":self.modelsAsObj}, data_only=True)
         self.modelsAsXmlChanged.emit()
 
     @Property(list, notify=modelsNameChanged)
@@ -129,6 +129,8 @@ class ModelProxy(QObject):
     @property
     def itemsAsObj(self):
         _items_as_obj = []
+        if self.currentModelIndex >= len(self._model):
+            return []
         for i in self._model[self.currentModelIndex].structure:
             dictionary = {'name': i.name}
             dictionary['type'] = i.type
@@ -137,11 +139,10 @@ class ModelProxy(QObject):
 
     @Property(str, notify=itemsAsXmlChanged)
     def itemsAsXml(self):
-        print('>>> itemsAsXml')
         return self._items_as_xml
 
     def _setItemsAsXml(self):
-        self._items_as_xml = dicttoxml(self.itemsAsObj).decode()
+        self._items_as_xml = XMLSerializer().encode({"item":self.itemsAsObj}, data_only=True)
         self.itemsAsXmlChanged.emit()
 
     @property
@@ -160,11 +161,10 @@ class ModelProxy(QObject):
 
     @Property(str, notify=layersAsXmlChanged)
     def layersAsXml(self):
-        print('>>> layersAsXml')
         return self._layers_as_xml
 
     def _setLayersAsXml(self):
-        self._layers_as_xml = dicttoxml(self.layersAsObj).decode()
+        self._layers_as_xml = XMLSerializer().encode({"item":self.layersAsObj}, data_only=True)
         self.layersAsXmlChanged.emit()
 
     @Property(int, notify=itemsIndexChanged)
@@ -181,6 +181,8 @@ class ModelProxy(QObject):
 
     @Property(int, notify=modelChanged)
     def currentItemsRepetitions(self):
+        if self.currentItemsIndex >= len(self._model[self.currentModelIndex].structure):
+            return 1
         if self._model[self.currentModelIndex].structure[
                 self.currentItemsIndex].type != 'Repeating Multi-layer':
             return 1
@@ -200,6 +202,9 @@ class ModelProxy(QObject):
 
     @Property(str, notify=modelChanged)
     def currentItemsType(self):
+        # sometimes in the process of removing an item, the model is not yet updated
+        if self.currentItemsIndex >= len(self._model[self.currentModelIndex].structure):
+            return ''
         return self._model[self.currentModelIndex].structure[self.currentItemsIndex].type
 
     @currentItemsType.setter
@@ -294,19 +299,25 @@ class ModelProxy(QObject):
 
     @currentModelIndex.setter
     def currentModelIndex(self, new_index: int):
+        print('>>> currentModelIndex: ', new_index)
         if self._current_model_index == new_index or new_index == -1:
+            return
+        print('>>> currentModelIndex new_index: ', new_index)
+        if new_index >= len(self._model):
             return
         self._current_model_index = new_index
         self._onItemsChanged()
         self._onLayersChanged()
         self.modelsNameChanged.emit()
-        self.parent.sampleChanged.emit()
 
     # # #
     # Actions
     # # #
 
     def _onItemsChanged(self):
+        print('>>> _onItemsChanged')
+        if self.currentModelIndex >= len(self._model):
+            return
         for i in self._model[self.currentModelIndex].structure:
             for j in i.layers:
                 if i.type == 'Surfactant Layer':
@@ -317,6 +328,8 @@ class ModelProxy(QObject):
         self._setModelsAsXml()
 
     def _onLayersChanged(self):
+        if self.currentModelIndex >= len(self._model):
+            return
         for i in self._model[self.currentModelIndex].structure:
             for j in i.layers:
                 if i.type == 'Surfactant Layer':
@@ -401,8 +414,13 @@ class ModelProxy(QObject):
         """
         self._model.remove_model(int(i))
         del self._colors[int(i)]
-        self.modelsNameChanged.emit()
-        self.parent.sampleChanged.emit()
+        # watch out for gremlins
+        # if self.currentModelIndex == int(i):
+        #     self.currentModelIndex = 0
+        # Are these two really necessary?
+        # self.modelsNameChanged.emit()
+        # self.parent.sampleChanged.emit()
+        self.itemsNameChanged.emit() # firing _onParametersChanged
 
     @Slot(str)
     def setCurrentModelsName(self, name):
@@ -411,6 +429,7 @@ class ModelProxy(QObject):
         :param sld: New name
         :type sld: str
         """
+        print('>>> setCurrentModelsName: ', name)
         if self._model[self.currentModelIndex].name == name:
             return
         self._model[self.currentModelIndex].name = name
@@ -419,7 +438,9 @@ class ModelProxy(QObject):
 
     @Property(str, notify=modelsNameChanged)
     def currentModelsName(self):
-        return self._model[self.currentModelIndex].name 
+        if self.currentModelIndex >= len(self._model):
+            return ''
+        return self._model[self.currentModelIndex].name
 
 
     # # Items
@@ -584,7 +605,10 @@ class ModelProxy(QObject):
 
     @Property(str, notify=itemsNameChanged)
     def currentItemsName(self):
-        return self._model[self.currentModelIndex].structure[self.currentItemsIndex].name 
+        # sometimes in the process of removing an item, the model is not yet updated
+        if self.currentItemsIndex >= len(self._model[self.currentModelIndex].structure):
+            return ''
+        return self._model[self.currentModelIndex].structure[self.currentItemsIndex].name
 
     # # Layers
 
@@ -697,6 +721,7 @@ class ModelProxy(QObject):
         :param i: Index of the layer
         :type i: str
         """
+        print(">>> Removing layer: ", i)
         self._model[self.currentModelIndex].structure[0].layers[0].thickness.enabled = True
         self._model[self.currentModelIndex].structure[0].layers[0].roughness.enabled = True
         self._model[self.currentModelIndex].structure[-1].layers[-1].thickness.enabled = True
@@ -814,14 +839,13 @@ class ModelProxy(QObject):
             self._model[self.currentModelIndex].structure[self.currentItemsIndex].constrain_solvent_roughness(solvent.roughness)
         self.parent.layersChanged.emit()
 
-
-    # # # 
-    # Calculations 
+    # # #
+    # Calculations
     # # #
 
     def getPureModelReflectometry(self, x):
         return self._pure.interface.fit_func(x, self._pure.uid)
-        
+
     def getPureModelSld(self):
         return self._pure.interface.sld_profile(self._pure.uid)
 

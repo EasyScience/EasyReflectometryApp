@@ -147,9 +147,11 @@ class SimulationProxy(QObject):
             # self.parent._project_proxy.projectInfoChanged.emit()
 
     def _onCalculatedDataChanged(self):
+        print('>>> _onCalculatedDataChanged')
         self._updateCalculatedData()
 
     def _onSimulationParametersChanged(self):
+        print('>>> _onSimulationParametersChanged')
         self.calculatedDataChanged.emit()
 
     # # #
@@ -157,7 +159,7 @@ class SimulationProxy(QObject):
     # # #
 
     def _updateCalculatedData(self):
-
+        print('>>> _updateCalculatedData')
         # if not self.experimentLoaded:# and not self.experimentSkipped:
         #     return
 

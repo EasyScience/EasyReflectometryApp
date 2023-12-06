@@ -237,8 +237,10 @@ class ProjectProxy(QObject):
                 for layer in structure.layers:
                     self.parent._material_proxy._materials.append(layer.material)
             model.interface = self.parent._interface
-        for material in Materials.from_dict(descr['materials_not_in_model']):
-            self.parent._material_proxy._materials.append(material)
+        mats = descr['materials_not_in_model']
+        if mats['data']:
+            for material in Materials.from_dict(mats):
+                self.parent._material_proxy._materials.append(material)
 
         # experiment
         if 'experiments' in descr:
@@ -339,6 +341,7 @@ class ProjectProxy(QObject):
     def resetProject(self):
         self._project_created = False
         self._project_info = self._defaultProjectInfo()
+        self.parent._model_proxy._setModelsAsXml()
         self.projectInfoChanged.emit()
 
     @Slot(str, float, float)

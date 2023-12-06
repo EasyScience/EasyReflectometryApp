@@ -335,7 +335,7 @@ EaComponents.ApplicationWindow {
 
         model: XmlListModel {
             xml: ExGlobals.Constants.proxy.state.statusModelAsXml
-            query: "/root/item"
+            query: "/data/item"
 
             XmlRole { name: "label"; query: "label/string()" }
             XmlRole { name: "value"; query: "value/string()" }

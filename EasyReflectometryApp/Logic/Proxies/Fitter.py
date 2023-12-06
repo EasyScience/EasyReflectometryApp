@@ -1,8 +1,6 @@
 __author__ = 'github.com/arm61'
 
 import sys
-from dicttoxml import dicttoxml
-from distutils.util import strtobool
 
 from PySide2.QtCore import Signal, QThread, QObject, Property, Slot
 
@@ -185,6 +183,7 @@ class FitterProxy(QObject):
         self._fitter_thread.stop()
 
     def _onSampleChanged(self):
-        self.sampleChanged.emit()
+        print(">>> Sample changed")
+        self.sampleChanged.emit()  # this signal has no slots!
 
     

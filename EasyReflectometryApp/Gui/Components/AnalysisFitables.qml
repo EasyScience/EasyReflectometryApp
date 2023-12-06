@@ -25,7 +25,7 @@ EaComponents.TableView {
         //xml: ExGlobals.Constants.proxy.fitablesListAsXml
         xml: ExGlobals.Constants.proxy.parameter.parametersAsXml
 
-        query: "/root/item"
+        query: "/data/item"
 
         XmlRole { name: "id"; query: "id/string()" }
         XmlRole { name: "number"; query: "number/number()" }
