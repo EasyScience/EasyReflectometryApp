@@ -7,34 +7,34 @@ Certain tasks may depend on other Easy-family projects (in particular EasyCore) 
 
 ```mermaid
 gantt
-    title EasyReflectometry Roadmap Nov 2022-Jan 2027
+    title EasyReflectometry Roadmap Nov 2023-Jan 2027
     dateFormat  YYYY-MM
     axisFormat  %Y-%m
     todaymarker off
 
     section General
-    User experience enhancement :a1, 2022-12, 24w
-    Resolution smearing :a2, 2023-04, 8w
-    File IO :a3, after a1, 16w
-    Video Tutorials :a4, after d3, 16w
+    Improved GUI :a1, 2023-12, 24w
+    Resolution smearing :a2, after a1, 8w
+    Video Tutorials :a3, after a1, 8w
+    File IO :a4, after c2, 16w
     Ready for real users: milestone, m1, after a3, 2min
 
     section New functionality
-    Mixed area models :b1, after m1, 20w
-    ESS integration :b2, after c2, 20w
-    Bayesian analysis :b3, after b2, 30w
-    Ready for first ESS instruments :milestone, m2, after b2, 2min
+    Mixed area models :b1, after m1, 10w
+    Bayesian analysis :b3, 2025-01, 30w
+    ESS integration :b2, after b3, 10w
+    Ready for first ESS instruments :milestone, m2, 2025-11, 2min
     ESS Start of User Operation :milestone, m3, 2026-11, 2min
 
     section Hard Condensed Matter
-    Magnetism support :c1, after m1, 52w
-    Spin asymmetry and polarisation analysis :c2, after c1, 40w
+    Magnetism support :c1, after m1, 40w
+    Spin asymmetry and polarisation analysis :c2, after m2, 30w
 
     section Item Library
-    Bilayer item :d1, 2023-01, 8w
-    Material gradient :d2, after a2, 8w
-    Mixed surfactant layer :d3, after b1, 8w
-    Bilayer with embedded protein :d4, after c1, 16w
+    # Bilayer item :d1, 2024-01, 8w
+    Material gradient :d2, after b1, 7w
+    Mixed surfactant layer :d3, after d2, 8w
+    Bilayer with embedded protein :d4, 2025-07, 16w
     Mixed bilayer item :d5, after c2, 8w
 ```
 
@@ -45,15 +45,15 @@ Issues that are general to EasyReflectometry (i.e. those related to interaction 
 
 ## Epics details 
 
-### User experience enhancement
+### Improved GUI / User experience enhancement
 
 The aim of this epic is to improve the user experience in EasyReflectometry. 
 Currently, there are a performance issues and user-unfriendly interfaces that should be improved. 
 This has the additional benefit of reducing technical debt. 
 This includes work such as improving visualisations and adding code signing. 
 
+- [Move to the new EasyApp structure](https://github.com/easyScience/EasyReflectometryApp/issues/160)
 - [Improve the project information page](https://github.com/easyScience/EasyReflectometryApp/issues/103)
-- [Slow UI changes](https://github.com/easyScience/EasyReflectometryApp/issues/102)
 - [Improve constraint UI for multiple contrasts](https://github.com/easyScience/EasyReflectometryApp/issues/101)
 - [Plotting multiple datasets and models](https://github.com/easyScience/EasyReflectometryApp/issues/85)
 - [Scale and background lines break rq^4 plotting](https://github.com/easyScience/EasyReflectometryApp/issues/108)
@@ -61,9 +61,7 @@ This includes work such as improving visualisations and adding code signing.
 - [Add examples](https://github.com/easyScience/EasyReflectometryApp/issues/77)
 - [Can't run installer version on linux - glibc mismatch?](https://github.com/easyScience/EasyReflectometryApp/issues/38)
 - [Fitter options](https://github.com/easyScience/EasyReflectometryApp/issues/32)
-- [Model description in the summary page](https://github.com/easyScience/EasyReflectometryApp/issues/28)
-- [Clearing the workspace doesn't reset the model name](https://github.com/easyScience/EasyReflectometryApp/issues/124)
-- [Rq^4 checkbox is inverted in the Experiment pane](https://github.com/easyScience/EasyReflectometryApp/issues/125)
+
 
 ### Resolution smearing
 
