@@ -14,10 +14,11 @@ gantt
 
     section General
     Improved GUI :a1, 2023-12, 24w
-    Resolution smearing :a2, after a1, 8w
-    Video Tutorials :a3, after a1, 8w
+    # Resolution smearing :a2, after a1, 8w
+    Resolution smearing :a2, 2024-01, 8w
+    Video Tutorials :a3, after a2, 8w
     File IO :a4, after c2, 16w
-    Ready for real users: milestone, m1, after a3, 2min
+    Ready for real users: milestone, m1, after a1, 2min
 
     section New functionality
     Mixed area models :b1, after m1, 10w
