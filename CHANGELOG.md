@@ -1,8 +1,5 @@
 # CHANGELOG
 
-### Changes 0.0.7-beta
-
-
 ### Changes 0.0.6
 
 - Enable plotting of reflectometry data with a logarithmic q-axes [6c26411](https://github.com/easyScience/EasyReflectometryApp/commit/6c26411c5a4d4f412ce475b16d64e0c46a040e55)
