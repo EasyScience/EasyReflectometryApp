@@ -1,4 +1,11 @@
-name: Build Executable
+# This pipeline 
+# - build executeable for MacOS
+# - build executeable for Windows 
+# - for master executeables are deployed 
+# -- offline installers to GitHub releases
+# -- online installers FTP server 
+
+name: Build Executable for MacOS and Windows
 
 on: [push, pull_request]
 
