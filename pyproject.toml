@@ -42,16 +42,16 @@ dependencies = [
 # application as a part of a Github Action.
 ci = [
     'pyinstaller^6.3.0',
-    'scipy^=1.11.4'
+    'scipy^=1.11.4',
     'dephell_licenses>=0.1.7',
     'pywin32-ctypes>=0.2.0; platform_system == "win32"', 
     'pypiwin32>=223; platform_system == "win32"',
-    'pefile>=2022.5.30; platform_system == "win32"',
+    'pefile>=2022.5.30; platform_system == "win32"'
 ]
 docs = [
-    'sphinx>=4.5.0',
-    'pydata-sphinx-theme>=0.4.3',
     'myst_parser>=0.18.1'
+    'pydata-sphinx-theme>=0.4.3',
+    'sphinx>=4.5.0',
 ]
 
 [project.urls]
