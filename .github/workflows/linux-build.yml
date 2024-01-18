@@ -1,6 +1,6 @@
 # This pipeline 
 # - build executeable for Ubuntu Linux
-# - for master branch executeable is deployed to snapcraft stable
+# - for main branch executeable is deployed to snapcraft stable
 # - for develop branch executeable is deployed to snapcraft beta
 
 name: Build Snap Image
@@ -70,8 +70,8 @@ jobs:
           snap: ${{ env.SNAP_FILENAME }}
           release: beta
           
-      - name: Publish Master Branch to snapcraft stable
-        if: steps.branch-name.outputs.current_branch == 'master'
+      - name: Publish Main Branch to snapcraft stable
+        if: steps.branch-name.outputs.current_branch == 'main'
         uses: snapcore/action-publish@v1
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
