@@ -1,4 +1,9 @@
-name: Build Snap Image
+# This pipeline 
+# - build executeable for Ubuntu Linux
+# - for main branch executeable is deployed to snapcraft stable
+# - for develop branch executeable is deployed to snapcraft beta
+
+name: Build Snap Image for Ubuntu Linux 
 
 on: [push, pull_request]
 
