@@ -414,12 +414,6 @@ class ModelProxy(QObject):
         """
         self._model.remove_model(int(i))
         del self._colors[int(i)]
-        # watch out for gremlins
-        # if self.currentModelIndex == int(i):
-        #     self.currentModelIndex = 0
-        # Are these two really necessary?
-        # self.modelsNameChanged.emit()
-        # self.parent.sampleChanged.emit()
         self.itemsNameChanged.emit() # firing _onParametersChanged
 
     @Slot(str)

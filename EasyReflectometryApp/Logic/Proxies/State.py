@@ -62,8 +62,6 @@ class StateProxy(QObject):
             "value":
             f'{self.parent._fitter_proxy.eFitter.easy_f.current_engine.name} ({self.parent._minimizer_proxy._current_minimizer_method_name})'
         }]
-        # xml = dicttoxml(model, attr_type=False)
-        # xml = xml.decode()
         xml = XMLSerializer().encode({"item":model}, data_only=True)
         return xml
 
