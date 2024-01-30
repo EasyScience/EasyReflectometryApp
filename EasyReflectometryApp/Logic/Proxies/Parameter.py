@@ -1,11 +1,10 @@
 __author__ = 'github.com/arm61'
 
 from typing import Union
-from dicttoxml import dicttoxml
 from distutils.util import strtobool
 from PySide2.QtCore import QObject, Signal, Property, Slot
 from easyCore.Fitting.Constraints import ObjConstraint, NumericConstraint, FunctionalConstraint
-
+from easyCore.Utils.io.xml import XMLSerializer
 from easyCore import borg
 from easyCore import np
 from easyCore.Utils.classTools import generatePath
@@ -88,8 +87,7 @@ class ParameterProxy(QObject):
         return self._parameters_as_xml
 
     def _setParametersAsXml(self):
-        self._parameters_as_xml = dicttoxml(self._parameters_as_obj,
-                                            attr_type=False).decode()
+        self._parameters_as_xml = XMLSerializer().encode({"item":self._parameters_as_obj}, data_only=True)
         self.parametersAsXmlChanged.emit()
 
     @Slot(str)
@@ -279,8 +277,9 @@ class ParameterProxy(QObject):
 
     @Property(str, notify=parametersAsObjChanged)
     def constraintsAsXml(self):
-        xml = dicttoxml(self.constraintsList(), attr_type=False)
-        xml = xml.decode()
+        # xml = dicttoxml(self.constraintsList(), attr_type=False)
+        xml = XMLSerializer().encode({"item":self.constraintsList()}, data_only=True)
+        # xml = xml.decode()
         return xml
 
     @Slot(int)

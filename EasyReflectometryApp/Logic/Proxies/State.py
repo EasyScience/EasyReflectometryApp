@@ -1,11 +1,9 @@
 __author__ = 'github.com/arm61'
 
-from dicttoxml import dicttoxml
-
 from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import np
-
+from easyCore.Utils.io.xml import XMLSerializer
 
 
 class StateProxy(QObject):
@@ -64,8 +62,7 @@ class StateProxy(QObject):
             "value":
             f'{self.parent._fitter_proxy.eFitter.easy_f.current_engine.name} ({self.parent._minimizer_proxy._current_minimizer_method_name})'
         }]
-        xml = dicttoxml(model, attr_type=False)
-        xml = xml.decode()
+        xml = XMLSerializer().encode({"item":model}, data_only=True)
         return xml
 
     # # #

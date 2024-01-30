@@ -123,7 +123,7 @@ EaComponents.SideBarColumn {
                         textRole: ExGlobals.Variables.iconifiedNames ? "iconified_label" : "label"
                         model: XmlListModel {
                             xml: ExGlobals.Constants.proxy.parameter.parametersAsXml
-                            query: "/root/item"
+                            query: "/data/item"
                             XmlRole { name: "label"; query: "label/string()" }
                             onXmlChanged: dependentParCurrentIndex = dependentPar.currentIndex
                         }
@@ -160,7 +160,7 @@ EaComponents.SideBarColumn {
                         textRole: ExGlobals.Variables.iconifiedNames ? "iconified_label" : "label"
                         model: XmlListModel {
                             xml: ExGlobals.Constants.proxy.parameter.parametersAsXml
-                            query: "/root/item"
+                            query: "/data/item"
                             XmlRole { name: "label"; query: "label/string()" }
                             // XmlRole { name: "iconified_label"; query: "iconified_label_with_index/string()" }
                             onXmlChanged: independentParCurrentIndex = independentPar.currentIndex

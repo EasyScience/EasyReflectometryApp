@@ -69,7 +69,7 @@ EaComponents.TableView {
             width: EaStyle.Sizes.fontPixelSize * 4.5
             headerText: "Solvation"
             enabled: model.solvation_enabled == "True"
-            text: (isNaN(surfactantModel.solvation)) ? '--' : surfactantModel.solvation.toFixed(2)
+            text: (isNaN(surfactantModel.solvation)) ? '--' : surfactantModel.solvation
             onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersSolvation(text)
         }
 
@@ -79,7 +79,7 @@ EaComponents.TableView {
             width: EaStyle.Sizes.fontPixelSize * 4.0
             headerText: "APM/Å<sup>2</sup>"
             enabled: model.apm_enabled == "True"
-            text: (isNaN(surfactantModel.apm)) ? '--' : surfactantModel.apm.toFixed(2)
+            text: (isNaN(surfactantModel.apm)) ? '--' : surfactantModel.apm
             onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentItemApm(text)
         }
 

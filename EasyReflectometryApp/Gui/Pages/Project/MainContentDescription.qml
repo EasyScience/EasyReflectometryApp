@@ -52,10 +52,10 @@ Rectangle {
                 text: ExGlobals.Constants.proxy.project.currentProjectPath
             }
 
-            EaElements.Label {
-                text: ExGlobals.Constants.proxy.project.projectInfoAsJson.samples
+            //EaElements.Label {
+            //    text: ExGlobals.Constants.proxy.project.projectInfoAsJson.samples
                 //onEditingFinished: ExGlobals.Constants.proxy.editProjectInfo("samples", text)
-            }
+            //}
 
             EaElements.Label {
                 font.bold: true

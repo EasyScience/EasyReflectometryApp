@@ -1,8 +1,16 @@
-name: Build Documentation
+# This pipeline
+# - build developer documentation
+# - push documentation to gh-pages branch of the same repository
+#
+# Deployment is handled by pages-build-deployment bot
+#
+# This pipeline DOES NOT build the end-user page
+
+name: Build Documentation and Push to gh-pages Branch 
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
 
   workflow_dispatch:
 

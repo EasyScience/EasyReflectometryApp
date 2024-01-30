@@ -49,9 +49,13 @@ class PyQmlProxy(QObject):
         # Sample Connections
         self.layersMaterialsChanged.connect(self._model_proxy._onLayersChanged)
         self.layersSelectionChanged.connect(self._model_proxy._onLayersChanged)
+
+
         self.layersChanged.connect(self._model_proxy._onLayersChanged)
         self.layersChanged.connect(self._parameter_proxy._onParametersChanged)
         self.layersChanged.connect(self._simulation_proxy._onCalculatedDataChanged)
+
+
         self._material_proxy.materialsChanged.connect(self._parameter_proxy._onParametersChanged)
         self._model_proxy.itemsNameChanged.connect(self._parameter_proxy._onParametersChanged)
         self.itemsChanged.connect(self._model_proxy._onItemsChanged)
@@ -64,11 +68,10 @@ class PyQmlProxy(QObject):
         self.sampleChanged.connect(self._material_proxy._setMaterialsAsXml)
         self.sampleChanged.connect(self._model_proxy._onLayersChanged)
         self.sampleChanged.connect(self._model_proxy._onItemsChanged)
-        self.sampleChanged.connect(
-            self._simulation_proxy._onSimulationParametersChanged)
+
         self.sampleChanged.connect(self._parameter_proxy._onParametersChanged)
         self.layersChanged.connect(self._fitter_proxy._onSampleChanged)
-        self.sampleChanged.connect(self._simulation_proxy._onCalculatedDataChanged)
+        self.sampleChanged.connect(self._simulation_proxy._onCalculatedDataChanged) # calls _updateCalculatedData
         self.sampleChanged.connect(self._undoredo_proxy.undoRedoChanged)
 
         # Screen recorder

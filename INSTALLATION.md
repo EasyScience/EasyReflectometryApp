@@ -2,9 +2,9 @@
 
 To make the installation of EasyReflectometry as easy as possible, we prepare packaged releases for three major operating systems: 
 
-- [Windows](https://github.com/easyScience/EasyReflectometryApp/releases/download/v0.0.6-beta/EasyReflectometry_Windows_x86-32_v0.0.6-beta.zip)
-- [macOS](https://github.com/easyScience/EasyReflectometryApp/releases/download/v0.0.6-beta/EasyReflectometry_macOS_x86-64_v0.0.6-beta.zip) (built on 10.15)
-- [Linux](https://github.com/easyScience/EasyReflectometryApp/releases/download/v0.0.6-beta/EasyReflectometry_Linux_x86-64_v0.0.6-beta.zip) (built on Ubuntu-20.04)
+- [Windows](https://github.com/easyScience/EasyReflectometryApp/releases/download/v0.0.7-beta/EasyReflectometry_Windows_x86-32_v0.0.7-beta.zip)
+- [macOS](https://github.com/easyScience/EasyReflectometryApp/releases/download/v0.0.7-beta/EasyReflectometry_macOS_x86-64_v0.0.7-beta.zip) (built on 10.15)
+- [Linux](https://github.com/easyScience/EasyReflectometryApp/releases/download/v0.0.7-beta/EasyReflectometry_Linux_x86-64_v0.0.7-beta.zip) (built on Ubuntu-20.04)
 
 If the relevant EasyReflectometry installation does not work on your system, then please try installation from source. 
 
@@ -19,13 +19,13 @@ If the relevant EasyReflectometry installation does not work on your system, the
   git clone https://github.com/easyScience/EasyReflectometryApp
   ```
 3. Go to **EasyReflectometryApp** directory
-4. Create virtual environment for **EasyReflectometryApp** and install its dependences using **poetry** 
+4. Create virtual environment for **EasyReflectometryApp** and install it and its dependences using **pip** 
   ```
-  poetry install
+  pip install .
   ```  
 5. Launch **EasyReflectometry** application using **poetry**
   ```
-  poetry run EasyReflectometry
+  python EasyReflectometryApp/main.py
   ```
 
 It is also possible to install [poetry within a conda](https://anaconda.org/conda-forge/poetry) environment [if you really need to](https://xkcd.com/1987/), but this is not recommended.
