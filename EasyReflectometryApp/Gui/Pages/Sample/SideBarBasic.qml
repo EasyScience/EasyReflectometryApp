@@ -3,15 +3,11 @@ import QtQuick.Controls 2.14
 import QtQuick.Dialogs 1.3 as Dialogs1
 import QtQuick.XmlListModel 2.13
 
-import easyApp.Gui.Globals 1.0 as EaGlobals
 import easyApp.Gui.Style 1.0 as EaStyle
 import easyApp.Gui.Elements 1.0 as EaElements
 import easyApp.Gui.Components 1.0 as EaComponents
-import easyApp.Gui.Logic 1.0 as EaLogic
 
 import Gui.Globals 1.0 as ExGlobals
-import Gui.Components 1.0 as ExComponents
-import Gui.Pages.Sample 1.0 as ExSample
 import Gui.Pages.Sample.Layers 1.0 as ExLayers
 
 EaComponents.SideBarColumn {
@@ -226,7 +222,7 @@ EaComponents.SideBarColumn {
                 ExGlobals.Constants.proxy.model.currentModelIndex = modelTable.currentIndex
                 itemsTable.currentIndex = 0
                 layersTable.currentIndex = 0
-            }
+                            }
         }
         Row {
             spacing: EaStyle.Sizes.fontPixelSize
@@ -349,7 +345,7 @@ EaComponents.SideBarColumn {
             onCurrentIndexChanged: {
                 ExGlobals.Constants.proxy.model.currentItemsIndex = itemsTable.currentIndex
                 currentItemsType = ExGlobals.Constants.proxy.model.currentItemsType
-                repsSpinBox.value = ExGlobals.Constants.proxy.model.currentItemsRepetitions
+repsSpinBox.value = ExGlobals.Constants.proxy.model.currentItemsRepetitions
             }
 
             onModelChanged: currentIndex = 0
@@ -423,7 +419,7 @@ EaComponents.SideBarColumn {
 
     ExLayers.RepeatingMultilayerGroup {
         visible: (currentItemsType == 'Repeating Multi-layer') ? true : false
-    }
+            }
 
     ExLayers.SurfactantGroup {
         visible: (currentItemsType == 'Surfactant Layer') ? true : false
