@@ -1,5 +1,7 @@
 # CHANGELOG
 
+### Changes 0.0.8
+
 ### Changes 0.0.7
 
 - No end-user related changes  
