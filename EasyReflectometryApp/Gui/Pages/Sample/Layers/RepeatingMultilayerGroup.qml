@@ -11,7 +11,7 @@ import Gui.Globals 1.0 as ExGlobals
 import Gui.Pages.Sample.Layers 1.0 as ExLayers
 
 EaElements.GroupBox {
-    id: repeatingMultilayerGroup
+//    id: repeatingMultilayerGroup
     title: qsTr(ExGlobals.Constants.proxy.model.currentItemsName + " editor")
     enabled: (itemsTable.model.count > 0) ? true : false //When a layer is selected
     collapsible: false
@@ -32,7 +32,7 @@ EaElements.GroupBox {
             editable: true
             from: 1
             to: 9999
-            value: ExGlobals.Constants.proxy.model.currentItemsRepetitions 
+            value: layerRepetionsSpinBoxValue 
             onValueChanged: {
                 ExGlobals.Constants.proxy.model.currentItemsRepetitions = value
             }
@@ -40,6 +40,7 @@ EaElements.GroupBox {
     }
 
     ExLayers.MultilayerTable{
+        id: layersTable
     }
 
     ExLayers.MultilayerRow{

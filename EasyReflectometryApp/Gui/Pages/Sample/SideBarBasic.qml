@@ -13,6 +13,7 @@ import Gui.Pages.Sample.Layers 1.0 as ExLayers
 EaComponents.SideBarColumn {
 
     property string currentItemsType: 'Multi-layer'
+    property int layerRepetionsSpinBoxValue: 1
 
     EaElements.GroupBox {
         title: qsTr("Material editor")
@@ -221,8 +222,8 @@ EaComponents.SideBarColumn {
             onCurrentIndexChanged: {
                 ExGlobals.Constants.proxy.model.currentModelIndex = modelTable.currentIndex
                 itemsTable.currentIndex = 0
-                layersTable.currentIndex = 0
-                            }
+                //layersTable.currentIndex = 0
+            }
         }
         Row {
             spacing: EaStyle.Sizes.fontPixelSize
@@ -345,7 +346,7 @@ EaComponents.SideBarColumn {
             onCurrentIndexChanged: {
                 ExGlobals.Constants.proxy.model.currentItemsIndex = itemsTable.currentIndex
                 currentItemsType = ExGlobals.Constants.proxy.model.currentItemsType
-repsSpinBox.value = ExGlobals.Constants.proxy.model.currentItemsRepetitions
+                layerRepetionsSpinBoxValue = ExGlobals.Constants.proxy.model.currentItemsRepetitions
             }
 
             onModelChanged: currentIndex = 0

@@ -18,6 +18,7 @@ EaElements.GroupBox {
     last: true
 
     ExLayers.MultilayerTable{
+        id: layersTable
     }
 
     ExLayers.MultilayerRow{
