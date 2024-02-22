@@ -1,6 +1,10 @@
 # CHANGELOG
 
+### Changes 0.0.9
+
 ### Changes 0.0.8
+
+- Just a retry of the release protocol
 
 ### Changes 0.0.7
 
