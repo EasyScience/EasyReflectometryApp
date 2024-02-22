@@ -8,15 +8,17 @@ build-backend = "hatchling.build"
 # Note that while the project is called EasyReflectometryApp
 # the application itself is EasyReflectometry. 
 name = "EasyReflectometry"
-version = "0.0.8-dev"
+version = "0.0.9-dev"
 description = "Making reflectometry data analysis and modelling easy."
 authors = [
     {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"}, 
     {name = "Andrew Sazonov"}, 
-    {name = "Simon Ward"}
+    {name = "Simon Ward"},
+    {name = "Andreas Pedersen", email = "andreas.pedersen@ess.eu"}
 ]
 maintainers = [
-    {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"}
+    {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"},
+    {name = "Andreas Pedersen", email = "andreas.pedersen@ess.eu"}
 ]
 license = "BSD-3-Clause"
 classifiers = [
@@ -41,8 +43,8 @@ dependencies = [
 # These optional dependencies are for building the
 # application as a part of a Github Action.
 ci = [
-    'pyinstaller==6.3.*',
-    'scipy==1.11.*',
+    'pyinstaller==6.4.*',
+    'scipy==1.12.*',
     'dephell_licenses>=0.1.7',
     'pywin32-ctypes>=0.2.0; platform_system == "win32"', 
     'pypiwin32>=223; platform_system == "win32"',
@@ -137,11 +139,11 @@ config_control = 'InstallerControlScript.js'
 config_style = 'style.qss'
 
 [ci.qtifw]
-version = '4.1.0'
+version = '4.6.1'
 https_mirrors = ['download.qt.io', 'ftp.fau.de/qtproject', 'mirrors.dotsrc.org/qtproject']
 base_path = 'official_releases/qt-installer-framework'
 file_name_base = 'QtInstallerFramework'
-file_platform = { macos = 'macOS-x86_64', ubuntu = 'linux-x64', windows = 'windows-x86' }
+file_platform = { macos = 'macOS-x64', ubuntu = 'linux-x64', windows = 'windows-x64' }
 file_ext = { macos = 'dmg', ubuntu = 'run', windows = 'exe' }
 installation_path = { macOS = '/Users/runner/Qt', Linux = '/home/runner/Qt', Windows = 'C:\Qt' }
 

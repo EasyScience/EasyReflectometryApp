@@ -129,15 +129,16 @@ def installerConfigXml():
                 #'CreateLocalRepository': 'true',
                 #'SaveDefaultRepositories': 'false',
                 #'RepositorySettingsPageVisible': 'false',
-                'RemoteRepositories': {
-                    'Repository': [
-                        {
-                            'Url': onlineRepositoryUrl(),
-                            'DisplayName': f'{CONFIG.app_name} {CONFIG.setup_os}_{CONFIG.setup_arch} repository',
-                            'Enabled': 1,
-                        }
-                    ]
-                },
+                # Commented out for now.  Remember we want to have a common set of tools/.. for all EasyApplications
+                # 'RemoteRepositories': {
+                #     'Repository': [
+                #         {
+                #             'Url': onlineRepositoryUrl(),
+                #             'DisplayName': f'{CONFIG.app_name} {CONFIG.setup_os}_{CONFIG.setup_arch} repository',
+                #             'Enabled': 1,
+                #         }
+                #     ]
+                # },
                 'MaintenanceToolName': maintenance_tool_name,
                 'AllowNonAsciiCharacters': 'true',
                 'AllowSpaceInPath': 'true',

@@ -43,7 +43,7 @@ Full details of the future plans for EasyReflectometry is available in the [road
 
 ### Downloading
 
-[Download](https://github.com/easyScience/EasyReflectometryApp/releases) the official **EasyReflectometry installer v0.0.7** for your operating system.
+[Download](https://github.com/easyScience/EasyReflectometryApp/releases) the official **EasyReflectometry installer** for your operating system.
 
 ### Installing
 
