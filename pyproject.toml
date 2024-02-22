@@ -14,11 +14,11 @@ authors = [
     {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"}, 
     {name = "Andrew Sazonov"}, 
     {name = "Simon Ward"},
-    {name = Andreas Pedersen, email = "andreas.pedersen@ess.eu"}
+    {name = "Andreas Pedersen", email = "andreas.pedersen@ess.eu"}
 ]
 maintainers = [
     {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"},
-    {name = Andreas Pedersen, email = "andreas.pedersen@ess.eu"}
+    {name = "Andreas Pedersen", email = "andreas.pedersen@ess.eu"}
 ]
 license = "BSD-3-Clause"
 classifiers = [
