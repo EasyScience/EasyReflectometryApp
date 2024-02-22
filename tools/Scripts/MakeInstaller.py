@@ -129,6 +129,7 @@ def installerConfigXml():
                 #'CreateLocalRepository': 'true',
                 #'SaveDefaultRepositories': 'false',
                 #'RepositorySettingsPageVisible': 'false',
+                # Commented out for now.  Remember we want to have a common set of tools/.. for all EasyApplications
                 # 'RemoteRepositories': {
                 #     'Repository': [
                 #         {
