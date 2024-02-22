@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### Changes 0.0.8
+
+- Just a retry of the release protocol
+
 ### Changes 0.0.7
 
 - No end-user related changes  
