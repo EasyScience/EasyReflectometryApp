@@ -129,15 +129,15 @@ def installerConfigXml():
                 #'CreateLocalRepository': 'true',
                 #'SaveDefaultRepositories': 'false',
                 #'RepositorySettingsPageVisible': 'false',
-                'RemoteRepositories': {
-                    'Repository': [
-                        {
-                            'Url': onlineRepositoryUrl(),
-                            'DisplayName': f'{CONFIG.app_name} {CONFIG.setup_os}_{CONFIG.setup_arch} repository',
-                            'Enabled': 1,
-                        }
-                    ]
-                },
+                # 'RemoteRepositories': {
+                #     'Repository': [
+                #         {
+                #             'Url': onlineRepositoryUrl(),
+                #             'DisplayName': f'{CONFIG.app_name} {CONFIG.setup_os}_{CONFIG.setup_arch} repository',
+                #             'Enabled': 1,
+                #         }
+                #     ]
+                # },
                 'MaintenanceToolName': maintenance_tool_name,
                 'AllowNonAsciiCharacters': 'true',
                 'AllowSpaceInPath': 'true',
