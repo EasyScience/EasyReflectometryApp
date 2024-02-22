@@ -11,10 +11,10 @@ jobs:
   build_snap:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: snapcore/action-build@v1
       id: snapcraft
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: snap
         path: ${{ steps.snapcraft.outputs.snap }}
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_snap
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: snap
           path: .
@@ -48,14 +48,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: install_test
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: snap
           path: .
       
       - name: Get branch names
         id: branch-name
-        uses: tj-actions/branch-names@v6
+        uses: tj-actions/branch-names@v8
       
       - name: Get snap filename
         run: |

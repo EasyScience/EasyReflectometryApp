@@ -25,10 +25,10 @@ jobs:
 
     steps:
       - name: Check-out EasyReflectometry repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4.5.0
+        uses: actions/setup-python@v5
         with:
             python-version: 3.9
 
@@ -89,14 +89,14 @@ jobs:
         run: python ${{ env.SCRIPTS_PATH }}/ZipArtifacts.py ${{ env.BRANCH_NAME }}
 
       - name: Upload installer to artifacts (macOS)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: runner.os == 'macOS'
         with:
           name: macOS
           path: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_macOS_*.zip"
       
       - name: Upload installer to artifacts (Windows)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: runner.os == 'Windows'
         with:
           name: windows
