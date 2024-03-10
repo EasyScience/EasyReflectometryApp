@@ -43,7 +43,7 @@ dependencies = [
 # These optional dependencies are for building the
 # application as a part of a Github Action.
 ci = [
-    'pyinstaller==6.4.*',
+    'pyinstaller==5.7.0',
     'scipy==1.12.*',
     'dephell_licenses>=0.1.7',
     'pywin32-ctypes>=0.2.0; platform_system == "win32"', 
