@@ -156,7 +156,8 @@ missing_pyside2_plugins = { macos = [], ubuntu = ['Qt/plugins/xcbglintegrations'
 missing_other_libraries = {macos = [], ubuntu = [], windows = ['libs/libiomp5md.dll', 'libs/opengl32.dll'] }
 auto_exclude = { macos = ['_tkinter'], ubuntu = ['_tkinter'], windows = [''], all = [ 'lib2to3', '_bisect',
                 '_codecs_cn', '_codecs_hk', '_codecs_iso2022', '_codecs_jp', '_codecs_kr', '_codecs_tw',
-                '_curses', '_elementtree', '_hashlib', '_heapq', '_multibytecodec', '_multiprocessing',
+                '_curses', '_elementtree', '_hashlib', '_heapq', '_multibytecodec', 
+                # '_multiprocessing',
                 '_opcode', '_queue', '_opcode', '_uuid', '_win32sysloader', 'grp', 'readline', 'termios' ] }
 manual_exclude = [ 'mfc*', 'msvcp*', 'VCRUNTIME*',
                    '*Qt*3D*', '*Qt*Bluetooth*', '*Qt*Bodymovin*', '*Qt*Gamepad*', '*Qt*Location*',
