@@ -154,11 +154,11 @@ content_suffix = { macos = 'Contents/MacOS/', ubuntu = '', windows = '' }
 missing_pyside2_files = { macos = ['libshiboken2.abi3.*.dylib'], ubuntu = [], windows = ['shiboken2.abi3.dll', 'MSVCP140.dll'] }
 missing_pyside2_plugins = { macos = [], ubuntu = ['Qt/plugins/xcbglintegrations'], windows = [] } # EGL and GLX plugins
 missing_other_libraries = {macos = [], ubuntu = [], windows = ['libs/libiomp5md.dll', 'libs/opengl32.dll'] }
-auto_exclude = { macos = ['_tkinter'], ubuntu = ['_tkinter'], windows = [''], all = [''] } # 'lib2to3', '_bisect',
-#                '_codecs_cn', '_codecs_hk', '_codecs_iso2022', '_codecs_jp', '_codecs_kr', '_codecs_tw',
-#                '_curses', '_elementtree', '_hashlib', '_heapq', '_multibytecodec', 
+auto_exclude = { macos = ['_tkinter'], ubuntu = ['_tkinter'], windows = [''], all = 'lib2to3', '_bisect',
+                '_codecs_cn', '_codecs_hk', '_codecs_iso2022', '_codecs_jp', '_codecs_kr', '_codecs_tw',
+                '_curses', '_elementtree', '_hashlib', '_heapq', '_multibytecodec', 
 #                # '_multiprocessing',
-#                '_opcode', '_queue', '_opcode', '_uuid', '_win32sysloader', 'grp', 'readline', 'termios' ] }
+                '_opcode', '_queue', '_opcode', '_uuid', '_win32sysloader', 'grp', 'readline', 'termios' ] }
 manual_exclude = [ 'mfc*', 'msvcp*', 'VCRUNTIME*',
                    '*Qt*3D*', '*Qt*Bluetooth*', '*Qt*Bodymovin*', '*Qt*Gamepad*', '*Qt*Location*',
                    '*Qt*Nfc*', '*Qt*Purchasing*', '*Qt*QuickParticles*', '*Qt*QuickShapes*', '*Qt*RemoteObjects*',
