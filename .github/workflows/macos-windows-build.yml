@@ -1,7 +1,10 @@
-# This pipeline 
-# - build executeable for MacOS
-# - build executeable for Windows 
-# - for main executeables are deployed 
+# This pipeline
+# EITHER
+# - create installer for MacOS
+# OR
+# - create installer for Windows 
+# - test installer
+# - for main executeables are deployed
 # -- offline installers to GitHub releases
 # -- online installers FTP server 
 
