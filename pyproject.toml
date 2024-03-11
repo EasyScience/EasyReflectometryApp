@@ -210,7 +210,7 @@ missing_other_libraries = {
     ubuntu = [],
     windows = ['libs/libiomp5md.dll', 'libs/opengl32.dll']
     }
-#auto_exclude = {
+# auto_exclude = {
 #    macos = ['_tkinter'],
 #    ubuntu = ['_tkinter'],
 #    windows = [''],
