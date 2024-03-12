@@ -28,6 +28,8 @@ EaElements.RemoteController {
 
     Component.onCompleted: {
         if (EaGlobals.Variables.isTestMode) {
+            // To ensure that Qt starts up there is a delay before the it is shut down again.
+            // When testing the application it should stay alive longer than the delay.
             print('*** TEST MODE START ***')
             delay(30000, function() {
                 print('*** TEST MODE 30 s DELAYED END ***')

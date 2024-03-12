@@ -25,10 +25,17 @@ def runApp():
     """
     Functions.printNeutralMessage(f'Installed application exe path: {appExePath()}')
     try:
-        time_start = time.time()
         message = f'run {CONFIG.app_name}'
         if len(sys.argv) == 1:
             Functions.run(appExePath())
+        elif sys.argv[1] == '--testmode':
+            time_start = time.time()
+            Functions.run(appExePath(), '--testmode')
+            time_end = time.time()
+            if time_end - time_start < DELAYED_QUIT:
+                # Delay is set in UserTutorialsController.qml
+                Functions.printFailMessage(f"Application ran for less the {DELAYED_QUIT} sec. Probably import error.")
+                sys.exit(1)
         else:
             #if 'test' in sys.argv[1:]:
             #    Functions.createDir(CONFIG.screenshots_dir)
@@ -36,14 +43,7 @@ def runApp():
     except Exception as exception:
         Functions.printFailMessage(message, exception)
         sys.exit(1)
-    else:
-        time_end = time.time()
-        if time_end - time_start > DELAYED_QUIT:
-            message = f'Application {CONFIG.app_name} is running'
-            Functions.printSuccessMessage(message)
-        else:
-            Functions.printFailMessage(f"Application ran for less the {DELAYED_QUIT} sec. Probably import error.")
-            sys.exit(1)
+
 
 if __name__ == "__main__":
     runApp()
