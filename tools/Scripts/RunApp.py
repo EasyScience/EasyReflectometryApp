@@ -3,9 +3,10 @@ __version__ = '0.0.1'
 
 import os, sys
 import Functions, Config
-
+import time
 
 CONFIG = Config.Config()
+DELAYED_QUIT = 30
 
 def appExePath() -> str:
     """
@@ -24,6 +25,7 @@ def runApp():
     """
     Functions.printNeutralMessage(f'Installed application exe path: {appExePath()}')
     try:
+        time_start = time.time()
         message = f'run {CONFIG.app_name}'
         if len(sys.argv) == 1:
             Functions.run(appExePath())
@@ -35,7 +37,13 @@ def runApp():
         Functions.printFailMessage(message, exception)
         sys.exit(1)
     else:
-        Functions.printSuccessMessage(message)
+        time_end = time.time()
+        if time_end - time_start > DELAYED_QUIT:
+            message = f'Application {CONFIG.app_name} is running'
+            Functions.printSuccessMessage(message)
+        else:
+            Functions.printFailMessage(f"Application ran for less the {DELAYED_QUIT} sec. Probably import error.")
+            sys.exit(1)
 
 if __name__ == "__main__":
     runApp()
