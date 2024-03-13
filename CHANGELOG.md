@@ -2,6 +2,8 @@
 
 ### Changes 0.0.9
 
+- Changes to make the MacOS version runable
+
 ### Changes 0.0.8
 
 - Just a retry of the release protocol
