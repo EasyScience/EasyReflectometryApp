@@ -1,6 +1,10 @@
 # CHANGELOG
+### Changes 0.0.10
+
 
 ### Changes 0.0.9
+
+- Changes to make the MacOS version runable
 
 ### Changes 0.0.8
 
