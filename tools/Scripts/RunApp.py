@@ -3,9 +3,10 @@ __version__ = '0.0.1'
 
 import os, sys
 import Functions, Config
-
+import time
 
 CONFIG = Config.Config()
+DELAYED_QUIT = 30
 
 def appExePath() -> str:
     """
@@ -27,6 +28,14 @@ def runApp():
         message = f'run {CONFIG.app_name}'
         if len(sys.argv) == 1:
             Functions.run(appExePath())
+        elif sys.argv[1] == '--testmode':
+            time_start = time.time()
+            Functions.run(appExePath(), '--testmode')
+            time_end = time.time()
+            if time_end - time_start < DELAYED_QUIT:
+                # Delay is set in UserTutorialsController.qml
+                Functions.printFailMessage(f"Application ran for less the {DELAYED_QUIT} sec. Probably import error.")
+                sys.exit(1)
         else:
             #if 'test' in sys.argv[1:]:
             #    Functions.createDir(CONFIG.screenshots_dir)
@@ -34,8 +43,7 @@ def runApp():
     except Exception as exception:
         Functions.printFailMessage(message, exception)
         sys.exit(1)
-    else:
-        Functions.printSuccessMessage(message)
+
 
 if __name__ == "__main__":
     runApp()

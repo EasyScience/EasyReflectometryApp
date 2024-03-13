@@ -15,10 +15,26 @@ EaElements.RemoteController {
     visible: false
     audioEnabled: false
 
+    // Timer for Creating delay
+    Timer {
+        id: timer
+    }
+    function delay(delayTime, cb) {
+        timer.interval = delayTime;
+        timer.repeat = false;
+        timer.triggered.connect(cb);
+        timer.start();
+    }
+
     Component.onCompleted: {
         if (EaGlobals.Variables.isTestMode) {
-            print('*** TEST MODE ***')
-            Qt.quit()
+            // To ensure that Qt starts up there is a delay before the it is shut down again.
+            // When testing the application it should stay alive longer than the delay.
+            print('*** TEST MODE START ***')
+            delay(30000, function() {
+                print('*** TEST MODE 30 s DELAYED END ***')
+                Qt.quit()
+            })
             // runTestTutorialTimer.start()
         }
     }
