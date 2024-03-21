@@ -350,7 +350,7 @@ class ModelProxy(QObject):
         for i in self._model[self.currentModelIndex].sample:
             for j in i.layers:
                 if i.type == 'Surfactant Layer':
-                    j.name = j.material.name
+                    j.name = j.material.name + ' Surfactant Layer'
                 else:
                     j.name = j.material.name + ' Layer'
         self._setLayersAsXml()
