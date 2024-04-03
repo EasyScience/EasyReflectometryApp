@@ -223,26 +223,18 @@ class ModelProxy(QObject):
                 layers=current_layers,
                 name=type    
             )
-#            self._model[self.currentModelIndex].add_item(ITEM_LOOKUP[type].from_pars(current_layers,
-#                                                             type))
         elif type == 'Repeating Multi-layer':
             new_item = RepeatingMultilayer.from_pars(
                 layers=current_layers,
                 repetitions=1,
                 name=type
             )
-#            self._model[self.currentModelIndex].add_item(ITEM_LOOKUP[type].from_pars(current_layers, 1,
-#                                                             type))
         elif type == 'Surfactant Layer':
             new_item = SurfactantLayer.from_pars(
                 'C32D64', 16, self.parent._material_proxy._materials[0], 0.0, 48.0, 3.0,
                 'C10H18NO8P', 10, self.parent._material_proxy._materials[0], 0.2, 48.0, 3.0,
                 name=type
             )
-#            self._model[self.currentModelIndex].add_item(ITEM_LOOKUP[type].from_pars(
-#                'C32D64', 16, self.parent._material_proxy._materials[0], 0.0, 48.0, 3.0,
-#                'C10H18NO8P', 10, self.parent._material_proxy._materials[0], 0.2, 48.0, 3.0,
-#                name=type))
         self._model[self.currentModelIndex].add_item(new_item)
         self.parent._parameter_proxy._setParametersAsObj()
         if target_position != len(self._model[self.currentModelIndex].sample) - 1:

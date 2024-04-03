@@ -336,9 +336,7 @@ def get_label(par_path: str) -> str:
         unit = '%'
     elif path_split[-1] == 'solvent_fraction':
         label = model[0] + ' Fractional '
-        label += par_path.split('.')[-2]#.split('/')[1]
-#        label += ' in '
-#        label += par_path.split('.')[-2]#.split('/')[0]
+        label += par_path.split('.')[-2]
     elif path_split[-1] == 'area_per_molecule':
         label = model[0] + ' ' + par_path.split('.')[-2].split('/')[0]
         label = label + ' APM'
