@@ -6,10 +6,6 @@ from PySide2.QtCore import QObject, Signal, Property, Slot
 
 from easyCore import np
 
-#from EasyReflectometry.experiment.model import Model
-#from EasyReflectometry.sample.structure import Structure
-#from EasyReflectometry.interface import InterfaceFactory
-
 class SimulationProxy(QObject):
 
     simulationParametersChanged = Signal()
