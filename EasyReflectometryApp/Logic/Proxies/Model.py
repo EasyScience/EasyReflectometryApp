@@ -353,9 +353,10 @@ class ModelProxy(QObject):
                     j.name = j.material.name + ' Surfactant Layer'
                 else:
                     j.name = j.material.name + ' Layer'
-        self._setLayersAsXml()
-        structure_dict = self._model[self.currentModelIndex].sample.as_dict()
+        sample = self._model[self.currentModelIndex].sample
+        structure_dict = sample.as_dict()
         self._pure = Model.from_pars(Sample.from_dict(structure_dict), 1, 0, 0, interface=self._pure_interface)
+        self._setLayersAsXml()
 
     # # #
     # Slots
