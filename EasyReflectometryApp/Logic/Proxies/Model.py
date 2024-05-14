@@ -1,22 +1,24 @@
 __author__ = 'github.com/arm61'
 
-from ast import Mult
+from PySide2.QtCore import QObject
+from PySide2.QtCore import Signal
+from PySide2.QtCore import Property
+from PySide2.QtCore import Slot
 
-from PySide2.QtCore import QObject, Signal, Property, Slot
+import numpy as np
+from easyscience import borg
+from easyscience.Utils.io.xml import XMLSerializer
+from easyscience.Utils.UndoRedo import property_stack_deco
 
-from easyCore import np, borg
-from easyCore.Utils.io.xml import XMLSerializer
-from easyCore.Utils.UndoRedo import property_stack_deco
-
-from EasyReflectometry.sample import Layer
-from EasyReflectometry.sample import Multilayer
-from EasyReflectometry.sample import RepeatingMultilayer
-from EasyReflectometry.sample import SurfactantLayer
-from EasyReflectometry.sample import Sample
-from EasyReflectometry.experiment.model import Model
-from EasyReflectometry.experiment.models import Models
-from EasyReflectometry.calculators import CalculatorFactory
-from numpy import isin
+from easyreflectometry.sample import Layer
+from easyreflectometry.sample import Multilayer
+from easyreflectometry.sample import RepeatingMultilayer
+from easyreflectometry.sample import SurfactantLayer
+from easyreflectometry.sample import Sample
+from easyreflectometry.experiment import Model
+from easyreflectometry.experiment import ModelCollection
+from easyreflectometry.experiment import percentage_fhwm_resolution_function
+from easyreflectometry.calculators import CalculatorFactory
 
 ITEM_LOOKUP = {'Multi-layer': Multilayer, 'Repeating Multi-layer': RepeatingMultilayer, 'Surfactant Layer': SurfactantLayer}
 COLORS =["#0173B2", "#DE8F05", "#029E73", "#D55E00", "#CC78BC", "#CA9161", "#FBAFE4", "#949494", "#ECE133", "#56B4E9"]
@@ -43,7 +45,10 @@ class ModelProxy(QObject):
         self._items_as_xml = ""
         self._layers_as_xml = ""
         self._structure = self._defaultStructure()
-        self._model = Models.from_pars(self._defaultModel(structure=self._structure, interface=parent._interface))
+        self._model = ModelCollection(
+            self._defaultModel(structure=self._structure, interface=parent._interface),
+            interface=parent._interface
+        )
         self._colors = [COLORS[0]]
 
         self._current_layers_index = 0
@@ -57,32 +62,40 @@ class ModelProxy(QObject):
 
     def _defaultStructure(self) -> Sample:
         layers = [
-            Layer.from_pars(self.parent._material_proxy._materials[0],
+            Layer(self.parent._material_proxy._materials[0],
                             0.0,
                             0.0,
                             name='Vacuum Layer'),
-            Layer.from_pars(self.parent._material_proxy._materials[1],
+            Layer(self.parent._material_proxy._materials[1],
                             100.0,
                             3.0,
                             name='Multi-layer'),
-            Layer.from_pars(self.parent._material_proxy._materials[2],
+            Layer(self.parent._material_proxy._materials[2],
                             0.0,
                             1.2,
                             name='Si Layer'),
         ]
         items = [
-            Multilayer.from_pars(layers[0], name='Superphase'),
-            Multilayer.from_pars(layers[1], name='Multi-layer'),
-            Multilayer.from_pars(layers[2], name='Subphase')
+            Multilayer(layers[0], name='Superphase'),
+            Multilayer(layers[1], name='Multi-layer'),
+            Multilayer(layers[2], name='Subphase')
         ]
-        structure =  Sample.from_pars(*items) 
+        structure =  Sample(*items) 
         structure[0].layers[0].thickness.enabled = False
         structure[0].layers[0].roughness.enabled = False
         structure[-1].layers[-1].thickness.enabled = False
         return structure
 
     def _defaultModel(self, structure: Sample, interface=None, name="Air-D2O-Si") -> Model:
-        return Model.from_pars(structure, 1, 0, 0, interface=interface, name=name)
+        resolution_function = percentage_fhwm_resolution_function(0)
+        return Model(
+            sample=structure,
+            scale=1,
+            background=0,
+            resolution_function=resolution_function, 
+            interface=interface,
+            name=name,
+        )
 
     # # #
     # Setters and getters
@@ -215,22 +228,22 @@ class ModelProxy(QObject):
             return
         current_layers = self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers
         if self._model[self.currentModelIndex].sample[self.currentItemsIndex].type == 'Surfactant Layer':
-            current_layers = Layer.from_pars(self.parent._material_proxy._materials[0], 10, 3)
+            current_layers = Layer(self.parent._material_proxy._materials[0], 10, 3)
         target_position = self.currentItemsIndex
         self._model[self.currentModelIndex].remove_item(self.currentItemsIndex)
         if type == 'Multi-layer':
-            new_item = Multilayer.from_pars(
+            new_item = Multilayer(
                 layers=current_layers,
                 name=type    
             )
         elif type == 'Repeating Multi-layer':
-            new_item = RepeatingMultilayer.from_pars(
+            new_item = RepeatingMultilayer(
                 layers=current_layers,
                 repetitions=1,
                 name=type
             )
         elif type == 'Surfactant Layer':
-            new_item = SurfactantLayer.from_pars(
+            new_item = SurfactantLayer(
                 'C32D64', 16, self.parent._material_proxy._materials[0], 0.0, 48.0, 3.0,
                 'C10H18NO8P', 10, self.parent._material_proxy._materials[0], 0.2, 48.0, 3.0,
                 name=type
@@ -347,7 +360,16 @@ class ModelProxy(QObject):
                     j.name = j.material.name + ' Layer'
         sample = self._model[self.currentModelIndex].sample
         structure_dict = sample.as_dict()
-        self._pure = Model.from_pars(Sample.from_dict(structure_dict), 1, 0, 0, interface=self._pure_interface)
+
+        resolution_function = percentage_fhwm_resolution_function(0)
+        self._pure = Model(
+            sample=Sample.from_dict(structure_dict),
+            scale=1,
+            background=0,
+            resolution_function=resolution_function, 
+            interface=self._pure_interface,
+        )
+#        self._pure = Model(Sample.from_dict(structure_dict), 1, 0, 0, interface=self._pure_interface)
         self._setLayersAsXml()
 
     # # #
@@ -456,15 +478,15 @@ class ModelProxy(QObject):
         self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = True
         try:
             self._model[self.currentModelIndex].add_item(
-                Multilayer.from_pars(
-                    Layer.from_pars(self.parent._material_proxy._materials[0], 10.,
+                Multilayer(
+                    Layer(self.parent._material_proxy._materials[0], 10.,
                                     1.2),
                     f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'))
         except IndexError:
             self.parent._material_proxy.addNewMaterials()
             self._model[self.currentModelIndex].add_item(
-                Multilayer.from_pars(
-                    Layer.from_pars(self.parent._material_proxy._materials[0], 10.,
+                Multilayer(
+                    Layer(self.parent._material_proxy._materials[0], 10.,
                                     1.2),
                     f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'))
         self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
@@ -485,12 +507,12 @@ class ModelProxy(QObject):
             to_dup_layers = []
             for i in to_dup.layers:
                 to_dup_layers.append(
-                    Layer.from_pars(i.material,
+                    Layer(i.material,
                                     i.thickness.raw_value,
                                     i.roughness.raw_value,
                                     name=i.name,
                                     interface=self.parent._interface))
-            dup_item = RepeatingMultilayer.from_pars(*to_dup_layers, 
+            dup_item = RepeatingMultilayer(*to_dup_layers, 
                                                      to_dup.repetitions.raw_value,
                                                      name=to_dup.name)
         elif isinstance(to_dup, SurfactantLayer):
@@ -501,12 +523,12 @@ class ModelProxy(QObject):
             to_dup_layers = []
             for i in to_dup.layers:
                 to_dup_layers.append(
-                    Layer.from_pars(i.material,
+                    Layer(i.material,
                                     i.thickness.raw_value,
                                     i.roughness.raw_value,
                                     name=i.name,
                                     interface=self.parent._interface))
-            dup_item = Multilayer.from_pars(*to_dup_layers, name=to_dup.name)
+            dup_item = Multilayer(*to_dup_layers, name=to_dup.name)
         self._model[self.currentModelIndex].add_item(dup_item)
         self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
         self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
@@ -623,7 +645,7 @@ class ModelProxy(QObject):
         self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = True
         try:
             self._model[self.currentModelIndex].sample[self.currentItemsIndex].add_layer(
-                Layer.from_pars(
+                Layer(
                     self.parent._material_proxy._materials[0],
                     10.0,
                     1.2,
@@ -646,7 +668,7 @@ class ModelProxy(QObject):
         to_dup = self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[
             self.currentLayersIndex]
         self._model[self.currentModelIndex].sample[self.currentItemsIndex].add_layer(
-            Layer.from_pars(to_dup.material,
+            Layer(to_dup.material,
                             to_dup.thickness.raw_value,
                             to_dup.roughness.raw_value,
                             name=to_dup.name))
@@ -855,4 +877,4 @@ class ModelProxy(QObject):
 
     def resetModel(self):
         self._structure = self._defaultStructure()
-        self._model = Models.from_pars(self._defaultModel(structure=self._structure, interface=self.parent._interface))
+        self._model = ModelCollection(self._defaultModel(structure=self._structure, interface=self.parent._interface))

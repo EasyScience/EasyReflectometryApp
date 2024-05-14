@@ -1,14 +1,18 @@
 __author__ = 'github.com/arm61'
 
-from matplotlib import cm, colors
+from matplotlib import cm
+from matplotlib import colors
 
-from PySide2.QtCore import QObject, Signal, Property, Slot
+from PySide2.QtCore import QObject
+from PySide2.QtCore import Signal
+from PySide2.QtCore import Property
+from PySide2.QtCore import Slot
 
-from easyCore import borg
-from easyCore.Utils.io.xml import XMLSerializer
+from easyscience import borg
+from easyscience.Utils.io.xml import XMLSerializer
 
-from EasyReflectometry.sample import Material
-from EasyReflectometry.sample import MaterialCollection
+from easyreflectometry.sample import Material
+from easyreflectometry.sample import MaterialCollection
 
 COLOURMAP = cm.get_cmap('Blues', 100)
 MIN_SLD = -3
@@ -43,9 +47,9 @@ class MaterialProxy(QObject):
         :return: Three materials; Air, D2O and Si.
         """
         return MaterialCollection(
-            Material.from_pars(0., 0., name='Air'),
-            Material.from_pars(6.335, 0., name='D2O'),
-            Material.from_pars(2.074, 0., name='Si')
+            Material(0., 0., name='Air'),
+            Material(6.335, 0., name='D2O'),
+            Material(2.074, 0., name='Si')
         )
 
     # # #
@@ -114,7 +118,7 @@ class MaterialProxy(QObject):
         """
         borg.stack.enabled = False
         self._materials.append(
-            Material.from_pars(2.074,
+            Material(2.074,
                                0.000,
                                name=f'Si',
                                interface=self.parent._interface))
@@ -134,7 +138,7 @@ class MaterialProxy(QObject):
         # Manual duplication instead of creating a copy
         to_dup = self._materials[self.currentMaterialsIndex]
         self._materials.append(
-            Material.from_pars(to_dup.sld.raw_value,
+            Material(to_dup.sld.raw_value,
                                to_dup.isld.raw_value,
                                name=to_dup.name,
                                interface=self.parent._interface))

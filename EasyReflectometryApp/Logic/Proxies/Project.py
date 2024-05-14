@@ -4,19 +4,20 @@ import os
 import datetime
 import json
 
-from PySide2.QtCore import QObject, Signal, Property, Slot
+from PySide2.QtCore import QObject
+from PySide2.QtCore import Signal
+from PySide2.QtCore import Property
+from PySide2.QtCore import Slot
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-import matplotlib.backends.backend_pdf
 
-from easyCore import np
+import numpy as np
 from easyApp.Logic.Utils.Utils import generalizePath
 
 from EasyReflectometryApp.Logic.DataStore import DataSet1D
-from EasyReflectometry.sample import MaterialCollection
-from EasyReflectometry.experiment.model import Model
-from EasyReflectometry.experiment.models import Models
+from easyreflectometry.sample import MaterialCollection
+from easyreflectometry.experiment.model_collection import ModelCollection
 
 
 class ProjectProxy(QObject):
@@ -230,8 +231,8 @@ class ProjectProxy(QObject):
                     self.parent._interface.switch(inter)
 
         self.parent._model_proxy._colors = descr['colors']
-        self.parent._model_proxy._model = Models.from_dict(descr['model'])
-        self.parent._material_proxy._materials = MaterialCollection.from_pars()
+        self.parent._model_proxy._model = ModelCollection.from_dict(descr['model'])
+        self.parent._material_proxy._materials = MaterialCollection()
         for model in self.parent._model_proxy._model:
             for sample in model.sample:
                 for layer in sample.layers:

@@ -2,11 +2,14 @@ __author__ = 'github.com/arm61'
 
 import re
 
-from PySide2.QtCore import QObject, Signal, Property, Slot
+from PySide2.QtCore import QObject
+from PySide2.QtCore import Signal
+from PySide2.QtCore import Property
+from PySide2.QtCore import Slot
 
-from easyCore import borg
-from easyCore.Objects.Groups import BaseCollection
-from easyCore.Objects.ObjectClasses import BaseObj
+from easyscience import borg
+from easyscience.Objects.Groups import BaseCollection
+from easyscience.Objects.ObjectClasses import BaseObj
 
 
 class UndoRedoProxy(QObject):

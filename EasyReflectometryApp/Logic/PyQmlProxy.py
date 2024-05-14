@@ -1,8 +1,10 @@
 __author__ = 'github.com/arm61'
 
-from PySide2.QtCore import QObject, Signal, Property
+from PySide2.QtCore import QObject
+from PySide2.QtCore import Signal
+from PySide2.QtCore import Property
 
-from EasyReflectometry.calculators import CalculatorFactory
+from easyreflectometry.calculators import CalculatorFactory
 
 from .Proxies.Calculator import CalculatorProxy
 from .Proxies.Data import DataProxy
