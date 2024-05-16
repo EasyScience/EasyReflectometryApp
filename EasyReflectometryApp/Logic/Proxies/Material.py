@@ -47,9 +47,9 @@ class MaterialProxy(QObject):
         :return: Three materials; Air, D2O and Si.
         """
         return MaterialCollection(
-            Material(0., 0., name='Air'),
-            Material(6.335, 0., name='D2O'),
-            Material(2.074, 0., name='Si')
+            Material(sld=0., isld=0., name='Air'),
+            Material(sld=6.335, isld=0., name='D2O'),
+            Material(sld=2.074, isld=0., name='Si')
         )
 
     # # #
@@ -118,10 +118,13 @@ class MaterialProxy(QObject):
         """
         borg.stack.enabled = False
         self._materials.append(
-            Material(2.074,
-                               0.000,
-                               name=f'Si',
-                               interface=self.parent._interface))
+            Material(
+                sld=2.074,
+                isld=0.000,
+                name='Si',
+                interface=self.parent._interface
+            )
+        )
         borg.stack.enabled = True
         self.materialsChanged.emit()
         self.parent.layersMaterialsChanged.emit()
@@ -138,10 +141,13 @@ class MaterialProxy(QObject):
         # Manual duplication instead of creating a copy
         to_dup = self._materials[self.currentMaterialsIndex]
         self._materials.append(
-            Material(to_dup.sld.raw_value,
-                               to_dup.isld.raw_value,
-                               name=to_dup.name,
-                               interface=self.parent._interface))
+            Material(
+                sld=to_dup.sld.raw_value,
+                isld=to_dup.isld.raw_value,
+                name=to_dup.name,
+                interface=self.parent._interface
+            )
+        )
         borg.stack.enabled = True
         self.materialsChanged.emit()
         self.parent.layersMaterialsChanged.emit()

@@ -62,18 +62,24 @@ class ModelProxy(QObject):
 
     def _defaultStructure(self) -> Sample:
         layers = [
-            Layer(self.parent._material_proxy._materials[0],
-                            0.0,
-                            0.0,
-                            name='Vacuum Layer'),
-            Layer(self.parent._material_proxy._materials[1],
-                            100.0,
-                            3.0,
-                            name='Multi-layer'),
-            Layer(self.parent._material_proxy._materials[2],
-                            0.0,
-                            1.2,
-                            name='Si Layer'),
+            Layer(
+                material=self.parent._material_proxy._materials[0],
+                thichness=0.0,
+                rougheness=0.0,
+                name='Vacuum Layer'
+            ),
+            Layer(
+                material=self.parent._material_proxy._materials[1],
+                thickness=100.0,
+                roughness=3.0,
+                name='Multi-layer'
+            ),
+            Layer(
+                material=self.parent._material_proxy._materials[2],
+                thickness=0.0,
+                roughness=1.2,
+                name='Si Layer'
+            ),
         ]
         items = [
             Multilayer(layers[0], name='Superphase'),
@@ -521,11 +527,14 @@ class ModelProxy(QObject):
             to_dup_layers = []
             for i in to_dup.layers:
                 to_dup_layers.append(
-                    Layer(i.material,
-                                    i.thickness.raw_value,
-                                    i.roughness.raw_value,
-                                    name=i.name,
-                                    interface=self.parent._interface))
+                    Layer(
+                        material=i.material,
+                        thickness=i.thickness.raw_value,
+                        roughness=i.roughness.raw_value,
+                        name=i.name,
+                        interface=self.parent._interface
+                    )
+                )
             dup_item = Multilayer(*to_dup_layers, name=to_dup.name)
         self._model[self.currentModelIndex].add_item(dup_item)
         self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
@@ -644,11 +653,12 @@ class ModelProxy(QObject):
         try:
             self._model[self.currentModelIndex].sample[self.currentItemsIndex].add_layer(
                 Layer(
-                    self.parent._material_proxy._materials[0],
-                    10.0,
-                    1.2,
+                    material=self.parent._material_proxy._materials[0],
+                    thickness=10.0,
+                    roguhness=1.2,
                     name=f'Layer {len(self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers)}'
-                ))
+                )
+            )
         except IndexError:
             self.addNewItems()
         self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
@@ -666,10 +676,13 @@ class ModelProxy(QObject):
         to_dup = self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[
             self.currentLayersIndex]
         self._model[self.currentModelIndex].sample[self.currentItemsIndex].add_layer(
-            Layer(to_dup.material,
-                            to_dup.thickness.raw_value,
-                            to_dup.roughness.raw_value,
-                            name=to_dup.name))
+            Layer(
+                material=to_dup.material,
+                thickness=to_dup.thickness.raw_value,
+                roughness=to_dup.roughness.raw_value,
+                name=to_dup.name
+                )
+            )
         self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
         self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
         self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
