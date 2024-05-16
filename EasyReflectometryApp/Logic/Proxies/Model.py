@@ -17,7 +17,7 @@ from easyreflectometry.sample import SurfactantLayer
 from easyreflectometry.sample import Sample
 from easyreflectometry.experiment import Model
 from easyreflectometry.experiment import ModelCollection
-from easyreflectometry.experiment import percentage_fhwm_resolution_function
+from easyreflectometry.experiment import PercentageFhwm
 from easyreflectometry.calculators import CalculatorFactory
 
 ITEM_LOOKUP = {'Multi-layer': Multilayer, 'Repeating Multi-layer': RepeatingMultilayer, 'Surfactant Layer': SurfactantLayer}
@@ -87,12 +87,11 @@ class ModelProxy(QObject):
         return structure
 
     def _defaultModel(self, structure: Sample, interface=None, name="Air-D2O-Si") -> Model:
-        resolution_function = percentage_fhwm_resolution_function(0)
         return Model(
             sample=structure,
             scale=1,
             background=0,
-            resolution_function=resolution_function, 
+            resolution_function=PercentageFhwm(0), 
             interface=interface,
             name=name,
         )
@@ -361,12 +360,11 @@ class ModelProxy(QObject):
         sample = self._model[self.currentModelIndex].sample
         structure_dict = sample.as_dict()
 
-        resolution_function = percentage_fhwm_resolution_function(0)
         self._pure = Model(
             sample=Sample.from_dict(structure_dict),
             scale=1,
             background=0,
-            resolution_function=resolution_function, 
+            resolution_function=PercentageFhwm(0), 
             interface=self._pure_interface,
         )
 #        self._pure = Model(Sample.from_dict(structure_dict), 1, 0, 0, interface=self._pure_interface)
