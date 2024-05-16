@@ -152,34 +152,34 @@ class ProjectProxy(QObject):
         projectPath = self.currentProjectPath
         project_save_filepath = os.path.join(projectPath, 'project.json')
         materials_in_model = []
-        for i in self.parent._model_proxy._model:
-            for j in i.structure:
-                for k in j.layers:
-                    materials_in_model.append(k.material)
+        for model in self.parent._model_proxy._model:
+            for assembly in model.sample:
+                for layer in assembly.layers:
+                    materials_in_model.append(layer.material)
         materials_not_in_model = []
-        for i in self.parent._material_proxy._materials:
-            if i not in materials_in_model:
-                materials_not_in_model.append(i)
+        for material in self.parent._material_proxy._materials:
+            if material not in materials_in_model:
+                materials_not_in_model.append(material)
         descr = {
             'model':
                 self.parent._model_proxy._model.as_dict(skip=['interface']),
             'materials_not_in_model':
-                MaterialCollection(*materials_not_in_model).as_dict(skip=['interface'])
+                MaterialCollection(materials_not_in_model).as_dict(skip=['interface'])
         }
 
         if self.parent._data_proxy._data.experiments:
             descr['experiments'] = []
             descr['experiments_models'] = []
             descr['experiments_names'] = []
-            for i in self.parent._data_proxy._data.experiments:
+            for experiment in self.parent._data_proxy._data.experiments:
                 if self.parent._data_proxy._data.experiments[0].xe is not None:
                     descr['experiments'].append([
-                        i.x, i.y, i.ye, i.xe
+                        experiment.x, experiment.y, experiment.ye, experiment.xe
                     ])
                 else:
-                    descr['experiments'].append([i.x, i.y, i.ye])
-                descr['experiments_models'].append(i.model.name)
-                descr['experiments_names'].append(i.name)
+                    descr['experiments'].append([experiment.x, experiment.y, experiment.ye])
+                descr['experiments_models'].append(experiment.model.name)
+                descr['experiments_names'].append(experiment.name)
 
         descr['experiment_skipped'] = self.parent._data_proxy._experiment_skipped
         descr['project_info'] = self._project_info
@@ -232,7 +232,7 @@ class ProjectProxy(QObject):
 
         self.parent._model_proxy._colors = descr['colors']
         self.parent._model_proxy._model = ModelCollection.from_dict(descr['model'])
-        self.parent._material_proxy._materials = MaterialCollection()
+        self.parent._material_proxy._materials = MaterialCollection([])  # Should be initialized with empty list to enforce no elements in collection
         for model in self.parent._model_proxy._model:
             for sample in model.sample:
                 for layer in sample.layers:
