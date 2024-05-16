@@ -11,10 +11,12 @@ from easyscience.Utils.io.xml import XMLSerializer
 from easyscience.Utils.UndoRedo import property_stack_deco
 
 from easyreflectometry.sample import Layer
+from easyreflectometry.sample import LayerAreaPerMolecule
 from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import RepeatingMultilayer
 from easyreflectometry.sample import SurfactantLayer
 from easyreflectometry.sample import Sample
+from easyreflectometry.sample import Material
 from easyreflectometry.experiment import Model
 from easyreflectometry.experiment import ModelCollection
 from easyreflectometry.experiment import PercentageFhwm
@@ -64,8 +66,8 @@ class ModelProxy(QObject):
         layers = [
             Layer(
                 material=self.parent._material_proxy._materials[0],
-                thichness=0.0,
-                rougheness=0.0,
+                thickness=0.0,
+                roughness=0.0,
                 name='Vacuum Layer'
             ),
             Layer(
@@ -248,9 +250,30 @@ class ModelProxy(QObject):
                 name=type
             )
         elif type == 'Surfactant Layer':
+            air = Material(0, 0, 'Air')
+            tail_layer = LayerAreaPerMolecule(
+                molecular_formula='C32D64',
+                thickness=16,
+                solvent=air,
+                solvent_fraction=0.0,
+                area_per_molecule=48.0,
+                roughness=3,
+                name='DPPC Tail',
+            )
+            d2o = Material(6.36, 0, 'D2O')
+            head_layer = LayerAreaPerMolecule(
+                molecular_formula='C10H18NO8P',
+                thickness=10.0,
+                solvent=d2o,
+                solvent_fraction=0.2,
+                area_per_molecule=48.0,
+                roughness=3.0,
+                name='DPPC Head',
+            )
+
             new_item = SurfactantLayer(
-                'C32D64', 16, self.parent._material_proxy._materials[0], 0.0, 48.0, 3.0,
-                'C10H18NO8P', 10, self.parent._material_proxy._materials[0], 0.2, 48.0, 3.0,
+                tail_layer=tail_layer,
+                head_layer=head_layer,
                 name=type
             )
         self._model[self.currentModelIndex].add_item(new_item)
@@ -313,7 +336,7 @@ class ModelProxy(QObject):
         else:
             return
 
-    @constrainApm.setter
+    @conformalRoughness.setter
     def conformalRoughness(self, x: bool):
         if self._model[self.currentModelIndex].sample[self.currentItemsIndex].conformal_roughness == x:
             return 
@@ -373,7 +396,6 @@ class ModelProxy(QObject):
             resolution_function=PercentageFhwm(0), 
             interface=self._pure_interface,
         )
-#        self._pure = Model(Sample.from_dict(structure_dict), 1, 0, 0, interface=self._pure_interface)
         self._setLayersAsXml()
 
     # # #
@@ -483,16 +505,25 @@ class ModelProxy(QObject):
         try:
             self._model[self.currentModelIndex].add_item(
                 Multilayer(
-                    Layer(self.parent._material_proxy._materials[0], 10.,
-                                    1.2),
-                    f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'))
+                    Layer(
+                        material=self.parent._material_proxy._materials[0],
+                        thickness=10.,
+                        roughness=1.2
+                    ),
+                    name=f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'
+                )
+            )
         except IndexError:
             self.parent._material_proxy.addNewMaterials()
             self._model[self.currentModelIndex].add_item(
                 Multilayer(
-                    Layer(self.parent._material_proxy._materials[0], 10.,
-                                    1.2),
-                    f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'))
+                    Layer(
+                        material=self.parent._material_proxy._materials[0],
+                        thicness=10.,
+                        roughness=1.2),
+                    name=f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'
+                )
+            )
         self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
         self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
         self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
@@ -511,14 +542,19 @@ class ModelProxy(QObject):
             to_dup_layers = []
             for i in to_dup.layers:
                 to_dup_layers.append(
-                    Layer(i.material,
-                                    i.thickness.raw_value,
-                                    i.roughness.raw_value,
-                                    name=i.name,
-                                    interface=self.parent._interface))
-            dup_item = RepeatingMultilayer(*to_dup_layers, 
-                                                     to_dup.repetitions.raw_value,
-                                                     name=to_dup.name)
+                    Layer(
+                        material=i.material,
+                        thickness=i.thickness.raw_value,
+                        roughness=i.roughness.raw_value,
+                        name=i.name,
+                        interface=self.parent._interface
+                    )
+                )
+            dup_item = RepeatingMultilayer(
+                *to_dup_layers, 
+                repetitions=to_dup.repetitions.raw_value,
+                name=to_dup.name
+            )
         elif isinstance(to_dup, SurfactantLayer):
             dup_item = SurfactantLayer.from_dict(to_dup.as_dict())
             for i, layer in enumerate(dup_item.layers):
@@ -535,7 +571,10 @@ class ModelProxy(QObject):
                         interface=self.parent._interface
                     )
                 )
-            dup_item = Multilayer(*to_dup_layers, name=to_dup.name)
+            dup_item = Multilayer(
+                *to_dup_layers,
+                name=to_dup.name
+            )
         self._model[self.currentModelIndex].add_item(dup_item)
         self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
         self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
