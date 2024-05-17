@@ -1,5 +1,0 @@
-_name 'Example Project'
-_short_description 'reflectometry, 1D'
-_samples None
-_experiments None
-_modified '17.05.2024 08:24'
