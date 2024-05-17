@@ -7,8 +7,8 @@ build-backend = "hatchling.build"
 # Information about the EasyReflectometryApp project.
 # Note that while the project is called EasyReflectometryApp
 # the application itself is EasyReflectometry. 
-name = "easyreflectometryapp"
-version = "0.0.10-dev"
+name = "EasyReflectometryApp"
+version = "0.0.10"
 description = "Making reflectometry data analysis and modelling easy."
 authors = [
     {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"}, 
@@ -31,7 +31,7 @@ classifiers = [
 requires-python = ">=3.9, <3.10"
 dependencies = [
     'darkdetect>=0.3.1',
-    'easyreflectometry>=1.0.0',
+    'easyreflectometry>=1.0.2',
     'easyApp @ git+https://github.com/easyScience/easyApp.git@develop',
     'matplotlib>=3.4.2',
     'toml>=0.10.2',
