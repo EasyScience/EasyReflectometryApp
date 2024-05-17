@@ -1,5 +1,6 @@
 __author__ = 'github.com/arm61'
 
+import matplotlib
 from matplotlib import cm
 from matplotlib import colors
 
@@ -14,7 +15,7 @@ from easyscience.Utils.io.xml import XMLSerializer
 from easyreflectometry.sample import Material
 from easyreflectometry.sample import MaterialCollection
 
-COLOURMAP = cm.get_cmap('Blues', 100)
+COLOURMAP = matplotlib.colormaps['Blues'].resampled(100)
 MIN_SLD = -3
 MAX_SLD = 15
 
