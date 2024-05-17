@@ -1,7 +1,6 @@
 __author__ = 'github.com/arm61'
 
 import matplotlib
-from matplotlib import cm
 from matplotlib import colors
 
 from PySide2.QtCore import QObject
