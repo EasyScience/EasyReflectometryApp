@@ -15,7 +15,7 @@ from EasyReflectometryApp.Logic.DataStore import DataSet1D
 from EasyReflectometryApp.Logic.DataStore import DataStore
 
 from easyreflectometry.data import load
-
+from easyreflectometry.experiment import PercentageFhwm
 
 class DataProxy(QObject):
 
@@ -98,7 +98,6 @@ class DataProxy(QObject):
             dictionary['model_index'] = self.parent._model_proxy._model.index(experiment.model)
             dictionary['color'] = self.parent._model_proxy._colors[dictionary['model_index']]
             dictionary['model_name'] = self.parent._model_proxy._model[dictionary['model_index']].name
-            dictionary['resolution'] = self.parent._model_proxy._model[dictionary['model_index']].resolution.raw_value 
             dictionary['background'] = self.parent._model_proxy._model[dictionary['model_index']].background.raw_value
             experiment_data_as_obj.append(dictionary)
         return experiment_data_as_obj
@@ -124,9 +123,10 @@ class DataProxy(QObject):
         :param new_resolution: New resolution value
         """
         model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
-        if self.parent._model_proxy._model[model_index].resolution.raw_value == new_resolution:
+        # For now only support for constant resolution function
+        if self.parent._model_proxy._model[model_index].resolution_function.constant == new_resolution:
             return
-        self.parent._model_proxy._model[model_index].resolution = new_resolution
+        self.parent._model_proxy._model[model_index].resolution_function = PercentageFhwm(new_resolution)
         self.parent.layersChanged.emit()
 
     @Slot(float)
@@ -162,7 +162,9 @@ class DataProxy(QObject):
     def currentResolution(self):
         try:
             model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
-            return self.parent._model_proxy._model[model_index].resolution.raw_value
+            # For now only support for constant resolution function
+            const_resolution = self.parent._model_proxy._model[model_index].resolution_function.constant
+            return const_resolution
         except IndexError:
             return 0
 
