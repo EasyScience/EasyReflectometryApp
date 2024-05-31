@@ -4,7 +4,7 @@
 # OR
 # - create installer for Windows 
 # - test installer
-# - for main executeables are deployed
+# - for master executeables are deployed
 # -- offline installers to GitHub releases
 # -- online installers FTP server 
 
@@ -75,7 +75,7 @@ jobs:
         run: python ${{ env.SCRIPTS_PATH }}/MakeInstaller.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
 
       - name: Create online app installers
-        if: github.event_name == 'push' && env.BRANCH_NAME == 'main'
+        if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
         run: python ${{ env.SCRIPTS_PATH }}/MakeOnlineInstaller.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
 
       # - name: Sign the installer
@@ -104,8 +104,8 @@ jobs:
           name: windows
           path: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_Windows_*.zip"
       
-      - name: Upload zipped offline app installer to GitHub releases (main only)
-        if: github.event_name == 'push' && env.BRANCH_NAME == 'main'
+      - name: Upload zipped offline app installer to GitHub releases (master only)
+        if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
         uses: ncipollo/release-action@v1
         with:
           draft: true
@@ -118,6 +118,6 @@ jobs:
           name: ${{ env.RELEASE_TITLE }}
           bodyFile: "RELEASE.md"
 
-      - name: Upload online app installer to repository via FTP (main only)
-        if: github.event_name == 'push' && env.BRANCH_NAME == 'main'
+      - name: Upload online app installer to repository via FTP (master only)
+        if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
         run: python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py ${{ env.BRANCH_NAME }} ${{ secrets.APP_REPO_FTP_PASSWORD }}

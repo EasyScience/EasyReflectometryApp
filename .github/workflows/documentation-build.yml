@@ -10,7 +10,7 @@ name: Build Documentation and Push to gh-pages Branch
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
   workflow_dispatch:
 

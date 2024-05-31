@@ -71,7 +71,7 @@ jobs:
           release: beta
           
       - name: Publish Main Branch to snapcraft stable
-        if: steps.branch-name.outputs.current_branch == 'main'
+        if: steps.branch-name.outputs.current_branch == 'master'
         uses: snapcore/action-publish@v1
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
