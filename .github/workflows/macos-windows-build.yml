@@ -6,7 +6,6 @@
 # - test installer
 # - for master executeables are deployed
 # -- offline installers to GitHub releases
-# -- online installers FTP server 
 
 name: Build Executable for MacOS and Windows
 
@@ -117,7 +116,3 @@ jobs:
           tag: ${{ env.RELEASE_TAG }}
           name: ${{ env.RELEASE_TITLE }}
           bodyFile: "RELEASE.md"
-
-      - name: Upload online app installer to repository via FTP (master only)
-        if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
-        run: python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py ${{ env.BRANCH_NAME }} ${{ secrets.APP_REPO_FTP_PASSWORD }}
