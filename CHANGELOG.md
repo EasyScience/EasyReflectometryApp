@@ -1,6 +1,7 @@
 # CHANGELOG
 ### Changes 0.0.10
 
+- Only internal clean-up
 
 ### Changes 0.0.9
 
