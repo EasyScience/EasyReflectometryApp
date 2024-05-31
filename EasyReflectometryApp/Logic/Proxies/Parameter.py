@@ -2,12 +2,17 @@ __author__ = 'github.com/arm61'
 
 from typing import Union
 from distutils.util import strtobool
-from PySide2.QtCore import QObject, Signal, Property, Slot
-from easyCore.Fitting.Constraints import ObjConstraint, NumericConstraint, FunctionalConstraint
-from easyCore.Utils.io.xml import XMLSerializer
-from easyCore import borg
-from easyCore import np
-from easyCore.Utils.classTools import generatePath
+from PySide2.QtCore import QObject
+from PySide2.QtCore import Signal
+from PySide2.QtCore import Property
+from PySide2.QtCore import Slot
+import numpy as np
+from easyscience.Fitting.Constraints import ObjConstraint
+from easyscience.Fitting.Constraints import NumericConstraint
+from easyscience.Fitting.Constraints import FunctionalConstraint
+from easyscience.Utils.io.xml import XMLSerializer
+from easyscience import borg
+from easyscience.Utils.classTools import generatePath
 
 
 class ParameterProxy(QObject):

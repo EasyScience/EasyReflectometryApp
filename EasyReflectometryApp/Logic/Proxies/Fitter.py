@@ -1,12 +1,14 @@
 __author__ = 'github.com/arm61'
 
-import sys
+from PySide2.QtCore import Signal
+from PySide2.QtCore import QThread
+from PySide2.QtCore import QObject
+from PySide2.QtCore import Property
+from PySide2.QtCore import Slot
 
-from PySide2.QtCore import Signal, QThread, QObject, Property, Slot
+from easyscience import borg
 
-from easyCore import borg
-
-from EasyReflectometry.fitting import Fitter as easyFitter
+from easyreflectometry.fitting import Fitter as easyFitter
 
 
 class Fitter(QThread):

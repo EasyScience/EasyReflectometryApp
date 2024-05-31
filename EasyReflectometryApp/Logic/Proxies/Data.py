@@ -1,17 +1,20 @@
 __author__ = 'github.com/arm61'
 
-import pathlib
 from os import path
 from dicttoxml import dicttoxml
 
-from PySide2.QtCore import QObject, Signal, Property, Slot
+from PySide2.QtCore import QObject
+from PySide2.QtCore import Signal
+from PySide2.QtCore import Property
+from PySide2.QtCore import Slot
 
-from easyCore import np
+import numpy as np
 from easyApp.Logic.Utils.Utils import generalizePath
 
-from EasyReflectometryApp.Logic.DataStore import DataSet1D, DataStore
+from EasyReflectometryApp.Logic.DataStore import DataSet1D
+from EasyReflectometryApp.Logic.DataStore import DataStore
 
-from EasyReflectometry.data import load
+from easyreflectometry.data import load
 
 
 class DataProxy(QObject):

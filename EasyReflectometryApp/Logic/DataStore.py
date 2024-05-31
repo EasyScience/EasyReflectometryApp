@@ -1,14 +1,14 @@
 __author__ = 'github.com/wardsimon'
 
-from abc import abstractmethod
-from typing import Union, overload, TypeVar
+from typing import Union
+from typing import TypeVar
 
-from easyCore import np
-from easyCore.Objects.core import ComponentSerializer
-from easyCore.Utils.io.dict import DictSerializer
+import numpy as np
+from easyscience.Objects.core import ComponentSerializer
+from easyscience.Utils.io.dict import DictSerializer
 from collections.abc import Sequence
 
-from EasyReflectometry.experiment.model import Model
+from easyreflectometry.experiment.model import Model
 
 T = TypeVar('T')
 

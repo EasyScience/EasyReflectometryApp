@@ -1,8 +1,10 @@
 __author__ = 'github.com/arm61'
 
-from PySide2.QtCore import QObject, Signal, Property
+from PySide2.QtCore import QObject
+from PySide2.QtCore import Signal
+from PySide2.QtCore import Property
 
-from easyCore.Utils.UndoRedo import property_stack_deco
+from easyscience.Utils.UndoRedo import property_stack_deco
 
 
 class CalculatorProxy(QObject):
