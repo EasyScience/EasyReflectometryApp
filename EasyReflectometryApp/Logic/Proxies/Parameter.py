@@ -2,12 +2,17 @@ __author__ = 'github.com/arm61'
 
 from typing import Union
 from distutils.util import strtobool
-from PySide2.QtCore import QObject, Signal, Property, Slot
-from easyCore.Fitting.Constraints import ObjConstraint, NumericConstraint, FunctionalConstraint
-from easyCore.Utils.io.xml import XMLSerializer
-from easyCore import borg
-from easyCore import np
-from easyCore.Utils.classTools import generatePath
+from PySide2.QtCore import QObject
+from PySide2.QtCore import Signal
+from PySide2.QtCore import Property
+from PySide2.QtCore import Slot
+import numpy as np
+from easyscience.Fitting.Constraints import ObjConstraint
+from easyscience.Fitting.Constraints import NumericConstraint
+from easyscience.Fitting.Constraints import FunctionalConstraint
+from easyscience.Utils.io.xml import XMLSerializer
+from easyscience import borg
+from easyscience.Utils.classTools import generatePath
 
 
 class ParameterProxy(QObject):
@@ -314,6 +319,7 @@ def get_label(par_path: str) -> str:
     """
     path_split = par_path.split('.')
     model = [(' ').join(path_split[0:1] + ['-'])]
+    # Handle sld and isld
     if path_split[-1][-3:] == 'sld':
         label = (' ').join(par_path.split('.')[-2:])
         label = label[:-3] + 'SLD'
@@ -333,11 +339,9 @@ def get_label(par_path: str) -> str:
     elif path_split[-1] == 'resolution':
         label =  model[0] + ' Resolution (dq/q)'
         unit = '%'
-    elif path_split[-1] == 'solvation':
+    elif path_split[-1] == 'solvent_fraction':
         label = model[0] + ' Fractional '
-        label += par_path.split('.')[-2].split('/')[1]
-        label += ' in '
-        label += par_path.split('.')[-2].split('/')[0]
+        label += par_path.split('.')[-2]
     elif path_split[-1] == 'area_per_molecule':
         label = model[0] + ' ' + par_path.split('.')[-2].split('/')[0]
         label = label + ' APM'

@@ -2,13 +2,12 @@ __author__ = 'github.com/arm61'
 
 import json
 
-from PySide2.QtCore import QObject, Signal, Property, Slot
+from PySide2.QtCore import QObject
+from PySide2.QtCore import Signal
+from PySide2.QtCore import Property
+from PySide2.QtCore import Slot
 
-from easyCore import np
-
-from EasyReflectometry.experiment.model import Model
-from EasyReflectometry.sample.structure import Structure
-from EasyReflectometry.interface import InterfaceFactory
+import numpy as np
 
 class SimulationProxy(QObject):
 

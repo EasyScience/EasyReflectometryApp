@@ -1,9 +1,12 @@
 __author__ = 'github.com/arm61'
 
-from PySide2.QtCore import QObject, Signal, Property, Slot
+from PySide2.QtCore import QObject
+from PySide2.QtCore import Signal
+from PySide2.QtCore import Property
+from PySide2.QtCore import Slot
 
-from easyCore import np
-from easyCore.Utils.io.xml import XMLSerializer
+import numpy as np
+from easyscience.Utils.io.xml import XMLSerializer
 
 
 class StateProxy(QObject):

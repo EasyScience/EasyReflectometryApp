@@ -1,14 +1,20 @@
 __author__ = "github.com/AndrewSazonov"
 __version__ = '0.0.1'
 
-import os, sys
+import os
+import sys
 from typing import List
-import importlib
 import glob
-import PySide2, shiboken2
-import refnx, refl1d, periodictable
-import easyCore, EasyReflectometry, easyApp
-import Functions, Config
+import PySide2
+import shiboken2
+import refnx
+import refl1d
+import periodictable
+import easyscience
+import easyreflectometry
+import easyApp
+import Functions
+import Config
 from PyInstaller.__main__ import run as pyInstallerMain
 
 
@@ -38,8 +44,8 @@ def addedData() -> List[str]:
             {'from': refnx.__path__[0], 'to': 'refnx'},
             {'from': refl1d.__path__[0], 'to': 'refl1d'},
             {'from': periodictable.__path__[0], 'to': 'periodictable'},
-            {'from': easyCore.__path__[0], 'to': 'easyCore'},
-            {'from': EasyReflectometry.__path__[0], 'to': 'EasyReflectometryLib'},
+            {'from': easyscience.__path__[0], 'to': 'easyscience'},
+            {'from': easyreflectometry.__path__[0], 'to': 'easyreflectometryLib'},
             {'from': easyApp.__path__[0], 'to': 'easyApp'},
             {'from': 'utils.py', 'to': '.'},
             {'from': 'pyproject.toml', 'to': '.'}]
