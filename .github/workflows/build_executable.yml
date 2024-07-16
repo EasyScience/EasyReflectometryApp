@@ -64,19 +64,19 @@ jobs:
       - name: Create offline app installers
         run: python ${{ env.SCRIPTS_PATH }}/MakeInstaller.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
 
-      - name: Create online app installers
-        if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
-        run: python ${{ env.SCRIPTS_PATH }}/MakeOnlineInstaller.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
+      #- name: Create online app installers
+      #  if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
+      #  run: python ${{ env.SCRIPTS_PATH }}/MakeOnlineInstaller.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
 
       # - name: Sign the installer
       #   run: python ${{ env.SCRIPTS_PATH }}/Signatures.py ${{ secrets.BINARY_SIGN_WIN }} ${{ secrets.CERT_ZIP_PASS }}
 
-      - name: Install app
-        run: python ${{ env.SCRIPTS_PATH }}/InstallApp.py
+      #- name: Install app
+      #  run: python ${{ env.SCRIPTS_PATH }}/InstallApp.py
 
-      - name: Run app in testmode and quit
-        if: runner.os == 'macOS'
-        run: python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
+      #- name: Run app in testmode and quit
+      #  if: runner.os == 'macOS'
+      #  run: python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
 
       - name: Create zip archive of offline app installer
         run: python ${{ env.SCRIPTS_PATH }}/ZipArtifacts.py ${{ env.BRANCH_NAME }}
@@ -109,6 +109,6 @@ jobs:
           name: ${{ env.RELEASE_TITLE }}
           bodyFile: "RELEASE.md"
 
-      - name: Upload online app installer to repository via FTP (master only)
-        if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
-        run: python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py ${{ env.BRANCH_NAME }} ${{ secrets.APP_REPO_FTP_PASSWORD }}
+      #- name: Upload online app installer to repository via FTP (master only)
+      #  if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
+      #  run: python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py ${{ env.BRANCH_NAME }} ${{ secrets.APP_REPO_FTP_PASSWORD }}
