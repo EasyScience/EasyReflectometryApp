@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2019, macos-12]
+        os: [macos-12]
 
     steps:
       - name: Check-out EasyReflectometry repository
@@ -87,14 +87,14 @@ jobs:
         with:
           name: macOS
           path: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_macOS_*.zip"
-      
+
       - name: Upload installer to artifacts (Windows)
         uses: actions/upload-artifact@v3
         if: runner.os == 'Windows'
         with:
           name: windows
           path: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_Windows_*.zip"
-      
+
       - name: Upload zipped offline app installer to GitHub releases (master only)
         if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
         uses: ncipollo/release-action@v1
