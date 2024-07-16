@@ -1,18 +1,18 @@
 [build-system]
-# Use hatch to build the application. 
+# Use hatch to build the application.
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
 # Information about the EasyReflectometryApp project.
 # Note that while the project is called EasyReflectometryApp
-# the application itself is EasyReflectometry. 
+# the application itself is EasyReflectometry.
 name = "EasyReflectometry"
 version = "0.0.6-beta"
 description = "Making reflectometry data analysis and modelling easy."
 authors = [
-    {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"}, 
-    {name = "Andrew Sazonov"}, 
+    {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"},
+    {name = "Andrew Sazonov"},
     {name = "Simon Ward"}
 ]
 maintainers = [
@@ -32,7 +32,7 @@ dependencies = [
     'darkdetect>=0.3.1',
     'pyobjc-framework-cocoa>=7.1; platform_system == "Darwin"',
     'matplotlib==3.4.2',
-    'EasyReflectometryLib @ git+https://github.com/easyScience/EasyReflectometryLib.git@develop',
+    'EasyReflectometryLib @ git+https://github.com/easyScience/EasyReflectometryLib.git@0.0.6rc_m2',
     'easyApp @ git+https://github.com/easyScience/easyApp.git@develop',
     'toml>=0.10.2'
 ]
@@ -42,7 +42,7 @@ dependencies = [
 # application as a part of a Github Action.
 ci = [
     'pyinstaller==4.5.1',
-    'pywin32-ctypes>=0.2.0; platform_system == "win32"', 
+    'pywin32-ctypes>=0.2.0; platform_system == "win32"',
     'pypiwin32>=223; platform_system == "win32"',
     'pefile>=2022.5.30; platform_system == "win32"',
     'dephell_licenses>=0.1.7',
@@ -61,7 +61,7 @@ changelog = 'https://github.com/easyScience/EasyReflectometryApp/blob/main/CHANG
 
 [project.scripts]
 # This allows EasyReflectometry to be run from the command
-# line after being installed by pip. 
+# line after being installed by pip.
 EasyReflectometry = "EasyReflectometryApp.main:main"
 
 [project.gui-scripts]
@@ -88,9 +88,9 @@ source = ['EasyReflectometryApp']
 ##########################################################
 ##########################################################
 
-# The content in this section is related to how the 
-# application is built on the Github action. Users of 
-# EasyReflectometry shouldn't worry about this content. 
+# The content in this section is related to how the
+# application is built on the Github action. Users of
+# EasyReflectometry shouldn't worry about this content.
 
 [ci.icon]
 dir = ['Gui', 'Resources', 'Logo']
