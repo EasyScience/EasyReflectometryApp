@@ -34,7 +34,8 @@ dependencies = [
     'matplotlib==3.4.2',
     'EasyReflectometryLib @ git+https://github.com/easyScience/EasyReflectometryLib.git@0.0.6rc_m2',
     'easyApp @ git+https://github.com/easyScience/easyApp.git@develop',
-    'toml>=0.10.2'
+    'toml>=0.10.2',
+    'numpy<2'
 ]
 
 [project.optional-dependencies]
