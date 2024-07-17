@@ -33,9 +33,9 @@ dependencies = [
     'easyApp @ git+https://github.com/easyScience/easyApp.git@develop',
     'matplotlib>=3.4.2',
     'toml>=0.10.2',
-    'numpy<2',
-    'pyobjc-core>=7.1; platform_system == "Darwin"',
-    'pyobjc-framework-cocoa>=7.1; platform_system == "Darwin"'
+    'numpy<2'#,
+    #'pyobjc-core>=7.1; platform_system == "Darwin"',
+    #'pyobjc-framework-cocoa>=7.1; platform_system == "Darwin"'
 ]
 
 [project.optional-dependencies]

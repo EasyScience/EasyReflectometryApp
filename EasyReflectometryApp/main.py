@@ -27,8 +27,8 @@ def proj():
     try:
         return toml.load(os.path.join(os.path.split(__file__)[0], project_fname))
     except FileNotFoundError:
-        up_directory = os.path.join(os.path.split(__file__)[0], '..') 
-        return toml.load(os.path.join(up_directory, project_fname)) 
+        up_directory = os.path.join(os.path.split(__file__)[0], '..')
+        return toml.load(os.path.join(up_directory, project_fname))
 
 CONFIG = proj()
 
@@ -53,7 +53,7 @@ def main():
     # Paths
     project_name = CONFIG['project']['name'] + 'App'
     current_path = EasyReflectometryApp.__path__[0]
-    
+
     package_path = os.path.join(current_path, f'{project_name}')
     if not os.path.exists(package_path):
         package_path = current_path
@@ -104,23 +104,23 @@ def main():
     # Load the root QML file
     engine.load(main_qml_path)
 
-    # Customize app window titlebar
-    if platform.system() == "Darwin":
-        import ctypes, objc, Cocoa
-
-        # Root application window
-        root_obj = engine.rootObjects()
-        if not root_obj:
-            sys.exit(-1)
-        root_window = root_obj[0]
-
-        ptr = int(root_window.winId())
-        view = objc.objc_object(c_void_p=ctypes.c_void_p(ptr))
-        window = view._.window
-
-        window.setStyleMask_(window.styleMask() | Cocoa.NSFullSizeContentViewWindowMask)
-        window.setTitlebarAppearsTransparent_(True)
-        window.setTitleVisibility_(Cocoa.NSWindowTitleHidden)
+    ## Customize app window titlebar
+    #if platform.system() == "Darwin":
+    #    import ctypes, objc, Cocoa
+    #
+    #    # Root application window
+    #    root_obj = engine.rootObjects()
+    #    if not root_obj:
+    #        sys.exit(-1)
+    #    root_window = root_obj[0]
+    #
+    #    ptr = int(root_window.winId())
+    #    view = objc.objc_object(c_void_p=ctypes.c_void_p(ptr))
+    #    window = view._.window
+    #
+    #    window.setStyleMask_(window.styleMask() | Cocoa.NSFullSizeContentViewWindowMask)
+    #    window.setTitlebarAppearsTransparent_(True)
+    #    window.setTitleVisibility_(Cocoa.NSWindowTitleHidden)
 
     # Event loop
     if not engine.rootObjects():
