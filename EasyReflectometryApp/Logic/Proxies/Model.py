@@ -325,16 +325,16 @@ class ModelProxy(QObject):
 
     @Property(bool, notify=modelChanged)
     def constrainApm(self):
-        if hasattr(self._model[self.currentModelIndex].sample[self.currentItemsIndex], 'constrain_apm'):
-            return self._model[self.currentModelIndex].sample[self.currentItemsIndex].constrain_apm
+        if hasattr(self._model[self.currentModelIndex].sample[self.currentItemsIndex], 'constrain_area_per_molecule'):
+            return self._model[self.currentModelIndex].sample[self.currentItemsIndex].constrain_area_per_molecule
         else:
             return
 
     @constrainApm.setter
     def constrainApm(self, x: bool):
-        if self._model[self.currentModelIndex].sample[self.currentItemsIndex].constrain_apm == x:
+        if self._model[self.currentModelIndex].sample[self.currentItemsIndex].constrain_area_per_molecule == x:
             return 
-        self._model[self.currentModelIndex].sample[self.currentItemsIndex].constrain_apm = x
+        self._model[self.currentModelIndex].sample[self.currentItemsIndex].constrain_area_per_molecule = x
         self.parent.layersChanged.emit()
 
     @Property(bool, notify=modelChanged)
@@ -866,7 +866,7 @@ class ModelProxy(QObject):
         :param id: New apm value
         """
         layer = self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[self.currentLayersIndex]
-        if layer.area_per_molecule.raw_value == apm:
+        if layer.area_per_molecule == apm:
             return
         layer.area_per_molecule = apm
         self.parent.layersChanged.emit()
@@ -905,9 +905,9 @@ class ModelProxy(QObject):
         
         :param structure: Chemical structure
         """
-        if self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[self.currentLayersIndex].chemical_structure == structure:
+        if self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[self.currentLayersIndex].molecular_formula == structure:
             return 
-        self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[self.currentLayersIndex].chemical_structure = structure
+        self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[self.currentLayersIndex].molecular_formula = structure
         self.parent.layersChanged.emit()
 
     @Slot(str)
