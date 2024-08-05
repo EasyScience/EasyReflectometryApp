@@ -23,7 +23,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2019, flyci-macos-14-m2]
+        os: [windows-2019, macos-latest]
 
     steps:
       - name: Check-out EasyReflectometry repository
