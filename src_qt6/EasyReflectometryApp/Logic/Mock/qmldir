@@ -1,0 +1,6 @@
+module MockLogic
+
+singleton BackendProxy BackendProxy.qml
+singleton Project Project.qml
+singleton Report Report.qml
+singleton Status Status.qml
