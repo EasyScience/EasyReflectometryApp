@@ -16,17 +16,17 @@ EaComponents.TableView {
         property int layersIndex: ExGlobals.Constants.proxy.model.currentLayersIndex + 1
 
         xml: ExGlobals.Constants.proxy.model.layersAsXml
-        query: `/root/item[${itemsTable.currentIndex + 1}]/layers/item`
+        query: `/data/item[${itemsTable.currentIndex + 1}]/layers`
 
-        XmlRole { name: "formula"; query: "chemical_structure/string()" }
+        XmlRole { name: "formula"; query: "molecular_formula/string()" }
         XmlRole { name: "thick"; query: "thickness/value/number()" }
         XmlRole { name: "thick_enabled"; query: "thickness/enabled/string()" }
         XmlRole { name: "rough"; query: "roughness/value/number()" }
         XmlRole { name: "rough_enabled"; query: "roughness/enabled/string()" }
-        XmlRole { name: "apm"; query: "area_per_molecule/value/number()" }
-        XmlRole { name: "apm_enabled"; query: "area_per_molecule/enabled/string()" }
-        XmlRole { name: "solvation"; query: "solvation/value/number()" }
-        XmlRole { name: "solvation_enabled"; query: "solvation/enabled/string()" }
+        XmlRole { name: "apm"; query: "area_per_molecule/number()" }
+//        XmlRole { name: "apm_enabled"; query: "area_per_molecule/enabled/string()" }
+        XmlRole { name: "solvation"; query: "solvent_fraction/value/number()" }
+//        XmlRole { name: "solvation_enabled"; query: "solvation/enabled/string()" }
         XmlRole { name: "solvent"; query: "solvent/name/string()"}
     }
 
@@ -68,8 +68,8 @@ EaComponents.TableView {
             horizontalAlignment: Text.AlignHCenter
             width: EaStyle.Sizes.fontPixelSize * 4.5
             headerText: "Solvation"
-            enabled: model.solvation_enabled == "True"
-            text: (isNaN(surfactantModel.solvation)) ? '--' : surfactantModel.solvation
+//            enabled: model.solvation_enabled == "True"
+            text: (isNaN(surfactantModel.solvation)) ? '--' : parseFloat(surfactantModel.solvation).toFixed(2)
             onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersSolvation(text)
         }
 
@@ -78,8 +78,8 @@ EaComponents.TableView {
             horizontalAlignment: Text.AlignHCenter
             width: EaStyle.Sizes.fontPixelSize * 4.0
             headerText: "APM/Å<sup>2</sup>"
-            enabled: model.apm_enabled == "True"
-            text: (isNaN(surfactantModel.apm)) ? '--' : surfactantModel.apm
+//            enabled: model.apm_enabled == "True"
+            text: (isNaN(surfactantModel.apm)) ? '--' : parseFloat(surfactantModel.apm).toFixed(2)
             onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentItemApm(text)
         }
 
