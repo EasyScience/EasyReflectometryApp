@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2024 EasyApp contributors
+// SPDX-FileCopyrightText: 2024 EasyReflectometryApp contributors
 // SPDX-License-Identifier: BSD-3-Clause
-// © 2024 Contributors to the EasyApp project <https://github.com/easyscience/EasyApp>
+// © 2024 Contributors to the EasyReflectometryApp project <https://github.com/easyscience/EasyReflectometryApp>
 
 pragma Singleton
 
@@ -9,21 +9,21 @@ import QtQuick
 QtObject {
 
     readonly property var about: {
-        'name': 'EasyIntermadiatePy',
+        'name': 'EasyReflectometry',
         'namePrefix': 'Easy',
-        'nameSuffix': 'IntermadiatePy',
+        'nameSuffix': 'Reflectometry',
         'namePrefixForLogo': 'easy',
-        'nameSuffixForLogo': 'intermadiatepy',
-        'homePageUrl': 'https://github.com/EasyScience/EasyExample',
-        'issuesUrl': 'https://github.com/EasyScience/EasyExample/issues',
-        'licenseUrl': 'https://github.com/EasyScience/EasyExample/LICENCE.md',
-        'dependenciesUrl': 'https://github.com/EasyScience/EasyExample/DEPENDENCIES.md',
-        'version': '2.0.1',
+        'nameSuffixForLogo': 'reflectometry',
+        'homePageUrl': 'from ApplicationInfo.qml',
+        'issuesUrl': 'from ApplicationInfo.qml',
+        'licenseUrl': 'from ApplicationInfo.qml',
+        'dependenciesUrl': 'from ApplicationInfo.qml',
+        'version': 'from ApplicationInfo.qml',
         'icon': Qt.resolvedUrl('../Resources/Logos/App.svg'),
         'date': new Date().toISOString().slice(0,10),
         'developerYearsFrom': '2019',
         'developerYearsTo': '2024',
-        'description': 'An example of how to build the basic application using EasyApp module.',
+        'description': 'Making reflectometry data analysis and modelling easy.',
         'developerIcons': [
             {
                 'url': 'https://ess.eu',
