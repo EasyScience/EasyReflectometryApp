@@ -62,7 +62,6 @@ QtObject {
     readonly property var project: QtObject {
         readonly property bool created: backendProxy.project.created
         readonly property var info: backendProxy.project.info
-        readonly property var examples: backendProxy.project.examples
 
         function create() { backendProxy.project.create() }
         function save() { backendProxy.project.save() }

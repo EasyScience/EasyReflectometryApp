@@ -1,58 +1,19 @@
-# SPDX-FileCopyrightText: 2024 EasyApp contributors
-# SPDX-License-Identifier: BSD-3-Clause
-# © 2024 Contributors to the EasyApp project <https://github.com/easyscience/EasyApp>
-
 import time
-from PySide6.QtCore import QObject, Signal, Slot, Property
+from PySide6.QtCore import QObject
+from PySide6.QtCore import Signal
+from PySide6.QtCore import Slot
+from PySide6.QtCore import Property
 
 from EasyApp.Logic.Logging import console
 from .helpers import IO
 
 
-_PY_INFO = {
-    'name': 'Super duper project',
-    'description': 'Default project description from Py proxy',
-    'location': '/path to the project',
-    'creationDate': ''
+_DEFAULT_INFO = {
+    'name': 'Name',
+    'description': 'Description',
+    'location': 'Folder',
+    'creationDate': '',
 }
-
-_PY_EXAMPLES = [
-    {
-        'description': 'neutrons, powder, constant wavelength, HRPT@PSI',
-        'name': 'La0.5Ba0.5CoO3 (HRPT)',
-        'path': ':/Examples/La0.5Ba0.5CoO3_HRPT@PSI/project.cif'
-    },
-    {
-        'description': 'neutrons, powder, constant wavelength, HRPT@PSI',
-        'name': 'La0.5Ba0.5CoO3-Raw (HRPT)',
-        'path': ':/Examples/La0.5Ba0.5CoO3-Raw_HRPT@PSI/project.cif'
-    },
-    {
-        'description': 'neutrons, powder, constant wavelength, HRPT@PSI, 2 phases',
-        'name': 'La0.5Ba0.5CoO3-Mult-Phases (HRPT)',
-        'path': ':/Examples/La0.5Ba0.5CoO3-Mult-Phases_HRPT@PSI/project.cif'
-    },
-    {
-        'description': 'neutrons, powder, constant wavelength, D20@ILL',
-        'name': 'Co2SiO4 (D20)',
-        'path': ':/Examples/Co2SiO4_D20@ILL/project.cif'
-    },
-    {
-        'description': 'neutrons, powder, constant wavelength, G41@LLB',
-        'name': 'Dy3Al5O12 (G41)',
-        'path': ':/Examples/Dy3Al5O12_G41@LLB/project.cif'
-    },
-    {
-        'description': 'neutrons, powder, constant wavelength, D1A@ILL',
-        'name': 'PbSO4 (D1A)',
-        'path': ':/Examples/PbSO4_D1A@ILL/project.cif'
-    },
-    {
-        'description': 'neutrons, powder, constant wavelength, 3T2@LLB',
-        'name': 'LaMnO3 (3T2)',
-        'path': ':/Examples/LaMnO3_3T2@LLB/project.cif'
-    }
-]
 
 
 class Project(QObject):
@@ -64,42 +25,37 @@ class Project(QObject):
         super().__init__(parent)
         self._proxy = parent
         self._created = False
-        self._info = _PY_INFO
-        self._examples = _PY_EXAMPLES
+        self._info = _DEFAULT_INFO
 
     @Property(bool, notify=createdChanged)
-    def created(self):
+    def created(self) -> bool:
         return self._created
 
     @created.setter
-    def created(self, newValue):
-        if self._created == newValue:
+    def created(self, new_value: bool) -> None:
+        if self._created == new_value:
             return
-        self._created = newValue
+        self._created = new_value
         self.createdChanged.emit()
 
     @Property('QVariant', notify=infoChanged)
-    def info(self):
+    def info(self) -> dict[str:str]:
         return self._info
 
     @info.setter
-    def info(self, newValue):
-        if self._info == newValue:
+    def info(self, new_dict: dict[str:str]) -> None:
+        if self._info == new_dict:
             return
-        self._info = newValue
+        self._info = new_dict
         self.infoChanged.emit()
 
-    @Property('QVariant', constant=True)
-    def examples(self):
-        return self._examples
-
     @Slot()
-    def create(self):
+    def create(self) -> None:
         console.debug(IO.formatMsg('main', f'Creating project {self.info["name"]}'))
         self.info['creationDate'] = time.strftime("%d %b %Y %H:%M", time.localtime())
         self.infoChanged.emit()
         self.created = True
 
     @Slot()
-    def save(self):
+    def save(self) -> None:
         console.debug(IO.formatMsg('main', f'Saving project {self.info["name"]}'))
