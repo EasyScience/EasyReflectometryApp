@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2024 EasyReflectometryApp contributors
-// SPDX-License-Identifier: BSD-3-Clause
-// © 2024 Contributors to the EasyReflectometryApp project <https://github.com/easyscience/EasyReflectometryApp>
-
 pragma Singleton
 
 import QtQuick
@@ -10,20 +6,17 @@ QtObject {
 
     readonly property var about: {
         'name': 'EasyReflectometry',
-        'namePrefix': 'Easy',
-        'nameSuffix': 'Reflectometry',
         'namePrefixForLogo': 'easy',
         'nameSuffixForLogo': 'reflectometry',
-        'homePageUrl': 'from ApplicationInfo.qml',
-        'issuesUrl': 'from ApplicationInfo.qml',
-        'licenseUrl': 'from ApplicationInfo.qml',
-        'dependenciesUrl': 'from ApplicationInfo.qml',
-        'version': 'from ApplicationInfo.qml',
+        'homePageUrl': 'https://easyreflectometry.org',
+        'issuesUrl': 'https://github.com/EasyScience/EasyReflectometryApp/issues',
+        'licenseUrl': 'https://github.com/EasyScience/EasyReflectometryApp/blob/master/LICENSE.md',
+        'documentationUrl': 'https://easyscience.github.io/EasyReflectometryApp/',
+        'dependenciesUrl': 'https://github.com/EasyScience/EasyReflectometryApp/blob/master/DEPENDENCIES.md',
         'icon': Qt.resolvedUrl('../Resources/Logos/App.svg'),
-        'date': new Date().toISOString().slice(0,10),
         'developerYearsFrom': '2019',
         'developerYearsTo': '2024',
-        'description': 'Making reflectometry data analysis and modelling easy.',
+        'description': 'EasyReflectometry is a scientific software for \nmodelling and analysis of \nneutron and x-ray reflecometry data. \n\nEasyReflectometry is build by ESS DMSC in \nCopenhagen, Denmark.',
         'developerIcons': [
             {
                 'url': 'https://ess.eu',

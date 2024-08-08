@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2024 EasyApp contributors
-// SPDX-License-Identifier: BSD-3-Clause
-// © 2024 Contributors to the EasyApp project <https://github.com/easyscience/EasyApp>
-
 import QtQuick
 
 import EasyApp.Gui.Globals as EaGlobals
@@ -20,8 +16,8 @@ EaComponents.AboutDialog {
 
     appPrefixName: Globals.ApplicationInfo.about.namePrefixForLogo
     appSuffixName: Globals.ApplicationInfo.about.nameSuffixForLogo
-    appVersion: Globals.ApplicationInfo.about.version
-    appDate: Globals.ApplicationInfo.about.date
+    appVersion: Globals.BackendProxy.home.versionNumber
+    appDate: Globals.BackendProxy.home.versionDate
 
     eulaUrl: Globals.ApplicationInfo.about.licenseUrl
     oslUrl: Globals.ApplicationInfo.about.dependenciesUrl

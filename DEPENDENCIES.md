@@ -5,6 +5,7 @@ The following Open Source projects are used in EasyReflectometry (_if there are 
 ## Computational libraries
 
 * [refnx](https://refnx.readthedocs.io/en/latest/): [BSD-3](https://github.com/refnx/refnx/blob/master/LICENSE) 
+* [refl1d](https://refl1d.readthedocs.io/en/latest/): [Public Domain](https://github.com/reflectometry/refl1d/blob/master/LICENSE.txt) 
 * [bornagain](https://www.bornagainproject.org): [GNU General Public License (GPL)](http://www.gnu.org/licenses/gpl-3.0.html)
 
 ## Visualization libraries

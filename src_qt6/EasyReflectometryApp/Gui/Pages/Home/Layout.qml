@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2024 EasyApp contributors
-// SPDX-License-Identifier: BSD-3-Clause
-// © 2024 Contributors to the EasyApp project <https://github.com/easyscience/EasyApp>
-
 import QtQuick
 
 import EasyApp.Gui.Style as EaStyle
@@ -59,7 +55,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
 
             text: {
-                return qsTr('Version') + ` ${Globals.ApplicationInfo.about.version} (${Globals.ApplicationInfo.about.date})`
+                return qsTr('Version') + ` ${Globals.BackendProxy.home.versionNumber} (${Globals.BackendProxy.home.versionDate})`
             }
         }
         // Application version
@@ -101,14 +97,6 @@ Item {
                     onClicked: EaGlobals.Vars.showAppAboutDialog = true
                     Loader { source: 'Popups/About.qml' }
                 }
-                EaElements.Button {
-                    text: qsTr('Online documentation')
-                    onClicked: Qt.openUrlExternally('https://github.com/EasyScience/EasyApp')
-                }
-                EaElements.Button {
-                    text: qsTr('Get in touch online')
-                    onClicked: console.debug(`Button clicked: ${text}`)
-                }
             }
             // Left links
 
@@ -117,16 +105,8 @@ Item {
                 spacing: EaStyle.Sizes.fontPixelSize
 
                 EaElements.Button {
-                    text: qsTr('Tutorial') + ' 1: ' + qsTr('App interface')
-                    onClicked: console.debug(`Button clicked: ${text}`)
-                }
-                EaElements.Button {
-                    text: qsTr('Tutorial') + ' 3: ' + qsTr('Basic usage')
-                    onClicked: console.debug(`Button clicked: ${text}`)
-                }
-                EaElements.Button {
-                    text: qsTr('Tutorial') + ' 3: ' + qsTr('Advanced usage')
-                    onClicked: console.debug(`Button clicked: ${text}`)
+                    text: qsTr('Online documentation')
+                    onClicked: Qt.openUrlExternally(Globals.ApplicationInfo.about.documentationUrl)
                 }
             }
             // Right links
