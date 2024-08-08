@@ -106,7 +106,7 @@ Item {
 
                 EaElements.Button {
                     text: qsTr('Online documentation')
-                    onClicked: Qt.openUrlExternally(Globals.ApplicationInfo.about.documentationUrl)
+                    onClicked: Qt.openUrlExternally(Globals.BackendProxy.home.documentationUrl)
                 }
             }
             // Right links

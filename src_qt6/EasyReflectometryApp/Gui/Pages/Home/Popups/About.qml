@@ -12,15 +12,15 @@ EaComponents.AboutDialog {
     onClosed: EaGlobals.Vars.showAppAboutDialog = false
 
     appIconPath: Globals.ApplicationInfo.about.icon
-    appUrl: Globals.ApplicationInfo.about.homePageUrl
 
     appPrefixName: Globals.ApplicationInfo.about.namePrefixForLogo
     appSuffixName: Globals.ApplicationInfo.about.nameSuffixForLogo
     appVersion: Globals.BackendProxy.home.versionNumber
     appDate: Globals.BackendProxy.home.versionDate
 
-    eulaUrl: Globals.ApplicationInfo.about.licenseUrl
-    oslUrl: Globals.ApplicationInfo.about.dependenciesUrl
+    appUrl: Globals.BackendProxy.home.homepageUrl
+    eulaUrl: Globals.BackendProxy.home.licenseUrl
+    oslUrl: Globals.BackendProxy.home.dependenciesUrl
 
     description: Globals.ApplicationInfo.about.description
     developerIcons: Globals.ApplicationInfo.about.developerIcons

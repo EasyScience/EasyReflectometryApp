@@ -48,6 +48,11 @@ QtObject {
     readonly property var home: QtObject {
         readonly property string versionNumber: backendProxy.home.version.number
         readonly property string versionDate: backendProxy.home.version.date
+        readonly property string homepageUrl: backendProxy.home.urls.homepage
+        readonly property string issuesUrl: backendProxy.home.urls.issues
+        readonly property string licenseUrl: backendProxy.home.urls.license
+        readonly property string documentationUrl: backendProxy.home.urls.documentation
+        readonly property string dependenciesUrl: backendProxy.home.urls.dependencies
     }
 
     ///////////////
