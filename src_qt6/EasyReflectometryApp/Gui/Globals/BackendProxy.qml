@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2024 EasyApp contributors
-// SPDX-License-Identifier: BSD-3-Clause
-// © 2024 Contributors to the EasyApp project <https://github.com/easyscience/EasyApp>
-
 pragma Singleton
 
 import QtQuick
@@ -43,6 +39,20 @@ QtObject {
         readonly property string calculator: backendProxy.status.calculator
         readonly property string minimizer: backendProxy.status.minimizer
         readonly property string variables: backendProxy.status.variables
+    }
+
+    ///////////////
+    // Home page
+    ///////////////
+
+    readonly property var home: QtObject {
+        readonly property string versionNumber: backendProxy.home.version.number
+        readonly property string versionDate: backendProxy.home.version.date
+        readonly property string homepageUrl: backendProxy.home.urls.homepage
+        readonly property string issuesUrl: backendProxy.home.urls.issues
+        readonly property string licenseUrl: backendProxy.home.urls.license
+        readonly property string documentationUrl: backendProxy.home.urls.documentation
+        readonly property string dependenciesUrl: backendProxy.home.urls.dependencies
     }
 
     ///////////////

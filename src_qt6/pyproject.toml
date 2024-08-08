@@ -5,6 +5,7 @@ build-backend = 'hatchling.build'
 [project]
 name = 'EasyReflectometryApp'
 version = '1.0.0'
+release_data = '24 December 2024'
 description = "Making reflectometry data analysis and modelling easy."
 authors = [
     {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"}, 
@@ -30,12 +31,15 @@ requires-python = '>=3.10'
 dependencies = [
   'PySide6>=6.6,<6.8',
   'EasyApp @ git+https://github.com/EasyScience/EasyApp.git@examples',
+  'toml',
 ]
 
 [project.urls]
 homepage = 'https://easyreflectometry.org'
-documentation = 'https://easyreflectometry.org'
-changelog = 'https://github.com/easyScience/EasyReflectometryApp/blob/main/CHANGELOG.md'
+issues = 'https://github.com/EasyScience/EasyReflectometryApp/issues'
+license = 'https://github.com/EasyScience/EasyReflectometryApp/blob/master/LICENSE.md'
+documentation = 'https://easyscience.github.io/EasyReflectometryApp/'
+dependencies = 'https://github.com/EasyScience/EasyReflectometryApp/blob/master/DEPENDENCIES.md'
 
 [tool.hatch.build.targets.wheel]
 packages = ['src/EasyReflectometryApp']
