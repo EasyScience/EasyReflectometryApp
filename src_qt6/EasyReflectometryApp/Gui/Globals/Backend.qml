@@ -2,12 +2,12 @@ pragma Singleton
 
 import QtQuick
 
-import Logic.Mock as MockLogic
+import Backend.Mock as MockBackend
 
 
 // If the backend_proxy_py object is created in main.py and exposed to qml, it is used as
 // realBackendPy to access the necessary backend properties and methods. Otherwise, the mock
-// proxy defined in MockLogic/Backend.qml with hardcoded data is used.
+// proxy defined in MockBackend/Backend.qml with hardcoded data is used.
 // The assumption here is that the real backend proxy and the mock proxy have the same API.
 
 QtObject {
@@ -16,7 +16,7 @@ QtObject {
     // Backend proxy
     ///////////////
 
-    readonly property var mockBackendQml: MockLogic.Backend
+    readonly property var mockBackendQml: MockBackend.Backend
 
     readonly property var realBackendPy: typeof backend_proxy_py !== 'undefined' &&
                                               backend_proxy_py !== null ?
