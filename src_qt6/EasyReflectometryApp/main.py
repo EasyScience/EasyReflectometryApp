@@ -12,7 +12,7 @@ from PySide6.QtCore import qInstallMessageHandler
 
 from EasyApp.Logic.Logging import console
 
-from Logic.Py.backend_proxy import BackendProxy
+from Backend.Py.backend import Backend
 
 CURRENT_DIR = Path(__file__).parent                                 # path to qml components of the current project
 EASYAPP_DIR = CURRENT_DIR / '..' / '..' / '..' / 'EasyApp' / 'src'  # path to qml components of the easyapp module
@@ -29,9 +29,9 @@ if __name__ == '__main__':
     engine = QQmlApplicationEngine()
     console.debug(f'QML application engine created {engine}')
 
-    backend_proxy = BackendProxy()
-    engine.rootContext().setContextProperty('backend_proxy_py', backend_proxy)
-    console.debug('backend_proxy object exposed to QML as backend_proxy_py')
+    backend = Backend()
+    engine.rootContext().setContextProperty('backend_py', backend)
+    console.debug('backend object exposed to QML as backend_py')
 
     engine.addImportPath(EASYAPP_DIR)
     engine.addImportPath(CURRENT_DIR)

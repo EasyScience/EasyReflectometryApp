@@ -5,7 +5,7 @@ import QtQuick
 import Backend.Mock as MockBackend
 
 
-// If the backend_proxy_py object is created in main.py and exposed to qml, it is used as
+// If the backend_py object is created in main.py and exposed to qml, it is used as
 // realBackendPy to access the necessary backend properties and methods. Otherwise, the mock
 // proxy defined in MockBackend/Backend.qml with hardcoded data is used.
 // The assumption here is that the real backend proxy and the mock proxy have the same API.
@@ -16,17 +16,14 @@ QtObject {
     // Backend proxy
     ///////////////
 
-    readonly property var mockBackendQml: MockBackend.Backend
+    readonly property var mockBackend: MockBackend.Backend
 
-    readonly property var realBackendPy: typeof backend_proxy_py !== 'undefined' &&
-                                              backend_proxy_py !== null ?
-                                                  backend_proxy_py :
-                                                  undefined
+    readonly property var pyBackend: typeof backend_py !== 'undefined' && backend_py !== null ? backend_py : undefined
 
     // This property is used to access the backend proxy object from GUI components.
-    // Sets Backend to realBackendPy if this property is defined, otherwise sets it to
-    // mockBackendQml
-    readonly property var backend: realBackendPy ?? mockBackendQml
+    // Sets Backend to pyBackend if this property is defined, otherwise sets it to
+    // mockBackend
+    readonly property var backend: pyBackend ?? mockBackend
 
     /////////////
     // Status bar
