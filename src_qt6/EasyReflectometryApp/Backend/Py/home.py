@@ -9,14 +9,14 @@ PYPROJECT = toml.load(PATH_PYPROJECT)
 class Home(QObject):
 
     @Property('QVariant', constant=True)
-    def version(self):
+    def version(self) -> dict[str:str]:
         return {
             'number': PYPROJECT['project']['version'],
             'date': PYPROJECT['project']['release_data'],
         }
 
     @Property('QVariant', constant=True)
-    def urls(self):
+    def urls(self) -> dict[str:str]:
         return {
             'homepage': PYPROJECT['project']['urls']['homepage'],
             'issues': PYPROJECT['project']['urls']['issues'],

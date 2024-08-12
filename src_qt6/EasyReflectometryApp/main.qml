@@ -4,7 +4,7 @@ import QtQuick.Controls
 import Gui as Gui
 
 
-Gui.ApplicationWindow {
+Gui.ApplicationWindow{
 
     id: applicationWindow  // Global access
 

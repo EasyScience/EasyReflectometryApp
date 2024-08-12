@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2024 EasyApp contributors
-// SPDX-License-Identifier: BSD-3-Clause
-// © 2024 Contributors to the EasyApp project <https://github.com/easyscience/EasyApp>
-
 import QtQuick
 import QtQuick.Controls
 
@@ -15,7 +11,7 @@ import Gui.Globals as Globals
 
 EaComponents.ContentPage {
 
-    defaultInfo: Globals.BackendProxy.project.created ?
+    defaultInfo: Globals.Backend.project.created ?
                      '' :
                      qsTr('No project defined')
 
@@ -31,18 +27,14 @@ EaComponents.ContentPage {
 
     sideBar: EaComponents.SideBar {
         tabs: [
-            EaElements.TabButton { text: qsTr('Basic controls') },
-            EaElements.TabButton { text: qsTr('Extra controls') },
-            EaElements.TabButton { text: qsTr('Text mode controls'); enabled: false }
+            EaElements.TabButton { text: qsTr('Basic controls') }
         ]
 
         items: [
-            Loader { source: 'Sidebar/Basic/Layout.qml' },
-            Loader { source: 'Sidebar/Extra/Layout.qml' },
-            Loader { source: 'Sidebar/Text/Layout.qml' }
+            Loader { source: 'Sidebar/Basic/Layout.qml' }
         ]
 
-        continueButton.text: Globals.BackendProxy.project.created ?
+        continueButton.text: Globals.Backend.project.created ?
                                  qsTr('Continue') :
                                  qsTr('Continue without project')
 

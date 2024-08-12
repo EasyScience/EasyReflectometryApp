@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2024 EasyApp contributors
-// SPDX-License-Identifier: BSD-3-Clause
-// © 2024 Contributors to the EasyApp project <https://github.com/easyscience/EasyApp>
-
 import QtQuick
 import QtQuick.Controls
 
@@ -17,14 +13,14 @@ EaComponents.ProjectDescriptionDialog {
     onClosed: EaGlobals.Vars.showProjectDescriptionDialog = false
 
     onAccepted: {
-        Globals.BackendProxy.project.create()
+        Globals.Backend.project.create()
         Globals.References.applicationWindow.appBarCentralTabs.summaryButton.enabled = true
     }
 
     Component.onCompleted: {
-        projectName = Globals.BackendProxy.project.info.name
-        projectDescription = Globals.BackendProxy.project.info.description
-        projectLocation = Globals.BackendProxy.project.info.location
+        projectName = Globals.Backend.project.info.name
+        projectDescription = Globals.Backend.project.info.description
+        projectLocation = Globals.Backend.project.info.location
     }
 
 }

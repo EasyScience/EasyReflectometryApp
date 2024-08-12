@@ -15,7 +15,7 @@ import Gui.Globals as Globals
 
 EaComponents.ContentPage {
 
-    defaultInfo: Globals.BackendProxy.summary.created ?
+    defaultInfo: Globals.Backend.summary.created ?
                      '' :
                      qsTr('No Summary Generated')
 

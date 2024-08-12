@@ -29,15 +29,15 @@
         "EasyReflectometryApp/Gui/Pages/Report/SidebarTabs/Basic/Groups/Export.qml",
         "EasyReflectometryApp/Gui/Pages/Report/SidebarTabs/Extra/Layout.qml",
         "EasyReflectometryApp/Gui/Pages/Report/SidebarTabs/Extra/Groups/Empty.qml",
-        "EasyReflectometryApp/Logic/Mock/qmldir",
-        "EasyReflectometryApp/Logic/Mock/BackendProxy.qml",
-        "EasyReflectometryApp/Logic/Mock/Project.qml",
-        "EasyReflectometryApp/Logic/Mock/Report.qml",
-        "EasyReflectometryApp/Logic/Mock/Status.qml",
-        "EasyReflectometryApp/Logic/Py/backend_proxy.py",
-        "EasyReflectometryApp/Logic/Py/helpers.py",
-        "EasyReflectometryApp/Logic/Py/project.py",
-        "EasyReflectometryApp/Logic/Py/report.py",
-        "EasyReflectometryApp/Logic/Py/status.py"
+        "EasyReflectometryApp/Backend/Mock/qmldir",
+        "EasyReflectometryApp/Backend/Mock/BackendProxy.qml",
+        "EasyReflectometryApp/Backend/Mock/Project.qml",
+        "EasyReflectometryApp/Backend/Mock/Report.qml",
+        "EasyReflectometryApp/Backend/Mock/Status.qml",
+        "EasyReflectometryApp/Backend/Py/backend_proxy.py",
+        "EasyReflectometryApp/Backend/Py/helpers.py",
+        "EasyReflectometryApp/Backend/Py/project.py",
+        "EasyReflectometryApp/Backend/Py/report.py",
+        "EasyReflectometryApp/Backend/Py/status.py"
     ]
 }

@@ -1,5 +1,5 @@
 module Globals
 
 singleton ApplicationInfo ApplicationInfo.qml
-singleton BackendProxy BackendProxy.qml
+singleton Backend Backend.qml
 singleton References References.qml

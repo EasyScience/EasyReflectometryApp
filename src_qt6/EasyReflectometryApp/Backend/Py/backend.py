@@ -12,7 +12,7 @@ from .status import Status
 from .report import Report
 
 
-class BackendProxy(QObject):
+class Backend(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
         self._logger = LoggerLevelHandler(self)
