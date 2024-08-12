@@ -18,11 +18,11 @@ EaComponents.ApplicationWindow {
     appBarLeftButtons: [
 
         EaElements.ToolButton {
-            enabled: Globals.BackendProxy.project.created
+            enabled: Globals.Backend.project.created
             highlighted: true
             fontIcon: 'save'
             ToolTip.text: qsTr('Save current state of the project')
-            onClicked: Globals.BackendProxy.project.save()
+            onClicked: Globals.Backend.project.save()
         }
 
     ]

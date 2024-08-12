@@ -37,5 +37,4 @@ Project {
         filter: "qmldir;*.ts;*.qrc;*.html"
         recursive: true
     }
-
 }
