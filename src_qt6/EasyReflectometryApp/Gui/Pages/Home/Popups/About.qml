@@ -18,9 +18,9 @@ EaComponents.AboutDialog {
     appVersion: Globals.Backend.home.versionNumber
     appDate: Globals.Backend.home.versionDate
 
-    appUrl: Globals.Backend.home.homepageUrl
-    eulaUrl: Globals.Backend.home.licenseUrl
-    oslUrl: Globals.Backend.home.dependenciesUrl
+    appUrl: Globals.Backend.home.urlsHomepage
+    eulaUrl: Globals.Backend.home.urlsLicense
+    oslUrl: Globals.Backend.home.urlsDependencies
 
     description: Globals.ApplicationInfo.about.description
     developerIcons: Globals.ApplicationInfo.about.developerIcons
