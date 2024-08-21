@@ -15,7 +15,7 @@ class Status(QObject):
 
     def __init__(self, parent):
         super().__init__(parent)
-        self._proxy = parent
+        self._parent = parent
         self._project = 'Py backend'
         self._phaseCount = '1'
         self._experimentsCount = '1'

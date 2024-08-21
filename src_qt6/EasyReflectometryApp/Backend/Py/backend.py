@@ -16,9 +16,11 @@ class Backend(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
         self._logger = LoggerLevelHandler(self)
+
+        # Pages and Stutus bar
+        self._status = Status(self)
         self._home = Home(self)
         self._project = Project(self)
-        self._status = Status(self)
         self._report = Report(self)
 
     @Property('QVariant', constant=True)

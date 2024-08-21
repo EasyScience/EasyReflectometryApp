@@ -1,61 +1,90 @@
-import time
 from PySide6.QtCore import QObject
 from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
 from PySide6.QtCore import Property
 
-from EasyApp.Logic.Logging import console
-from .helpers import IO
-
-
-_DEFAULT_INFO = {
-    'name': 'Name',
-    'description': 'Description',
-    'location': 'Folder',
-    'creationDate': '',
-}
+from .logic.project import Project as ProjectLogic
 
 
 class Project(QObject):
     createdChanged = Signal()
     infoChanged = Signal()
-    examplesChanged = Signal()
+    htmlExportingFinished = Signal(bool, str)
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self._proxy = parent
-        self._created = False
-        self._info = _DEFAULT_INFO
+        self._parent = parent
+        self._logic = ProjectLogic()
+
+    # Setters and getters
 
     @Property(bool, notify=createdChanged)
     def created(self) -> bool:
-        return self._created
+        return self._logic._created
 
     @created.setter
     def created(self, new_value: bool) -> None:
-        if self._created == new_value:
-            return
-        self._created = new_value
-        self.createdChanged.emit()
+        if self._logic.set_created(new_value):
+            self.createdChanged.emit()
 
     @Property('QVariant', notify=infoChanged)
-    def info(self) -> dict[str:str]:
-        return self._info
+    def infoName(self) -> str:
+        return self._logic._info['name']
 
-    @info.setter
-    def info(self, new_dict: dict[str:str]) -> None:
-        if self._info == new_dict:
-            return
-        self._info = new_dict
-        self.infoChanged.emit()
+    @infoName.setter
+    def infoName(self, new_value: str) -> None:
+        if self._logic.set_info(key='name', value=new_value):
+            self.infoChanged.emit()
 
-    @Slot()
-    def create(self) -> None:
-        console.debug(IO.formatMsg('main', f'Creating project {self.info["name"]}'))
-        self.info['creationDate'] = time.strftime("%d %b %Y %H:%M", time.localtime())
+    @Property('QVariant', notify=infoChanged)
+    def infoDescription(self) -> str:
+        return self._logic._info['description']
+
+    @infoDescription.setter
+    def infoDescription(self, new_value: str) -> None:
+        if self._logic.set_info(key='description', value=new_value):
+            self.infoChanged.emit()
+
+    @Property('QVariant', notify=infoChanged)
+    def infoLocation(self) -> str:
+        return self._logic._info['location']
+
+    @infoLocation.setter
+    def infoLocation(self, new_value: str) -> None:
+        if self._logic.set_info(key='location', value=new_value):
+            self.infoChanged.emit()
+
+    @Property('QVariant', notify=infoChanged)
+    def infoCreationDate(self) -> str:
+        return self._logic._info['creationDate']
+
+    @infoCreationDate.setter
+    def infoCreationDate(self, new_value: str) -> None:
+        if self._logic.set_info(key='creationDate', value=new_value):
+            self.infoChanged.emit()
+
+    @Property(str, notify=infoChanged)
+    def currentProjectPath(self) -> str:
+        return self._logic._current_project_path
+
+    @currentProjectPath.setter
+    def currentProjectPath(self, new_path: str) -> None:
+        if self._logic.set_current_project_path(new_path):
+            self.infoChanged.emit()
+
+    # Slots
+
+    # @Slot(str, str)
+    # def editProjectInfo(self, key:str, value: str) -> None:
+    #     if self._logic.edit_project_info(key, value):
+    #         self.infoChanged.emit()
+
+    @Slot(str)
+    def create(self, project_path: str) -> None:
+        self._logic.create(project_path)
         self.infoChanged.emit()
-        self.created = True
 
     @Slot()
     def save(self) -> None:
-        console.debug(IO.formatMsg('main', f'Saving project {self.info["name"]}'))
+        self._logic.save()
+

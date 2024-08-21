@@ -13,14 +13,14 @@ EaComponents.ProjectDescriptionDialog {
     onClosed: EaGlobals.Vars.showProjectDescriptionDialog = false
 
     onAccepted: {
-        Globals.Backend.project.create()
+        Globals.Backend.project.create(projectLocation)
         Globals.References.applicationWindow.appBarCentralTabs.summaryButton.enabled = true
     }
 
     Component.onCompleted: {
-        projectName = Globals.Backend.project.info.name
-        projectDescription = Globals.Backend.project.info.description
-        projectLocation = Globals.Backend.project.info.location
+        projectName = Globals.Backend.project.infoName
+        projectDescription = Globals.Backend.project.infoDescription
+        projectLocation = Globals.Backend.project.infoLocation
     }
 
 }

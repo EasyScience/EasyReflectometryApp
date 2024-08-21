@@ -81,7 +81,7 @@ class Report(QObject):
 
     def __init__(self, parent):
         super().__init__(parent)
-        self._proxy = parent
+        self._parent = parent
         self._created = True
         self._asHtml = _PY_HTML
 

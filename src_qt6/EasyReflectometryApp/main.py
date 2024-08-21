@@ -12,7 +12,7 @@ from PySide6.QtCore import qInstallMessageHandler
 
 from EasyApp.Logic.Logging import console
 
-from Backend.Py.backend import Backend
+from Backend.Py import Backend
 
 CURRENT_DIR = Path(__file__).parent                                 # path to qml components of the current project
 EASYAPP_DIR = CURRENT_DIR / '..' / '..' / '..' / 'EasyApp' / 'src'  # path to qml components of the easyapp module

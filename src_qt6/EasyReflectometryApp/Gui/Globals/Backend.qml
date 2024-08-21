@@ -45,11 +45,11 @@ QtObject {
     readonly property var home: QtObject {
         readonly property string versionNumber: backend.home.version.number
         readonly property string versionDate: backend.home.version.date
-        readonly property string homepageUrl: backend.home.urls.homepage
-        readonly property string issuesUrl: backend.home.urls.issues
-        readonly property string licenseUrl: backend.home.urls.license
-        readonly property string documentationUrl: backend.home.urls.documentation
-        readonly property string dependenciesUrl: backend.home.urls.dependencies
+        readonly property string urlsHomepage: backend.home.urls.homepage
+        readonly property string urlsIssues: backend.home.urls.issues
+        readonly property string urlsLicense: backend.home.urls.license
+        readonly property string urlsDocumentation: backend.home.urls.documentation
+        readonly property string urlsDependencies: backend.home.urls.dependencies
     }
 
     ///////////////
@@ -57,10 +57,16 @@ QtObject {
     ///////////////
 
     readonly property var project: QtObject {
-        readonly property bool created: backend.project.created
-        readonly property var info: backend.project.info
+        property bool created: backend.project.created
 
-        function create() { backend.project.create() }
+        property string infoName: backend.project.infoName
+        property string infoDescription: backend.project.infoDescription
+        property string infoLocation: backend.project.infoLocation
+        property string infoCreationDate: backend.project.infoCreationDate
+
+        property string currentProjectPath: backend.project.currentProjectPath
+
+        function create(project_path) { backend.project.create(project_path) }
         function save() { backend.project.save() }
     }
 
