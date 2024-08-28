@@ -8,8 +8,9 @@ from .logic.project import Project as ProjectLogic
 
 class Project(QObject):
     createdChanged = Signal()
-    infoChanged = Signal()
-    htmlExportingFinished = Signal(bool, str)
+    nameChanged = Signal()
+    descriptionChanged = Signal()
+    locationChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -22,67 +23,48 @@ class Project(QObject):
     def created(self) -> bool:
         return self._logic._created
 
-    @created.setter
-    def created(self, new_value: bool) -> None:
-        if self._logic.set_created(new_value):
-            self.createdChanged.emit()
+    @Property(str, notify=nameChanged)
+    def name(self) -> str:
+        return self._logic.name
 
-    @Property('QVariant', notify=infoChanged)
-    def infoName(self) -> str:
-        return self._logic._info['name']
+    @Slot(str)
+    def setName(self, new_value: str) -> None:
+        if self._logic.name != new_value:
+            self._logic.name = new_value
+            self.nameChanged.emit()
 
-    @infoName.setter
-    def infoName(self, new_value: str) -> None:
-        if self._logic.set_info(key='name', value=new_value):
-            self.infoChanged.emit()
+    @Property(str, notify=descriptionChanged)
+    def description(self) -> str:
+        return self._logic.description
 
-    @Property('QVariant', notify=infoChanged)
-    def infoDescription(self) -> str:
-        return self._logic._info['description']
+    @Slot(str)
+    def setDescription(self, new_value: str) -> None:
+        if self._logic.description != new_value:
+            self._logic.description = new_value
+            self.descriptionChanged.emit()
 
-    @infoDescription.setter
-    def infoDescription(self, new_value: str) -> None:
-        if self._logic.set_info(key='description', value=new_value):
-            self.infoChanged.emit()
+    @Property(str, notify=locationChanged)
+    def location(self) -> str:
+        return self._logic.current_path
 
-    @Property('QVariant', notify=infoChanged)
-    def infoLocation(self) -> str:
-        return self._logic._info['location']
+    @Slot(str)
+    def setLocation(self, new_value: str) -> None:
+        if self._logic.current_path != new_value:
+            self._logic.current_path = new_value
+            self.locationChanged.emit()
 
-    @infoLocation.setter
-    def infoLocation(self, new_value: str) -> None:
-        if self._logic.set_info(key='location', value=new_value):
-            self.infoChanged.emit()
+    @Property(str, notify=createdChanged)
+    def creationDate(self) -> str:
+        return self._logic.creation_date
 
-    @Property('QVariant', notify=infoChanged)
-    def infoCreationDate(self) -> str:
-        return self._logic._info['creationDate']
-
-    @infoCreationDate.setter
-    def infoCreationDate(self, new_value: str) -> None:
-        if self._logic.set_info(key='creationDate', value=new_value):
-            self.infoChanged.emit()
-
-    @Property(str, notify=infoChanged)
+    @Property(str)
     def currentProjectPath(self) -> str:
-        return self._logic._current_project_path
-
-    @currentProjectPath.setter
-    def currentProjectPath(self, new_path: str) -> None:
-        if self._logic.set_current_project_path(new_path):
-            self.infoChanged.emit()
-
-    # Slots
-
-    # @Slot(str, str)
-    # def editProjectInfo(self, key:str, value: str) -> None:
-    #     if self._logic.edit_project_info(key, value):
-    #         self.infoChanged.emit()
+        return self._logic.current_path
 
     @Slot(str)
     def create(self, project_path: str) -> None:
         self._logic.create(project_path)
-        self.infoChanged.emit()
+        self.createdChanged.emit()
 
     @Slot()
     def save(self) -> None:

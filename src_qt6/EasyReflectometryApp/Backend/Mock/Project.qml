@@ -6,23 +6,23 @@ QtObject {
 
     property bool created: false
 
-    property string currentProjectPath: 'Not set yet'
-
-    property string infoName: 'Super duper project'
-    property string infoDescription: 'Default project description from Mock proxy'
-    property string infoLocation: '/path to the project'
-    property string infoCreationDate: ''
+    property string name: 'Super duper project'
+    function setName(new_value) {name = new_value}
+    property string description: 'Default project description from Mock proxy'
+    function setDescription(new_value) {description = new_value}
+    property string location: '/path to the project'
+    function setLocation(new_value) {location = new_value}
+    property string creationDate: ''
 
     function create(project_path) {
-        currentProjectPath = project_path
-        console.debug(`Creating project ${infoName}`)
-        infoCreationDate = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`
-//        infoChanged()  // this signal is not emitted automatically when only part of the object is changed
+        location = project_path
+        console.debug(`Creating project ${name}`)
+        creationDate = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`
         created = true
     }
 
     function save() {
-        console.debug(`Saving project ${info.name}`)
+        console.debug(`Saving project ${name}`)
     }
 
 }

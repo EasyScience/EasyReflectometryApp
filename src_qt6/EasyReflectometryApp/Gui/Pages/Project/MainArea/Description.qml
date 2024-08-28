@@ -31,8 +31,8 @@ Rectangle {
             font.family: EaStyle.Fonts.secondFontFamily
             font.pixelSize: EaStyle.Sizes.fontPixelSize * 3
             font.weight: Font.ExtraLight
-            text: Globals.Backend.project.infoName
-            onEditingFinished: Globals.Backend.project.editData('name', text)
+            text: Globals.Backend.project.name
+            onEditingFinished: Globals.Backend.project.setName(text)
         }
         // Project title
 
@@ -47,8 +47,8 @@ Rectangle {
                 text: qsTr('Description:')
             }
             EaElements.TextInput {
-                text: Globals.Backend.project.infoDescription
-                onEditingFinished: Globals.Backend.project.editData('description', text)
+                text: Globals.Backend.project.description
+                onEditingFinished: Globals.Backend.project.setDescription(text)
             }
 
             EaElements.Label {
@@ -56,7 +56,7 @@ Rectangle {
                 text: qsTr('Location:')
             }
             EaElements.Label {
-                text: Globals.Backend.project.infoLocation
+                text: Globals.Backend.project.location
             }
 
             EaElements.Label {
@@ -64,7 +64,7 @@ Rectangle {
                 text: qsTr('Created:')
             }
             EaElements.Label {
-                text: Globals.Backend.project.infoCreationDate
+                text: Globals.Backend.project.creationDate
             }
         }
         // Project info

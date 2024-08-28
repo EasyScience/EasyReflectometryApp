@@ -57,14 +57,16 @@ QtObject {
     ///////////////
 
     readonly property var project: QtObject {
-        property bool created: backend.project.created
+        readonly property bool created: backend.project.created
 
-        property string infoName: backend.project.infoName
-        property string infoDescription: backend.project.infoDescription
-        property string infoLocation: backend.project.infoLocation
-        property string infoCreationDate: backend.project.infoCreationDate
+        readonly property string name: backend.project.name
+        function setName(new_value) { backend.project.setName(new_value) }
+        readonly property string description: backend.project.description
+        function setDescription(new_value) { backend.project.setDescription(new_value) }
+        readonly property string location: backend.project.location
+        function setLocation(new_value) { backend.project.setLocation(new_value) }
 
-        property string currentProjectPath: backend.project.currentProjectPath
+        readonly property string creationDate: backend.project.creationDate
 
         function create(project_path) { backend.project.create(project_path) }
         function save() { backend.project.save() }
