@@ -2,7 +2,7 @@ pragma Singleton
 
 import QtQuick
 
-import Backend.Mock as MockBackend
+import Backends.Mock as MockBackend
 
 QtObject {
 

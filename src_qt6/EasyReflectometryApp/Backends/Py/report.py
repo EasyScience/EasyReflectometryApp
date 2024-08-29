@@ -97,11 +97,11 @@ class Report(QObject):
         self.createdChanged.emit()
 
     @Property(str, notify=asHtmlChanged)
-    def asHtml(self):
+    def as_html(self):
         return self._asHtml
 
-    @asHtml.setter
-    def asHtml(self, newValue):
+    @as_html.setter
+    def as_html(self, newValue):
         if self._asHtml == newValue:
             return
         self._asHtml = newValue

@@ -55,7 +55,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
 
             text: {
-                return qsTr('Version') + ` ${Globals.Backend.home.versionNumber} (${Globals.Backend.home.versionDate})`
+                return qsTr('Version') + ` ${Globals.Backend.homeVersionNumber} (${Globals.Backend.homeVersionDate})`
             }
         }
         // Application version

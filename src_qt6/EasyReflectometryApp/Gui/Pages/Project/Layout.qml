@@ -11,7 +11,7 @@ import Gui.Globals as Globals
 
 EaComponents.ContentPage {
 
-    defaultInfo: Globals.Backend.project.created ?
+    defaultInfo: Globals.Backend.projectCreated ?
                      '' :
                      qsTr('No project defined')
 
@@ -34,7 +34,7 @@ EaComponents.ContentPage {
             Loader { source: 'Sidebar/Basic/Layout.qml' }
         ]
 
-        continueButton.text: Globals.Backend.project.created ?
+        continueButton.text: Globals.Backend.projectCreated ?
                                  qsTr('Continue') :
                                  qsTr('Continue without project')
 

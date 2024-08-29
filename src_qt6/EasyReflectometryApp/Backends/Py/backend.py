@@ -55,7 +55,7 @@ class Backend(QObject):
 
     def _relay_project_name(self):
         self._status.project = self._project.name
-        self._report._as_html = self._project.name
+        self._report.as_html = self._project.name
 
     def _relay_project_created(self):
         self._report.created = self._project.created

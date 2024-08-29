@@ -2,7 +2,7 @@ pragma Singleton
 
 import QtQuick
 
-import Backend.Mock as MockBackend
+import Backends.Mock as MockBackend
 
 
 // If the backend_py object is created in main.py and exposed to qml, it is used as
@@ -15,69 +15,51 @@ QtObject {
     ///////////////
     // Backend proxy
     ///////////////
-
+    // Sets the active backend to pyBackend if this property is defined
+    // otherwise sets it to mockBackend
     readonly property var mockBackend: MockBackend.Backend
-
     readonly property var pyBackend: typeof backend_py !== 'undefined' && backend_py !== null ? backend_py : undefined
-
-    // This property is used to access the backend proxy object from GUI components.
-    // Sets Backend to pyBackend if this property is defined, otherwise sets it to
-    // mockBackend
-    readonly property var backend: pyBackend ?? mockBackend
+    readonly property var activeBackend: pyBackend ?? mockBackend
 
     /////////////
     // Status bar
     /////////////
-
-    readonly property var status: QtObject {
-        readonly property string project: backend.status.project
-        readonly property string phaseCount: backend.status.phaseCount
-        readonly property string experimentsCount: backend.status.experimentsCount
-        readonly property string calculator: backend.status.calculator
-        readonly property string minimizer: backend.status.minimizer
-        readonly property string variables: backend.status.variables
-    }
+    readonly property string statusProject: activeBackend.status.project
+    readonly property string statusPhaseCount: activeBackend.status.phaseCount
+    readonly property string statusExperimentsCount: activeBackend.status.experimentsCount
+    readonly property string statusCalculator: activeBackend.status.calculator
+    readonly property string statusMinimizer: activeBackend.status.minimizer
+    readonly property string statusVariables: activeBackend.status.variables
 
     ///////////////
     // Home page
     ///////////////
-
-    readonly property var home: QtObject {
-        readonly property string versionNumber: backend.home.version.number
-        readonly property string versionDate: backend.home.version.date
-        readonly property string urlsHomepage: backend.home.urls.homepage
-        readonly property string urlsIssues: backend.home.urls.issues
-        readonly property string urlsLicense: backend.home.urls.license
-        readonly property string urlsDocumentation: backend.home.urls.documentation
-        readonly property string urlsDependencies: backend.home.urls.dependencies
-    }
+    readonly property string homeVersionNumber: activeBackend.home.version.number
+    readonly property string homeVersionDate: activeBackend.home.version.date
+    readonly property string homeUrlsHomepage: activeBackend.home.urls.homepage
+    readonly property string homeUrlsIssues: activeBackend.home.urls.issues
+    readonly property string homeUrlsLicense: activeBackend.home.urls.license
+    readonly property string homeUrlsDocumentation: activeBackend.home.urls.documentation
+    readonly property string homeUrlsDependencies: activeBackend.home.urls.dependencies
 
     ///////////////
     // Project page
     ///////////////
-
-    readonly property var project: QtObject {
-        readonly property bool created: backend.project.created
-        readonly property string creationDate: backend.project.creationDate
-
-        readonly property string name: backend.project.name
-        function setName(new_value) { backend.project.name = new_value }
-        readonly property string description: backend.project.description
-        function setDescription(new_value) { backend.project.description = new_value }
-        readonly property string location: backend.project.location
-        function setLocation(new_value) { backend.project.location = new_value }
-
-        function create(project_path) { backend.project.create(project_path) }
-        function save() { backend.project.save() }
-    }
+    readonly property bool projectCreated: activeBackend.project.created
+    readonly property string projectCreationDate: activeBackend.project.creationDate
+    readonly property string projectName: activeBackend.project.name
+    function projectSetName(value) { activeBackend.project.name = value }
+    readonly property string projectDescription: activeBackend.project.description
+    function projectSetDescription(value) { activeBackend.project.description = value }
+    readonly property string projectLocation: activeBackend.project.location
+    function projectSetLocation(value) { activeBackend.project.location = value }
+    function projectCreate(value) { activeBackend.project.create(value) }
+    function projectSave() { activeBackend.project.save() }
 
     ///////////////
     // Summary page
     ///////////////
-
-    readonly property var summary: QtObject {
-        readonly property bool created: backend.report.created
-        readonly property string asHtml: backend.report.asHtml
-    }
+    readonly property bool summaryCreated: activeBackend.report.created
+    readonly property string summaryAsHtml: activeBackend.report.asHtml
 
 }
