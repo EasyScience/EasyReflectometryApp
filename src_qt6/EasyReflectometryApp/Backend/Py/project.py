@@ -27,8 +27,8 @@ class Project(QObject):
     def name(self) -> str:
         return self._logic.name
 
-    @Slot(str)
-    def setName(self, new_value: str) -> None:
+    @name.setter
+    def name(self, new_value: str) -> None:
         if self._logic.name != new_value:
             self._logic.name = new_value
             self.nameChanged.emit()
@@ -37,8 +37,8 @@ class Project(QObject):
     def description(self) -> str:
         return self._logic.description
 
-    @Slot(str)
-    def setDescription(self, new_value: str) -> None:
+    @description.setter
+    def description(self, new_value: str) -> None:
         if self._logic.description != new_value:
             self._logic.description = new_value
             self.descriptionChanged.emit()
@@ -47,8 +47,8 @@ class Project(QObject):
     def location(self) -> str:
         return self._logic.current_path
 
-    @Slot(str)
-    def setLocation(self, new_value: str) -> None:
+    @location.setter
+    def location(self, new_value: str) -> None:
         if self._logic.current_path != new_value:
             self._logic.current_path = new_value
             self.locationChanged.emit()
