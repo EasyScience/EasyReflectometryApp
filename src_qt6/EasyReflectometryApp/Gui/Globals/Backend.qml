@@ -5,19 +5,25 @@ import QtQuick
 import Backends.Mock as MockBackend
 
 
-// If the backend_py object is created in main.py and exposed to qml, it is used as
-// realBackendPy to access the necessary backend properties and methods. Otherwise, the mock
-// proxy defined in MockBackend/Backend.qml with hardcoded data is used.
-// The assumption here is that the real backend proxy and the mock proxy have the same API.
+// Wrapper to expose the backend properties and methods.
+// Backend implementations are located in the Backends folder.
+// Serves to decouple the GUI code from the backend code.
+// - In GUI code, the properties and methods MUST be accessed through this object.
+// - To pass a property value from the GUI to the backend one needs to used dedicated set methods.
+// - To protect the backend from unwanted changes, the properties are read-only and set methods are exposed.
+// - The backend is selected at runtime based on the availability of the backend_py object.
+// - A flat structure is used.
+// -- Enable QT Creator to show the properties in the property editor (code completion and rightclick follow).
+// -- Location of property in backend should be encoded in the name. 
 
 QtObject {
 
     ///////////////
-    // Backend proxy
+    // Determine active backend
     ///////////////
     // Sets the active backend to pyBackend if this property is defined
     // otherwise sets it to mockBackend
-    readonly property var mockBackend: MockBackend.Backend
+    readonly property var mockBackend: MockBackend.Backend{ id: mockBackendId }
     readonly property var pyBackend: typeof backend_py !== 'undefined' && backend_py !== null ? backend_py : undefined
     readonly property var activeBackend: pyBackend ?? mockBackend
 

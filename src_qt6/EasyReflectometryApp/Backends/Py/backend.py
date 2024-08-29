@@ -20,7 +20,7 @@ class Backend(QObject):
 
         self._logger = LoggerLevelHandler(self)
 
-        # Must be last
+        # Must be last to ensure all backend parts are created
         self._connect_backend_parts()
 
     ######### Enable dot access in QML code to the page specific backend parts
