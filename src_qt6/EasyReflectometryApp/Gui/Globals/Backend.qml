@@ -5,15 +5,17 @@ import QtQuick
 import Backends.Mock as MockBackend
 
 
-// Wrapper to expose the backend properties and methods.
+// Wrapper to expose the backend properties and methods to the QML GUI.
 // Backend implementations are located in the Backends folder.
 // Serves to decouple the GUI code from the backend code.
-// - In GUI code, the properties and methods MUST be accessed through this object.
-// - To pass a property value from the GUI to the backend one needs to used dedicated set methods.
-// - To protect the backend from unwanted changes, the properties are read-only and set methods are exposed.
+// - In GUI code, backend properties and methods MUST be accessed through this object.
 // - The backend is selected at runtime based on the availability of the backend_py object.
+// - The properties are read-only, setter methods are exposed.
+// -- To protect the backend from unwanted changes.
+// -- To prevent the GUI from breaking the link to the backend property.
+// -- To pass a property value from the GUI to the backend one needs to used dedicated set methods.
 // - A flat structure is used.
-// -- Enable QT Creator to show the properties in the property editor (code completion and rightclick follow).
+// -- Enable QT Creator to show the properties in the editor (code completion and rightclick follow).
 // -- Location of property in backend should be encoded in the name. 
 
 QtObject {
