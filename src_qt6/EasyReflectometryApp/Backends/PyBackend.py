@@ -2,13 +2,13 @@ from PySide6.QtCore import QObject, Property
 
 from EasyApp.Logic.Logging import LoggerLevelHandler
 
-from .home import Home
-from .project import Project
-from .status import Status
-from .report import Report
+from .Py.home import Home
+from .Py.project import Project
+from .Py.status import Status
+from .Py.report import Report
 
 
-class Backend(QObject):
+class PyBackend(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
 

@@ -2,14 +2,13 @@ pragma Singleton
 
 import QtQuick
 
-import Backends.Mock as MockBackend
-
+import Backends
 
 // Wrapper to expose the backend properties and methods to the QML GUI.
 // Backend implementations are located in the Backends folder.
 // Serves to decouple the GUI code from the backend code.
 // - In GUI code, backend properties and methods MUST be accessed through this object.
-// - The backend is selected at runtime based on the availability of the backend_py object.
+// - The backend is instantiated at runtime based on the availability of the PyBackend class.
 // - The properties are read-only, setter methods are exposed.
 // -- To protect the backend from unwanted changes.
 // -- To prevent the GUI from breaking the link to the backend property.
@@ -21,13 +20,19 @@ import Backends.Mock as MockBackend
 QtObject {
 
     ///////////////
-    // Determine active backend
+    // Active backend
     ///////////////
-    // Sets the active backend to pyBackend if this property is defined
-    // otherwise sets it to mockBackend
-    readonly property var mockBackend: MockBackend.Backend
-    readonly property var pyBackend: typeof backend_py !== 'undefined' && backend_py !== null ? backend_py : undefined
-    readonly property var activeBackend: pyBackend ?? mockBackend
+    // Is PyBackend instance if defined otherwise MockBackend
+    // PyBackend is defined if exposed in main.py
+    readonly property var activeBackend: {
+        if (typeof PyBackend == 'undefined') {
+            console.debug('Currently, the MOCK backend is in use')
+            return MockBackend
+        } else {
+            console.debug('Currently, the REAL python backend proxy is in use')
+            return PyBackend
+        }
+    }
 
     /////////////
     // Status bar
