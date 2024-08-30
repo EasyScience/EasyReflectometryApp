@@ -25,7 +25,7 @@ QtObject {
     ///////////////
     // Sets the active backend to pyBackend if this property is defined
     // otherwise sets it to mockBackend
-    readonly property var mockBackend: MockBackend.Backend{ id: mockBackendId }
+    readonly property var mockBackend: MockBackend.Backend
     readonly property var pyBackend: typeof backend_py !== 'undefined' && backend_py !== null ? backend_py : undefined
     readonly property var activeBackend: pyBackend ?? mockBackend
 
