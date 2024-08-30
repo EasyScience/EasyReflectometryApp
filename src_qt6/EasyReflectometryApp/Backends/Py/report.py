@@ -79,9 +79,8 @@ class Report(QObject):
     createdChanged = Signal()
     asHtmlChanged = Signal()
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super().__init__(parent)
-        self._parent = parent
         self._created = True
         self._asHtml = _PY_HTML
 

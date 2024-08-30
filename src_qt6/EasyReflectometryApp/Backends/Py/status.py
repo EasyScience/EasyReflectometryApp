@@ -13,9 +13,8 @@ class Status(QObject):
     minimizerChanged = Signal()
     variablesChanged = Signal()
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super().__init__(parent)
-        self._parent = parent
         self._project = 'Py backend'
         self._phaseCount = '1'
         self._experimentsCount = '1'

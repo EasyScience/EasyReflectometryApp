@@ -13,10 +13,10 @@ class PyBackend(QObject):
         super().__init__(parent)
 
         # Page specific backend parts and Status bar
-        self._home = Home(self)
-        self._project = Project(self)
-        self._report = Report(self)
-        self._status = Status(self)
+        self._home = Home()
+        self._project = Project()
+        self._report = Report()
+        self._status = Status()
 
         self._logger = LoggerLevelHandler(self)
 
