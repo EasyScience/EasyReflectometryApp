@@ -13,7 +13,7 @@ from PySide6.QtQml import qmlRegisterSingletonType
 
 from EasyApp.Logic.Logging import console
 
-from Backends.PyBackend import PyBackend
+from Backends.Py import PyBackend
 
 CURRENT_DIR = Path(__file__).parent                                 # path to qml components of the current project
 EASYAPP_DIR = CURRENT_DIR / '..' / '..' / '..' / 'EasyApp' / 'src'  # path to qml components of the easyapp module
