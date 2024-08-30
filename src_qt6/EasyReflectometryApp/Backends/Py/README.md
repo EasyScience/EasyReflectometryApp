@@ -3,7 +3,7 @@ The backend utilizes the EasyReflectometryLib.
 
 # Folder root
 The modules in the root folder define the API of the backend.  
-The API is used in the GUI through the QML wrapper defined in Gui.Globals.Backend.qml
+The API is used in the GUI through the QML wrapper defined in Gui.Globals.BackendWrapper.qml
 Pyside is used to handle the integration between the Python backend and the QML GUI.
 
 The entrypoint is the class:

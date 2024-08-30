@@ -55,7 +55,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
 
             text: {
-                return qsTr('Version') + ` ${Globals.Backend.homeVersionNumber} (${Globals.Backend.homeVersionDate})`
+                return qsTr('Version') + ` ${Globals.BackendWrapper.homeVersionNumber} (${Globals.BackendWrapper.homeVersionDate})`
             }
         }
         // Application version
@@ -106,7 +106,7 @@ Item {
 
                 EaElements.Button {
                     text: qsTr('Online documentation')
-                    onClicked: Qt.openUrlExternally(Globals.Backend.home.documentationUrl)
+                    onClicked: Qt.openUrlExternally(Globals.BackendWrapper.home.documentationUrl)
                 }
             }
             // Right links
