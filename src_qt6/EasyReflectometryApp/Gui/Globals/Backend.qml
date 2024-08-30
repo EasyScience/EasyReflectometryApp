@@ -2,17 +2,13 @@ pragma Singleton
 
 import QtQuick
 
-import Backends
+import Backends as Backends
 
-// Wrapper to expose the backend properties and methods to the QML GUI.
+// Wrapper to external backend API to expose properties and methods to the QML GUI.
 // Backend implementations are located in the Backends folder.
 // Serves to decouple the GUI code from the backend code.
 // - In GUI code, backend properties and methods MUST be accessed through this object.
 // - The backend is instantiated at runtime based on the availability of the PyBackend class.
-// - The properties are read-only, setter methods are exposed.
-// -- To protect the backend from unwanted changes.
-// -- To prevent the GUI from breaking the link to the backend property.
-// -- To pass a property value from the GUI to the backend one needs to used dedicated set methods.
 // - A flat structure is used.
 // -- Enable QT Creator to show the properties in the editor (code completion and rightclick follow).
 // -- Location of property in backend should be encoded in the name. 
@@ -22,15 +18,15 @@ QtObject {
     ///////////////
     // Active backend
     ///////////////
-    // Is PyBackend instance if defined otherwise MockBackend
-    // PyBackend is defined if exposed in main.py
+    // Instantiate MockBackend if PyBackend is not defined otherwise use PyBackend
+    // The PyBackend class will be defined if exposed from main.py
     readonly property var activeBackend: {
-        if (typeof PyBackend == 'undefined') {
-            console.debug('Currently, the MOCK backend is in use')
-            return MockBackend
+        if (typeof Backends.PyBackend == 'undefined') {
+            console.debug('MOCK backend is in use')
+            return Backends.MockBackend
         } else {
-            console.debug('Currently, the REAL python backend proxy is in use')
-            return PyBackend
+            console.debug('PYTHON backend proxy is in use')
+            return Backends.PyBackend
         }
     }
 
@@ -60,12 +56,14 @@ QtObject {
     ///////////////
     readonly property bool projectCreated: activeBackend.project.created
     readonly property string projectCreationDate: activeBackend.project.creationDate
-    readonly property string projectName: activeBackend.project.name
-    function projectSetName(value) { activeBackend.project.name = value }
-    readonly property string projectDescription: activeBackend.project.description
-    function projectSetDescription(value) { activeBackend.project.description = value }
-    readonly property string projectLocation: activeBackend.project.location
-    function projectSetLocation(value) { activeBackend.project.location = value }
+
+    property string projectName: activeBackend.project.name
+    onProjectNameChanged: activeBackend.project.name = projectName
+    property string projectDescription: activeBackend.project.description
+    onProjectDescriptionChanged: activeBackend.project.description = projectDescription
+    property string projectLocation: activeBackend.project.location
+    onProjectLocationChanged: activeBackend.project.location = projectLocation
+
     function projectCreate(value) { activeBackend.project.create(value) }
     function projectSave() { activeBackend.project.save() }
 
