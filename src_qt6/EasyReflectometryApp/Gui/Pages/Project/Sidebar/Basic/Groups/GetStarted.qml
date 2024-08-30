@@ -30,8 +30,24 @@ Grid {
         }
     }
     // button 1
-
+/*
     // button 2
+    EaElements.SideBarButton {
+        fontIcon: "arrow-circle-right"
+        text: qsTr("Continue without a project")
+
+        onClicked: {
+            Globals.References.samplePageEnabled = true
+            Globals.References.sampleTabButton.toggle()
+        }
+        Component.onCompleted: {
+            Globals.References.continueWithoutProjectButton = this
+            Globals.Constants.proxy.undoredo.resetUndoRedoStack()
+        }
+    }
+    // button 2
+*/
+    // button 3
     EaElements.SideBarButton {
         fontIcon: 'upload'
         text: qsTr('Open an existing project')
@@ -45,6 +61,6 @@ Grid {
             source: '../Popups/OpenJsonFile.qml'
         }
     }
-    // button 2
+    // button 3
 
 }
