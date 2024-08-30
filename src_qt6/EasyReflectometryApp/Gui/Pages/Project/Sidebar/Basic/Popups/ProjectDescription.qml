@@ -14,7 +14,7 @@ EaComponents.ProjectDescriptionDialog {
 
     onAccepted: {
 
-        Globals.BackendWrapper.projectProjectName = projectName
+        Globals.BackendWrapper.projectName = projectName
         Globals.BackendWrapper.projectDescription = projectDescription
         Globals.BackendWrapper.projectLocation = projectLocation
 
