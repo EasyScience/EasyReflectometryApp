@@ -6,13 +6,14 @@ import sys
 
 from pathlib import Path
 
+from PySide6.QtCore import qInstallMessageHandler
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import qInstallMessageHandler
+from PySide6.QtQml import qmlRegisterSingletonType
 
 from EasyApp.Logic.Logging import console
 
-from Backend.Py.backend import Backend
+from Backends.Py import PyBackend
 
 CURRENT_DIR = Path(__file__).parent                                 # path to qml components of the current project
 EASYAPP_DIR = CURRENT_DIR / '..' / '..' / '..' / 'EasyApp' / 'src'  # path to qml components of the easyapp module
@@ -29,9 +30,8 @@ if __name__ == '__main__':
     engine = QQmlApplicationEngine()
     console.debug(f'QML application engine created {engine}')
 
-    backend = Backend()
-    engine.rootContext().setContextProperty('backend_py', backend)
-    console.debug('backend object exposed to QML as backend_py')
+    qmlRegisterSingletonType(PyBackend, 'Backends', 1, 0, 'PyBackend')
+    console.debug('Backend class is registered to be accessible from QML via the name PyBackend')
 
     engine.addImportPath(EASYAPP_DIR)
     engine.addImportPath(CURRENT_DIR)

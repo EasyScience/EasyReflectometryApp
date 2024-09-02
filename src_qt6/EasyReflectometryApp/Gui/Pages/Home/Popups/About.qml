@@ -15,12 +15,12 @@ EaComponents.AboutDialog {
 
     appPrefixName: Globals.ApplicationInfo.about.namePrefixForLogo
     appSuffixName: Globals.ApplicationInfo.about.nameSuffixForLogo
-    appVersion: Globals.Backend.home.versionNumber
-    appDate: Globals.Backend.home.versionDate
+    appVersion: Globals.BackendWrapper.homeVersionNumber
+    appDate: Globals.BackendWrapper.homeVersionDate
 
-    appUrl: Globals.Backend.home.homepageUrl
-    eulaUrl: Globals.Backend.home.licenseUrl
-    oslUrl: Globals.Backend.home.dependenciesUrl
+    appUrl: Globals.BackendWrapper.homeUrlsHomepage
+    eulaUrl: Globals.BackendWrapper.homeUrlsLicense
+    oslUrl: Globals.BackendWrapper.homeUrlsDependencies
 
     description: Globals.ApplicationInfo.about.description
     developerIcons: Globals.ApplicationInfo.about.developerIcons

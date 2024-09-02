@@ -7,6 +7,8 @@ PATH_PYPROJECT = 'src_qt6/pyproject.toml'
 PYPROJECT = toml.load(PATH_PYPROJECT)
 
 class Home(QObject):
+    def __init__(self, parent=None):
+        super().__init__(parent)
 
     @Property('QVariant', constant=True)
     def version(self) -> dict[str:str]:

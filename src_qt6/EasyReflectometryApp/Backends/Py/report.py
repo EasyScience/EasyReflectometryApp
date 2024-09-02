@@ -79,9 +79,8 @@ class Report(QObject):
     createdChanged = Signal()
     asHtmlChanged = Signal()
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super().__init__(parent)
-        self._proxy = parent
         self._created = True
         self._asHtml = _PY_HTML
 
@@ -105,4 +104,4 @@ class Report(QObject):
         if self._asHtml == newValue:
             return
         self._asHtml = newValue
-        self.asHtmlChanged.emit()
+        self.asHtmlChanged.emit
