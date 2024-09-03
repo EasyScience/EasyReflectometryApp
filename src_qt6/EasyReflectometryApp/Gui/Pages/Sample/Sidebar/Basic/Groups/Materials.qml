@@ -71,14 +71,14 @@ EaElements.GroupColumn {
             }
 
             EaComponents.TableViewTextInput {
-                id: sldLabel
-                text: Globals.BackendWrapper.sampleMaterials[index].sld
+//                id: sldLabel
+                text: Number(Globals.BackendWrapper.sampleMaterials[index].sld).toFixed(2)
                 onEditingFinished: Globals.BackendWrapper.sampleSetCurrentMaterialSld(text)
             }
 
             EaComponents.TableViewTextInput {
-                id: isldLabel
-                text: Globals.BackendWrapper.sampleMaterials[index].isld
+//                id: isldLabel
+                text: Number(Globals.BackendWrapper.sampleMaterials[index].isld).toFixed(2)
                 onEditingFinished: Globals.BackendWrapper.sampleSetCurrentMaterialISld(text)
             }
 
@@ -86,7 +86,7 @@ EaElements.GroupColumn {
                 enabled: tableView !== null && tableView.model > 1
                 fontIcon: "minus-circle"
                 ToolTip.text: qsTr("Remove this material")
-                onClicked: Globals.BackendWrapper.sampleRemoveMaterial(index)
+                onClicked: Globals.BackendWrapper.sampleRemoveMaterial(materialsView.currentIndex)
             }
 
         }
