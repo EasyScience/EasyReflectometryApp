@@ -78,7 +78,7 @@ QtObject {
     function sampleSetCurrentMaterialName(value) { activeBackend.sample.setCurrentMaterialName(value) }
     function sampleSetCurrentMaterialSld(value) { activeBackend.sample.setCurrentMaterialSld(value) } 
     function sampleSetCurrentMaterialISld(value) { activeBackend.sample.setCurrentMaterialISld(value) }
-    function sampleRemoveMaterials(value) { activeBackend.sample.removeMaterial(value) }
+    function sampleRemoveMaterial(value) { activeBackend.sample.removeMaterial(value) }
     function sampleAddNewMaterial() { activeBackend.sample.addNewMaterial() }
     function sampleDuplicateSelectedMaterial() { activeBackend.sample.duplicateSelectedMaterial() }
     function sampleMoveSelectedMaterialUp() { activeBackend.sample.moveSelectedMaterialUp() }

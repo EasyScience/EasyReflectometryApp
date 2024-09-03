@@ -7,28 +7,30 @@ import EasyApp.Gui.Components as EaComponents
 
 import Gui.Globals as Globals
 
-EaElements.GroupBox {
-    title: qsTr("Material editor")
-    collapsible: true
-    collapsed: false
-    enabled: Globals.BackendWrapper.analysisIsFitFinished
+EaElements.GroupColumn {
 
+    // Table
     EaComponents.TableView {
         id: materialsView
 
-        tallRows: true
+        tallRows: false
         maxRowCountShow: 6
 
         defaultInfoText: qsTr("No Materials Added/Loaded")
 
-        model: Globals.BackendWrapper.sampleMaterials
+        // Table model
+        // We only use the length of the model object defined in backend logic and
+        // directly access that model in every row using the TableView index property.
+        model: Globals.BackendWrapper.sampleMaterials.length
+        // Table model
 
-        // header
+        // Header row
         header: EaComponents.TableViewHeader {
-//            EaComponents.TableViewLabel {
-//                enabled: false
-//                width: EaStyle.Sizes.fontPixelSize * 2.5
-//            }
+            EaComponents.TableViewLabel {
+                enabled: false
+                width: EaStyle.Sizes.fontPixelSize * 2.5
+                //text: qsTr("no.")
+            }
 
             EaComponents.TableViewLabel {
                 flexibleWidth: true
@@ -37,84 +39,99 @@ EaElements.GroupBox {
             }
 
             EaComponents.TableViewLabel {
-                flexibleWidth: true
-                horizontalAlignment: Text.AlignLeft
-                text: qsTr("SLD/10<sup>-6</sup> Å<sup>-2</sup>")
+                width: EaStyle.Sizes.fontPixelSize * 9.5
+                horizontalAlignment: Text.AlignHCenter
+                text: "SLD/10<sup>-6</sup> Å<sup>-2</sup>"
             }
 
             EaComponents.TableViewLabel {
-                flexibleWidth: true
-                horizontalAlignment: Text.AlignLeft
-                text: qsTr("<i>i</i> SLD/10<sup>-6</sup> Å<sup>-2</sup>")
+                width: EaStyle.Sizes.fontPixelSize * 9.5
+                horizontalAlignment: Text.AlignHCenter
+                text: "<i>i</i> SLD/10<sup>-6</sup> Å<sup>-2</sup>"
+            }
+
+            EaComponents.TableViewLabel {
+                width: EaStyle.Sizes.tableRowHeight
+                //text: qsTr("del.")
             }
         }
-        // header
-
-        // delegate
-
-
-        // Table model
-
-//        model: XmlListModel {
-//            property int materialsIndex: Globals.BackendWrapper.sampleCurrentMaterialIndex + 1
-//
-//            source: Globals.BackendWrapper.sampleMaterialAsXml
-//            query: "/data/item"
-//
-//            XmlListModelRole { name: "color"; elementName: "color" }
-//            XmlListModelRole { name: "label"; elementName: "name" }
-//            XmlListModelRole { name: "sld"; elementName: "sld/value" }
-//            XmlListModelRole { name: "isld"; elementName: "isld/value" }
-//        }
+        // Header row
 
         // Table rows
-
         delegate: EaComponents.TableViewDelegate {
 
             EaComponents.TableViewLabel {
-                horizontalAlignment: Text.AlignLeft
-//                width: EaStyle.Sizes.sideBarContentWidth - (sldLabel.width + isldLabel.width + 5 * EaStyle.Sizes.tableColumnSpacing)
-//                width: EaStyle.Sizes.sideBarContentWidth - (sldLabel.width + isldLabel.width + colorLabel.width + deleteRowColumn.width + 5 * EaStyle.Sizes.tableColumnSpacing)
-//                headerText: "Name"
+                text: index + 1
+                color: EaStyle.Colors.themeForegroundMinor
+            }
+
+            EaComponents.TableViewTextInput {
                 text: Globals.BackendWrapper.sampleMaterials[index].label
-//                onEditingFinished: Globals.BackendWrapper.sampleSetCurrentMaterialName(text)
+                onEditingFinished: Globals.BackendWrapper.sampleSetCurrentMaterialName(text)
             }
 
             EaComponents.TableViewTextInput {
                 id: sldLabel
-                horizontalAlignment: Text.AlignHCenter
-                width: EaStyle.Sizes.fontPixelSize * 9.5
-//                headerText: "SLD/10<sup>-6</sup> Å<sup>-2</sup>"
                 text: Globals.BackendWrapper.sampleMaterials[index].sld
                 onEditingFinished: Globals.BackendWrapper.sampleSetCurrentMaterialSld(text)
             }
 
             EaComponents.TableViewTextInput {
                 id: isldLabel
-                horizontalAlignment: Text.AlignHCenter
-                width: EaStyle.Sizes.fontPixelSize * 9.5
-//                headerText: "<i>i</i> SLD/10<sup>-6</sup> Å<sup>-2</sup>"
                 text: Globals.BackendWrapper.sampleMaterials[index].isld
                 onEditingFinished: Globals.BackendWrapper.sampleSetCurrentMaterialISld(text)
             }
 
-//            EaComponents.TableViewButton {
-//                id: deleteRowColumn
-//                    headerText: "Del." //"\uf2ed"
-//                fontIcon: "minus-circle"
-//                ToolTip.text: qsTr("Remove this material")
-//                enabled: (materialsView.model.count > 1) ? true : false
-//                onClicked: Globals.BackendWrapper.sampleRemoveMaterial(materialsTable.currentIndex)
-//            }
+            EaComponents.TableViewButton {
+                enabled: tableView !== null && tableView.model > 1
+                fontIcon: "minus-circle"
+                ToolTip.text: qsTr("Remove this material")
+                onClicked: Globals.BackendWrapper.sampleRemoveMaterial(index)
+            }
 
         }
+        // Table rows
 
         onCurrentIndexChanged: {
             Globals.BackendWrapper.sampleCurrentMaterialIndex = materialsView.currentIndex
         }
 
     }
+    // Table
 
+    // Control buttons below table
+    Row {
+        spacing: EaStyle.Sizes.fontPixelSize
+
+        // This button should add a new item to the model editor.
+        EaElements.SideBarButton {
+            fontIcon: "plus-circle"
+            text: qsTr("Add material")
+            onClicked: {
+                console.debug(`Clicking '${text}' button: ${this}`)
+                console.debug('*** Adding new material ***')
+                Globals.BackendWrapper.sampleAddNewMaterial()
+            }
+        }
+
+        // When an item is selected, this button will be enabled to allow
+        // the selected item to be duplicated
+        EaElements.SideBarButton {
+            fontIcon: "clone"
+            text: qsTr("Duplicate material")
+            onClicked: {
+                console.debug(`Clicking '${text}' button: ${this}`)
+                console.debug('*** Duplicating selected material ***')
+                Globals.BackendWrapper.sampleDuplicateSelectedMaterial()
+            }
+        }
+
+    }
+    // Control buttons below table
+
+}
+
+/*
     Row {
         spacing: EaStyle.Sizes.fontPixelSize
 
@@ -138,7 +155,7 @@ EaElements.GroupBox {
         }
 
         EaElements.SideBarButton {
-            // When an item is selected and it is not at the top, 
+            // When an item is selected and it is not at the top,
             // this button will be enabled to allow
             // the selected item to be moved up
             enabled: (materialsView.model.count > 0 && materialsView.currentIndex !== 0) ? true : false//When item is selected
@@ -149,7 +166,7 @@ EaElements.GroupBox {
         }
 
         EaElements.SideBarButton {
-            // When an item is selected and it is not at the bottom, 
+            // When an item is selected and it is not at the bottom,
             // this button will be enabled to allow
             // the selected item to be moved down
             enabled: (materialsView.model.count > 0 && materialsView.currentIndex + 1 !== materialsTable.model.count) ? true : false//When item is selected
@@ -159,6 +176,7 @@ EaElements.GroupBox {
             onClicked: Globals.BackendWrapper.sampleMoveSelectedMaterialDown()
         }
     }
+    */
 
     /*Row {
         spacing: EaStyle.Sizes.fontPixelSize
@@ -173,4 +191,4 @@ EaElements.GroupBox {
             //Component.onCompleted: ExGlobals.Variables.setNewSampleManuallyButton = this
         }
     }*/
-}
+//}

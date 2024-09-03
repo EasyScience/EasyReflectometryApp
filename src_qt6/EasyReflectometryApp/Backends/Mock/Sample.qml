@@ -4,7 +4,7 @@ import QtQuick
 
 QtObject {
 
-    readonly property int currentMaterialIndex: 0
+    property int currentMaterialIndex: 0
     readonly property var materials: [
         {
             'label': 'label 1',
