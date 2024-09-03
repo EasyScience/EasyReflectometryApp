@@ -42,16 +42,16 @@ EaComponents.ApplicationWindow {
     // Page buttons for the pages described below
     appBarCentralTabs.contentData: [
 
-        // Home page
+/*        // Home page
         EaElements.AppBarTabButton {
             id: homeButton
             objectName: 'applicationWindow.appBarCentralTabs.homeButton'
             fontIcon: 'home'
             text: qsTr('Home')
             ToolTip.text: qsTr('Home')
-            //Component.onCompleted: {
-            //    Globals.References.applicationWindow.appBarCentralTabs.homeButton = homeButton
-            //}
+            Component.onCompleted: {
+                Globals.References.applicationWindow.appBarCentralTabs.homeButton = homeButton
+            }
         },
         // Home page
 
@@ -67,7 +67,42 @@ EaComponents.ApplicationWindow {
             }
         },
         // Project page
+*/
+        // Sample page
+        EaElements.AppBarTabButton {
+            id: sampleButton
+            enabled: false
+            fontIcon: 'layer-group'
+            text: qsTr('Sample')
+            ToolTip.text: qsTr('Sample description page')
+            Component.onCompleted: {
+                Globals.References.applicationWindow.appBarCentralTabs.sampleButton = sampleButton
+            }
+        },
+        // Sample page
+/*
+        // Experiment tab
+        EaElements.AppBarTabButton {
+            id: experimentTabButton
+            enabled: ExGlobals.Variables.samplePageEnabled
+            fontIcon: "microscope"
+            text: qsTr("Experiment")
+            ToolTip.text: qsTr("Experimental settings and data page")
+            Component.onCompleted: ExGlobals.Variables.experimentTabButton = experimentTabButton
+        },
 
+        // Analysis tab
+        EaElements.AppBarTabButton {
+            id: analysisTabButton
+            enabled: ExGlobals.Variables.samplePageEnabled &&
+                     (ExGlobals.Constants.proxy.data.experimentSkipped ||
+                      ExGlobals.Constants.proxy.data.experimentLoaded)
+            fontIcon: "calculator"
+            text: qsTr("Analysis")
+            ToolTip.text: qsTr("Simulation and fitting page")
+            Component.onCompleted: ExGlobals.Variables.analysisTabButton = analysisTabButton
+        },
+*/
         // Summary page
         EaElements.AppBarTabButton {
             id: summaryButton
@@ -88,8 +123,11 @@ EaComponents.ApplicationWindow {
 
     // Pages for the tab buttons described above
     contentArea: [
-        Loader { source: 'Pages/Home/Layout.qml' },
-        Loader { source: 'Pages/Project/Layout.qml' },
+//        Loader { source: 'Pages/Home/Layout.qml' },
+//        Loader { source: 'Pages/Project/Layout.qml' },
+        Loader { source: 'Pages/Sample/Layout.qml' },
+//        Loader { source: 'Pages/Experiment/Layout.qml' },
+//        Loader { source: 'Pages/Analysis/Layout.qml' },
         Loader { source: 'Pages/Report/Layout.qml' }
     ]
 

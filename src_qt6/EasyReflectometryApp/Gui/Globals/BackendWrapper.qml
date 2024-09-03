@@ -68,6 +68,29 @@ QtObject {
     function projectSave() { activeBackend.project.save() }
 
     ///////////////
+    // Sample page
+    ///////////////
+
+    property int sampleCurrentMaterialIndex: activeBackend.sample.currentMaterialIndex
+    onSampleCurrentMaterialIndexChanged: activeBackend.sample.currentMaterialIndex = sampleCurrentMaterialIndex
+    readonly property var sampleMaterials: activeBackend.sample.materials
+
+    function sampleSetCurrentMaterialName(value) { activeBackend.sample.setCurrentMaterialName(value) }
+    function sampleSetCurrentMaterialSld(value) { activeBackend.sample.setCurrentMaterialSld(value) } 
+    function sampleSetCurrentMaterialISld(value) { activeBackend.sample.setCurrentMaterialISld(value) }
+    function sampleRemoveMaterials(value) { activeBackend.sample.removeMaterial(value) }
+    function sampleAddNewMaterial() { activeBackend.sample.addNewMaterial() }
+    function sampleDuplicateSelectedMaterial() { activeBackend.sample.duplicateSelectedMaterial() }
+    function sampleMoveSelectedMaterialUp() { activeBackend.sample.moveSelectedMaterialUp() }
+    function sampleMoveSelectedMaterialDown() { activeBackend.sample.moveSelectedMaterialDown() }
+
+    ///////////////
+    // Analysis page
+    ///////////////
+    readonly property bool analysisIsFitFinished: activeBackend.analysis.isFitFinished
+
+
+    ///////////////
     // Summary page
     ///////////////
     readonly property bool summaryCreated: activeBackend.report.created
