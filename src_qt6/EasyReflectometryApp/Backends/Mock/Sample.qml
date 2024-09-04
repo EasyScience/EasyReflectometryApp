@@ -57,6 +57,7 @@ QtObject {
 
     // MODELS
     property int currentModelIndex: -1
+    property string currentModelName: 'currentModelName'
 
     readonly property var models: [
         {
@@ -98,4 +99,22 @@ QtObject {
         console.debug(`moveSelectedModelDown ${currentModelIndex}`)
     }
 
+    // ASSEMBLIES
+    property int currentAssemblyIndex: -1
+    property string currentAssemblyName: 'currentAssemblyName'
+
+    readonly property var assemblies: [
+        {
+            'color': 'red',
+            'label': 'label 1'
+        },
+        {
+            'color': 'green',
+            'label': 'label 2'
+        },
+        {
+            'color': 'blue',
+            'label': 'label 3'
+        },
+    ]
 }

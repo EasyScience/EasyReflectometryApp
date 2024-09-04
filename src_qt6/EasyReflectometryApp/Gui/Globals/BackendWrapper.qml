@@ -93,6 +93,7 @@ QtObject {
     property int sampleCurrentModelIndex: activeBackend.sample.currentModelIndex
     onSampleCurrentModelIndexChanged: activeBackend.sample.currentModelIndex = sampleCurrentModelIndex
     readonly property var sampleModels: activeBackend.sample.models
+    readonly property string sampleCurrentModelName: activeBackend.sample.currentModelName
 
     function sampleSetCurrentModelName(value) { activeBackend.sample.setCurrentModelName(value) }
     function sampleRemoveModel(value) { activeBackend.sample.removeModel(value) }
@@ -101,6 +102,11 @@ QtObject {
     function sampleMoveSelectedModelUp() { activeBackend.sample.moveSelectedModelUp() }
     function sampleMoveSelectedModelDown() { activeBackend.sample.moveSelectedModelDown() }
 
+    // Assembly
+    property int sampleCurrentAssemblyIndex: activeBackend.sample.currentAssemblyIndex
+    onSampleCurrentAssemblyIndexChanged: activeBackend.sample.currentAssemblyIndex = sampleCurrentAssemblyIndex
+    readonly property var sampleAssemblies: activeBackend.sample.assemblies
+    readonly property string sampleCurrentAssemblyName: activeBackend.sample.currentAssemblyName
 
     ///////////////
     // Analysis page
