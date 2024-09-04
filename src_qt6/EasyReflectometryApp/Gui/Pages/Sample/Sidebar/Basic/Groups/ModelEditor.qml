@@ -86,9 +86,9 @@ EaElements.GroupBox {
             }
 
             onCurrentIndexChanged: {
-                ExGlobals.Constants.proxy.model.currentItemsIndex = assembliesView.currentIndex
+                Globals.BackendWrapper.sampleSetCurrentAssemblyIndex(assembliesView.currentIndex)
                 currentAssemblyType: assembliesView.currentIndex
-                repsSpinBox.value = ExGlobals.Constants.proxy.model.currentItemsRepetitions
+//                repsSpinBox.value = ExGlobals.Constants.proxy.model.currentItemsRepetitions
             }
 
             onModelChanged: currentIndex = 0
@@ -107,7 +107,7 @@ EaElements.GroupBox {
             }
 
             EaElements.SideBarButton {
-                enabled: (assembliesView.model.count > 0) ? true : false//When item is selected
+                enabled: (assembliesView.currentIndex > 0) ? true : false//When item is selected
                 width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 fontIcon: "clone"
                 text: qsTr("Duplicate layer")
@@ -115,7 +115,7 @@ EaElements.GroupBox {
             }
 
             EaElements.SideBarButton {
-                enabled: (assembliesView.model.count > 0 && assembliesView.currentIndex !== 0) ? true : false//When item is selected
+                enabled: (assembliesView.currentIndex !== 0 && Globals.BackendWrapper.sampleAssemblies.length > 0 ) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-up"
                 ToolTip.text: qsTr("Move layer up")
@@ -123,7 +123,7 @@ EaElements.GroupBox {
             }
 
             EaElements.SideBarButton {
-                enabled: (assembliesView.model.count > 0 && assembliesView.currentIndex + 1 !== assembliesView.model.count) ? true : false//When item is selected
+                enabled: (assembliesView.currentIndex + 1 !== Globals.BackendWrapper.sampleAssemblies.length && Globals.BackendWrapper.sampleAssemblies.length > 0 ) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-down"
                 ToolTip.text: qsTr("Move layer down")

@@ -145,4 +145,8 @@ QtObject {
     function moveSelectedAssemblyDown() {
         console.debug(`moveSelectedAssemblyDown ${currentAssemblyIndex}`)
     }
+
+    function setCurrentAssemblyIndex(value) {
+        console.debug(`setCurrentAssemblyIndex ${value}`)
+    }
 }

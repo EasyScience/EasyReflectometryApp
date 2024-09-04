@@ -115,7 +115,7 @@ QtObject {
     function sampleDuplicateSelectedAssembly() { activeBackend.sample.duplicateSelectedAssembly() }
     function sampleMoveSelectedAssemblyUp() { activeBackend.sample.moveSelectedAssemblyUp() }
     function sampleMoveSelectedAssemblyDown() { activeBackend.sample.moveSelectedAssemblyDown() }
-
+    function sampleSetCurrentAssemblyIndex(value) { activeBackend.sample.setCurrentAssemblyIndex(value) }
 
     ///////////////
     // Analysis page

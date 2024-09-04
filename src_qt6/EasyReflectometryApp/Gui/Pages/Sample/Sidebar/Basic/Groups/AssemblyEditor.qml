@@ -3,6 +3,8 @@ import QtQuick.Controls
 
 import EasyApp.Gui.Elements as EaElements
 
+import Gui.Globals as Globals
+
 EaElements.GroupBox {
     title: qsTr("Layer editor: " + Globals.BackendWrapper.sampleCurrentAssemblyName)
     collapsible: true

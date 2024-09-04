@@ -96,7 +96,7 @@ EaElements.GroupBox {
             }
 
             EaElements.SideBarButton {
-                enabled: (Globals.BackendWrapper.sampleModels.length > 0 && modelView.currentIndex !== 0) ? true : false//When item is selected
+                enabled: (modelView.currentIndex !== 0 && Globals.BackendWrapper.sampleModels.length > 0) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-up"
                 ToolTip.text: qsTr("Move model up")
@@ -104,7 +104,7 @@ EaElements.GroupBox {
             }
 
             EaElements.SideBarButton {
-                enabled: (Globals.BackendWrapper.sampleModels.length > 0 && modelView.currentIndex + 1 !== Globals.BackendWrapper.sampleModels.length) ? true : false//When item is selected
+                enabled: (modelView.currentIndex + 1 !== Globals.BackendWrapper.sampleModels.length && Globals.BackendWrapper.sampleModels.length > 0 ) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-down"
                 ToolTip.text: qsTr("Move model down")

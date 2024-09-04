@@ -101,7 +101,7 @@ EaElements.GroupBox {
             }
 
             EaElements.SideBarButton {
-                enabled: (materialsView.currentIndext > 0)
+                enabled: (materialsView.currentIndex > 0) ? true : false //When material is selected
                 width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 fontIcon: "clone"
                 text: qsTr("Duplicate material")
@@ -109,7 +109,7 @@ EaElements.GroupBox {
             }
 
             EaElements.SideBarButton {
-                enabled: (Globals.BackendWrapper.sampleMaterials.length > 0 && materialsView.currentIndex !== 0) ? true : false//When item is selected
+                enabled: (materialsView.currentIndex !== 0 && Globals.BackendWrapper.sampleMaterials.length > 0) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-up"
                 ToolTip.text: qsTr("Move material up")
@@ -117,7 +117,7 @@ EaElements.GroupBox {
             }
 
             EaElements.SideBarButton {
-                enabled: (Globals.BackendWrapper.sampleMaterials.length > 0 && materialsView.currentIndex + 1 !== Globals.BackendWrapper.sampleMaterials.length) ? true : false//When item is selected
+                enabled: (materialsView.currentIndex + 1 !== Globals.BackendWrapper.sampleMaterials.length && Globals.BackendWrapper.sampleMaterials.length > 0) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-down"
                 ToolTip.text: qsTr("Move material down")
