@@ -22,141 +22,16 @@ EaComponents.SideBarColumn {
         collapsible: true
         collapsed: false
         enabled: Globals.BackendWrapper.analysisIsFitFinished
-
         Loader { source: 'Groups/Materials.qml' }
-/*
-        EaComponents.TableView {
-            id: materialsTable
+    }
+    
+    EaElements.GroupBox {
+        title: qsTr("Model editor")
+        collapsible: true
+        collapsed: false
+        enabled: Globals.BackendWrapper.analysisIsFitFinished
 
-            defaultInfoText: qsTr("No Materials Added/Loaded")
-
-            // Table model
-
-            model: XmlListModel {
-                property int materialsIndex: Globals.BackendWrapper.sampleCurrentMaterialIndex + 1
-
-                source: Globals.BackendWrapper.sampleMaterialAsXml
-                query: "/data/item"
-
-                XmlListModelRole { name: "color"; elementName: "color" }
-                XmlListModelRole { name: "label"; elementName: "name" }
-                XmlListModelRole { name: "sld"; elementName: "sld/value" }
-                XmlListModelRole { name: "isld"; elementName: "isld/value" }
-            }
-
-            // Table rows
-
-            delegate: EaComponents.TableViewDelegate {
-
-                EaComponents.TableViewLabel {
-                    id: colorLabel
-                    width: EaStyle.Sizes.fontPixelSize * 2.5
-                    headerText: "No."
-                    text: model.index + 1
-                }
-
-                EaComponents.TableViewTextInput {
-                    horizontalAlignment: Text.AlignLeft
-                    width: EaStyle.Sizes.sideBarContentWidth - (sldLabel.width + isldLabel.width + colorLabel.width + deleteRowColumn.width + 5 * EaStyle.Sizes.tableColumnSpacing)
-                    headerText: "Name"
-                    text: model.label
-                    onEditingFinished: Globals.BackendWrapper.sampleSetCurrentMaterialName(text)
-                }
-
-                EaComponents.TableViewTextInput {
-                    id: sldLabel
-                    horizontalAlignment: Text.AlignHCenter
-                    width: EaStyle.Sizes.fontPixelSize * 9.5
-                    headerText: "SLD/10<sup>-6</sup> Å<sup>-2</sup>"
-                    text: model.sld.toFixed(3)
-                    onEditingFinished: Globals.BackendWrapper.sampleSetCurrentMaterialSld(text)
-                }
-
-                EaComponents.TableViewTextInput {
-                    id: isldLabel
-                    horizontalAlignment: Text.AlignHCenter
-                    width: EaStyle.Sizes.fontPixelSize * 9.5
-                    headerText: "<i>i</i> SLD/10<sup>-6</sup> Å<sup>-2</sup>"
-                    text: model.isld.toFixed(3)
-                    onEditingFinished: Globals.BackendWrapper.sampleSetCurrentMaterialISld(text)
-                }
-
-                EaComponents.TableViewButton {
-                    id: deleteRowColumn
-                    headerText: "Del." //"\uf2ed"
-                    fontIcon: "minus-circle"
-                    ToolTip.text: qsTr("Remove this material")
-                    enabled: (materialsTable.model.count > 1) ? true : false
-
-                    onClicked: Globals.BackendWrapper.sampleRemoveMaterial(materialsTable.currentIndex)
-                }
-
-            }
-
-            onCurrentIndexChanged: {
-                Globals.BackendWrapper.sampleCurrentMaterialIndex = materialsTable.currentIndex
-            }
-
-        }
-
-        Row {
-            spacing: EaStyle.Sizes.fontPixelSize
-
-            EaElements.SideBarButton {
-                // This button should add a new item to the model editor.
-                enabled: true
-                width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
-                fontIcon: "plus-circle"
-                text: qsTr("Add material")
-                onClicked: Globals.BackendWrapper.sampleAddNewMaterial()
-            }
-
-            EaElements.SideBarButton {
-                // When an item is selected, this button will be enabled to allow
-                // the selected item to be duplicated
-                enabled: (materialsTable.model.count > 0) ? true : false //When material is selected
-                width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
-                fontIcon: "clone"
-                text: qsTr("Duplicate material")
-                onClicked: Globals.BackendWrapper.sampleDuplicateSelectedMaterial()
-            }
-
-            EaElements.SideBarButton {
-                // When an item is selected and it is not at the top, 
-                // this button will be enabled to allow
-                // the selected item to be moved up
-                enabled: (materialsTable.model.count > 0 && materialsTable.currentIndex != 0) ? true : false//When item is selected
-                width: EaStyle.Sizes.tableRowHeight
-                fontIcon: "arrow-up"
-                ToolTip.text: qsTr("Move material up")
-                onClicked: Globals.BackendWrapper.sampleMoveSelectedMaterialUp()
-            }
-
-            EaElements.SideBarButton {
-                // When an item is selected and it is not at the bottom, 
-                // this button will be enabled to allow
-                // the selected item to be moved down
-                enabled: (materialsTable.model.count > 0 && materialsTable.currentIndex + 1 != materialsTable.model.count) ? true : false//When item is selected
-                width: EaStyle.Sizes.tableRowHeight
-                fontIcon: "arrow-down"
-                ToolTip.text: qsTr("Move material down")
-                onClicked: Globals.BackendWrapper.sampleMoveSelectedMaterialDown()
-            }
-        }*/
-
-        /*Row {
-            spacing: EaStyle.Sizes.fontPixelSize
-
-            EaElements.SideBarButton {
-                // This button will in future allow a material to be defined from a file (i.e. a CIF)
-                // or from a periodic table and molecular density.
-                enabled: false //Not implemented
-                fontIcon: "upload"
-                text: qsTr("Import a new material")
-                onClicked: loadPhaseFileDialog()
-                //Component.onCompleted: ExGlobals.Variables.setNewSampleManuallyButton = this
-            }
-        }*/
+        Loader { source: 'Groups/Models.qml' }
     }
 /*
     EaElements.GroupBox{

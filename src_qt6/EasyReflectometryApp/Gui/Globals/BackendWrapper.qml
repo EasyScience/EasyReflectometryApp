@@ -30,6 +30,7 @@ QtObject {
         }
     }
 
+
     /////////////
     // Status bar
     /////////////
@@ -39,6 +40,7 @@ QtObject {
     readonly property string statusCalculator: activeBackend.status.calculator
     readonly property string statusMinimizer: activeBackend.status.minimizer
     readonly property string statusVariables: activeBackend.status.variables
+
 
     ///////////////
     // Home page
@@ -50,6 +52,7 @@ QtObject {
     readonly property string homeUrlsLicense: activeBackend.home.urls.license
     readonly property string homeUrlsDocumentation: activeBackend.home.urls.documentation
     readonly property string homeUrlsDependencies: activeBackend.home.urls.dependencies
+
 
     ///////////////
     // Project page
@@ -67,10 +70,12 @@ QtObject {
     function projectCreate(value) { activeBackend.project.create(value) }
     function projectSave() { activeBackend.project.save() }
 
+
     ///////////////
     // Sample page
     ///////////////
 
+    // Material
     property int sampleCurrentMaterialIndex: activeBackend.sample.currentMaterialIndex
     onSampleCurrentMaterialIndexChanged: activeBackend.sample.currentMaterialIndex = sampleCurrentMaterialIndex
     readonly property var sampleMaterials: activeBackend.sample.materials
@@ -83,6 +88,19 @@ QtObject {
     function sampleDuplicateSelectedMaterial() { activeBackend.sample.duplicateSelectedMaterial() }
     function sampleMoveSelectedMaterialUp() { activeBackend.sample.moveSelectedMaterialUp() }
     function sampleMoveSelectedMaterialDown() { activeBackend.sample.moveSelectedMaterialDown() }
+
+    // Model
+    property int sampleCurrentModelIndex: activeBackend.sample.currentModelIndex
+    onSampleCurrentModelIndexChanged: activeBackend.sample.currentModelIndex = sampleCurrentModelIndex
+    readonly property var sampleModels: activeBackend.sample.models
+
+    function sampleSetCurrentModelName(value) { activeBackend.sample.setCurrentModelName(value) }
+    function sampleRemoveModel(value) { activeBackend.sample.removeModel(value) }
+    function sampleAddNewModel() { activeBackend.sample.addNewModel() }
+    function sampleDuplicateSelectedModel() { activeBackend.sample.duplicateSelectedModel() }
+    function sampleMoveSelectedModelUp() { activeBackend.sample.moveSelectedModelUp() }
+    function sampleMoveSelectedModelDown() { activeBackend.sample.moveSelectedModelDown() }
+
 
     ///////////////
     // Analysis page
