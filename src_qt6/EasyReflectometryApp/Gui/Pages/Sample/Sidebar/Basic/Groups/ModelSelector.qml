@@ -19,7 +19,10 @@ EaElements.GroupColumn {
 
         // Header row
         header: EaComponents.TableViewHeader {
+
+            // Placeholder for row color
             EaComponents.TableViewLabel {
+                id: colorLabel
                 width: EaStyle.Sizes.fontPixelSize * 2.5
 //                enabled: false
 //                horizontalAlignment: Text.AlignLeft
@@ -27,22 +30,23 @@ EaElements.GroupColumn {
             }
 
             EaComponents.TableViewLabel {
-                flexibleWidth: true
+                width: EaStyle.Sizes.sideBarContentWidth - (colorLabel.width + deleteRowColumn.width + 3 * EaStyle.Sizes.tableColumnSpacing)
+//                flexibleWidth: true
                 horizontalAlignment: Text.AlignLeft
                 text: qsTr('Label')
             }
 
             // Placeholder for row delete button
             EaComponents.TableViewLabel {
-                enabled: false
+//                enabled: false
                 width: EaStyle.Sizes.tableRowHeight
+                id: deleteRowColumn
             }
         }
 
         delegate: EaComponents.TableViewDelegate {
 
             EaComponents.TableViewLabel {
-                id: colorLabel
                 backgroundColor: Globals.BackendWrapper.sampleModels[index].color
             }
 
@@ -62,7 +66,7 @@ EaElements.GroupColumn {
             // }
 
             EaComponents.TableViewButton {
-                id: deleteRowColumn
+//                id: deleteRowColumn
 //                headerText: "Del." //"\uf2ed"
                 fontIcon: "minus-circle"
                 enabled: (modelView.model > 1) ? true : false//When item is selected

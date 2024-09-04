@@ -15,7 +15,7 @@ import Gui.Globals as Globals
 
 EaComponents.SideBarColumn {
 
-    property string currentItemsType: 'Multi-layer'
+    property string currentAssemblyType: 'Multi-layer'
 
     EaElements.GroupBox {
         title: qsTr("Material editor")

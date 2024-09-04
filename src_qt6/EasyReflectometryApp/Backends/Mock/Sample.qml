@@ -61,23 +61,22 @@ QtObject {
 
     readonly property var models: [
         {
+            'label': 'label 1',
             'color': 'red',
-            'label': 'label 1'
         },
         {
-            'color': 'green',
-            'label': 'label 2'
+            'label': 'label 2',
+            'color': 'green'
         },
         {
-            'color': 'blue',
-            'label': 'label 3'
+            'label': 'label 3',
+            'color': 'blue'
         },
     ]
 
     function setCurrentModelName(value) {
         console.debug(`setCurrentModelName ${value}`)
     }
-
 
     function removeModel(value) {
         console.debug(`removeModel ${value}`)
@@ -105,16 +104,17 @@ QtObject {
 
     readonly property var assemblies: [
         {
-            'color': 'red',
-            'label': 'label 1'
+            'label': 'label 1',
+            'type': 'Multi-layer'
         },
         {
-            'color': 'green',
-            'label': 'label 2'
+            'label': 'label 2',
+            'type': 'Multi-layer'
+
         },
         {
-            'color': 'blue',
-            'label': 'label 3'
+            'label': 'label 3',
+            'type': 'Multi-layer'
         },
     ]
 }

@@ -27,7 +27,7 @@ EaElements.GroupColumn {
 
             // Placeholder for row nr
             EaComponents.TableViewLabel {
-                enabled: false
+//                enabled: false
                 width: EaStyle.Sizes.fontPixelSize * 2.5
             }
 
@@ -51,7 +51,7 @@ EaElements.GroupColumn {
 
             // Placeholder for row delete button
             EaComponents.TableViewLabel {
-                enabled: false
+//                enabled: false
                 width: EaStyle.Sizes.tableRowHeight
             }
         }

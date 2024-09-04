@@ -8,21 +8,42 @@ import EasyApp.Gui.Components as EaComponents
 import Gui.Globals as Globals
 
 EaElements.GroupColumn {
+    id: groups
     EaComponents.TableView {
-        id: itemsTable
+        id: assembliesView
+
+        tallRows: false
 
         defaultInfoText: qsTr("No Model Present")
 
-        // Table model
+        model: Globals.BackendWrapper.sampleAssemblies.length
 
-        model: XmlListModel {
-            property int itemsIndex: ExGlobals.Constants.proxy.model.currentItemsIndex + 1
+        // Header row
+        header: EaComponents.TableViewHeader {
 
-            xml: ExGlobals.Constants.proxy.model.itemsAsXml
-            query: "/data/item"
+            EaComponents.TableViewLabel {
+                id: noLabel
+                width: EaStyle.Sizes.fontPixelSize * 2.5
+            }
 
-            XmlRole { name: "label"; query: "name/string()" }
-            XmlRole { name: "type"; query: "type/string()" }
+            EaComponents.TableViewLabel {
+                width: EaStyle.Sizes.sideBarContentWidth - (noLabel.width + deleteRowColumn.width + layersType.width + 4 * EaStyle.Sizes.tableColumnSpacing)
+                horizontalAlignment: Text.AlignLeft
+                text: qsTr('Label')
+            }
+
+            EaComponents.TableViewLabel {
+                id: layersType
+                width: EaStyle.Sizes.fontPixelSize * 13.8
+                text: qsTr('Type')
+            }
+
+            // Placeholder for row delete button
+            EaComponents.TableViewLabel {
+                id: deleteRowColumn
+                enabled: false
+                width: EaStyle.Sizes.tableRowHeight
+            }
         }
 
         // Table rows
@@ -31,48 +52,40 @@ EaElements.GroupColumn {
             property var itemsModel: model
 
             EaComponents.TableViewLabel {
-                id: colorLabel
-                width: EaStyle.Sizes.fontPixelSize * 2.5
-                headerText: "No."
-                text: model.index + 1
+                color: EaStyle.Colors.themeForegroundMinor
+                text: index + 1
             }
 
             EaComponents.TableViewTextInput {
                 horizontalAlignment: Text.AlignLeft
-                width: EaStyle.Sizes.sideBarContentWidth - (colorLabel.width + deleteRowColumn.width + layersType.width + 4 * EaStyle.Sizes.tableColumnSpacing)
-                headerText: "Label"
-                text: itemsModel.label
-                onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentItemsName(text)
+                text: Globals.BackendWrapper.sampleAssemblies[index].label
+                onEditingFinished: Globals.BackendWrapper.setCurrentAssemblyName(text)
             }
 
             EaComponents.TableViewComboBox{
-                id: layersType
                 horizontalAlignment: Text.AlignLeft
-                width: EaStyle.Sizes.fontPixelSize * 13.8
-                headerText: "Type"
                 model: ["Multi-layer", "Repeating Multi-layer", "Surfactant Layer"]
                 onActivated: {
-                    ExGlobals.Constants.proxy.model.currentItemsType = currentValue
-                    currentItemsType = ExGlobals.Constants.proxy.model.currentItemsType
+                    Globals.BackendWrapper.sampleAssemblies[index].type = currentValue
+//                    ExGlobals.Constants.proxy.model.currentItemsType = currentValue
+                    parent.parent.currentAssemblyType = currentValue
                 }
                 Component.onCompleted: {
-                    currentIndex = indexOfValue(itemsModel.type)
+                    currentIndex = indexOfValue(Globals.BackendWrapper.sampleAssemblies[index].type)
                 }
             }
 
             EaComponents.TableViewButton {
-                id: deleteRowColumn
-                headerText: "Del." //"\uf2ed"
                 fontIcon: "minus-circle"
                 ToolTip.text: qsTr("Remove this layer")
-                enabled: (itemsTable.model.count > 1) ? true : false  
-                onClicked: ExGlobals.Constants.proxy.model.removeItems(itemsTable.currentIndex)
+                enabled: assembliesView.model > 1
+                onClicked: Globals.BackendWrapper.sampleRemoveAssembly(assembliesView.currentIndex)
             }
 
         }
 
         onCurrentIndexChanged: {
-            ExGlobals.Constants.proxy.model.currentItemsIndex = itemsTable.currentIndex
+            ExGlobals.Constants.proxy.model.currentItemsIndex = assembliesView.currentIndex
             currentItemsType = ExGlobals.Constants.proxy.model.currentItemsType
             repsSpinBox.value = ExGlobals.Constants.proxy.model.currentItemsRepetitions
         }
@@ -89,17 +102,17 @@ EaElements.GroupColumn {
             enabled: true
             width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
             fontIcon: "plus-circle"
-            text: qsTr("Add item")
+            text: qsTr("Add layer")
             onClicked: ExGlobals.Constants.proxy.model.addNewItems()
         }
 
         EaElements.SideBarButton {
             // When an item is selected, this button will be enabled to allow
             // the selected item to be duplicated
-            enabled: (itemsTable.model.count > 0) ? true : false//When item is selected
+            enabled: (assembliesView.model.count > 0) ? true : false//When item is selected
             width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
             fontIcon: "clone"
-            text: qsTr("Duplicate item")
+            text: qsTr("Duplicate layer")
             onClicked: ExGlobals.Constants.proxy.model.duplicateSelectedItems()
         }
 
@@ -107,10 +120,10 @@ EaElements.GroupColumn {
             // When an item is selected and it is not at the top, 
             // this button will be enabled to allow
             // the selected item to be moved up
-            enabled: (itemsTable.model.count > 0 && itemsTable.currentIndex != 0) ? true : false//When item is selected
+            enabled: (assembliesView.model.count > 0 && assembliesView.currentIndex != 0) ? true : false//When item is selected
             width: EaStyle.Sizes.tableRowHeight
             fontIcon: "arrow-up"
-            ToolTip.text: qsTr("Move item up")
+            ToolTip.text: qsTr("Move layer up")
             onClicked: ExGlobals.Constants.proxy.model.moveSelectedItemsUp()
         }
 
@@ -118,10 +131,10 @@ EaElements.GroupColumn {
             // When an item is selected and it is not at the bottom, 
             // this button will be enabled to allow
             // the selected item to be moved down
-            enabled: (itemsTable.model.count > 0 && itemsTable.currentIndex + 1 != itemsTable.model.count) ? true : false//When item is selected
+            enabled: (assembliesView.model.count > 0 && assembliesView.currentIndex + 1 != assembliesView.model.count) ? true : false//When item is selected
             width: EaStyle.Sizes.tableRowHeight
             fontIcon: "arrow-down"
-            ToolTip.text: qsTr("Move item down")
+            ToolTip.text: qsTr("Move layer down")
             onClicked: ExGlobals.Constants.proxy.model.moveSelectedItemsDown()
         }
     }
