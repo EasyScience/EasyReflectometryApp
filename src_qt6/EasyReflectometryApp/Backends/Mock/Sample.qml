@@ -117,4 +117,32 @@ QtObject {
             'type': 'Multi-layer'
         },
     ]
+
+    function setCurrentAssemblyName(value) {
+        console.debug(`setCurrentAssemblyName ${value}`)
+    }
+
+    function setCurrentAssemblyType(value) {
+        console.debug(`setCurrentAssemblyType ${value}`)
+    }
+
+    function removeAssembly(value) {
+        console.debug(`removeAssembly ${value}`)
+    }
+
+    function addNewAssembly() {
+        console.debug(`addNewAssembly`)
+    }
+
+    function duplicateSelectedAssembly() {
+        console.debug(`duplicateSelectedAssembly ${currentAssemblyIndex}`)
+    }
+
+    function moveSelectedAssemblyUp() {
+        console.debug(`moveSelectedAssemblyUp ${currentAssemblyIndex}`)
+    }
+
+    function moveSelectedAssemblyDown() {
+        console.debug(`moveSelectedAssemblyDown ${currentAssemblyIndex}`)
+    }
 }
