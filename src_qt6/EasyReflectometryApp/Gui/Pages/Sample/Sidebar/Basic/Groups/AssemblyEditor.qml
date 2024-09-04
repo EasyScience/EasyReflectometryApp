@@ -4,6 +4,7 @@ import QtQuick.Controls
 import EasyApp.Gui.Elements as EaElements
 
 import Gui.Globals as Globals
+import "./Assemblies" as Assemblies
 
 EaElements.GroupBox {
     title: qsTr("Layer editor: " + Globals.BackendWrapper.sampleCurrentAssemblyName)
@@ -12,14 +13,12 @@ EaElements.GroupBox {
 
     EaElements.GroupColumn {
 
-        EaElements.GroupColumn {
+        Assemblies.MultiLayer{
             visible: true //(currentAssemblyType == 'Multi-layer') ? true : false
-            Loader { source: 'Assemblies/MultiLayer.qml' }
         }
 
-        EaElements.GroupColumn {
-            visible: (currentAssemblyType == 'Repeating Multi-layer') ? true : false
-            Loader { source: 'Assemblies/RepeatingMultiLayer.qml' }
+        Assemblies.RepeatingMultiLayer{
+            visible: true //(currentAssemblyType == 'Repeating Multi-layer') ? true : false
         }
 
         EaElements.GroupColumn {

@@ -7,6 +7,7 @@ import EasyApp.Gui.Components as EaComponents
 
 import Gui.Globals as Globals
 
+
 EaElements.GroupColumn {
     EaComponents.TableView {
         id: layersView
@@ -78,24 +79,18 @@ EaElements.GroupColumn {
             }
 
             EaComponents.TableViewTextInput {
-    //            id: roughLabel
                 horizontalAlignment: Text.AlignHCenter
-    //            width: EaStyle.Sizes.fontPixelSize * 10.0
-    //            headerText: "Upper Roughness/Å"
                 enabled: model.rough_enabled === "True"
                 text: (isNaN(layersModel.rough)) ? '--' : layersModel.rough.toFixed(2)
                 onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
             }
 
             EaComponents.TableViewButton {
-    //            id: deleteRowColumn
-    //            headerText: "Del." //"\uf2ed"
                 fontIcon: "minus-circle"
                 ToolTip.text: qsTr("Remove this item")
                 enabled: layersView.model.count > 1
                 onClicked: ExGlobals.Constants.proxy.model.removeLayers(layersTable.currentIndex)
             }
-
         }
 
         onCurrentIndexChanged: {
