@@ -13,7 +13,7 @@ EaElements.GroupBox {
     EaElements.GroupColumn {
 
         EaElements.GroupColumn {
-            visible: (currentAssemblyType == 'Multi-layer') ? true : false
+            visible: true //(currentAssemblyType == 'Multi-layer') ? true : false
             Loader { source: 'Assemblies/MultiLayer.qml' }
         }
 

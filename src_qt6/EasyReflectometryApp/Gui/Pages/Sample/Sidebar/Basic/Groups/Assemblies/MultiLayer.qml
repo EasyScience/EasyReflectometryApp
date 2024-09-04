@@ -1,94 +1,109 @@
-import QtQuick 2.14
-import QtQuick.Controls 2.14
-import QtQuick.XmlListModel 2.13
+import QtQuick
+import QtQuick.Controls
 
-import easyApp.Gui.Components 1.0 as EaComponents
-import easyApp.Gui.Style 1.0 as EaStyle
+import EasyApp.Gui.Style as EaStyle
+import EasyApp.Gui.Elements as EaElements
+import EasyApp.Gui.Components as EaComponents
 
-import Gui.Globals 1.0 as ExGlobals
+import Gui.Globals as Globals
 
-EaComponents.TableView {
-    id: layersTable
-    defaultInfoText: qsTr("No Layers Added")
+EaElements.GroupColumn {
+    EaComponents.TableView {
+        id: layersView
+        tallRows: false
+        defaultInfoText: qsTr("No Layers Added")
+        model: Globals.BackendWrapper.sampleLayers.length
 
-    // Table model
-
-    model: XmlListModel {
-        property int layersIndex: ExGlobals.Constants.proxy.model.currentLayersIndex + 1
-
-        xml: ExGlobals.Constants.proxy.model.layersAsXml
-        query: `/data/item[${itemsTable.currentIndex + 1}]/layers`
-
-        XmlRole { name: "thick"; query: "thickness/value/number()" }
-        XmlRole { name: "rough"; query: "roughness/value/number()" }
-        XmlRole { name: "materialid"; query: "material/name/string()"}
-        XmlRole { name: "thick_enabled"; query: "thickness/enabled/string()" }
-        XmlRole { name: "rough_enabled"; query: "roughness/enabled/string()" }
-    }
-
-    // Table rows
-
-    delegate: EaComponents.TableViewDelegate {
-        property var layersModel: model
-
-        EaComponents.TableViewLabel {
-            id: noLabel
-            width: EaStyle.Sizes.fontPixelSize * 2.3
-            headerText: "No."
-            text: model.index + 1
-        }
-
-        EaComponents.TableViewComboBox{
-            horizontalAlignment: Text.AlignLeft
-            width: EaStyle.Sizes.sideBarContentWidth - (thickLabel.width + roughLabel.width + noLabel.width + deleteRowColumn.width + 5 * EaStyle.Sizes.tableColumnSpacing)
-            headerText: "Material"
-            onActivated: {
-                ExGlobals.Constants.proxy.model.setCurrentLayersMaterial(currentIndex)
+        // Table
+        header: EaComponents.TableViewHeader {
+            EaComponents.TableViewLabel {
+                text: qsTr('No.')
+                width: EaStyle.Sizes.fontPixelSize * 2.5
+                id: noLabel
             }
-            model: ExGlobals.Constants.proxy.material.materialsName
-            onModelChanged: {
-                currentIndex = indexOfValue(layersModel.materialid)
+
+            EaComponents.TableViewLabel {
+                width: EaStyle.Sizes.sideBarContentWidth - (thickLabel.width + roughLabel.width + noLabel.width + deleteRowColumn.width + 5 * EaStyle.Sizes.tableColumnSpacing)
+                horizontalAlignment: Text.AlignLeft
+                text: qsTr('Material')
             }
-            Component.onCompleted: {
-                currentIndex = indexOfValue(layersModel.materialid)
+
+            EaComponents.TableViewLabel {
+                text: qsTr('Thickness/Å')
+                width: EaStyle.Sizes.fontPixelSize * 10.0
+                id: thickLabel
+            }
+
+            EaComponents.TableViewLabel {
+                text: qsTr('Upper Roughness/Å')
+                width: EaStyle.Sizes.fontPixelSize * 10.0
+                id: roughLabel
+            }
+
+            // Placeholder for row delete button
+            EaComponents.TableViewLabel {
+                id: deleteRowColumn
+                enabled: false
+                width: EaStyle.Sizes.tableRowHeight
             }
         }
 
-        EaComponents.TableViewTextInput {
-            id: thickLabel
-            horizontalAlignment: Text.AlignHCenter
-            width: EaStyle.Sizes.fontPixelSize * 10.0
-            headerText: "Thickness/Å"
-            enabled: model.thick_enabled == "True"
-            text: (isNaN(layersModel.thick)) ? '--' : layersModel.thick.toFixed(2)
-            onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersThickness(text)
+        // Rows
+        delegate: EaComponents.TableViewDelegate {
+            property var layersModel: model
+
+            EaComponents.TableViewLabel {
+                text: model.index + 1
+            }
+
+            EaComponents.TableViewComboBox{
+                horizontalAlignment: Text.AlignLeft
+                onActivated: {
+                    Globals.BackendWrapper.sampleSetCurrentLayerMaterialIndex(currentIndex)
+                }
+                model: Globals.BackendWrapper.sampleMaterialNames
+                onModelChanged: {
+                    currentIndex = indexOfValue(layersModel.materialid)
+                }
+                Component.onCompleted: {
+                    currentIndex = indexOfValue(layersModel.materialid)
+                }
+            }
+
+            EaComponents.TableViewTextInput {
+                horizontalAlignment: Text.AlignHCenter
+                enabled: model.thick_enabled === "True"
+                text: (isNaN(layersModel.thick)) ? '--' : layersModel.thick.toFixed(2)
+                onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersThickness(text)
+            }
+
+            EaComponents.TableViewTextInput {
+    //            id: roughLabel
+                horizontalAlignment: Text.AlignHCenter
+    //            width: EaStyle.Sizes.fontPixelSize * 10.0
+    //            headerText: "Upper Roughness/Å"
+                enabled: model.rough_enabled === "True"
+                text: (isNaN(layersModel.rough)) ? '--' : layersModel.rough.toFixed(2)
+                onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
+            }
+
+            EaComponents.TableViewButton {
+    //            id: deleteRowColumn
+    //            headerText: "Del." //"\uf2ed"
+                fontIcon: "minus-circle"
+                ToolTip.text: qsTr("Remove this item")
+                enabled: layersView.model.count > 1
+                onClicked: ExGlobals.Constants.proxy.model.removeLayers(layersTable.currentIndex)
+            }
+
         }
 
-        EaComponents.TableViewTextInput {
-            id: roughLabel
-            horizontalAlignment: Text.AlignHCenter
-            width: EaStyle.Sizes.fontPixelSize * 10.0
-            headerText: "Upper Roughness/Å"
-            enabled: model.rough_enabled == "True"
-            text: (isNaN(layersModel.rough)) ? '--' : layersModel.rough.toFixed(2)
-            onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
-        } 
+        onCurrentIndexChanged: {
+            Globals.BackendWrapper.sampleCurrentLayersIndex = layersView.currentIndex
 
-        EaComponents.TableViewButton {
-            id: deleteRowColumn
-            headerText: "Del." //"\uf2ed"
-            fontIcon: "minus-circle"
-            ToolTip.text: qsTr("Remove this item")
-            enabled: layersTable.model.count > 1
-            onClicked: ExGlobals.Constants.proxy.model.removeLayers(layersTable.currentIndex)
         }
-
     }
-
-    onCurrentIndexChanged: {
-        ExGlobals.Constants.proxy.model.currentLayersIndex = layersTable.currentIndex
-    }
-
+    // Control buttons below table
     Row {
         spacing: EaStyle.Sizes.fontPixelSize
 
@@ -102,7 +117,7 @@ EaComponents.TableView {
 
         EaElements.SideBarButton {
             width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
-            enabled: (layersTable.model.count > 0) ? true : false //when item is selected
+            enabled: (layersView.currentIndex > 0) ? true : false //when item is selected
             fontIcon: "clone"
             text: qsTr("Duplicate layer")
             onClicked: ExGlobals.Constants.proxy.model.duplicateSelectedLayers()
@@ -110,7 +125,7 @@ EaComponents.TableView {
 
         EaElements.SideBarButton {
             width: EaStyle.Sizes.tableRowHeight
-            enabled: (layersTable.model.count > 0 && layersTable.currentIndex != 0) ? true : false//When item is selected
+            enabled: (layersView.currentIndex !== 0 && Globals.BackendWrapper.sampleLayers.length > 0 ) ? true : false//When item is selected
             fontIcon: "arrow-up"
             ToolTip.text: qsTr("Move layer up")
             onClicked: ExGlobals.Constants.proxy.model.moveSelectedLayersUp()
@@ -118,7 +133,7 @@ EaComponents.TableView {
 
         EaElements.SideBarButton {
             width: EaStyle.Sizes.tableRowHeight
-            enabled: (layersTable.model.count > 0 && layersTable.currentIndex + 1 != layersTable.model.count) ? true : false
+            enabled: (layersView.currentIndex + 1 !== Globals.BackendWrapper.sampleLayers.length && Globals.BackendWrapper.sampleLayers.length > 0 ) ? true : false
             fontIcon: "arrow-down"
             ToolTip.text: qsTr("Move layer down")
             onClicked: ExGlobals.Constants.proxy.model.moveSelectedLayersDown()

@@ -22,6 +22,7 @@ QtObject {
             'isld': '-3.45678'
         },
     ]
+    readonly property var materialNames: materials.map(function (item) { return item.label })
 
     function setCurrentMaterialName(value) {
         console.debug(`setCurrentMaterialName ${value}`)
@@ -148,5 +149,37 @@ QtObject {
 
     function setCurrentAssemblyIndex(value) {
         console.debug(`setCurrentAssemblyIndex ${value}`)
+    }
+
+    // LAYERS
+    property int currentLayerIndex: -1
+    property string currentLayerName: 'currentLayerName'
+
+    readonly property var layers: [
+        {
+            'thickness': 'thickness 1',
+            'thickness_enabled': 'thickness_enabled 1',
+            'roughness': 'roughness 1',
+            'roughnesss_enabled': 'roughness_enabled 1',
+            'material': 'material 1',
+        },
+        {
+            'thickness': 'thickness 2',
+            'thickness_enabled': 'thickness_enabled 2',
+            'roughness': 'roughness 2',
+            'roughnesss_enabled': 'roughness_enabled 2',
+            'material': 'material 2',
+        },
+        {
+            'thickness': 'thickness 3',
+            'thickness_enabled': 'thickness_enabled 3',
+            'roughness': 'roughness 3',
+            'roughnesss_enabled': 'roughness_enabled 3',
+            'material': 'material 3',
+        },
+    ]
+
+    function setCurrentLayerMaterialIndex(value) {
+        console.debug(`setCurrentLayerMaterialIndex ${value}`)
     }
 }

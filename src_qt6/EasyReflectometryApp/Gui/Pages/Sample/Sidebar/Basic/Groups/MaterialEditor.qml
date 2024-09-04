@@ -24,8 +24,8 @@ EaElements.GroupBox {
             // Header
             header: EaComponents.TableViewHeader {
 
-                // Placeholder for row nr
                 EaComponents.TableViewLabel {
+                    text: qsTr('No.')
                     width: EaStyle.Sizes.fontPixelSize * 2.5
                 }
 

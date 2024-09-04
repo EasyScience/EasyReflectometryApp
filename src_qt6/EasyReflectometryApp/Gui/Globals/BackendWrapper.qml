@@ -79,6 +79,7 @@ QtObject {
     property int sampleCurrentMaterialIndex: activeBackend.sample.currentMaterialIndex
     onSampleCurrentMaterialIndexChanged: activeBackend.sample.currentMaterialIndex = sampleCurrentMaterialIndex
     readonly property var sampleMaterials: activeBackend.sample.materials
+    readonly property var sampleMaterialNames: activeBackend.sample.materialNames
 
     function sampleSetCurrentMaterialName(value) { activeBackend.sample.setCurrentMaterialName(value) }
     function sampleSetCurrentMaterialSld(value) { activeBackend.sample.setCurrentMaterialSld(value) } 
@@ -116,6 +117,15 @@ QtObject {
     function sampleMoveSelectedAssemblyUp() { activeBackend.sample.moveSelectedAssemblyUp() }
     function sampleMoveSelectedAssemblyDown() { activeBackend.sample.moveSelectedAssemblyDown() }
     function sampleSetCurrentAssemblyIndex(value) { activeBackend.sample.setCurrentAssemblyIndex(value) }
+
+    // Layer
+    property int sampleCurrentLayerIndex: activeBackend.sample.currentLayerIndex
+    onSampleCurrentLayerIndexChanged: activeBackend.sample.currentLayerIndex = sampleCurrentLayerIndex
+    readonly property var sampleLayers: activeBackend.sample.layers
+
+    function sampleSetCurrentLayerMaterialIndex(value) { activeBackend.sample.setCurrentLayerMaterialIndex(value) } 
+//    readonly property string sampleCurrentLayerName: activeBackend.sample.currentLayerName
+
 
     ///////////////
     // Analysis page

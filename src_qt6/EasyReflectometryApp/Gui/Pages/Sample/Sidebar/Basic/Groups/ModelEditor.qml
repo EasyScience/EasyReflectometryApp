@@ -24,9 +24,11 @@ EaElements.GroupBox {
             // Header
             header: EaComponents.TableViewHeader {
 
+                // Placeholder for color column
                 EaComponents.TableViewLabel {
-                    id: noLabel
+                    text: qsTr('No.')
                     width: EaStyle.Sizes.fontPixelSize * 2.5
+                    id: noLabel
                 }
 
                 EaComponents.TableViewLabel {
@@ -78,7 +80,7 @@ EaElements.GroupBox {
 
                 EaComponents.TableViewButton {
                     fontIcon: "minus-circle"
-                    ToolTip.text: qsTr("Remove this layer")
+                    ToolTip.text: qsTr("Remove this assembly")
                     enabled: assembliesView.model > 1
                     onClicked: Globals.BackendWrapper.sampleRemoveAssembly(assembliesView.currentIndex)
                 }
@@ -102,7 +104,7 @@ EaElements.GroupBox {
                 enabled: true
                 width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 fontIcon: "plus-circle"
-                text: qsTr("Add layer")
+                text: qsTr("Add assembly")
                 onClicked: Globals.BackendWrapper.sampleAddNewAssembly()
             }
 
@@ -110,7 +112,7 @@ EaElements.GroupBox {
                 enabled: (assembliesView.currentIndex > 0) ? true : false//When item is selected
                 width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 fontIcon: "clone"
-                text: qsTr("Duplicate layer")
+                text: qsTr("Duplicate assembly")
                 onClicked: Globals.BackendWrapper.sampleDuplicateSelectedAssembly()
             }
 
@@ -118,7 +120,7 @@ EaElements.GroupBox {
                 enabled: (assembliesView.currentIndex !== 0 && Globals.BackendWrapper.sampleAssemblies.length > 0 ) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-up"
-                ToolTip.text: qsTr("Move layer up")
+                ToolTip.text: qsTr("Move assembly up")
                 onClicked: Globals.BackendWrapper.sampleMoveSelectedAssemblyUp()
             }
 
@@ -126,7 +128,7 @@ EaElements.GroupBox {
                 enabled: (assembliesView.currentIndex + 1 !== Globals.BackendWrapper.sampleAssemblies.length && Globals.BackendWrapper.sampleAssemblies.length > 0 ) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-down"
-                ToolTip.text: qsTr("Move layer down")
+                ToolTip.text: qsTr("Move assembly down")
                 onClicked: Globals.BackendWrapper.sampleMoveSelectedAssemblyDown()
             }
         }
