@@ -93,8 +93,8 @@ EaElements.GroupColumn {
         }
 
         onCurrentIndexChanged: {
-            Globals.BackendWrapper.sampleCurrentLayersIndex = layersView.currentIndex
-
+            Globals.BackendWrapper.sampleSetCurrentLayerIndex(layersView.currentIndex)
+//            Globals.BackendWrapper.sampleCurrentLayersIndex = layersView.currentIndex
         }
     }
     // Control buttons below table

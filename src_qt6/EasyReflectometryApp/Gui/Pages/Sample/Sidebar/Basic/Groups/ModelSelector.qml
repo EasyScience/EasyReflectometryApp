@@ -63,13 +63,13 @@ EaElements.GroupBox {
                     ToolTip.text: qsTr("Remove this model")
                     onClicked: {
                         Globals.BackendWrapper.sampleRemoveModel(modelView.currentIndex)
-                        modelView.currentIndex = modelView.currentIndex - 1
+//                        modelView.currentIndex = modelView.currentIndex - 1
                     }
                 }
             }
 
             onCurrentIndexChanged: {
-                Globals.BackendWrapper.sampleCurrentModelIndex = modelView.currentIndex
+                Globals.BackendWrapper.sampleSetCurrentModelIndex(modelView.currentIndex)
                 // NEED TO CONNECT THIS
                 // In ModelEditor assembliesView.currentIndex = 0
                 // In MultiLayer layersView.currentIndex = 0

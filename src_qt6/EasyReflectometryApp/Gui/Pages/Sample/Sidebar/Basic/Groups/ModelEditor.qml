@@ -53,8 +53,6 @@ EaElements.GroupBox {
 
             // Rows
             delegate: EaComponents.TableViewDelegate {
-                property var itemsModel: model
-
                 EaComponents.TableViewLabel {
                     color: EaStyle.Colors.themeForegroundMinor
                     text: index + 1

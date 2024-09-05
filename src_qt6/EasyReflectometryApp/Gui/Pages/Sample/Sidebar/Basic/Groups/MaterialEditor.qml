@@ -84,7 +84,7 @@ EaElements.GroupBox {
                 }
             }
             onCurrentIndexChanged: {
-                Globals.BackendWrapper.sampleCurrentMaterialIndex = materialsView.currentIndex
+                Globals.BackendWrapper.sampleSetCurrentMaterialIndex(materialsView.currentIndex)
             }
         }
 

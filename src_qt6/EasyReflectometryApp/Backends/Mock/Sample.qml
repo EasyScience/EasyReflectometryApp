@@ -27,6 +27,9 @@ QtObject {
     readonly property var materialNames: materials.map(function (item) { return item.label })
 
     // Setters
+    function setCurrentMaterialIndex(value) {
+        console.debug(`setCurrentMaterialIndex ${value}`)
+    }
     function setCurrentMaterialName(value) {
         console.debug(`setCurrentMaterialName ${value}`)
     }
@@ -74,6 +77,9 @@ QtObject {
     ]
 
     // Setters
+    function setCurrentModelIndex(value){
+        console.debug(`setCurrentModelIndex ${value}`)
+    }
     function setCurrentModelName(value) {
         console.debug(`setCurrentModelName ${value}`)
     }
@@ -194,6 +200,9 @@ QtObject {
     ]
 
     // Setters
+    function setCurrentLayerIndex(value){
+        console.debug(`setCurrentLayerIndex ${value}`)
+    }
     function setCurrentLayerFormula(value) {
         console.debug(`setCurrentLayerFormula ${value}`)
     }
