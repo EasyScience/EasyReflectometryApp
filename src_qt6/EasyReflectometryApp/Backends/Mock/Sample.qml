@@ -161,21 +161,21 @@ QtObject {
             'thickness_enabled': 'thickness_enabled 1',
             'roughness': 'roughness 1',
             'roughnesss_enabled': 'roughness_enabled 1',
-            'material': 'material 1',
+            'material': 'label 1',
         },
         {
             'thickness': 'thickness 2',
             'thickness_enabled': 'thickness_enabled 2',
             'roughness': 'roughness 2',
             'roughnesss_enabled': 'roughness_enabled 2',
-            'material': 'material 2',
+            'material': 'label 2',
         },
         {
             'thickness': 'thickness 3',
             'thickness_enabled': 'thickness_enabled 3',
             'roughness': 'roughness 3',
             'roughnesss_enabled': 'roughness_enabled 3',
-            'material': 'material 3',
+            'material': 'label 3',
         },
     ]
 

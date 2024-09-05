@@ -64,10 +64,10 @@ EaElements.GroupColumn {
                 }
                 model: Globals.BackendWrapper.sampleMaterialNames
                 onModelChanged: {
-                    currentIndex = indexOfValue(layersModel.materialid)
+                    currentIndex = indexOfValue(Globals.BackendWrapper.sampleLayers[index].material)
                 }
                 Component.onCompleted: {
-                    currentIndex = indexOfValue(layersModel.materialid)
+                    currentIndex = indexOfValue(Globals.BackendWrapper.sampleLayers[index].material)
                 }
             }
 

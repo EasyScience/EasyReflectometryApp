@@ -14,11 +14,11 @@ EaElements.GroupBox {
     EaElements.GroupColumn {
 
         Assemblies.MultiLayer{
-            visible: true //(currentAssemblyType == 'Multi-layer') ? true : false
+            visible: (currentAssemblyType == 'Multi-layer') ? true : false
         }
 
         Assemblies.RepeatingMultiLayer{
-            visible: true //(currentAssemblyType == 'Repeating Multi-layer') ? true : false
+            visible: (currentAssemblyType == 'Repeating Multi-layer') ? true : false
         }
 
         EaElements.GroupColumn {

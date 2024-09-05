@@ -11,7 +11,6 @@ import "../Assemblies" as Assemblies
 
 EaElements.GroupColumn {
     Row {
-        visible: (currentItemsType == 'Repeating Multi-layer') ? true : false
         spacing: EaStyle.Sizes.fontPixelSize * 0.5
 
         // This integer defines how many repetitions of the layer structure should be
