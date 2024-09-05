@@ -7,6 +7,7 @@ from .logic.sample import Sample as SampleLogic
 
 
 class Sample(QObject):
+    materialsChanged = Signal()
 #    currentMaterialIndexChanged = Signal()
 
     def __init__(self, parent=None):
@@ -25,7 +26,7 @@ class Sample(QObject):
             self._logic.material_index = new_value
 #            self.currentMaterialIndexChanged.emit()
 
-    @Property('QVariantList')
+    @Property('QVariantList', notify=materialsChanged)
     def materials(self) -> list[dict[str, str]]:
         return self._logic.materials
 
@@ -56,6 +57,7 @@ class Sample(QObject):
     @Slot()
     def addNewMaterial(self) -> None:
         self._logic.add_new_material()
+        self.materialsChanged.emit()
 
     @Slot()
     def duplicateSelectedMaterial(self) -> None:
