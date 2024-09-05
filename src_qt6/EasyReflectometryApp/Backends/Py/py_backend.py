@@ -2,8 +2,10 @@ from PySide6.QtCore import QObject, Property
 
 from EasyApp.Logic.Logging import LoggerLevelHandler
 
+from. analysis import Analysis
 from .home import Home
 from .project import Project
+from .sample import Sample
 from .status import Status
 from .report import Report
 
@@ -15,6 +17,8 @@ class PyBackend(QObject):
         # Page specific backend parts and Status bar
         self._home = Home()
         self._project = Project()
+        self._sample = Sample()
+        self._analysis = Analysis()
         self._report = Report()
         self._status = Status()
 
@@ -31,6 +35,14 @@ class PyBackend(QObject):
     @Property('QVariant', constant=True)
     def project(self) -> Project:
         return self._project
+
+    @Property('QVariant', constant=True)
+    def sample(self) -> Project:
+        return self._sample
+
+    @Property('QVariant', constant=True)
+    def analysis(self) -> Analysis:
+        return self._analysis
 
     @Property('QVariant', constant=True)
     def report(self) -> Report:

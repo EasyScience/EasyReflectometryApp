@@ -63,7 +63,6 @@ EaElements.GroupBox {
                     ToolTip.text: qsTr("Remove this model")
                     onClicked: {
                         Globals.BackendWrapper.sampleRemoveModel(modelView.currentIndex)
-//                        modelView.currentIndex = modelView.currentIndex - 1
                     }
                 }
             }
