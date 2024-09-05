@@ -17,7 +17,7 @@ EaElements.GroupColumn {
         // used.
         EaComponents.TableViewLabel{
             horizontalAlignment: Text.AlignRight
-            width: labelWidth() * 2.1
+            width: EaStyle.Sizes.fontPixelSize * 2.1
             ToolTip.text: qsTr("To create some repeating multilayer structure")
             text: qsTr("Number of repetitions:")
         }

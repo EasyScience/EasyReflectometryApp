@@ -51,7 +51,7 @@ EaElements.GroupColumn {
 
         // Rows
         delegate: EaComponents.TableViewDelegate {
-            property var layersModel: model
+//            property var layersModel: model
 
             EaComponents.TableViewLabel {
                 text: model.index + 1
@@ -74,14 +74,14 @@ EaElements.GroupColumn {
             EaComponents.TableViewTextInput {
                 horizontalAlignment: Text.AlignHCenter
                 enabled: model.thick_enabled === "True"
-                text: (isNaN(layersModel.thick)) ? '--' : layersModel.thick.toFixed(2)
+                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].thickness)) ? '--' : Globals.BackendWrapper.sampleLayers[index].thickness //layersModel.thick.toFixed(2)
                 onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersThickness(text)
             }
 
             EaComponents.TableViewTextInput {
                 horizontalAlignment: Text.AlignHCenter
                 enabled: model.rough_enabled === "True"
-                text: (isNaN(layersModel.rough)) ? '--' : layersModel.rough.toFixed(2)
+                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].roughness)) ? '--' : Globals.BackendWrapper.sampleLayers[index].roughness // layersModel.rough.toFixed(2)
                 onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
             }
 

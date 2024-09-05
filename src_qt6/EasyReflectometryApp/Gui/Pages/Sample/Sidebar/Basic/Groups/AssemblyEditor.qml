@@ -21,9 +21,9 @@ EaElements.GroupBox {
             visible: (currentAssemblyType == 'Repeating Multi-layer') ? true : false
         }
 
-        EaElements.GroupColumn {
-            visible: (currentAssemblyType == 'Surfactant Layer') ? true : false
-            Loader { source: 'Assemblies/SurfactantLayer.qml' }
+        Assemblies.SurfactantLayer {
+            visible: true //(currentAssemblyType == 'Surfactant Layer') ? true : false
+//            Loader { source: 'Assemblies/SurfactantLayer.qml' }
         }
 
     }
