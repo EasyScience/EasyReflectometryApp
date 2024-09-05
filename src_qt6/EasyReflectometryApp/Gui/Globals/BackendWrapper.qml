@@ -111,19 +111,32 @@ QtObject {
 
     function sampleSetCurrentAssemblyName(value) { activeBackend.sample.setCurrentAssemblyName(value) }
     function sampleSetCurrentAssemblyType(value) { activeBackend.sample.setCurrentAssemblyType(value) }
+    function sampleSetCurrentAssemblyIndex(value) { activeBackend.sample.setCurrentAssemblyIndex(value) }
     function sampleRemoveAssembly(value) { activeBackend.sample.removeAssembly(value) }
     function sampleAddNewAssembly() { activeBackend.sample.addNewAssembly() }
     function sampleDuplicateSelectedAssembly() { activeBackend.sample.duplicateSelectedAssembly() }
     function sampleMoveSelectedAssemblyUp() { activeBackend.sample.moveSelectedAssemblyUp() }
     function sampleMoveSelectedAssemblyDown() { activeBackend.sample.moveSelectedAssemblyDown() }
-    function sampleSetCurrentAssemblyIndex(value) { activeBackend.sample.setCurrentAssemblyIndex(value) }
 
     // Layer
     property int sampleCurrentLayerIndex: activeBackend.sample.currentLayerIndex
     onSampleCurrentLayerIndexChanged: activeBackend.sample.currentLayerIndex = sampleCurrentLayerIndex
     readonly property var sampleLayers: activeBackend.sample.layers
 
-    function sampleSetCurrentLayerMaterialIndex(value) { activeBackend.sample.setCurrentLayerMaterialIndex(value) } 
+    function sampleSetCurrentLayerFormula(value) { activeBackend.sample.setCurrentLayerFormula(value) }
+    function sampleSetCurrentLayerMaterialIndex(value) { activeBackend.sample.setCurrentLayerMaterialIndex(value) }
+    function sampleSetCurrentLayerSolvent(value) { activeBackend.sample.setCurrentLayerSolvent(value) }
+    function sampleSetCurrentLayerThickness(value) { activeBackend.sample.setCurrentLayerThickness(value) }
+    function sampleSetCurrentLayerRoughness(value) { activeBackend.sample.setCurrentLayerRoughness(value) }
+    function sampleSetCurrentLayerAPM(value) { activeBackend.sample.setCurrentLayerAPM(value) }
+    function sampleSetCurrentLayerSolvation(value) { activeBackend.sample.setCurrentLayerSolvation(value) }
+
+    function sampleRemoveLayer(value) { activeBackend.sample.removeLayer(value) }
+    function sampleAddNewLayer() { activeBackend.sample.addNewLayer() }
+    function sampleDuplicateSelectedLayer() { activeBackend.sample.duplicateSelectedLayer() }
+    function sampleMoveSelectedLayerUp() { activeBackend.sample.moveSelectedLayerUp() }
+    function sampleMoveSelectedLayerDown() { activeBackend.sample.moveSelectedLayerDown() }
+//    function sampleRemoveLayer(value) { activeBackend.sample.setCurrentLayerThickness(value) } //{ activeBackend.sample.removeLayer(value) }
 //    readonly property string sampleCurrentLayerName: activeBackend.sample.currentLayerName
 
 

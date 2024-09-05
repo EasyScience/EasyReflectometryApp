@@ -22,9 +22,7 @@ EaElements.GroupBox {
         }
 
         Assemblies.SurfactantLayer {
-            visible: true //(currentAssemblyType == 'Surfactant Layer') ? true : false
-//            Loader { source: 'Assemblies/SurfactantLayer.qml' }
+            visible: (currentAssemblyType == 'Surfactant Layer') ? true : false
         }
-
     }
 }

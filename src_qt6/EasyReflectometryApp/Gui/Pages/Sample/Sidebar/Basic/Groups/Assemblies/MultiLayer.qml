@@ -73,23 +73,23 @@ EaElements.GroupColumn {
 
             EaComponents.TableViewTextInput {
                 horizontalAlignment: Text.AlignHCenter
-                enabled: model.thick_enabled === "True"
-                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].thickness)) ? '--' : Globals.BackendWrapper.sampleLayers[index].thickness //layersModel.thick.toFixed(2)
-                onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersThickness(text)
+                enabled: Globals.BackendWrapper.sampleLayers[index].thickness_enabled === "True"
+                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].thickness)) ? '--' : Number(Globals.BackendWrapper.sampleLayers[index].thickness).toFixed(2) //layersModel.thick.toFixed(2)
+                onEditingFinished: Globals.BackendWrapper.sampleSetCurrentLayerThickness(text)
             }
 
             EaComponents.TableViewTextInput {
                 horizontalAlignment: Text.AlignHCenter
-                enabled: model.rough_enabled === "True"
-                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].roughness)) ? '--' : Globals.BackendWrapper.sampleLayers[index].roughness // layersModel.rough.toFixed(2)
-                onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
+                enabled: Globals.BackendWrapper.sampleLayers[index].roughness_enabled === "True"
+                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].roughness)) ? '--' : Number(Globals.BackendWrapper.sampleLayers[index].roughness).toFixed(2) // layersModel.rough.toFixed(2)
+                onEditingFinished: Globals.BackendWrapper.sampleSetCurrentLayerRoughness(text)
             }
 
             EaComponents.TableViewButton {
                 fontIcon: "minus-circle"
-                ToolTip.text: qsTr("Remove this item")
-                enabled: layersView.model.count > 1
-                onClicked: ExGlobals.Constants.proxy.model.removeLayers(layersTable.currentIndex)
+                ToolTip.text: qsTr("Remove this layer")
+                enabled: layersView !== null && layersView.model > 1
+                onClicked: Globals.BackendWrapper.sampleRemoveLayer(index)// ExGlobals.Constants.proxy.model.removeLayers(layersTable.currentIndex)
             }
         }
 
@@ -107,7 +107,7 @@ EaElements.GroupColumn {
             enabled: true
             fontIcon: "plus-circle"
             text: qsTr("Add layer")
-            onClicked: ExGlobals.Constants.proxy.model.addNewLayers()
+            onClicked: Globals.BackendWrapper.sampleAddNewLayer()
         }
 
         EaElements.SideBarButton {
@@ -115,7 +115,7 @@ EaElements.GroupColumn {
             enabled: (layersView.currentIndex > 0) ? true : false //when item is selected
             fontIcon: "clone"
             text: qsTr("Duplicate layer")
-            onClicked: ExGlobals.Constants.proxy.model.duplicateSelectedLayers()
+            onClicked: Globals.BackendWrapper.sampleDuplicateSelectedLayer()
         }
 
         EaElements.SideBarButton {
@@ -123,7 +123,7 @@ EaElements.GroupColumn {
             enabled: (layersView.currentIndex !== 0 && Globals.BackendWrapper.sampleLayers.length > 0 ) ? true : false//When item is selected
             fontIcon: "arrow-up"
             ToolTip.text: qsTr("Move layer up")
-            onClicked: ExGlobals.Constants.proxy.model.moveSelectedLayersUp()
+            onClicked: Globals.BackendWrapper.sampleMoveSelectedLayerUp()
         }
 
         EaElements.SideBarButton {
@@ -131,7 +131,7 @@ EaElements.GroupColumn {
             enabled: (layersView.currentIndex + 1 !== Globals.BackendWrapper.sampleLayers.length && Globals.BackendWrapper.sampleLayers.length > 0 ) ? true : false
             fontIcon: "arrow-down"
             ToolTip.text: qsTr("Move layer down")
-            onClicked: ExGlobals.Constants.proxy.model.moveSelectedLayersDown()
+            onClicked: Globals.BackendWrapper.sampleMoveSelectedLayerDown()
         }
     }
 }

@@ -9,7 +9,7 @@ import Gui.Globals as Globals
 
 EaElements.GroupColumn {
     EaComponents.TableView {
-        id: layersView
+        id: surfactantView
         tallRows: false
         defaultInfoText: qsTr("No Layers Added")
         model: Globals.BackendWrapper.sampleLayers.length
@@ -54,48 +54,46 @@ EaElements.GroupColumn {
         }
         // Rows
         delegate: EaComponents.TableViewDelegate {
-//            property var surfactantModel: model
 
             EaComponents.TableViewTextInput {
                 horizontalAlignment: Text.AlignHCenter
                 text: Globals.BackendWrapper.sampleLayers[index].formula
-//                headerText: "Formula"
-                onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersChemStructure(text)
+                onEditingFinished: Globals.BackendWrapper.sampleSetCurrentLayerFormula(text)
             }
 
             EaComponents.TableViewTextInput {
                 horizontalAlignment: Text.AlignHCenter
                 enabled: Globals.BackendWrapper.sampleLayers[index].thickness_enabled === "True"
-                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].thickness)) ? '--' : Globals.BackendWrapper.sampleLayers[index].thickness //surfactantModel.thick.toFixed(2)
-                onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersThickness(text)
+                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].thickness)) ? '--' : Number(Globals.BackendWrapper.sampleLayers[index].thickness).toFixed(2)
+                onEditingFinished: Globals.BackendWrapper.sampleSetCurrentLayerThickness(text)
             }
 
             EaComponents.TableViewTextInput {
                 horizontalAlignment: Text.AlignHCenter
                 enabled: Globals.BackendWrapper.sampleLayers[index].roughness_enabled === "True"
-                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].roughness)) ? '--' : Globals.BackendWrapper.sampleLayers[index].roughness //surfactantModel.rough.toFixed(2)
-                onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersRoughness(text)
+                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].roughness)) ? '--' : Number(Globals.BackendWrapper.sampleLayers[index].roughness).toFixed(2)
+                onEditingFinished: Globals.BackendWrapper.sampleSetCurrentLayerRoughness(text)
             }
 
             EaComponents.TableViewTextInput {
                 horizontalAlignment: Text.AlignHCenter
-                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].solvation)) ? '--' : Globals.BackendWrapper.sampleLayers[index].solvation //parseFloat(surfactantModel.solvation).toFixed(2)
-                onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentLayersSolvation(text)
+                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].solvation)) ? '--' : Number(Globals.BackendWrapper.sampleLayers[index].solvation).toFixed(2)
+                onEditingFinished: Globals.BackendWrapper.sampleSetCurrentLayersSolvation(text)
             }
 
             EaComponents.TableViewTextInput {
                 horizontalAlignment: Text.AlignHCenter
                 enabled: Globals.BackendWrapper.sampleLayers[index].apm_enabled === "True"
-                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].apm)) ? '--' : Globals.BackendWrapper.sampleLayers[index].apm // parseFloat(surfactantModel.apm).toFixed(2)
-                onEditingFinished: ExGlobals.Constants.proxy.model.setCurrentItemApm(text)
+                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].apm)) ? '--' : Number(Globals.BackendWrapper.sampleLayers[index].apm).toFixed(2)
+                onEditingFinished: Globals.BackendWrapper.sampleSetCurrentItemApm(text)
             }
 
             EaComponents.TableViewComboBox{
                 horizontalAlignment: Text.AlignLeft
                 onActivated: {
-                    ExGlobals.Constants.proxy.model.setCurrentLayersSolvent(currentIndex)
+                    Globals.BackendWrapper.sampleSetCurrentLayerSolvent(currentIndex)
                 }
-                model: ExGlobals.Constants.proxy.material.materialsName
+                model: Globals.BackendWrapper.sampleMaterialNames
                 onModelChanged: {
                     currentIndex = indexOfValue(Globals.BackendWrapper.sampleLayers[index].solvent)
                 }
@@ -106,53 +104,47 @@ EaElements.GroupColumn {
         }
 
         onCurrentIndexChanged: {
-            ExGlobals.Constants.proxy.model.currentLayersIndex = surfactantTable.currentIndex
+            Globals.BackendWrapper.sampleCurrentLayersIndex = surfactantView.currentIndex
         }
     }
 
-//    EaElements.GroupBox {
-//        spacing: EaStyle.Sizes.fontPixelSize * 0.5
-//        collapsible: true
-//        collapsed: true
-//
-//        title: qsTr('Chemical Constraints')
-        Row {
-            EaElements.CheckBox {
-                checked: false
-                id: apm_check
-                text: qsTr("Area-per-molecule")
-                ToolTip.text: qsTr("Checking this box will ensure that the area-per-molecule of the head and tail layers is the same")
-                onCheckedChanged: ExGlobals.Constants.proxy.model.constrainApm = checked
-            }
-            EaElements.CheckBox {
-                checked: false
-                id: conformal
-                text: qsTr("Conformal roughness")
-                ToolTip.text: qsTr("Checking this box will ensure that the interfacial roughness is the same for all interfaces of the surfactant")
-                onCheckedChanged: ExGlobals.Constants.proxy.model.conformalRoughness = checked
-            }
+    Row {
+        EaElements.CheckBox {
+            checked: false
+            id: apm_check
+            text: qsTr("Area-per-molecule")
+            ToolTip.text: qsTr("Checking this box will ensure that the area-per-molecule of the head and tail layers is the same")
+            onCheckedChanged: ExGlobals.Constants.proxy.model.constrainApm = checked
         }
-
-        Row {
-            EaElements.CheckBox {
-                checked: false
-                id: solvent_rough
-                text: qsTr("Constrain roughness to item")
-                enabled: conformal.checked
-                ToolTip.text: qsTr("Checking this box allows another item to be selected and the conformal roughness will be constrained to this")
-                onCheckedChanged: checked ? ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(solvent_rough_item.currentText) : ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(null)
-            }
-            EaElements.ComboBox {
-                id: solvent_rough_item
-                enabled: solvent_rough.checked
-                onActivated: {
-                    ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(null)
-                    ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(currentText)
-                }
-                model: ExGlobals.Constants.proxy.model.itemsNamesConstrain
-            }
+        EaElements.CheckBox {
+            checked: false
+            id: conformal
+            text: qsTr("Conformal roughness")
+            ToolTip.text: qsTr("Checking this box will ensure that the interfacial roughness is the same for all interfaces of the surfactant")
+            onCheckedChanged: ExGlobals.Constants.proxy.model.conformalRoughness = checked
         }
     }
+
+    Row {
+        EaElements.CheckBox {
+            checked: false
+            id: solvent_rough
+            text: qsTr("Constrain roughness to item")
+            enabled: conformal.checked
+            ToolTip.text: qsTr("Checking this box allows another item to be selected and the conformal roughness will be constrained to this")
+            onCheckedChanged: checked ? ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(solvent_rough_item.currentText) : ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(null)
+        }
+        EaElements.ComboBox {
+            id: solvent_rough_item
+            enabled: solvent_rough.checked
+            onActivated: {
+                ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(null)
+                ExGlobals.Constants.proxy.model.currentSurfactantSolventRoughness(currentText)
+            }
+            model: ExGlobals.Constants.proxy.model.itemsNamesConstrain
+        }
+    }
+}
 //}
 /*
 
