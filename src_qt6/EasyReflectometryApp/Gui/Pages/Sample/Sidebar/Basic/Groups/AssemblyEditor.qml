@@ -14,6 +14,7 @@ EaElements.GroupBox {
     EaElements.GroupColumn {
 
         Assemblies.MultiLayer{
+            id: multiLayerEditor
             visible: (currentAssemblyType == 'Multi-layer') ? true : false
         }
 

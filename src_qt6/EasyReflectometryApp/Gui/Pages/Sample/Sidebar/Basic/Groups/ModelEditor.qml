@@ -21,7 +21,7 @@ EaElements.GroupBox {
             defaultInfoText: qsTr("No Model Present")
             model: Globals.BackendWrapper.sampleAssemblies.length
 
-            // Header
+            // Headers
             header: EaComponents.TableViewHeader {
 
                 // Placeholder for color column
@@ -63,7 +63,7 @@ EaElements.GroupBox {
                 EaComponents.TableViewTextInput {
                     horizontalAlignment: Text.AlignLeft
                     text: Globals.BackendWrapper.sampleAssemblies[index].label
-                    onEditingFinished: Globals.BackendWrapper.setCurrentAssemblyName(text)
+                    onEditingFinished: Globals.BackendWrapper.sampleSetCurrentAssemblyName(text)
                 }
 
                 EaComponents.TableViewComboBox{
@@ -89,8 +89,10 @@ EaElements.GroupBox {
 
             onCurrentIndexChanged: {
                 Globals.BackendWrapper.sampleSetCurrentAssemblyIndex(assembliesView.currentIndex)
+                // MAYBE DO DIFFERENTLY THAN HAVING PROPERTY IN PARENT OBJECT
                 currentAssemblyType: assembliesView.currentIndex
-//                repsSpinBox.value = ExGlobals.Constants.proxy.model.currentItemsRepetitions
+                // NEED TO CONNECT THIS
+                // repsSpinBox.value = ExGlobals.Constants.proxy.model.currentItemsRepetitions
             }
 
             onModelChanged: currentIndex = 0

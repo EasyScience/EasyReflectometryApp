@@ -97,6 +97,10 @@ QtObject {
 
     // ASSEMBLIES
     property int currentAssemblyIndex: -1
+    property bool constrainAPM: false
+    property bool conformalRoughness: false
+    property int repeatedLayerReptitions: 1
+
     property string currentAssemblyName: 'currentAssemblyName'
 
     // Getters
@@ -146,6 +150,7 @@ QtObject {
 
     // LAYERS
     property int currentLayerIndex: -1
+
     property string currentLayerName: 'currentLayerName'
 
     // Getters

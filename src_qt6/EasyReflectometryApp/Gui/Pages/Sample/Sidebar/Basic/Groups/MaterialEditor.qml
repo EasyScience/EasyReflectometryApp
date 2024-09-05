@@ -21,7 +21,7 @@ EaElements.GroupBox {
             defaultInfoText: qsTr("No Materials Added/Loaded")
             model: Globals.BackendWrapper.sampleMaterials.length
 
-            // Header
+            // Headers
             header: EaComponents.TableViewHeader {
 
                 EaComponents.TableViewLabel {

@@ -27,6 +27,7 @@ EaComponents.SideBarColumn {
     }
 
     Groups.AssemblyEditor{
+        id: assemblyEditor
         enabled: Globals.BackendWrapper.analysisIsFitFinished
     }
 

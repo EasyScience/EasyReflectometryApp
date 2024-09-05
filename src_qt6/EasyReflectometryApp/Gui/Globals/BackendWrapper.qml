@@ -106,6 +106,13 @@ QtObject {
     // Assembly
     property int sampleCurrentAssemblyIndex: activeBackend.sample.currentAssemblyIndex
     onSampleCurrentAssemblyIndexChanged: activeBackend.sample.currentAssemblyIndex = sampleCurrentAssemblyIndex
+    property bool sampleConstrainAPM: activeBackend.sample.constrainAPM
+    onSampleConstrainAPMChanged: activeBackend.sample.constrainAPM = sampleConstrainAPM
+    property bool sampleConformalRoughness: activeBackend.sample.conformalRoughness
+    onSampleConformalRoughness: activeBackend.sample.conformalRoughness = sampleConformalRoughness
+    property int sampleRepeatedLayerReptitions: activeBackend.sample.repeatedLayerReptitions
+    onSampleRepeatedLayerReptitionsChanged: activeBackend.sample.repeatedLayerReptitions = sampleRepeatedLayerReptitions
+
     readonly property var sampleAssemblies: activeBackend.sample.assemblies
     readonly property string sampleCurrentAssemblyName: activeBackend.sample.currentAssemblyName
 
@@ -136,8 +143,6 @@ QtObject {
     function sampleDuplicateSelectedLayer() { activeBackend.sample.duplicateSelectedLayer() }
     function sampleMoveSelectedLayerUp() { activeBackend.sample.moveSelectedLayerUp() }
     function sampleMoveSelectedLayerDown() { activeBackend.sample.moveSelectedLayerDown() }
-//    function sampleRemoveLayer(value) { activeBackend.sample.setCurrentLayerThickness(value) } //{ activeBackend.sample.removeLayer(value) }
-//    readonly property string sampleCurrentLayerName: activeBackend.sample.currentLayerName
 
 
     ///////////////

@@ -15,7 +15,7 @@ EaElements.GroupColumn {
         defaultInfoText: qsTr("No Layers Added")
         model: Globals.BackendWrapper.sampleLayers.length
 
-        // Table
+        // Headers
         header: EaComponents.TableViewHeader {
             EaComponents.TableViewLabel {
                 text: qsTr('No.')
@@ -51,7 +51,6 @@ EaElements.GroupColumn {
 
         // Rows
         delegate: EaComponents.TableViewDelegate {
-//            property var layersModel: model
 
             EaComponents.TableViewLabel {
                 text: model.index + 1
@@ -74,14 +73,14 @@ EaElements.GroupColumn {
             EaComponents.TableViewTextInput {
                 horizontalAlignment: Text.AlignHCenter
                 enabled: Globals.BackendWrapper.sampleLayers[index].thickness_enabled === "True"
-                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].thickness)) ? '--' : Number(Globals.BackendWrapper.sampleLayers[index].thickness).toFixed(2) //layersModel.thick.toFixed(2)
+                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].thickness)) ? '--' : Number(Globals.BackendWrapper.sampleLayers[index].thickness).toFixed(2)
                 onEditingFinished: Globals.BackendWrapper.sampleSetCurrentLayerThickness(text)
             }
 
             EaComponents.TableViewTextInput {
                 horizontalAlignment: Text.AlignHCenter
                 enabled: Globals.BackendWrapper.sampleLayers[index].roughness_enabled === "True"
-                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].roughness)) ? '--' : Number(Globals.BackendWrapper.sampleLayers[index].roughness).toFixed(2) // layersModel.rough.toFixed(2)
+                text: (isNaN(Globals.BackendWrapper.sampleLayers[index].roughness)) ? '--' : Number(Globals.BackendWrapper.sampleLayers[index].roughness).toFixed(2)
                 onEditingFinished: Globals.BackendWrapper.sampleSetCurrentLayerRoughness(text)
             }
 
@@ -89,7 +88,7 @@ EaElements.GroupColumn {
                 fontIcon: "minus-circle"
                 ToolTip.text: qsTr("Remove this layer")
                 enabled: layersView !== null && layersView.model > 1
-                onClicked: Globals.BackendWrapper.sampleRemoveLayer(index)// ExGlobals.Constants.proxy.model.removeLayers(layersTable.currentIndex)
+                onClicked: Globals.BackendWrapper.sampleRemoveLayer(index)
             }
         }
 

@@ -22,7 +22,7 @@ EaElements.GroupBox {
             defaultInfoText: qsTr("No Models Present")
             model: Globals.BackendWrapper.sampleModels.length
 
-            // Header
+            // Headers
             header: EaComponents.TableViewHeader {
 
                 // Placeholder for row color
@@ -70,8 +70,9 @@ EaElements.GroupBox {
 
             onCurrentIndexChanged: {
                 Globals.BackendWrapper.sampleCurrentModelIndex = modelView.currentIndex
-                itemsTable.currentIndex = 0
-                layersTable.currentIndex = 0
+                // NEED TO CONNECT THIS
+                // In ModelEditor assembliesView.currentIndex = 0
+                // In MultiLayer layersView.currentIndex = 0
             }
         }
 

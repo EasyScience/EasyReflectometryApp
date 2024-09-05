@@ -15,22 +15,24 @@ EaElements.GroupColumn {
 
         // This integer defines how many repetitions of the layer structure should be
         // used.
-        EaComponents.TableViewLabel{
-            horizontalAlignment: Text.AlignRight
-            width: EaStyle.Sizes.fontPixelSize * 2.1
-            ToolTip.text: qsTr("To create some repeating multilayer structure")
-            text: qsTr("Number of repetitions:")
-        }
         EaElements.SpinBox {
             id: repsSpinBox
             editable: true
             from: 1
             to: 9999
-            value: ExGlobals.Constants.proxy.model.currentItemsRepetitions
+            value: Globals.BackendWrapper.sampleRepeatedLayerReptitions
             onValueChanged: {
-                ExGlobals.Constants.proxy.model.currentItemsRepetitions = value
+                Globals.BackendWrapper.sampleRepeatedLayerReptitions = value
             }
         }
+
+        EaComponents.TableViewLabel{
+            horizontalAlignment: Text.AlignRight
+            width: EaStyle.Sizes.fontPixelSize * 10
+            ToolTip.text: qsTr("To create some repeating multilayer structure")
+            text: qsTr("Number of repetitions")
+        }
+
     }
     Assemblies.MultiLayer{}
 }
