@@ -50,6 +50,7 @@ class Sample:
 
     def remove_material_at_index(self, value: str) -> None:
         self._materials.pop(int(value))
+        self._material_index -= 1
     
     def add_new_material(self) -> None:
         self._materials.append({
