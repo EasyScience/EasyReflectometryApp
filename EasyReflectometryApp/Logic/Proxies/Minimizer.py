@@ -4,7 +4,7 @@ from PySide2.QtCore import QObject
 from PySide2.QtCore import Signal
 from PySide2.QtCore import Property
 
-from easyscience.Utils.UndoRedo import property_stack_deco
+from easyscience.global_object.undo_redo import property_stack_deco
 
 
 class MinimizerProxy(QObject):
@@ -18,8 +18,7 @@ class MinimizerProxy(QObject):
         self.parent = parent
 
         self._current_minimizer_method_index = 0
-        self._current_minimizer_method_name = self.parent._fitter_proxy.eFitter.easy_f.available_methods(
-        )[0]
+        self._current_minimizer_method_name = self.parent._fitter_proxy.eFitter.easy_f.available_minimizers[0]
         self.currentMinimizerChanged.connect(self._onCurrentMinimizerChanged)
 
     # # #
@@ -28,11 +27,11 @@ class MinimizerProxy(QObject):
 
     @Property('QVariant', notify=dummySignal)
     def minimizerNames(self):
-        return self.parent._fitter_proxy.eFitter.easy_f.available_engines
+        return self.parent._fitter_proxy.eFitter.easy_f.available_minimizers
 
     @Property(int, notify=currentMinimizerChanged)
     def currentMinimizerIndex(self):
-        current_name = self.parent._fitter_proxy.eFitter.easy_f.current_engine.name
+        current_name = self.parent._fitter_proxy.eFitter.easy_f.minimizer.name
         return self.minimizerNames.index(current_name)
 
     @currentMinimizerIndex.setter
@@ -59,13 +58,13 @@ class MinimizerProxy(QObject):
 
     @Property('QVariant', notify=currentMinimizerChanged)
     def minimizerMethodNames(self):
-        current_minimizer = self.minimizerNames[self.currentMinimizerIndex]
+        current_package = self.parent._fitter_proxy.eFitter.easy_f.minimizer.package
         tested_methods = {
             'lmfit': ['leastsq', 'powell', 'cobyla'],
             'bumps': ['newton', 'lm', 'de'],
-            'DFO_LS': ['leastsq']
+            'dfo': ['leastsq']
         }
-        return tested_methods[current_minimizer]
+        return tested_methods[current_package]
 
     # # #
     # Actions

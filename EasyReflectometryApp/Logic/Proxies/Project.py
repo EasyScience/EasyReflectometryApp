@@ -374,7 +374,7 @@ class ProjectProxy(QObject):
             for i, d in enumerate(data):
                 model_index = self.parent._model_proxy._model.index(d.model)
                 color = self.parent._model_proxy._colors[model_index]
-                y = self.parent._interface.fit_func(d.x, d.model.uid)
+                y = self.parent._interface.fit_func(d.x, d.model.unique_name)
                 if self.parent._simulation_proxy._plot_rq4:
                     ax1.errorbar(d.x, (d.y * d.x ** 4) * 10 ** i, (d.ye * d.x ** 4) * 10 ** i, marker='', ls='',
                                  color=color, alpha=0.5)
@@ -382,7 +382,7 @@ class ProjectProxy(QObject):
                 else:
                     ax1.errorbar(d.x, d.y * 10 ** i, d.ye * 10 ** i, marker='', ls='', color=color, alpha=0.5)
                     ax1.plot(d.x, y * 10 ** i, ls='-', color=color, zorder=10, label=d.name)
-                sld_profile = self.parent._interface.sld_profile(d.model.uid)
+                sld_profile = self.parent._interface.sld_profile(d.model.unique_name)
                 ax2.plot(sld_profile[0], sld_profile[1] + 10 * i, color=color, ls='-')
             ax1.set_yscale('log')
         else:
@@ -393,12 +393,12 @@ class ProjectProxy(QObject):
             model = self.parent._model_proxy._model
             for i, m in enumerate(model):
                 color = self.parent._model_proxy._colors[i]
-                y = self.parent._interface.fit_func(x, m.uid)
+                y = self.parent._interface.fit_func(x, m.unique_name)
                 if self.parent._simulation_proxy._plot_rq4:
                     ax1.plot(x, (y * d.x ** 4) * 10 ** i, ls='-', color=color, zorder=10, label=m.name)
                 else:
                     ax1.plot(x, y * 10 ** i, ls='-', color=color, zorder=10, label=m.name)
-                sld_profile = self.parent._interface.sld_profile(m.uid)
+                sld_profile = self.parent._interface.sld_profile(m.unique_name)
                 ax2.plot(sld_profile[0], sld_profile[1] + 10 * i, color=color, ls='-')
             ax1.set_yscale('log')
         ax1.legend()

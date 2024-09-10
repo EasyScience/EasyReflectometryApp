@@ -8,7 +8,7 @@ from PySide2.QtCore import Slot
 import numpy as np
 from easyscience import borg
 from easyscience.Utils.io.xml import XMLSerializer
-from easyscience.Utils.UndoRedo import property_stack_deco
+from easyscience.global_object.undo_redo import property_stack_deco
 
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import LayerAreaPerMolecule
@@ -395,7 +395,7 @@ class ModelProxy(QObject):
                 else:
                     j.name = j.material.name + ' Layer'
         sample = self._model[self.currentModelIndex].sample
-        structure_dict = sample.as_dict()
+        structure_dict = sample.as_dict(skip=['unique_name'])
 
         self._pure = Model(
             sample=Sample.from_dict(structure_dict),
@@ -928,10 +928,10 @@ class ModelProxy(QObject):
     # # #
 
     def getPureModelReflectometry(self, x):
-        return self._pure.interface.fit_func(x, self._pure.uid)
+        return self._pure.interface.fit_func(x, self._pure.unique_name)
 
     def getPureModelSld(self):
-        return self._pure.interface.sld_profile(self._pure.uid)
+        return self._pure.interface.sld_profile(self._pure.unique_name)
 
     def resetModel(self):
         self._structure = self._defaultStructure()
