@@ -72,7 +72,7 @@ class MinimizerProxy(QObject):
 
     def _onCurrentMinimizerChanged(self):
         idx = 0
-        minimizer_name = self.parent._fitter_proxy.eFitter.easy_f.current_engine.name
+        minimizer_name = self.parent._fitter_proxy.eFitter.easy_f.minimizer.name
         if minimizer_name == 'lmfit':
             idx = self.minimizerMethodNames.index('leastsq')
         elif minimizer_name == 'bumps':
