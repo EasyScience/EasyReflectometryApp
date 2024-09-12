@@ -98,7 +98,7 @@ class DataProxy(QObject):
             dictionary['model_index'] = self.parent._model_proxy._model.index(experiment.model)
             dictionary['color'] = self.parent._model_proxy._colors[dictionary['model_index']]
             dictionary['model_name'] = self.parent._model_proxy._model[dictionary['model_index']].name
-            dictionary['background'] = self.parent._model_proxy._model[dictionary['model_index']].background.raw_value
+            dictionary['background'] = self.parent._model_proxy._model[dictionary['model_index']].background.value
             experiment_data_as_obj.append(dictionary)
         return experiment_data_as_obj
 
@@ -110,7 +110,7 @@ class DataProxy(QObject):
         :param new_scaling: New scaling value
         """
         model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
-        if self.parent._model_proxy._model[model_index].scale.raw_value == new_scaling:
+        if self.parent._model_proxy._model[model_index].scale.value == new_scaling:
             return
         self.parent._model_proxy._model[model_index].scale = new_scaling
         self.parent.layersChanged.emit()
@@ -137,7 +137,7 @@ class DataProxy(QObject):
         :param new_background: New background value
         """
         model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
-        if self.parent._model_proxy._model[model_index].background.raw_value == new_background:
+        if self.parent._model_proxy._model[model_index].background.value == new_background:
             return
         self.parent._model_proxy._model[model_index].background = new_background
         self.parent.layersChanged.emit()
@@ -146,7 +146,7 @@ class DataProxy(QObject):
     def currentScaling(self):
         try:
             model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
-            return self.parent._model_proxy._model[model_index].scale.raw_value
+            return self.parent._model_proxy._model[model_index].scale.value
         except IndexError:
             return 1
 
@@ -154,7 +154,7 @@ class DataProxy(QObject):
     def currentBackground(self):
         try:
             model_index = self.parent._model_proxy._model.index(self._data[self.currentDataIndex].model)
-            return self.parent._model_proxy._model[model_index].background.raw_value
+            return self.parent._model_proxy._model[model_index].background.value
         except IndexError:
             return 0
     

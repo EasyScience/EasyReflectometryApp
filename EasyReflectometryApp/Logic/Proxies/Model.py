@@ -208,7 +208,7 @@ class ModelProxy(QObject):
         if self._model[self.currentModelIndex].sample[
                 self.currentItemsIndex].type != 'Repeating Multi-layer':
             return 1
-        return self._model[self.currentModelIndex].sample[self.currentItemsIndex].repetitions.raw_value
+        return self._model[self.currentModelIndex].sample[self.currentItemsIndex].repetitions.value
 
     @currentItemsRepetitions.setter
     def currentItemsRepetitions(self, new_repetitions: int):
@@ -217,7 +217,7 @@ class ModelProxy(QObject):
             return
         if self._model[self.currentModelIndex].sample[
                 self.
-                currentItemsIndex].repetitions.raw_value == new_repetitions or new_repetitions == -1:
+                currentItemsIndex].repetitions.value == new_repetitions or new_repetitions == -1:
             return
         self._model[self.currentModelIndex].sample[self.currentItemsIndex].repetitions = new_repetitions
         self.parent.layersChanged.emit()
@@ -552,15 +552,15 @@ class ModelProxy(QObject):
                 to_dup_layers.append(
                     Layer(
                         material=i.material,
-                        thickness=i.thickness.raw_value,
-                        roughness=i.roughness.raw_value,
+                        thickness=i.thickness.value,
+                        roughness=i.roughness.value,
                         name=i.name,
                         interface=self.parent._interface
                     )
                 )
             dup_item = RepeatingMultilayer(
                 *to_dup_layers, 
-                repetitions=to_dup.repetitions.raw_value,
+                repetitions=to_dup.repetitions.value,
                 name=to_dup.name
             )
         elif isinstance(to_dup, SurfactantLayer):
@@ -573,8 +573,8 @@ class ModelProxy(QObject):
                 to_dup_layers.append(
                     Layer(
                         material=i.material,
-                        thickness=i.thickness.raw_value,
-                        roughness=i.roughness.raw_value,
+                        thickness=i.thickness.value,
+                        roughness=i.roughness.value,
                         name=i.name,
                         interface=self.parent._interface
                     )
@@ -725,8 +725,8 @@ class ModelProxy(QObject):
         self._model[self.currentModelIndex].sample[self.currentItemsIndex].add_layer(
             Layer(
                 material=to_dup.material,
-                thickness=to_dup.thickness.raw_value,
-                roughness=to_dup.roughness.raw_value,
+                thickness=to_dup.thickness.value,
+                roughness=to_dup.roughness.value,
                 name=to_dup.name
                 )
             )
@@ -839,7 +839,7 @@ class ModelProxy(QObject):
         :param sld: New thickness value
         """
         if self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[
-                self.currentLayersIndex].thickness.raw_value == thickness:
+                self.currentLayersIndex].thickness.value == thickness:
             return
         self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[
             self.currentLayersIndex].thickness = thickness
@@ -853,7 +853,7 @@ class ModelProxy(QObject):
         :param sld: New roughness value
         """
         layer = self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[self.currentLayersIndex]
-        if layer.roughness.raw_value == roughness:
+        if layer.roughness.value == roughness:
             return 
         layer.roughness = roughness
         self.parent.layersChanged.emit()
@@ -879,7 +879,7 @@ class ModelProxy(QObject):
         :param solvation: New solvation value
         """
         layer = self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[self.currentLayersIndex]
-        if layer.material.fraction.raw_value == solvation:
+        if layer.material.fraction.value == solvation:
             return
         layer.material.fraction = solvation
         self.parent.layersChanged.emit()

@@ -142,8 +142,8 @@ class MaterialProxy(QObject):
         to_dup = self._materials[self.currentMaterialsIndex]
         self._materials.append(
             Material(
-                sld=to_dup.sld.raw_value,
-                isld=to_dup.isld.raw_value,
+                sld=to_dup.sld.value,
+                isld=to_dup.isld.value,
                 name=to_dup.name,
                 interface=self.parent._interface
             )
@@ -203,9 +203,9 @@ class MaterialProxy(QObject):
 
         :param sld: New SLD value
         """
-        if self._materials[self.currentMaterialsIndex].sld.raw_value == sld:
+        if self._materials[self.currentMaterialsIndex].sld.value == sld:
             return
-        self._materials[self.currentMaterialsIndex].sld = sld
+        self._materials[self.currentMaterialsIndex].sld.value = sld
         self.materialsChanged.emit()
         self.parent.layersChanged.emit()
 
@@ -216,9 +216,9 @@ class MaterialProxy(QObject):
 
         :param isld: New iSLD value
         """
-        if self._materials[self.currentMaterialsIndex].isld.raw_value == isld:
+        if self._materials[self.currentMaterialsIndex].isld.value == isld:
             return
-        self._materials[self.currentMaterialsIndex].isld = isld
+        self._materials[self.currentMaterialsIndex].isld.value = isld
         self.materialsChanged.emit()
         self.parent.layersChanged.emit()
 
