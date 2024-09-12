@@ -52,7 +52,7 @@ class ParameterProxy(QObject):
 
         par_ids, par_paths = generatePath(self.parent._model_proxy._model, True)
         pids = []
-        labels = []
+#        labels = []
         self._n_fit = False
         for par_index, par_path in enumerate(par_paths):
             par_id = par_ids[par_index]
@@ -61,11 +61,11 @@ class ParameterProxy(QObject):
             pids.append(par_id)
             par = borg.map.get_item_by_key(par_id)
             path_split = par_path.split('.')
-            if path_split[-1] == 'repetitions' and par.raw_value == 1:
+            if path_split[-1] == 'repetitions' and par.value == 1:
                 continue
             if not par.enabled:
                 continue
-            unit = '{:~P}'.format(par.unit)
+            unit = par.unit #'{:~P}'.format(par.unit)
             label = get_label(par_path)
             if label is None:
                 continue
@@ -77,7 +77,7 @@ class ParameterProxy(QObject):
                 "id": str(par_id),
                 "number": par_index + 1,
                 "label": label,
-                "value": par.raw_value,
+                "value": par.value,
                 "unit": unit,
                 "error": float(par.error),
                 "fit": int(not par.fixed),
@@ -134,7 +134,7 @@ class ParameterProxy(QObject):
             self.parent._undoredo_proxy.undoRedoChanged.emit()
 
         else:
-            if obj.raw_value == new_value:
+            if obj.value == new_value:
                 return
 
             obj.value = new_value
@@ -216,7 +216,7 @@ class ParameterProxy(QObject):
             pids.append(par_id)
             par = borg.map.get_item_by_key(par_id)
             path_split = par_path.split('.')
-            if path_split[-1] == 'repetitions' and par.raw_value == 1:
+            if path_split[-1] == 'repetitions' and par.value == 1:
                 continue
             if not par.enabled:
                 continue
