@@ -11,18 +11,14 @@ from PySide2.QtCore import Slot
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-
 import numpy as np
-from easyApp.Logic.Utils.Utils import generalizePath
 
 from easyscience import global_object
-
-from EasyReflectometryApp.Logic.DataStore import DataSet1D
+from easyApp.Logic.Utils.Utils import generalizePath
 from easyreflectometry.sample import MaterialCollection
-from easyreflectometry.sample import Material
-
 from easyreflectometry.experiment.model_collection import ModelCollection
 
+from ..DataStore import DataSet1D
 
 class ProjectProxy(QObject):
     dummySignal = Signal()

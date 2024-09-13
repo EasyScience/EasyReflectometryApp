@@ -6,10 +6,10 @@ from PySide2.QtCore import Property
 from PySide2.QtCore import Slot
 
 import numpy as np
+
 from easyscience import global_object
 from easyscience.Utils.io.xml import XMLSerializer
 from easyscience.global_object.undo_redo import property_stack_deco
-
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import LayerAreaPerMolecule
 from easyreflectometry.sample import Multilayer

@@ -11,11 +11,11 @@ from PySide2.QtCore import Slot
 import numpy as np
 from easyApp.Logic.Utils.Utils import generalizePath
 
-from EasyReflectometryApp.Logic.DataStore import DataSet1D
-from EasyReflectometryApp.Logic.DataStore import DataStore
-
 from easyreflectometry.data import load
 from easyreflectometry.experiment import PercentageFhwm
+
+from ..DataStore import DataSet1D
+from ..DataStore import DataStore
 
 class DataProxy(QObject):
 

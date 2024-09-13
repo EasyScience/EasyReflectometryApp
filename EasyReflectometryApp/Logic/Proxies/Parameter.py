@@ -7,6 +7,7 @@ from PySide2.QtCore import Signal
 from PySide2.QtCore import Property
 from PySide2.QtCore import Slot
 import numpy as np
+
 from easyscience.fitting.Constraints import ObjConstraint
 from easyscience.fitting.Constraints import NumericConstraint
 from easyscience.fitting.Constraints import FunctionalConstraint
