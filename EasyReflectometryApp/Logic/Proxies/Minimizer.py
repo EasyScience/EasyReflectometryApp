@@ -40,7 +40,7 @@ class MinimizerProxy(QObject):
         if self.currentMinimizerIndex == new_index:
             return
         new_name = self.minimizerNames[new_index]
-        self.parent._fitter_proxy.eFitter.easy_f.switch_engine(new_name)
+        self.parent._fitter_proxy.eFitter.easy_f.switch_minimizer(new_name)
         self.currentMinimizerChanged.emit()
 
     @Property(int, notify=currentMinimizerMethodChanged)

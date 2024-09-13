@@ -11,7 +11,7 @@ from easyscience.fitting.Constraints import ObjConstraint
 from easyscience.fitting.Constraints import NumericConstraint
 from easyscience.fitting.Constraints import FunctionalConstraint
 from easyscience.Utils.io.xml import XMLSerializer
-from easyscience import borg
+from easyscience import global_object
 from easyscience.Utils.classTools import generatePath
 
 
@@ -59,7 +59,7 @@ class ParameterProxy(QObject):
             if par_id in pids:
                 continue
             pids.append(par_id)
-            par = borg.map.get_item_by_key(par_id)
+            par = global_object.map.get_item_by_key(par_id)
             path_split = par_path.split('.')
             if path_split[-1] == 'repetitions' and par.value == 1:
                 continue
@@ -191,8 +191,8 @@ class ParameterProxy(QObject):
     def _parameterObj(self, obj_id: str):
         if not obj_id:
             return
-        obj_id = int(obj_id)
-        obj = borg.map.get_item_by_key(obj_id)
+#        obj_id = int(obj_id)
+        obj = global_object.map.get_item_by_key(obj_id)
         return obj
 
     # Constraints
@@ -214,7 +214,7 @@ class ParameterProxy(QObject):
             if par_id in pids:
                 continue
             pids.append(par_id)
-            par = borg.map.get_item_by_key(par_id)
+            par = global_object.map.get_item_by_key(par_id)
             path_split = par_path.split('.')
             if path_split[-1] == 'repetitions' and par.value == 1:
                 continue
@@ -350,9 +350,10 @@ def get_label(par_path: str) -> str:
     return label
 
 def get_par_path(par, model):
-    model_id = borg.map.convert_id(model)
-    elem = borg.map.convert_id(par)
-    route = borg.map.reverse_route(elem, model_id)
-    objs = [getattr(borg.map.get_item_by_key(r), "name") for r in route]
+#    model_id = global_object.map.convert_id(model)
+#    elem = global_object.map.convert_id(par)
+#    route = global_object.map.reverse_route(elem, model_id)
+    route = global_object.map.reverse_route(par.unique_name, model.unique_name)
+    objs = [getattr(global_object.map.get_item_by_key(r), "name") for r in route]
     objs.reverse()
     return ".".join(objs[1:]) 

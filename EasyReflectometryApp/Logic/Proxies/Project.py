@@ -15,8 +15,12 @@ import matplotlib.gridspec as gridspec
 import numpy as np
 from easyApp.Logic.Utils.Utils import generalizePath
 
+from easyscience import global_object
+
 from EasyReflectometryApp.Logic.DataStore import DataSet1D
 from easyreflectometry.sample import MaterialCollection
+from easyreflectometry.sample import Material
+
 from easyreflectometry.experiment.model_collection import ModelCollection
 
 
@@ -189,7 +193,7 @@ class ProjectProxy(QObject):
         descr['colors'] = self.parent._model_proxy._colors
 
         descr['minimizer'] = {
-            'engine': self.parent._fitter_proxy.eFitter.easy_f.current_engine.name,
+            'engine': self.parent._fitter_proxy.eFitter.easy_f.minimizer.name,
             'method': self.parent._minimizer_proxy._current_minimizer_method_name
         }
 
@@ -223,6 +227,13 @@ class ProjectProxy(QObject):
         with open(path, 'r') as xml_file:
             descr: dict = json.load(xml_file)
 
+        self.parent._model_proxy._model = None
+        self.parent._material_proxy._materials = None
+        self.parent._model_proxy._colors = None
+        materials_in_model = []
+
+        global_object.map._clear()
+
         interface_name = descr.get('interface', None)
         for i, inter in enumerate(interface_name):
             if inter is not None:
@@ -230,18 +241,42 @@ class ProjectProxy(QObject):
                 if old_interface_name != inter:
                     self.parent._interface.switch(inter)
 
+        #self.parent._material_proxy._materials = MaterialCollection([])  # Should be initialized with empty list to enforce no elements in collection
+        # mats = descr['materials_not_in_model']
+        # mats['populate_if_none'] = False
+        # if not mats['data']:
+        #     mats['data'] = ()
+        # self.parent._material_proxy._materials = MaterialCollection.from_dict(mats)
+
+        # self.parent._material_proxy._materials = MaterialCollection([])
+#            for material in MaterialCollection.from_dict(mats):
+#                self.parent._material_proxy._materials.append(material)
+
         self.parent._model_proxy._colors = descr['colors']
+
         self.parent._model_proxy._model = ModelCollection.from_dict(descr['model'])
-        self.parent._material_proxy._materials = MaterialCollection([])  # Should be initialized with empty list to enforce no elements in collection
         for model in self.parent._model_proxy._model:
             for sample in model.sample:
                 for layer in sample.layers:
-                    self.parent._material_proxy._materials.append(layer.material)
+                    materials_in_model.append(layer.material)
             model.interface = self.parent._interface
+
+
         mats = descr['materials_not_in_model']
-        if mats['data']:
-            for material in MaterialCollection.from_dict(mats):
-                self.parent._material_proxy._materials.append(material)
+        mats['populate_if_none'] = False
+        if not mats['data']:
+            mats['data'] = None
+        material_collection = MaterialCollection.from_dict(mats)
+        for material in materials_in_model:
+            if material not in material_collection:
+                material_collection.append(material)
+        self.parent._material_proxy._materials = material_collection
+
+
+        # mats = descr['materials_not_in_model']
+        # if mats['data']:
+        #     for material in MaterialCollection.from_dict(mats):
+        #         self.parent._material_proxy._materials.append(material)
 
         # experiment
         if 'experiments' in descr:
