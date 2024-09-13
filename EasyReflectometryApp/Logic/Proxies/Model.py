@@ -6,7 +6,7 @@ from PySide2.QtCore import Property
 from PySide2.QtCore import Slot
 
 import numpy as np
-from easyscience import borg
+from easyscience import global_object
 from easyscience.Utils.io.xml import XMLSerializer
 from easyscience.global_object.undo_redo import property_stack_deco
 
@@ -303,7 +303,7 @@ class ModelProxy(QObject):
                 self._model[self.currentModelIndex].remove_item(0)
             for i in range(len(new_items_list)):
                 self._model[self.currentModelIndex].add_item(new_items_list[i])
-            borg.stack.enabled = True
+            global_object.stack.enabled = True
             self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
             self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
             self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
@@ -592,9 +592,9 @@ class ModelProxy(QObject):
 
     @Slot()
     def moveSelectedItemsUp(self):
-        # if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default item')
-        borg.stack.enabled = False
+        # if global_object.stack.enabled:
+        #    global_object.stack.beginMacro('Loaded default item')
+        global_object.stack.enabled = False
         # This convoluted approach is necessary as currently the BaseCollection
         # does not allow insertion or popping. In future, this could be
         # replaced with the approach for moving items around
@@ -615,7 +615,7 @@ class ModelProxy(QObject):
                 self._model[self.currentModelIndex].remove_item(0)
             for i in range(len(new_items_list)):
                 self._model[self.currentModelIndex].add_item(new_items_list[i])
-            borg.stack.enabled = True
+            global_object.stack.enabled = True
             self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
             self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
             self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
@@ -630,7 +630,7 @@ class ModelProxy(QObject):
         old_index = self.currentItemsIndex
         new_items_list = []
         if old_index != len(self._model[self.currentModelIndex].sample):
-            borg.stack.enabled = False
+            global_object.stack.enabled = False
             self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = True
             self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = True
             self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = True
@@ -645,7 +645,7 @@ class ModelProxy(QObject):
                 self._model[self.currentModelIndex].remove_item(0)
             for i in range(len(new_items_list)):
                 self._model[self.currentModelIndex].add_item(new_items_list[i])
-            borg.stack.enabled = True
+            global_object.stack.enabled = True
             self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
             self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
             self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
@@ -745,7 +745,7 @@ class ModelProxy(QObject):
         # not allow insertion or popping. In future, this could be replaced with the
         # approach for moving items around
         if old_index != 0:
-            borg.stack.enabled = False
+            global_object.stack.enabled = False
             self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = True
             self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = True
             self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = True
@@ -760,7 +760,7 @@ class ModelProxy(QObject):
                 item.remove_layer(0)
             for i in range(len(new_layers_list)):
                 item.add_layer(new_layers_list[i])
-            borg.stack.enabled = True
+            global_object.stack.enabled = True
             self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
             self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
             self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
@@ -779,7 +779,7 @@ class ModelProxy(QObject):
             self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = True
             self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = True
             self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = True
-            borg.stack.enabled = False
+            global_object.stack.enabled = False
             for i, l in enumerate(layers):
                 if i == old_index:
                     new_layers_list.append(layers[old_index + 1])
@@ -791,7 +791,7 @@ class ModelProxy(QObject):
                 item.remove_layer(0)
             for i in range(len(new_layers_list)):
                 item.add_layer(new_layers_list[i])
-            borg.stack.enabled = True
+            global_object.stack.enabled = True
             self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
             self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
             self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False

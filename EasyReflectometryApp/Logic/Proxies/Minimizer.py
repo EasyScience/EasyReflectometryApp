@@ -5,7 +5,7 @@ from PySide2.QtCore import Signal
 from PySide2.QtCore import Property
 
 from easyscience.global_object.undo_redo import property_stack_deco
-
+from easyscience.fitting import AvailableMinimizers
 
 class MinimizerProxy(QObject):
 
@@ -17,9 +17,10 @@ class MinimizerProxy(QObject):
         super().__init__(parent)
         self.parent = parent
 
-        self._current_minimizer_method_index = 0
-        self._current_minimizer_method_name = self.parent._fitter_proxy.eFitter.easy_f.available_minimizers[0]
+        self._current_minimizer = AvailableMinimizers.LMFit_leastsq
         self.currentMinimizerChanged.connect(self._onCurrentMinimizerChanged)
+        self._current_minimizer_method_index = self.currentMinimizerIndex
+        self._current_minimizer_method_name = self._current_minimizer.name
 
     # # #
     # Setters and getters
@@ -27,7 +28,7 @@ class MinimizerProxy(QObject):
 
     @Property('QVariant', notify=dummySignal)
     def minimizerNames(self):
-        return self.parent._fitter_proxy.eFitter.easy_f.available_minimizers
+        return [minimizer.name for minimizer in AvailableMinimizers]
 
     @Property(int, notify=currentMinimizerChanged)
     def currentMinimizerIndex(self):
@@ -56,29 +57,14 @@ class MinimizerProxy(QObject):
         self._current_minimizer_method_name = self.minimizerMethodNames[new_index]
         self.currentMinimizerMethodChanged.emit()
 
-    @Property('QVariant', notify=currentMinimizerChanged)
-    def minimizerMethodNames(self):
-        current_package = self.parent._fitter_proxy.eFitter.easy_f.minimizer.package
-        tested_methods = {
-            'lmfit': ['leastsq', 'powell', 'cobyla'],
-            'bumps': ['newton', 'lm', 'de'],
-            'dfo': ['leastsq']
-        }
-        return tested_methods[current_package]
-
     # # #
     # Actions
     # # #
 
     def _onCurrentMinimizerChanged(self):
-        idx = 0
-        minimizer_name = self.parent._fitter_proxy.eFitter.easy_f.minimizer.name
-        if minimizer_name == 'lmfit':
-            idx = self.minimizerMethodNames.index('leastsq')
-        elif minimizer_name == 'bumps':
-            idx = self.minimizerMethodNames.index('lm')
-        if -1 < idx != self._current_minimizer_method_index:
+        idx = self.currentMinimizerIndex
+        if idx != self._current_minimizer_method_index:
             # Bypass the property as it would be added to the stack.
             self._current_minimizer_method_index = idx
-            self._current_minimizer_method_name = self.minimizerMethodNames[idx]
+            self._current_minimizer_method_name = self._current_minimizer.name
             self.currentMinimizerMethodChanged.emit()

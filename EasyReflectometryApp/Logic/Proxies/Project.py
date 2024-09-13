@@ -332,9 +332,9 @@ class ProjectProxy(QObject):
             new_engine_index = self.parent._minimizer_proxy.minimizerNames.index(new_engine)
             self.currentMinimizerIndex = new_engine_index
             try:
-                new_method_index = self.parent._minimizer_proxy.minimizerMethodNames.index(new_method)
+                new_method_index = self.parent._minimizer_proxy.minimizerNames.index(new_method)
             except ValueError:
-                new_method_index = self.parent._minimizer_proxy.minimizerMethodNames[0]
+                new_method_index = self.parent._minimizer_proxy.minimizerNames[0]
             self.currentMinimizerMethodIndex = new_method_index
 
         self.parent._undoredo_proxy.resetUndoRedoStack()

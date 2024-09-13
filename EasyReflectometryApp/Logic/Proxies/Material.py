@@ -8,7 +8,7 @@ from PySide2.QtCore import Signal
 from PySide2.QtCore import Property
 from PySide2.QtCore import Slot
 
-from easyscience import borg
+from easyscience import global_object
 from easyscience.Utils.io.xml import XMLSerializer
 
 from easyreflectometry.sample import Material
@@ -116,7 +116,7 @@ class MaterialProxy(QObject):
         """
         Add a new material.
         """
-        borg.stack.enabled = False
+        global_object.stack.enabled = False
         self._materials.append(
             Material(
                 sld=2.074,
@@ -125,7 +125,7 @@ class MaterialProxy(QObject):
                 interface=self.parent._interface
             )
         )
-        borg.stack.enabled = True
+        global_object.stack.enabled = True
         self.materialsChanged.emit()
         self.parent.layersMaterialsChanged.emit()
 
@@ -134,9 +134,9 @@ class MaterialProxy(QObject):
         """
         Duplicate the currently selected material.
         """
-        # if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default material')
-        borg.stack.enabled = False
+        # if global_object.stack.enabled:
+        #    global_object.stack.beginMacro('Loaded default material')
+        global_object.stack.enabled = False
         # This is a fix until deepcopy is worked out
         # Manual duplication instead of creating a copy
         to_dup = self._materials[self.currentMaterialsIndex]
@@ -148,7 +148,7 @@ class MaterialProxy(QObject):
                 interface=self.parent._interface
             )
         )
-        borg.stack.enabled = True
+        global_object.stack.enabled = True
         self.materialsChanged.emit()
         self.parent.layersMaterialsChanged.emit()
 
