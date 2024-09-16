@@ -1,3 +1,7 @@
+from pip._internal.operations.freeze import freeze
+for line in freeze():
+    print(line.split('=='))
+    
 import os
 import sys
 import pathlib
