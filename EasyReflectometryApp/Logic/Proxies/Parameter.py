@@ -65,7 +65,7 @@ class ParameterProxy(QObject):
                 continue
             if not par.enabled:
                 continue
-            unit = par.unit #'{:~P}'.format(par.unit)
+            unit = par.unit
             label = get_label(par_path)
             if label is None:
                 continue
