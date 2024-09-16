@@ -191,7 +191,6 @@ class ParameterProxy(QObject):
     def _parameterObj(self, obj_id: str):
         if not obj_id:
             return
-#        obj_id = int(obj_id)
         obj = global_object.map.get_item_by_key(obj_id)
         return obj
 

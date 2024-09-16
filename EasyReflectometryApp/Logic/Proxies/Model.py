@@ -592,8 +592,6 @@ class ModelProxy(QObject):
 
     @Slot()
     def moveSelectedItemsUp(self):
-        # if global_object.stack.enabled:
-        #    global_object.stack.beginMacro('Loaded default item')
         global_object.stack.enabled = False
         # This convoluted approach is necessary as currently the BaseCollection
         # does not allow insertion or popping. In future, this could be
