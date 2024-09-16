@@ -18,7 +18,7 @@ from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView  # to call
 import EasyReflectometryApp
 import toml
 import easyApp
-import easyreflectometry
+from easyscience.fitting import AvailableMinimizers
 # from easyApp.Logic.Maintenance import Updater
 # from easyApp.Logic.Translate import Translator
 from EasyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
