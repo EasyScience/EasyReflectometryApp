@@ -18,7 +18,7 @@ from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView  # to call
 import EasyReflectometryApp
 import toml
 import easyApp
-from easyscience.fitting import AvailableMinimizers
+from easyscience.fitting import available_minimizers
 # from easyApp.Logic.Maintenance import Updater
 # from easyApp.Logic.Translate import Translator
 from EasyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
@@ -42,6 +42,7 @@ class App(QApplication):
         super(App, self).__init__(sys_argv)
 
 def main():
+    print(available_minimizers.installed_packages)
     # Arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--logtofile', action='store_true',
