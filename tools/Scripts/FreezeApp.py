@@ -9,6 +9,9 @@ import PySide2
 import shiboken2
 import refnx
 import refl1d
+import bumps
+import lmfit
+import dfols
 import periodictable
 import easyscience
 import easyreflectometry
@@ -42,6 +45,10 @@ def addedData() -> List[str]:
     data = [{'from': CONFIG.package_name, 'to': CONFIG.package_name},
             #{'from': importlib.import_module(lib).__path__[0], 'to': lib},
             {'from': refnx.__path__[0], 'to': 'refnx'},
+            {'from': refl1d.__path__[0], 'to': 'refl1d'},
+            {'from': lmfit.__path__[0], 'to': 'lmfit'},
+            {'from': bumps.__path__[0], 'to': 'bumps'},
+            {'from': dfols.__path__[0], 'to': 'dfols'},
             {'from': refl1d.__path__[0], 'to': 'refl1d'},
             {'from': periodictable.__path__[0], 'to': 'periodictable'},
             {'from': easyscience.__path__[0], 'to': 'easyscience'},
