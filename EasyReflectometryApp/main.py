@@ -8,9 +8,8 @@ import darkdetect
 # PySide
 from PySide2.QtCore import QUrl
 from PySide2.QtWidgets import QApplication
-from PySide2.QtGui import Qt
-from PySide2.QtGui import QIcon
-from PySide2.QtQml import QQmlApplicationEngine
+from PySide2.QtGui import Qt, QIcon
+from PySide2.QtQml import QQmlApplicationEngine, qmlRegisterType
 from PySide2.QtWebEngine import QtWebEngine
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView  # to call hook-PySide2.QtWebEngineWidgets.py
 
@@ -18,7 +17,6 @@ from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView  # to call
 import EasyReflectometryApp
 import toml
 import easyApp
-from easyscience.fitting import available_minimizers
 # from easyApp.Logic.Maintenance import Updater
 # from easyApp.Logic.Translate import Translator
 from EasyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
@@ -42,7 +40,6 @@ class App(QApplication):
         super(App, self).__init__(sys_argv)
 
 def main():
-    print(available_minimizers.installed_packages)
     # Arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--logtofile', action='store_true',
