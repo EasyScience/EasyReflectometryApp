@@ -237,17 +237,6 @@ class ProjectProxy(QObject):
                 if old_interface_name != inter:
                     self.parent._interface.switch(inter)
 
-        #self.parent._material_proxy._materials = MaterialCollection([])  # Should be initialized with empty list to enforce no elements in collection
-        # mats = descr['materials_not_in_model']
-        # mats['populate_if_none'] = False
-        # if not mats['data']:
-        #     mats['data'] = ()
-        # self.parent._material_proxy._materials = MaterialCollection.from_dict(mats)
-
-        # self.parent._material_proxy._materials = MaterialCollection([])
-#            for material in MaterialCollection.from_dict(mats):
-#                self.parent._material_proxy._materials.append(material)
-
         self.parent._model_proxy._colors = descr['colors']
 
         self.parent._model_proxy._model = ModelCollection.from_dict(descr['model'])
@@ -267,12 +256,6 @@ class ProjectProxy(QObject):
             if material not in material_collection:
                 material_collection.append(material)
         self.parent._material_proxy._materials = material_collection
-
-
-        # mats = descr['materials_not_in_model']
-        # if mats['data']:
-        #     for material in MaterialCollection.from_dict(mats):
-        #         self.parent._material_proxy._materials.append(material)
 
         # experiment
         if 'experiments' in descr:

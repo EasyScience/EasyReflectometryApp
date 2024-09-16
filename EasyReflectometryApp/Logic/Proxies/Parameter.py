@@ -53,7 +53,6 @@ class ParameterProxy(QObject):
 
         par_ids, par_paths = generatePath(self.parent._model_proxy._model, True)
         pids = []
-#        labels = []
         self._n_fit = False
         for par_index, par_path in enumerate(par_paths):
             par_id = par_ids[par_index]
@@ -351,9 +350,6 @@ def get_label(par_path: str) -> str:
     return label
 
 def get_par_path(par, model):
-#    model_id = global_object.map.convert_id(model)
-#    elem = global_object.map.convert_id(par)
-#    route = global_object.map.reverse_route(elem, model_id)
     route = global_object.map.reverse_route(par.unique_name, model.unique_name)
     objs = [getattr(global_object.map.get_item_by_key(r), "name") for r in route]
     objs.reverse()

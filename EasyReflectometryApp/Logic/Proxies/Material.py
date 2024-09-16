@@ -134,8 +134,6 @@ class MaterialProxy(QObject):
         """
         Duplicate the currently selected material.
         """
-        # if global_object.stack.enabled:
-        #    global_object.stack.beginMacro('Loaded default material')
         global_object.stack.enabled = False
         # This is a fix until deepcopy is worked out
         # Manual duplication instead of creating a copy
