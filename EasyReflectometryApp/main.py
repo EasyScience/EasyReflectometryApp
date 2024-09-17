@@ -21,9 +21,13 @@ import toml
 import easyApp
 # from easyApp.Logic.Maintenance import Updater
 # from easyApp.Logic.Translate import Translator
-from easyscience import AvailableMinimizers
-print ([minimizer.name for minimizer in AvailableMinimizers])
-print (AvailableMinimizers.LMFit_leastsq.name)
+#from easyscience import AvailableMinimizers
+#print ([minimizer.name for minimizer in AvailableMinimizers])
+#print (AvailableMinimizers.LMFit_leastsq.name)
+
+import lmfit
+import dfols
+import bumps
 
 from EasyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
 
