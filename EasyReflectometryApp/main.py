@@ -23,6 +23,8 @@ import easyApp
 # from easyApp.Logic.Translate import Translator
 from easyscience import AvailableMinimizers
 print ([minimizer.name for minimizer in AvailableMinimizers])
+print (AvailableMinimizers.LMFit_leastsq.name)
+
 from EasyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
 
 # Global vars
