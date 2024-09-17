@@ -35,7 +35,7 @@ parts:
             snapcraftctl set-version "$(cat pyproject.toml | grep version | head -n 1 | awk -F'"' '$0=$2' | sed 's/ //g')"
 
         stage-packages:
-            - python3.10-venv
+            - python3.9-venv
             - libfreetype6
             - libgomp1
             - libpng16-16
@@ -56,21 +56,22 @@ parts:
             - libxcb-keysyms1
             - libxcb-util1
         build-packages:
-            - python3.10-venv
+            - python3.9-venv
+            - python3.9-dev
             - git-all
             - pipenv
         build-environment:
-            - SNAPCRAFT_PYTHON_INTERPRETER: python3.10
+            - SNAPCRAFT_PYTHON_INTERPRETER: python3.9
             - PATH: $SNAPCRAFT_PART_INSTALL/bin:$PATH
             - PYTHONPATH: ''
         override-build: |
             # Work around a bug in snapcraft python plugin / gnome 3.38 extension
             # https://forum.snapcraft.io/t/build-a-snap-with-any-version-of-python-i-want/10420/8
 
-            rm -rf $SNAPCRAFT_PART_INSTALL/usr/lib/python3.10/distutils
-            cp -r /usr/lib/python3.10/distutils $SNAPCRAFT_PART_INSTALL/usr/lib/python3.10/distutils
+            rm -rf $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
+            cp -r /usr/lib/python3.9/distutils $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
             mkdir -p $SNAPCRAFT_PART_INSTALL/usr/include/
-            cp -r /usr/include/python3.10 $SNAPCRAFT_PART_INSTALL/usr/include/python3.10
+            cp -r /usr/include/python3.9 $SNAPCRAFT_PART_INSTALL/usr/include/python3.9
 
             snapcraftctl build
 
