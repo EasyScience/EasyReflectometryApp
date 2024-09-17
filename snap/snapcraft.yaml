@@ -35,6 +35,7 @@ parts:
             snapcraftctl set-version "$(cat pyproject.toml | grep version | head -n 1 | awk -F'"' '$0=$2' | sed 's/ //g')"
 
         stage-packages:
+            - python3.10
             - libfreetype6
             - libgomp1
             - libpng16-16
@@ -55,6 +56,7 @@ parts:
             - libxcb-keysyms1
             - libxcb-util1
         build-packages:
+            - python3.10
             - git-all
             - pipenv
         build-environment:
