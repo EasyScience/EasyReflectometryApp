@@ -12,7 +12,8 @@ from PySide2.QtGui import Qt
 from PySide2.QtGui import QIcon
 from PySide2.QtQml import QQmlApplicationEngine
 from PySide2.QtWebEngine import QtWebEngine
-from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView  # to call hook-PySide2.QtWebEngineWidgets.py
+from PySide2.QtWebEngineWidgets import QWebEnginePage  # to call hook-PySide2.QtWebEngineWidgets.py
+from PySide2.QtWebEngineWidgets import QWebEngineView  # to call hook-PySide2.QtWebEngineWidgets.py
 
 # easyScience
 import EasyReflectometryApp
