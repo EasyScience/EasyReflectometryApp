@@ -28,7 +28,7 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Development Status :: 3 - Alpha"
 ]
-requires-python = ">=3.10, <3.11"
+requires-python = ">=3.9, <3.11"
 dependencies = [
     'darkdetect>=0.3.1',
     'easyreflectometry @ git+https://github.com/EasyScience/EasyReflectometryLib.git@adjustments-to-fit-app',
