@@ -8,9 +8,9 @@ from PySide2.QtCore import Property
 from PySide2.QtCore import Slot
 import numpy as np
 
-from easyscience.fitting.Constraints import ObjConstraint
-from easyscience.fitting.Constraints import NumericConstraint
-from easyscience.fitting.Constraints import FunctionalConstraint
+from easyscience.Constraints import ObjConstraint
+from easyscience.Constraints import NumericConstraint
+from easyscience.Constraints import FunctionalConstraint
 from easyscience.Utils.io.xml import XMLSerializer
 from easyscience import global_object
 from easyscience.Utils.classTools import generatePath
