@@ -49,7 +49,6 @@ def addedData() -> List[str]:
             {'from': lmfit.__path__[0], 'to': 'lmfit'},
             {'from': bumps.__path__[0], 'to': 'bumps'},
             {'from': dfols.__path__[0], 'to': 'dfols'},
-            {'from': refl1d.__path__[0], 'to': 'refl1d'},
             {'from': periodictable.__path__[0], 'to': 'periodictable'},
             {'from': easyscience.__path__[0], 'to': 'easyscience'},
             {'from': easyreflectometry.__path__[0], 'to': 'easyreflectometryLib'},
