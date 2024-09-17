@@ -60,10 +60,6 @@ parts:
             - python3.10
             - git-all
             - pipenv
-        build-environment:
-            - SNAPCRAFT_PYTHON_INTERPRETER: python3.10
-            - PATH: $SNAPCRAFT_PART_INSTALL/bin:$PATH
-            - PYTHONPATH: ''
 
 plugs:
   shmem:
