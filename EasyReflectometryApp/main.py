@@ -19,15 +19,15 @@ from PySide2.QtWebEngineWidgets import QWebEngineView  # to call hook-PySide2.Qt
 import EasyReflectometryApp
 import toml
 import easyApp
-# from easyApp.Logic.Maintenance import Updater
-# from easyApp.Logic.Translate import Translator
-#from easyscience import AvailableMinimizers
-#print ([minimizer.name for minimizer in AvailableMinimizers])
-#print (AvailableMinimizers.LMFit_leastsq.name)
 
-import lmfit
-import dfols
-import bumps
+import pkg_resources
+installed_packages = {pkg.key for pkg in pkg_resources.working_set}
+if 'lmfit' in installed_packages:
+    exit('LMFit.')
+installed_packages = {pkg.key.lower() for pkg in pkg_resources.working_set}
+if 'lmfit' in installed_packages:
+    exit('LMFit lower.')
+
 
 from EasyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
 
