@@ -4,8 +4,8 @@ import pathlib
 import platform
 import argparse
 import darkdetect
+import toml
 
-# PySide
 from PySide2.QtCore import QUrl
 from PySide2.QtWidgets import QApplication
 from PySide2.QtGui import Qt
@@ -15,19 +15,8 @@ from PySide2.QtWebEngine import QtWebEngine
 from PySide2.QtWebEngineWidgets import QWebEnginePage  # to call hook-PySide2.QtWebEngineWidgets.py
 from PySide2.QtWebEngineWidgets import QWebEngineView  # to call hook-PySide2.QtWebEngineWidgets.py
 
-# easyScience
 import EasyReflectometryApp
-import toml
 import easyApp
-
-import pkg_resources
-installed_packages = {pkg.key for pkg in pkg_resources.working_set}
-if 'lmfit' in installed_packages:
-    exit('LMFit.')
-installed_packages = {pkg.key.lower() for pkg in pkg_resources.working_set}
-if 'lmfit' in installed_packages:
-    exit('LMFit lower.')
-
 
 from EasyReflectometryApp.Logic.PyQmlProxy import PyQmlProxy
 
