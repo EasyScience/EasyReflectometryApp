@@ -2,9 +2,9 @@
 
 To make the installation of EasyReflectometry as easy as possible, we prepare packaged releases for three major operating systems: 
 
-- [Windows](https://github.com/easyScience/EasyReflectometryApp/releases/download/v0.0.11-beta/EasyReflectometry_Windows_x86-32_v0.0.11-beta.exe)
-- [macOS](https://github.com/easyScience/EasyReflectometryApp/releases/download/v0.0.11-beta/EasyReflectometry_macOS_x86-64_v0.0.11-beta.zip) (built on 10.15)
-- [Linux](https://github.com/easyScience/EasyReflectometryApp/releases/download/v0.0.11-beta/EasyReflectometry_Linux_x86-64_v0.0.11-beta.zip) (built on Ubuntu-20.04)
+- [Windows](https://github.com/easyScience/EasyReflectometryApp/releases/download/v0.0.12-beta/EasyReflectometry_Windows_x86-32_v0.0.12-beta.exe)
+- [macOS](https://github.com/easyScience/EasyReflectometryApp/releases/download/v0.0.12-beta/EasyReflectometry_macOS_x86-64_v0.0.12-beta.zip) (built on 10.15)
+- [Linux](https://github.com/easyScience/EasyReflectometryApp/releases/download/v0.0.12-beta/EasyReflectometry_Linux_x86-64_v0.0.12-beta.zip) (built on Ubuntu-20.04)
 
 If the relevant EasyReflectometry installation does not work on your system, then please try installation from source. 
 
