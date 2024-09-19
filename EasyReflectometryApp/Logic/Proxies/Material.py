@@ -8,7 +8,7 @@ from PySide2.QtCore import Signal
 from PySide2.QtCore import Property
 from PySide2.QtCore import Slot
 
-from easyscience import borg
+from easyscience import global_object
 from easyscience.Utils.io.xml import XMLSerializer
 
 from easyreflectometry.sample import Material
@@ -116,7 +116,7 @@ class MaterialProxy(QObject):
         """
         Add a new material.
         """
-        borg.stack.enabled = False
+        global_object.stack.enabled = False
         self._materials.append(
             Material(
                 sld=2.074,
@@ -125,7 +125,7 @@ class MaterialProxy(QObject):
                 interface=self.parent._interface
             )
         )
-        borg.stack.enabled = True
+        global_object.stack.enabled = True
         self.materialsChanged.emit()
         self.parent.layersMaterialsChanged.emit()
 
@@ -134,21 +134,19 @@ class MaterialProxy(QObject):
         """
         Duplicate the currently selected material.
         """
-        # if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default material')
-        borg.stack.enabled = False
+        global_object.stack.enabled = False
         # This is a fix until deepcopy is worked out
         # Manual duplication instead of creating a copy
         to_dup = self._materials[self.currentMaterialsIndex]
         self._materials.append(
             Material(
-                sld=to_dup.sld.raw_value,
-                isld=to_dup.isld.raw_value,
+                sld=to_dup.sld.value,
+                isld=to_dup.isld.value,
                 name=to_dup.name,
                 interface=self.parent._interface
             )
         )
-        borg.stack.enabled = True
+        global_object.stack.enabled = True
         self.materialsChanged.emit()
         self.parent.layersMaterialsChanged.emit()
 
@@ -203,9 +201,9 @@ class MaterialProxy(QObject):
 
         :param sld: New SLD value
         """
-        if self._materials[self.currentMaterialsIndex].sld.raw_value == sld:
+        if self._materials[self.currentMaterialsIndex].sld.value == sld:
             return
-        self._materials[self.currentMaterialsIndex].sld = sld
+        self._materials[self.currentMaterialsIndex].sld.value = sld
         self.materialsChanged.emit()
         self.parent.layersChanged.emit()
 
@@ -216,9 +214,9 @@ class MaterialProxy(QObject):
 
         :param isld: New iSLD value
         """
-        if self._materials[self.currentMaterialsIndex].isld.raw_value == isld:
+        if self._materials[self.currentMaterialsIndex].isld.value == isld:
             return
-        self._materials[self.currentMaterialsIndex].isld = isld
+        self._materials[self.currentMaterialsIndex].isld.value = isld
         self.materialsChanged.emit()
         self.parent.layersChanged.emit()
 

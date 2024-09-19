@@ -54,8 +54,6 @@ EaComponents.SideBarColumn {
             EaElements.ComboBox {
                 id: minimizerSelector
 
-                width: (EaStyle.Sizes.sideBarContentWidth - minimizerLabel.width * 2 - EaStyle.Sizes.fontPixelSize * 4) / 2
-
                 model: ExGlobals.Constants.proxy.minimizer.minimizerNames
                 currentIndex: ExGlobals.Constants.proxy.minimizer.currentMinimizerIndex
 
@@ -63,28 +61,7 @@ EaComponents.SideBarColumn {
                     ExGlobals.Constants.proxy.minimizer.currentMinimizerIndex = currentIndex
                 }
             }
-
-            // Spacer
-            Item {}
-
-            // Method
-            EaComponents.TableViewLabel{
-                horizontalAlignment: Text.AlignRight
-                width: minimizerLabel.width
-                text: qsTr("Method:")
-            }
-            EaElements.ComboBox {
-                id: methodSelector
-
-                width: minimizerSelector.width
-                model: ExGlobals.Constants.proxy.minimizer.minimizerMethodNames
-                currentIndex: ExGlobals.Constants.proxy.minimizer.currentMinimizerMethodIndex
-                onCurrentIndexChanged: {
-                    ExGlobals.Constants.proxy.currentMinimizerMethodIndex = currentIndex
-                }
-            }
         }
-
     }
 
     /*
