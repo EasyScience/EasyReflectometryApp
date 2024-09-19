@@ -507,36 +507,50 @@ class ModelProxy(QObject):
 
     @Slot()
     def addNewItems(self):
-        self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = True
-        self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = True
-        self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = True
-        try:
-            self._model[self.currentModelIndex].add_item(
-                Multilayer(
-                    Layer(
-                        material=self.parent._material_proxy._materials[0],
-                        thickness=10.,
-                        roughness=1.2
-                    ),
-                    name=f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'
-                )
-            )
-        except IndexError:
+        if len(self.parent._material_proxy._materials) == 0:
             self.parent._material_proxy.addNewMaterials()
-            self._model[self.currentModelIndex].add_item(
-                Multilayer(
-                    Layer(
-                        material=self.parent._material_proxy._materials[0],
-                        thicness=10.,
-                        roughness=1.2),
-                    name=f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'
-                )
+        self._model[self.currentModelIndex].add_item(
+            Multilayer(
+                Layer(
+                    material=self.parent._material_proxy._materials[0],
+                    thicness=10.,
+                    roughness=1.2),
+                name=f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'
             )
-        self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
-        self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
-        self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
+        )
         self.parent.layersChanged.emit()
         self.parent.itemsChanged.emit()
+
+        # self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = True
+        # self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = True
+        # self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = True
+        # try:
+        #     self._model[self.currentModelIndex].add_item(
+        #         Multilayer(
+        #             Layer(
+        #                 material=self.parent._material_proxy._materials[0],
+        #                 thickness=10.,
+        #                 roughness=1.2
+        #             ),
+        #             name=f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'
+        #         )
+        #     )
+        # except IndexError:
+        #     self.parent._material_proxy.addNewMaterials()
+        #     self._model[self.currentModelIndex].add_item(
+        #         Multilayer(
+        #             Layer(
+        #                 material=self.parent._material_proxy._materials[0],
+        #                 thicness=10.,
+        #                 roughness=1.2),
+        #             name=f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'
+        #         )
+        #     )
+        # self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
+        # self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
+        # self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
+        # self.parent.layersChanged.emit()
+        # self.parent.itemsChanged.emit()
 
     @Slot()
     def duplicateSelectedItems(self):
