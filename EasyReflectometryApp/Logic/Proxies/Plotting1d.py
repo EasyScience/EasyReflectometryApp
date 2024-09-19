@@ -2,9 +2,11 @@ __author__ = 'github.com/arm61'
 
 import numpy as np
 
-from PySide2.QtCore import QObject, Qt, QPointF, Signal, Slot, Property
-from PySide2.QtGui import QImage, QBrush
-from PySide2.QtQml import QJSValue
+from PySide2.QtCore import QObject
+from PySide2.QtCore import QPointF
+from PySide2.QtCore import Signal
+from PySide2.QtCore import Slot
+from PySide2.QtCore import Property
 
 
 class Plotting1dProxy(QObject):

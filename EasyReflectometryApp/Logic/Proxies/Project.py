@@ -11,14 +11,14 @@ from PySide2.QtCore import Slot
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-
 import numpy as np
-from easyApp.Logic.Utils.Utils import generalizePath
 
-from EasyReflectometryApp.Logic.DataStore import DataSet1D
+from easyscience import global_object
+from easyApp.Logic.Utils.Utils import generalizePath
 from easyreflectometry.sample import MaterialCollection
 from easyreflectometry.experiment.model_collection import ModelCollection
 
+from ..DataStore import DataSet1D
 
 class ProjectProxy(QObject):
     dummySignal = Signal()
@@ -189,7 +189,7 @@ class ProjectProxy(QObject):
         descr['colors'] = self.parent._model_proxy._colors
 
         descr['minimizer'] = {
-            'engine': self.parent._fitter_proxy.eFitter.easy_f.current_engine.name,
+            'engine': self.parent._fitter_proxy.eFitter.easy_f.minimizer.name,
             'method': self.parent._minimizer_proxy._current_minimizer_method_name
         }
 
@@ -223,6 +223,13 @@ class ProjectProxy(QObject):
         with open(path, 'r') as xml_file:
             descr: dict = json.load(xml_file)
 
+        self.parent._model_proxy._model = None
+        self.parent._material_proxy._materials = None
+        self.parent._model_proxy._colors = None
+        materials_in_model = []
+
+        global_object.map._clear()
+
         interface_name = descr.get('interface', None)
         for i, inter in enumerate(interface_name):
             if inter is not None:
@@ -231,17 +238,24 @@ class ProjectProxy(QObject):
                     self.parent._interface.switch(inter)
 
         self.parent._model_proxy._colors = descr['colors']
+
         self.parent._model_proxy._model = ModelCollection.from_dict(descr['model'])
-        self.parent._material_proxy._materials = MaterialCollection([])  # Should be initialized with empty list to enforce no elements in collection
         for model in self.parent._model_proxy._model:
             for sample in model.sample:
                 for layer in sample.layers:
-                    self.parent._material_proxy._materials.append(layer.material)
+                    materials_in_model.append(layer.material)
             model.interface = self.parent._interface
+
+
         mats = descr['materials_not_in_model']
-        if mats['data']:
-            for material in MaterialCollection.from_dict(mats):
-                self.parent._material_proxy._materials.append(material)
+        mats['populate_if_none'] = False
+        if not mats['data']:
+            mats['data'] = None
+        material_collection = MaterialCollection.from_dict(mats)
+        for material in materials_in_model:
+            if material not in material_collection:
+                material_collection.append(material)
+        self.parent._material_proxy._materials = material_collection
 
         # experiment
         if 'experiments' in descr:
@@ -297,9 +311,9 @@ class ProjectProxy(QObject):
             new_engine_index = self.parent._minimizer_proxy.minimizerNames.index(new_engine)
             self.currentMinimizerIndex = new_engine_index
             try:
-                new_method_index = self.parent._minimizer_proxy.minimizerMethodNames.index(new_method)
+                new_method_index = self.parent._minimizer_proxy.minimizerNames.index(new_method)
             except ValueError:
-                new_method_index = self.parent._minimizer_proxy.minimizerMethodNames[0]
+                new_method_index = self.parent._minimizer_proxy.minimizerNames[0]
             self.currentMinimizerMethodIndex = new_method_index
 
         self.parent._undoredo_proxy.resetUndoRedoStack()
@@ -374,7 +388,7 @@ class ProjectProxy(QObject):
             for i, d in enumerate(data):
                 model_index = self.parent._model_proxy._model.index(d.model)
                 color = self.parent._model_proxy._colors[model_index]
-                y = self.parent._interface.fit_func(d.x, d.model.uid)
+                y = self.parent._interface.fit_func(d.x, d.model.unique_name)
                 if self.parent._simulation_proxy._plot_rq4:
                     ax1.errorbar(d.x, (d.y * d.x ** 4) * 10 ** i, (d.ye * d.x ** 4) * 10 ** i, marker='', ls='',
                                  color=color, alpha=0.5)
@@ -382,7 +396,7 @@ class ProjectProxy(QObject):
                 else:
                     ax1.errorbar(d.x, d.y * 10 ** i, d.ye * 10 ** i, marker='', ls='', color=color, alpha=0.5)
                     ax1.plot(d.x, y * 10 ** i, ls='-', color=color, zorder=10, label=d.name)
-                sld_profile = self.parent._interface.sld_profile(d.model.uid)
+                sld_profile = self.parent._interface.sld_profile(d.model.unique_name)
                 ax2.plot(sld_profile[0], sld_profile[1] + 10 * i, color=color, ls='-')
             ax1.set_yscale('log')
         else:
@@ -393,12 +407,12 @@ class ProjectProxy(QObject):
             model = self.parent._model_proxy._model
             for i, m in enumerate(model):
                 color = self.parent._model_proxy._colors[i]
-                y = self.parent._interface.fit_func(x, m.uid)
+                y = self.parent._interface.fit_func(x, m.unique_name)
                 if self.parent._simulation_proxy._plot_rq4:
                     ax1.plot(x, (y * d.x ** 4) * 10 ** i, ls='-', color=color, zorder=10, label=m.name)
                 else:
                     ax1.plot(x, y * 10 ** i, ls='-', color=color, zorder=10, label=m.name)
-                sld_profile = self.parent._interface.sld_profile(m.uid)
+                sld_profile = self.parent._interface.sld_profile(m.unique_name)
                 ax2.plot(sld_profile[0], sld_profile[1] + 10 * i, color=color, ls='-')
             ax1.set_yscale('log')
         ax1.legend()

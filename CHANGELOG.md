@@ -1,4 +1,8 @@
 # CHANGELOG
+### Changes 0.0.12
+
+- Use the latest version of the lib
+
 ### Changes 0.0.11
 
 - Fix to how surfactant table is displayed in GUI

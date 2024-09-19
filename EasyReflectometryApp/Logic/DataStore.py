@@ -4,10 +4,10 @@ from typing import Union
 from typing import TypeVar
 
 import numpy as np
-from easyscience.Objects.core import ComponentSerializer
-from easyscience.Utils.io.dict import DictSerializer
 from collections.abc import Sequence
 
+from easyscience.Objects.core import ComponentSerializer
+from easyscience.Utils.io.dict import DictSerializer
 from easyreflectometry.experiment.model import Model
 
 T = TypeVar('T')
