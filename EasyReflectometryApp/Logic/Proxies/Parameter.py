@@ -7,11 +7,12 @@ from PySide2.QtCore import Signal
 from PySide2.QtCore import Property
 from PySide2.QtCore import Slot
 import numpy as np
-from easyscience.Fitting.Constraints import ObjConstraint
-from easyscience.Fitting.Constraints import NumericConstraint
-from easyscience.Fitting.Constraints import FunctionalConstraint
+
+from easyscience.Constraints import ObjConstraint
+from easyscience.Constraints import NumericConstraint
+from easyscience.Constraints import FunctionalConstraint
 from easyscience.Utils.io.xml import XMLSerializer
-from easyscience import borg
+from easyscience import global_object
 from easyscience.Utils.classTools import generatePath
 
 
@@ -52,20 +53,19 @@ class ParameterProxy(QObject):
 
         par_ids, par_paths = generatePath(self.parent._model_proxy._model, True)
         pids = []
-        labels = []
         self._n_fit = False
         for par_index, par_path in enumerate(par_paths):
             par_id = par_ids[par_index]
             if par_id in pids:
                 continue
             pids.append(par_id)
-            par = borg.map.get_item_by_key(par_id)
+            par = global_object.map.get_item_by_key(par_id)
             path_split = par_path.split('.')
-            if path_split[-1] == 'repetitions' and par.raw_value == 1:
+            if path_split[-1] == 'repetitions' and par.value == 1:
                 continue
             if not par.enabled:
                 continue
-            unit = '{:~P}'.format(par.unit)
+            unit = par.unit
             label = get_label(par_path)
             if label is None:
                 continue
@@ -77,7 +77,7 @@ class ParameterProxy(QObject):
                 "id": str(par_id),
                 "number": par_index + 1,
                 "label": label,
-                "value": par.raw_value,
+                "value": par.value,
                 "unit": unit,
                 "error": float(par.error),
                 "fit": int(not par.fixed),
@@ -134,7 +134,7 @@ class ParameterProxy(QObject):
             self.parent._undoredo_proxy.undoRedoChanged.emit()
 
         else:
-            if obj.raw_value == new_value:
+            if obj.value == new_value:
                 return
 
             obj.value = new_value
@@ -191,8 +191,7 @@ class ParameterProxy(QObject):
     def _parameterObj(self, obj_id: str):
         if not obj_id:
             return
-        obj_id = int(obj_id)
-        obj = borg.map.get_item_by_key(obj_id)
+        obj = global_object.map.get_item_by_key(obj_id)
         return obj
 
     # Constraints
@@ -214,9 +213,9 @@ class ParameterProxy(QObject):
             if par_id in pids:
                 continue
             pids.append(par_id)
-            par = borg.map.get_item_by_key(par_id)
+            par = global_object.map.get_item_by_key(par_id)
             path_split = par_path.split('.')
-            if path_split[-1] == 'repetitions' and par.raw_value == 1:
+            if path_split[-1] == 'repetitions' and par.value == 1:
                 continue
             if not par.enabled:
                 continue
@@ -350,9 +349,7 @@ def get_label(par_path: str) -> str:
     return label
 
 def get_par_path(par, model):
-    model_id = borg.map.convert_id(model)
-    elem = borg.map.convert_id(par)
-    route = borg.map.reverse_route(elem, model_id)
-    objs = [getattr(borg.map.get_item_by_key(r), "name") for r in route]
+    route = global_object.map.reverse_route(par.unique_name, model.unique_name)
+    objs = [getattr(global_object.map.get_item_by_key(r), "name") for r in route]
     objs.reverse()
     return ".".join(objs[1:]) 

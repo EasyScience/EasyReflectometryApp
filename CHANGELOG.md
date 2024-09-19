@@ -1,4 +1,8 @@
 # CHANGELOG
+### Changes 0.0.11
+
+- Fix to how surfactant table is displayed in GUI
+
 ### Changes 0.0.10
 
 - Only internal clean-up

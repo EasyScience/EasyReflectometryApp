@@ -6,7 +6,7 @@ from PySide2.QtCore import QObject
 from PySide2.QtCore import Property
 from PySide2.QtCore import Slot
 
-from easyscience import borg
+from easyscience import global_object
 
 from easyreflectometry.fitting import Fitter as easyFitter
 
@@ -126,7 +126,7 @@ class FitterProxy(QObject):
         # if running, stop the thread
         if not self.isFitFinished:
             self.onStopFit()
-            borg.stack.endMacro()  # need this to close the undo stack properly
+            global_object.stack.endMacro()  # need this to close the undo stack properly
             return
         # macos is possibly problematic with MT, skip on this platform
         # if 'darwin' in sys.platform:
@@ -146,7 +146,7 @@ class FitterProxy(QObject):
         x = [i.x for i in exp_data]
         y = [i.y for i in exp_data]
         weights = [1 / i.ye for i in exp_data]
-        method = self.parent.minimizer._current_minimizer_method_name
+        method = self.parent.minimizer._current_minimizer.method
 
         res = self.eFitter.easy_f.fit(x, y, weights=weights, method=method)
         self._setFitResults(res)
