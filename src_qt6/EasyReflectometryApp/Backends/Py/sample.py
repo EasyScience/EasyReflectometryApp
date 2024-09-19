@@ -8,20 +8,20 @@ from .logic.sample import Sample as SampleLogic
 
 class Sample(QObject):
     materialsChanged = Signal()
-    currentMaterialIndexChanged = Signal()
+#    currentMaterialIndexChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self._logic = SampleLogic()
 
-    @Property(str)
-    def currentMaterialIndex(self, notify=currentMaterialIndexChanged) -> str:
-        return self._logic.material_index
+##    @Property(str)
+##    def currentMaterialIndex(self, notify=currentMaterialIndexChanged) -> str:
+##        return self._logic.material_index
 
-    @currentMaterialIndex.setter
-    def currentMaterialIndex(self, new_value: str) -> None:
-        if self._logic.material_index != new_value:
-            self._logic.material_index = new_value
+##    @currentMaterialIndex.setter
+##    def currentMaterialIndex(self, new_value: str) -> None:
+##        if self._logic.material_index != new_value:
+#        self._logic.material_index = new_value
 #            self.currentMaterialIndexChanged.emit()
 
     @Property('QVariantList', notify=materialsChanged)
@@ -35,8 +35,8 @@ class Sample(QObject):
     # Setters
     @Slot(str)
     def setCurrentMaterialIndex(self, new_value: str) -> None:
-        self.currentMaterialIndex = new_value
-        self.currentMaterialIndexChanged.emit()
+        self._logic.material_index = new_value
+#        self.currentMaterialIndexChanged.emit()
 
     @Slot(str)
     def setCurrentMaterialName(self, new_value: str) -> None:
@@ -57,7 +57,6 @@ class Sample(QObject):
     def removeMaterial(self, value: str) -> None:
         self._logic.remove_material_at_index(value)
         self.materialsChanged.emit()
-        self.currentMaterialIndexChanged.emit()
 
     @Slot()
     def addNewMaterial(self) -> None:
@@ -73,10 +72,8 @@ class Sample(QObject):
     def moveSelectedMaterialUp(self) -> None:
         self._logic.move_selected_material_up()
         self.materialsChanged.emit()
-        self.currentMaterialIndexChanged.emit()
 
     @Slot()
     def moveSelectedMaterialDown(self) -> None:
         self._logic.move_selected_material_down()
         self.materialsChanged.emit()
-        self.currentMaterialIndexChanged.emit()

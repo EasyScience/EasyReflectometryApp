@@ -4,7 +4,7 @@ from PySide2.QtCore import QObject
 from PySide2.QtCore import Signal
 from PySide2.QtCore import Property
 
-from easyscience.Utils.UndoRedo import property_stack_deco
+# from easyscience.Utils.UndoRedo import property_stack_deco
 
 
 class CalculatorProxy(QObject):
@@ -31,7 +31,7 @@ class CalculatorProxy(QObject):
         return self.calculatorNames.index(self.parent._interface.current_interface_name)
 
     @currentCalculatorIndex.setter
-    @property_stack_deco('Calculation engine change')
+#    @property_stack_deco('Calculation engine change')
     def currentCalculatorIndex(self, new_index: int):
         if self.currentCalculatorIndex == new_index:
             return

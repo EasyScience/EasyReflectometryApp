@@ -1,4 +1,6 @@
 from typing import Union
+from easyscience import global_object
+from easyreflectometry.sample import Sample as SampleLib
 
 MATERIALS = [
     {
@@ -21,6 +23,7 @@ MATERIALS = [
 class Sample:
     def __init__(self):
         self._material_index = -1
+        self._sample = SampleLib()
         self._materials: list[dict[str, str]] = MATERIALS
 
     @property
@@ -50,7 +53,6 @@ class Sample:
 
     def remove_material_at_index(self, value: str) -> None:
         self._materials.pop(int(value))
-        self._material_index -= 1
     
     def add_new_material(self) -> None:
         self._materials.append({
@@ -65,9 +67,7 @@ class Sample:
     def move_selected_material_up(self) -> None:
         if self._material_index > 0:
             self._materials[self._material_index], self._materials[self._material_index - 1] = self._materials[self._material_index - 1], self._materials[self._material_index]
-            self._material_index -= 1
     
     def move_selected_material_down(self) -> None:
         if self._material_index < len(self._materials) - 1:
             self._materials[self._material_index], self._materials[self._material_index + 1] = self._materials[self._material_index + 1], self._materials[self._material_index]
-            self._material_index += 1
