@@ -31,7 +31,7 @@ classifiers = [
 requires-python = ">=3.9, <3.11"
 dependencies = [
     'darkdetect>=0.3.1',
-    'easyreflectometry @ git+https://github.com/EasyScience/EasyReflectometryLib.git@180-extract-functionality-from-sample-in-easyreflectometryappproxiesmodel-to-lib',
+    'easyreflectometry @ git+https://github.com/EasyScience/EasyReflectometryLib.git@184-extract-functionality-from-easyreflectometryapp-proxies-material-to-lib',
     'easyApp @ git+https://github.com/easyScience/easyApp.git@pyside2',
     'matplotlib>=3.4.2',
     'toml>=0.10.2',
