@@ -11,7 +11,6 @@ from PySide2.QtCore import Slot
 from easyscience import global_object
 from easyscience.Utils.io.xml import XMLSerializer
 
-from easyreflectometry.sample import Material
 from easyreflectometry.sample import MaterialCollection
 
 COLOURMAP = matplotlib.colormaps['Blues'].resampled(100)
@@ -30,27 +29,11 @@ class MaterialProxy(QObject):
         self.parent = parent
 
         self._materials_as_xml = ""
-        self._materials = self._defaultMaterials()
+        self._materials = MaterialCollection() #self._defaultMaterials()
 
         self._current_materials_index = 0
 
         self.materialsChanged.connect(self._setMaterialsAsXml)
-
-    # # #
-    # Defaults
-    # # #
-
-    def _defaultMaterials(self) -> MaterialCollection:
-        """
-        Default materials for EasyReflecometry.
-        
-        :return: Three materials; Air, D2O and Si.
-        """
-        return MaterialCollection(
-            Material(sld=0., isld=0., name='Air'),
-            Material(sld=6.335, isld=0., name='D2O'),
-            Material(sld=2.074, isld=0., name='Si')
-        )
 
     # # #
     # Setters and getters
@@ -117,14 +100,8 @@ class MaterialProxy(QObject):
         Add a new material.
         """
         global_object.stack.enabled = False
-        self._materials.append(
-            Material(
-                sld=2.074,
-                isld=0.000,
-                name='Si',
-                interface=self.parent._interface
-            )
-        )
+        self._materials.add_material()
+
         global_object.stack.enabled = True
         self.materialsChanged.emit()
         self.parent.layersMaterialsChanged.emit()
@@ -135,17 +112,7 @@ class MaterialProxy(QObject):
         Duplicate the currently selected material.
         """
         global_object.stack.enabled = False
-        # This is a fix until deepcopy is worked out
-        # Manual duplication instead of creating a copy
-        to_dup = self._materials[self.currentMaterialsIndex]
-        self._materials.append(
-            Material(
-                sld=to_dup.sld.value,
-                isld=to_dup.isld.value,
-                name=to_dup.name,
-                interface=self.parent._interface
-            )
-        )
+        self._materials.duplicate_material(self.currentMaterialsIndex)
         global_object.stack.enabled = True
         self.materialsChanged.emit()
         self.parent.layersMaterialsChanged.emit()
@@ -157,7 +124,7 @@ class MaterialProxy(QObject):
 
         :param i: Index of the material
         """
-        del self._materials[int(i)]
+        self._materials.remove_material(int(i))
         self.materialsChanged.emit()
         self.parent.layersMaterialsChanged.emit()
 
@@ -166,8 +133,7 @@ class MaterialProxy(QObject):
         """
         Move the currently selected material up.
         """
-        i = self.currentMaterialsIndex
-        self._materials.insert(i-1, self._materials.pop(i))
+        self._materials.move_material_up(self.currentMaterialsIndex)
         self.materialsChanged.emit()
         self.parent.layersMaterialsChanged.emit()
 
@@ -176,8 +142,7 @@ class MaterialProxy(QObject):
         """
         Move the currently selected material down.
         """
-        i = self.currentMaterialsIndex
-        self._materials.insert(i+1, self._materials.pop(i))
+        self._materials.move_material_down(self.currentMaterialsIndex)
         self.materialsChanged.emit()
         self.parent.layersMaterialsChanged.emit()
 
