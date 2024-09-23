@@ -509,17 +509,20 @@ class ModelProxy(QObject):
     def addNewItems(self):
         if len(self.parent._material_proxy._materials) == 0:
             self.parent._material_proxy.addNewMaterials()
-        self._model[self.currentModelIndex].add_assemblies(
-            Multilayer(
-                Layer(
-                    material=self.parent._material_proxy._materials[0],
-                    thickness=10.,
-                    roughness=1.2),
-                name=f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'
-            )
-        )
+        self._model[self.currentModelIndex].add_assemblies()
+        # self._model[self.currentModelIndex].sample[-1].layers[-1].material = self.parent._material_proxy._materials[0]
+        # self._model[self.currentModelIndex].add_assemblies(
+        #     Multilayer(
+        #         Layer(
+        #             material=self.parent._material_proxy._materials[0],
+        #             thickness=10.,
+        #             roughness=1.2),
+        #         name=f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'
+        #     )
+        # )
         self.parent.layersChanged.emit()
         self.parent.itemsChanged.emit()
+        self.parent.layersMaterialsChanged.emit()
 
 
     @Slot()
