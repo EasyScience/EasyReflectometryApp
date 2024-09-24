@@ -29,7 +29,7 @@ class MaterialProxy(QObject):
         self.parent = parent
 
         self._materials_as_xml = ""
-        self._materials = MaterialCollection() #self._defaultMaterials()
+        self._materials = MaterialCollection()
 
         self._current_materials_index = 0
 
@@ -51,6 +51,12 @@ class MaterialProxy(QObject):
                 COLOURMAP((dictionary['sld']['value'] - MIN_SLD) / (MAX_SLD - MIN_SLD)))
             _materials_as_obj.append(dictionary)
         return _materials_as_obj
+
+    @property
+    def last_material(self):
+        if len(self._materials) == 0:
+            self.addNewMaterials()
+        return self._materials[-1]
 
     @Property(str, notify=materialsAsXmlChanged)
     def materialsAsXml(self):

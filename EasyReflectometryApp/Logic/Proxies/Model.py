@@ -507,9 +507,8 @@ class ModelProxy(QObject):
 
     @Slot()
     def addNewItems(self):
-        if len(self.parent._material_proxy._materials) == 0:
-            self.parent._material_proxy.addNewMaterials()
         self._model[self.currentModelIndex].add_assemblies()
+        self._model[self.currentModelIndex].sample[-1].layers[-1].material = self.parent._material_proxy.last_material
         self.parent.layersChanged.emit()
         self.parent.itemsChanged.emit()
         self.parent.layersMaterialsChanged.emit()
