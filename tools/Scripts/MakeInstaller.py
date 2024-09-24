@@ -208,17 +208,20 @@ def osDependentPreparation():
         Functions.printNeutralMessage(f'No preparation needed for os {CONFIG.os}')
 
 def installQtInstallerFramework():
+    osDependentPreparation()
     if os.path.exists(qtifwDirPath()):
         Functions.printNeutralMessage(f'QtInstallerFramework was already installed to {qtifwDirPath()}')
         return
     try:
         message = f'install QtInstallerFramework to {qtifwDirPath()}'
-        silent_script = os.path.join(CONFIG.scripts_dir, CONFIG['ci']['scripts']['silent_install'])
-        Functions.installSilently(
-            installer=qtifwSetupExe(),
-            silent_script=silent_script
+        Functions.run(
+            qtifwSetupExe(),
+            'install',
+            '--verbose',
+            '--confirm-command',
+            '--default-answer',
+            '--accept-licenses'
         )
-        time.sleep(10)
     except Exception as exception:
         Functions.printFailMessage(message, exception)
         sys.exit(1)
