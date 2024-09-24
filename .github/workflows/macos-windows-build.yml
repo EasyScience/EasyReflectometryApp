@@ -23,7 +23,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2019, macos-12]
+        os: [ubuntu-24.04, windows-2019, macos-12]
 
     steps:
       - name: Check-out EasyReflectometry repository
@@ -67,8 +67,8 @@ jobs:
           echo "PYTHON_PACKAGES_PATH=$(python utils.py --get ci.paths.python_packages_path)" >> $GITHUB_ENV
           echo "GIT_INSTALL_URL=git+ssh://git@github.com/$GITHUB_REPOSITORY@${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
 
-      - name: Set up screen (Linux)
-        if: runner.os == 'Linux'
+      - name: Set up screen (Ubuntu)
+        if: runner.os == 'Ubuntu'
         run: |
           sudo apt-get update
           sudo apt-get install libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0 libxcb-cursor0
