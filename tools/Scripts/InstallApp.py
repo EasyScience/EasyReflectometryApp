@@ -7,28 +7,41 @@ import Functions, Config
 
 CONFIG = Config.Config()
 
-def setupExePath() -> str:
-    """
-    :return: Path to the installer executable.
-    """
+def setupExePath():
     d = {
-        'macos': os.path.join(CONFIG.setup_full_name, 'Contents', 'MacOS', CONFIG.setup_name),
-        'ubuntu': CONFIG.setup_full_name,
+        'macos':   os.path.join(CONFIG.setup_full_name, 'Contents', 'MacOS', CONFIG.setup_name),
+        'ubuntu':  CONFIG.setup_full_name,
         'windows': CONFIG.setup_full_name
     }
     return os.path.join(CONFIG.dist_dir, d[CONFIG.os])
 
+def fixPermissions():
+    if CONFIG.os == 'macos' or 'ubuntu':
+        try:
+            message = f'fixing permissions for os {CONFIG.os}'
+            Functions.run(
+                'chmod',
+                '+x',
+                setupExePath()
+            )
+        except Exception as exception:
+            Functions.printFailMessage(message, exception)
+            sys.exit(1)
+        else:
+            Functions.printSuccessMessage(message)
+    else:
+        Functions.printNeutralMessage(f'No fixing permissions needed for os {CONFIG.os}')
+
 def runInstallerSilently():
-    """
-    Install the applcation. 
-    """
     try:
         message = f'install {CONFIG.app_name}'
-        silent_script = CONFIG['ci']['scripts']['silent_install']
-        silent_script_path = os.path.join(CONFIG.scripts_dir, silent_script)
-        Functions.installSilently(
-            installer=setupExePath(),
-            silent_script=silent_script_path
+        Functions.run(
+            setupExePath(),
+            'install',
+            '--verbose',
+            '--confirm-command',
+            '--default-answer',
+            '--accept-licenses'
         )
     except Exception as exception:
         Functions.printFailMessage(message, exception)
@@ -36,5 +49,7 @@ def runInstallerSilently():
     else:
         Functions.printSuccessMessage(message)
 
+
 if __name__ == "__main__":
+    fixPermissions()
     runInstallerSilently()
