@@ -67,6 +67,17 @@ jobs:
           echo "PYTHON_PACKAGES_PATH=$(python utils.py --get ci.paths.python_packages_path)" >> $GITHUB_ENV
           echo "GIT_INSTALL_URL=git+ssh://git@github.com/$GITHUB_REPOSITORY@${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
 
+      - name: Set up screen (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0 libxcb-cursor0
+          sudo apt-get install libpulse-mainloop-glib0
+          sudo apt-get install libxkbcommon-x11-0
+          sudo apt-get install libegl1-mesa-dev
+          Xvfb :0 -screen 0 1920x1080x24 -ac &
+          echo "DISPLAY=:0" >> $GITHUB_ENV          
+
       - name: Create frozen python app bundle
         run: python ${{ env.SCRIPTS_PATH }}/FreezeApp.py
 
