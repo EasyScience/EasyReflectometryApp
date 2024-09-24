@@ -23,7 +23,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2019, macos-12]
+        os: [ubuntu-22.04, windows-2019, macos-12]
 
     steps:
       - name: Check-out EasyReflectometry repository
@@ -102,7 +102,14 @@ jobs:
         with:
           name: windows
           path: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_Windows_*.zip"
-      
+
+      - name: Upload installer to artifacts (Ubuntu)
+        uses: actions/upload-artifact@v4
+        if: runner.os == 'Ubuntu'
+        with:
+          name: ubuntu
+          path: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_Ubuntu_*.zip"
+          
       - name: Upload zipped offline app installer to GitHub releases (master only)
         if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
         uses: ncipollo/release-action@v1
