@@ -139,8 +139,8 @@ config_control = 'InstallerControlScript.js'
 config_style = 'style.qss'
 
 [ci.qtifw]
-version = '4.6.1'
-https_mirrors = ['download.qt.io', 'ftp.fau.de/qtproject', 'mirrors.dotsrc.org/qtproject']
+version = '4.7.0'
+https_mirrors = ['qt.mirror.constant.com', 'ftp.fau.de/qtproject', 'mirrors.dotsrc.org/qtproject']
 base_path = 'official_releases/qt-installer-framework'
 file_name_base = 'QtInstallerFramework'
 file_platform = { macos = 'macOS-x64', ubuntu = 'linux-x64', windows = 'windows-x64' }
