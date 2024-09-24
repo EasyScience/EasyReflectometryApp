@@ -118,8 +118,8 @@ jobs:
         uses: actions/upload-artifact@v4
         if: runner.os == 'Linux'
         with:
-          name: ubuntu
-          path: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_Ubuntu_*.zip"
+          name: linux
+          path: "${{ env.DISTRIBUTION_PATH }}/${{ env.APP_NAME }}_Linux_*.zip"
           
       - name: Upload zipped offline app installer to GitHub releases (master only)
         if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
