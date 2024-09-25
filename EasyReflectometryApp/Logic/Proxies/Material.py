@@ -195,6 +195,6 @@ class MaterialProxy(QObject):
         """
         Reset the materials to the default.
         """
-        self._materials = self.parent._material_proxy._defaultMaterials()
+        self._materials = MaterialCollection()
         self.materialsChanged.emit()
         self.parent.layersChanged.emit()

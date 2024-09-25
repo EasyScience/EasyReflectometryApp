@@ -237,7 +237,7 @@ class ModelProxy(QObject):
         if self._model[self.currentModelIndex].sample[self.currentItemsIndex].type == 'Surfactant Layer':
             current_layers = Layer(self.parent._material_proxy._materials[0], 10, 3)
         target_position = self.currentItemsIndex
-        self._model[self.currentModelIndex].remove_item(self.currentItemsIndex)
+        self._model[self.currentModelIndex].remove_assembly(self.currentItemsIndex)
         if type == 'Multi-layer':
             new_item = Multilayer(
                 layers=current_layers,
@@ -284,7 +284,7 @@ class ModelProxy(QObject):
                 head_layer=head_layer,
                 name=type
             )
-        self._model[self.currentModelIndex].add_item(new_item)
+        self._model[self.currentModelIndex].add_assemblies(new_item)
         self.parent._parameter_proxy._setParametersAsObj()
         if target_position != len(self._model[self.currentModelIndex].sample) - 1:
             new_items_list = []
@@ -300,9 +300,9 @@ class ModelProxy(QObject):
                 else:
                     new_items_list.append(item)
             while len(self._model[self.currentModelIndex].sample) != 0:
-                self._model[self.currentModelIndex].remove_item(0)
+                self._model[self.currentModelIndex].remove_assembly(0)
             for i in range(len(new_items_list)):
-                self._model[self.currentModelIndex].add_item(new_items_list[i])
+                self._model[self.currentModelIndex].add_assemblies(new_items_list[i])
             global_object.stack.enabled = True
             self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
             self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
