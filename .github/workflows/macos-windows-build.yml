@@ -1,13 +1,12 @@
 # This pipeline
 # EITHER
-# - create installer for MacOS
-# OR
-# - create installer for Windows 
+# - create installer for MacOS, Windows or Ubuntu
+# And
 # - test installer
 # - for master executeables are deployed
 # -- offline installers to GitHub releases
 
-name: Build Executable for MacOS and Windows
+name: Build Executable for MacOS, Windows or Ubuntu
 
 on: [push, pull_request]
 
@@ -72,7 +71,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0 libxcb-cursor0
-          sudo apt-get install libc6
           sudo apt-get install libpulse-mainloop-glib0
           sudo apt-get install libxkbcommon-x11-0
           sudo apt-get install libegl1-mesa-dev
@@ -95,8 +93,8 @@ jobs:
       - name: Install app
         run: python ${{ env.SCRIPTS_PATH }}/InstallApp.py
 
-      # - name: Run app in testmode and quit
-      #   run: python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
+      - name: Run app in testmode and quit
+        run: python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
 
       - name: Create zip archive of offline app installer
         run: python ${{ env.SCRIPTS_PATH }}/ZipArtifacts.py ${{ env.BRANCH_NAME }}
