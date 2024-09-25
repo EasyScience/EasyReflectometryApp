@@ -32,7 +32,7 @@ requires-python = ">=3.9, <3.11"
 dependencies = [
     'scipy<1.14',
     'darkdetect>=0.3.1',
-    'easyreflectometry>=1.1.1',
+    'easyreflectometry==1.1.1',
     'easyApp @ git+https://github.com/easyScience/easyApp.git@pyside2',
 #    'matplotlib>=3.4.2',
     'pyobjc-core>=7.1; platform_system == "Darwin"',
