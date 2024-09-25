@@ -65,6 +65,7 @@ jobs:
           echo "QTIFW_PATH=$(python utils.py --get ci.qtifw.installation_path.${{ runner.os }})" >> $GITHUB_ENV
           echo "PYTHON_PACKAGES_PATH=$(python utils.py --get ci.paths.python_packages_path)" >> $GITHUB_ENV
           echo "GIT_INSTALL_URL=git+ssh://git@github.com/$GITHUB_REPOSITORY@${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
+          echo "PACKAGE_NAME=$(python utils.py --get project.name)" >> $GITHUB_ENV
 
       - name: Set up screen (Linux)
         if: runner.os == 'Linux'
