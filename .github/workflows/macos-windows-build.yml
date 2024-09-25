@@ -89,7 +89,8 @@ jobs:
           Get-DisplayResolution
 
       - name: Run app in testmode and quit
-        run: python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
+        shell: bash
+        run: python ${{ env.PACKAGE_NAME }}/main.py --testmode
   
       - name: Create frozen python app bundle
         run: python ${{ env.SCRIPTS_PATH }}/FreezeApp.py
