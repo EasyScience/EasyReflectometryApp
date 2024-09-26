@@ -16,7 +16,7 @@ import numpy as np
 from easyscience import global_object
 from easyApp.Logic.Utils.Utils import generalizePath
 from easyreflectometry.sample import MaterialCollection
-from easyreflectometry.experiment.model_collection import ModelCollection
+from easyreflectometry.model.model_collection import ModelCollection
 
 from ..DataStore import DataSet1D
 
