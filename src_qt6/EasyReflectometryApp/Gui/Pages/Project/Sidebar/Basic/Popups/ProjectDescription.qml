@@ -18,7 +18,7 @@ EaComponents.ProjectDescriptionDialog {
         Globals.BackendWrapper.projectDescription = projectDescription
         Globals.BackendWrapper.projectLocation = projectLocation
 
-        Globals.BackendWrapper.projectCreate(projectLocation)
+        Globals.BackendWrapper.projectCreate()
         Globals.References.applicationWindow.appBarCentralTabs.summaryButton.enabled = true
     }
 

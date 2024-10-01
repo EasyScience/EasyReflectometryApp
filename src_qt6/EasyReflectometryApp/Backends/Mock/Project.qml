@@ -11,8 +11,7 @@ QtObject {
     property string description: 'Default project description from Mock proxy'
     property string location: '/path to the project'
 
-    function create(project_path) {
-        location = project_path
+    function create() {
         console.debug(`Creating project ${name}`)
         creationDate = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`
         created = true
@@ -20,6 +19,10 @@ QtObject {
 
     function save() {
         console.debug(`Saving project ${name}`)
+    }
+
+    function load(path) {
+        console.debug(`Loading project from ${path}`)
     }
 
 }

@@ -3,24 +3,27 @@ from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
 from PySide6.QtCore import Property
 
+from EasyApp.Logic.Utils.Utils import generalizePath
+
 from .logic.project import Project as ProjectLogic
+from easyreflectometry import Project as ProjectLib
 
 
 class Project(QObject):
-    createdChanged = Signal()
+    createdChanged = Signal(bool)
     nameChanged = Signal()
     descriptionChanged = Signal()
     locationChanged = Signal()
 
-    def __init__(self, parent=None):
+    def __init__(self, project: ProjectLib, parent=None):
         super().__init__(parent)
-        self._logic = ProjectLogic()
+        self._logic = ProjectLogic(project)
 
     # Setters and getters
 
     @Property(bool, notify=createdChanged)
     def created(self) -> bool:
-        return self._logic._created
+        return self._logic.created
 
     @Property(str, notify=nameChanged)
     def name(self) -> str:
@@ -61,11 +64,18 @@ class Project(QObject):
         return self._logic.current_path
 
     @Slot(str)
-    def create(self, project_path: str) -> None:
-        self._logic.create(project_path)
-        self.createdChanged.emit()
+    def create(self) -> None:
+        self._logic.create()
+        self._created = True
+        self.createdChanged.emit(True)
+
+    @Slot(str)
+    def load(self, path: str) -> None:
+        self._logic.load(generalizePath(path))
+        self._created = True
+        self.createdChanged.emit(True)
 
     @Slot()
-    def save(self) -> None:
+    def save(self, path: str) -> None:
         self._logic.save()
 

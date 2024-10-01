@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # © 2024 Contributors to the EasyApp project <https://github.com/easyscience/EasyApp>
 
-from PySide6.QtCore import QObject, Signal, Property
-
+from PySide6.QtCore import QObject
+from PySide6.QtCore import Signal
+from PySide6.QtCore import Property
+from easyreflectometry import Project as ProjectLib
 
 class Status(QObject):
     projectChanged = Signal()
@@ -13,8 +15,9 @@ class Status(QObject):
     minimizerChanged = Signal()
     variablesChanged = Signal()
 
-    def __init__(self, parent=None):
+    def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
+        self._project_lib = project_lib
         self._project = 'Py backend'
         self._phaseCount = '1'
         self._experimentsCount = '1'
@@ -24,7 +27,7 @@ class Status(QObject):
 
     @Property(str, notify=projectChanged)
     def project(self):
-        return self._project
+        return self._project._info['name']
 
     @project.setter
     def project(self, newValue):

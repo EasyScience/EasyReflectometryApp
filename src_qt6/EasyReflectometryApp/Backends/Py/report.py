@@ -3,7 +3,7 @@
 # © 2024 Contributors to the EasyApp project <https://github.com/easyscience/EasyApp>
 
 from PySide6.QtCore import QObject, Signal, Property
-
+from easyreflectometry import Project as ProjectLib
 
 _PY_HTML = """<!DOCTYPE html>
 <html>
@@ -79,7 +79,7 @@ class Report(QObject):
     createdChanged = Signal()
     asHtmlChanged = Signal()
 
-    def __init__(self, parent=None):
+    def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
         self._created = True
         self._asHtml = _PY_HTML
