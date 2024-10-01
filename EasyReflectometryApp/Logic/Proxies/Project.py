@@ -67,7 +67,7 @@ class ProjectProxy(QObject):
     @Slot(str, str)
     def editProjectInfo(self, key, value):
         if key == 'location':
-            self._project.project_path = value
+            self._project.path = value
             return
         else:
             if self._project._info[key] == value:
@@ -77,13 +77,13 @@ class ProjectProxy(QObject):
 
     @Property(str, notify=projectInfoChanged)
     def currentProjectPath(self):
-        return str(self._project.project_path)
+        return str(self._project.path)
 
     @currentProjectPath.setter
     def currentProjectPath(self, new_path):
-        if self._project.project_path == new_path:
+        if self._project.path == new_path:
             return
-        self._project.project_path = new_path
+        self._project.path = new_path
         self.projectInfoChanged.emit()
 
     # # #
@@ -110,6 +110,7 @@ class ProjectProxy(QObject):
     def loadProjectAs(self, filepath):
         self._project.load_project_json(generalizePath(filepath))
         self._relayProjectChange()
+        self.projectInfoChanged.emit()
 
     @Slot()
     def loadProject(self):
