@@ -15,9 +15,9 @@ class Project(QObject):
     descriptionChanged = Signal()
     locationChanged = Signal()
 
-    def __init__(self, project: ProjectLib, parent=None):
+    def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
-        self._logic = ProjectLogic(project)
+        self._logic = ProjectLogic(project_lib)
 
     # Setters and getters
 
@@ -47,12 +47,12 @@ class Project(QObject):
 
     @Property(str, notify=locationChanged)
     def location(self) -> str:
-        return self._logic.current_path
+        return self._logic.path
 
     @location.setter
     def location(self, new_value: str) -> None:
-        if self._logic.current_path != new_value:
-            self._logic.current_path = new_value
+        if self._logic.path != new_value:
+            self._logic.path = new_value
             self.locationChanged.emit()
 
     @Property(str, notify=createdChanged)
@@ -61,9 +61,9 @@ class Project(QObject):
 
     @Property(str)
     def currentProjectPath(self) -> str:
-        return self._logic.current_path
+        return self._logic.path
 
-    @Slot(str)
+    @Slot()
     def create(self) -> None:
         self._logic.create()
         self._created = True
@@ -76,6 +76,9 @@ class Project(QObject):
         self.createdChanged.emit(True)
 
     @Slot()
-    def save(self, path: str) -> None:
+    def save(self) -> None:
         self._logic.save()
 
+    @Slot()
+    def reset(self) -> None:
+        self._logic.reset()

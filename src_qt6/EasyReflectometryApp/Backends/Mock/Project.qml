@@ -21,6 +21,10 @@ QtObject {
         console.debug(`Saving project ${name}`)
     }
 
+    function reset() {
+        console.debug(`Reset project ${name}`)
+    }
+
     function load(path) {
         console.debug(`Loading project from ${path}`)
     }

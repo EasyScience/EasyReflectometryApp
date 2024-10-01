@@ -65,6 +65,7 @@ QtObject {
     onProjectLocationChanged: activeBackend.project.location = projectLocation
 
     function projectCreate() { activeBackend.project.create() }
+    function projectReset() { activeBackend.project.reset() }
     function projectSave() { activeBackend.project.save() }
     function projectLoad(value) { activeBackend.project.load(value) }
 

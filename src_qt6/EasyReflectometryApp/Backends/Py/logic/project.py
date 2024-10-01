@@ -22,11 +22,11 @@ class Project:
             self._project_lib._project_created = False
 
     @property
-    def current_path(self) -> str:
+    def path(self) -> str:
         return str(self._project_lib.path)
 
-    @current_path.setter
-    def current_path(self, new_value: str) -> None:
+    @path.setter
+    def path(self, new_value: str) -> None:
         self._project_lib.path = new_value
 
     @property
@@ -65,4 +65,5 @@ class Project:
     def load(self, path: str) -> None:
         self._project_lib.load_project_json(path)
 
-
+    def reset(self) -> None:
+        self._project_lib.reset()

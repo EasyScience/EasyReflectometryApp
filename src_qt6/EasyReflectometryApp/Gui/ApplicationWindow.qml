@@ -20,9 +20,16 @@ EaComponents.ApplicationWindow {
         EaElements.ToolButton {
             enabled: Globals.BackendWrapper.projectCreated
             highlighted: true
-            fontIcon: 'save'
-            ToolTip.text: qsTr('Save current state of the project')
+            fontIcon: "save"
+            ToolTip.text: qsTr("Save current state of the project")
             onClicked: Globals.BackendWrapper.projectSave()
+        },
+
+        EaElements.ToolButton {
+            enabled: Globals.References.projectPageEnabled
+            fontIcon: "backspace"
+            ToolTip.text: qsTr("Reset to initial state without project, models and data")
+            onClicked: Globals.BackendWrapper.projectReset()
         }
 
     ]
@@ -31,8 +38,8 @@ EaComponents.ApplicationWindow {
     appBarRightButtons: [
 
         EaElements.ToolButton {
-            fontIcon: 'cog'
-            ToolTip.text: qsTr('Application preferences')
+            fontIcon: "cog"
+            ToolTip.text: qsTr("Application preferences")
             onClicked: EaGlobals.Vars.showAppPreferencesDialog = true
         }
 
@@ -45,13 +52,13 @@ EaComponents.ApplicationWindow {
         // Home page
         EaElements.AppBarTabButton {
             id: homeButton
-            objectName: 'applicationWindow.appBarCentralTabs.homeButton'
-            fontIcon: 'home'
-            text: qsTr('Home')
-            ToolTip.text: qsTr('Home')
-            //Component.onCompleted: {
-            //    Globals.References.applicationWindow.appBarCentralTabs.homeButton = homeButton
-            //}
+            objectName: "applicationWindow.appBarCentralTabs.homeButton"
+            fontIcon: "home"
+            text: qsTr("Home")
+            ToolTip.text: qsTr("Home")
+            Component.onCompleted: {
+                Globals.References.applicationWindow.appBarCentralTabs.homeButton = homeButton
+            }
         },
         // Home page
 
@@ -59,9 +66,9 @@ EaComponents.ApplicationWindow {
         EaElements.AppBarTabButton {
             id: projectButton
             enabled: false
-            fontIcon: 'archive'
-            text: qsTr('Project')
-            ToolTip.text: qsTr('Project description page')
+            fontIcon: "archive"
+            text: qsTr("Project")
+            ToolTip.text: qsTr("Project description page")
             Component.onCompleted: {
                 Globals.References.applicationWindow.appBarCentralTabs.projectButton = projectButton
             }
@@ -72,9 +79,9 @@ EaComponents.ApplicationWindow {
         EaElements.AppBarTabButton {
             id: summaryButton
             enabled: false
-            fontIcon: 'clipboard-list'
-            text: qsTr('Summary')
-            ToolTip.text: qsTr('Summary of the work done')
+            fontIcon: "clipboard-list"
+            text: qsTr("Summary")
+            ToolTip.text: qsTr("Summary of the work done")
             Component.onCompleted: {
                 Globals.References.applicationWindow.appBarCentralTabs.summaryButton = summaryButton
             }
