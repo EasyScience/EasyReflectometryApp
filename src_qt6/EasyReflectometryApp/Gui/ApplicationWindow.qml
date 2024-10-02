@@ -26,7 +26,7 @@ EaComponents.ApplicationWindow {
         },
 
         EaElements.ToolButton {
-            enabled: Globals.References.projectPageEnabled
+            enabled: Globals.BackendWrapper.projectCreated
             fontIcon: "backspace"
             ToolTip.text: qsTr("Reset to initial state without project, models and data")
             onClicked: Globals.BackendWrapper.projectReset()
@@ -52,7 +52,7 @@ EaComponents.ApplicationWindow {
         // Home page
         EaElements.AppBarTabButton {
             id: homeButton
-            objectName: "applicationWindow.appBarCentralTabs.homeButton"
+//            objectName: "applicationWindow.appBarCentralTabs.homeButton"
             fontIcon: "home"
             text: qsTr("Home")
             ToolTip.text: qsTr("Home")

@@ -23,10 +23,13 @@ QtObject {
 
     function reset() {
         console.debug(`Reset project ${name}`)
+        created = false
     }
 
     function load(path) {
         console.debug(`Loading project from ${path}`)
+        creationDate = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`
+        created = true
     }
 
 }

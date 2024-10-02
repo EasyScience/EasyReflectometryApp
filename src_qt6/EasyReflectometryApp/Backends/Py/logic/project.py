@@ -1,5 +1,6 @@
 import time
 from copy import copy
+from pathlib import Path
 
 
 from easyreflectometry import Project as ProjectLib
@@ -10,24 +11,28 @@ class Project:
 
     @property
     def created(self) -> bool:
-        return self._project_lib._project_created
+        return self._project_lib.created
 
     @created.setter
     def created(self, new_value: bool) -> None:
         if new_value:
             self._project_lib._info['modified'] = time.strftime("%d %b %Y %H:%M", time.localtime())
-            self._project_lib._project_created = True
+            self._project_lib._created = True
         else:
             self._project_lib._info['modified'] = ''
-            self._project_lib._project_created = False
+            self._project_lib._created = False
 
     @property
     def path(self) -> str:
         return str(self._project_lib.path)
+    
+    @property
+    def root_path(self) -> str:
+        return str(self._project_lib.path.parent)
 
-    @path.setter
-    def path(self, new_value: str) -> None:
-        self._project_lib.path = new_value
+    @root_path.setter
+    def root_path(self, new_value: str) -> None:
+        self._project_lib.set_root_path(Path(new_value).parent)
 
     @property
     def name(self) -> str:
@@ -55,15 +60,15 @@ class Project:
         return info
     
     def create(self) -> None:
-        self._project_lib.create_project_dir()
+        self._project_lib.create()
         self._project_lib.default_model()
-        self._project_lib.save_project_json()
+        self._project_lib.save_as_json()
 
     def save(self) -> None:
-        self._project_lib.save_project_json()
+        self._project_lib.save_as_json()
 
     def load(self, path: str) -> None:
-        self._project_lib.load_project_json(path)
+        self._project_lib.load_from_json(path)
 
     def reset(self) -> None:
         self._project_lib.reset()

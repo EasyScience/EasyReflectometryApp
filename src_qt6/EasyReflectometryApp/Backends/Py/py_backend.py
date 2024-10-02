@@ -56,8 +56,8 @@ class PyBackend(QObject):
         self._project.createdChanged.connect(self._relay_project_created)
 
     def _relay_project_name(self):
-        self._status.project = self._project.name
-        self._report.asHtml = self._project.name
-
+        self._status.projectChanged.emit()
+        self._report.asHtmlChanged.emit()
+ 
     def _relay_project_created(self):
-        self._report.created = self._project.created
+        self._report.createdChanged.emit()

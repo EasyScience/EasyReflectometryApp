@@ -30,7 +30,7 @@ classifiers = [
 requires-python = '>=3.10'
 dependencies = [
   'EasyApp @ git+https://github.com/EasyScience/EasyApp.git@new-easy-app2',
-  'easyreflectometry @ git+https://github.com/EasyScience/EasyReflectometryLib.git@develop',
+  'easyreflectometry @ git+https://github.com/EasyScience/EasyReflectometryLib.git@project-adjustments',
   'PySide6==6.6',
   'toml',
 ]

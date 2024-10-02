@@ -10,7 +10,7 @@ from easyreflectometry import Project as ProjectLib
 
 
 class Project(QObject):
-    createdChanged = Signal(bool)
+    createdChanged = Signal()
     nameChanged = Signal()
     descriptionChanged = Signal()
     locationChanged = Signal()
@@ -47,12 +47,12 @@ class Project(QObject):
 
     @Property(str, notify=locationChanged)
     def location(self) -> str:
-        return self._logic.path
+        return self._logic.root_path
 
     @location.setter
     def location(self, new_value: str) -> None:
-        if self._logic.path != new_value:
-            self._logic.path = new_value
+        if self._logic.root_path != new_value:
+            self._logic.root_path = new_value
             self.locationChanged.emit()
 
     @Property(str, notify=createdChanged)
@@ -66,15 +66,16 @@ class Project(QObject):
     @Slot()
     def create(self) -> None:
         self._logic.create()
-        self._created = True
-        self.createdChanged.emit(True)
+        self.createdChanged.emit()
 
     @Slot(str)
     def load(self, path: str) -> None:
         self._logic.load(generalizePath(path))
-        self._created = True
-        self.createdChanged.emit(True)
-
+        self.createdChanged.emit()
+        self.nameChanged.emit()
+        self.descriptionChanged.emit()
+        self.locationChanged.emit()
+        
     @Slot()
     def save(self) -> None:
         self._logic.save()
@@ -82,3 +83,7 @@ class Project(QObject):
     @Slot()
     def reset(self) -> None:
         self._logic.reset()
+        self.createdChanged.emit()
+        self.nameChanged.emit()
+        self.descriptionChanged.emit()
+        self.locationChanged.emit()
