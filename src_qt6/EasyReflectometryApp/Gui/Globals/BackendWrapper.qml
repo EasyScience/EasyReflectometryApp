@@ -11,7 +11,8 @@ import Backends as Backends
 // - The backend is instantiated at runtime based on the availability of the PyBackend class.
 // - A flat structure is used.
 // -- Enable QT Creator to show the properties in the editor (code completion and rightclick follow).
-// -- Location of property in backend should be encoded in the name. 
+// -- Location of property in backend should be encoded in the name.
+// -- Should implement setters for properties that are writable, onChanged breaks the link to the property.
 
 QtObject {
 
@@ -57,12 +58,12 @@ QtObject {
     readonly property bool projectCreated: activeBackend.project.created
     readonly property string projectCreationDate: activeBackend.project.creationDate
 
-    property string projectName: activeBackend.project.name
-    onProjectNameChanged: activeBackend.project.name = projectName
-    property string projectDescription: activeBackend.project.description
-    onProjectDescriptionChanged: activeBackend.project.description = projectDescription
-    property string projectLocation: activeBackend.project.location
-    onProjectLocationChanged: activeBackend.project.location = projectLocation
+    readonly property string projectName: activeBackend.project.name
+    function projectSetName(value) { activeBackend.project.setName(value) } 
+    readonly property string projectDescription: activeBackend.project.description
+    function projectSetDescription(value) { activeBackend.project.setDescription(value) } 
+    readonly property string projectLocation: activeBackend.project.location
+    function projectSetLocation(value) { activeBackend.project.setLocation(value) } 
 
     function projectCreate() { activeBackend.project.create() }
     function projectReset() { activeBackend.project.reset() }

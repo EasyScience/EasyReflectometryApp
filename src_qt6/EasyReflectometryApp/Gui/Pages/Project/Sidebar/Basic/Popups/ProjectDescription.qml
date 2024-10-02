@@ -10,13 +10,16 @@ import Gui.Globals as Globals
 EaComponents.ProjectDescriptionDialog {
 
     visible: EaGlobals.Vars.showProjectDescriptionDialog
-    onClosed: EaGlobals.Vars.showProjectDescriptionDialog = false
+    onClosed: {
+        EaGlobals.Vars.showProjectDescriptionDialog = false
+        // Needed because the location path is being formatted by the backend
+        projectLocation = Globals.BackendWrapper.projectLocation
+    }
 
     onAccepted: {
-
-        Globals.BackendWrapper.projectName = projectName
-        Globals.BackendWrapper.projectDescription = projectDescription
-        Globals.BackendWrapper.projectLocation = projectLocation
+        Globals.BackendWrapper.projectSetName(projectName)
+        Globals.BackendWrapper.projectSetDescription(projectDescription)
+        Globals.BackendWrapper.projectSetLocation(projectLocation)
 
         Globals.BackendWrapper.projectCreate()
         Globals.References.applicationWindow.appBarCentralTabs.summaryButton.enabled = true

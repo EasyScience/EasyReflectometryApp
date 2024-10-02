@@ -1,4 +1,4 @@
-import time
+#import time
 from copy import copy
 from pathlib import Path
 
@@ -12,15 +12,6 @@ class Project:
     @property
     def created(self) -> bool:
         return self._project_lib.created
-
-    @created.setter
-    def created(self, new_value: bool) -> None:
-        if new_value:
-            self._project_lib._info['modified'] = time.strftime("%d %b %Y %H:%M", time.localtime())
-            self._project_lib._created = True
-        else:
-            self._project_lib._info['modified'] = ''
-            self._project_lib._created = False
 
     @property
     def path(self) -> str:

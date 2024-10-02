@@ -8,8 +8,11 @@ QtObject {
     property string creationDate: ''
 
     property string name: 'Super duper project'
+    function setName(value) { name = value }
     property string description: 'Default project description from Mock proxy'
+    function setDescription(value) { description = value }
     property string location: '/path to the project'
+    function setLocation(value) { location = value }    
 
     function create() {
         console.debug(`Creating project ${name}`)

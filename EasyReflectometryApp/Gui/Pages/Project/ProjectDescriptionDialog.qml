@@ -5,24 +5,25 @@ import easyApp.Gui.Components 1.0 as EaComponents
 
 import Gui.Globals 1.0 as ExGlobals
 
+import Gui.Globals as Globals
+
 EaComponents.ProjectDescriptionDialog {
     visible: EaGlobals.Variables.showProjectDescriptionDialog
     onClosed: EaGlobals.Variables.showProjectDescriptionDialog = false
 
-    onProjectNameChanged: ExGlobals.Constants.proxy.project.editProjectInfo("name", projectName)
-    onProjectShortDescriptionChanged: ExGlobals.Constants.proxy.project.editProjectInfo("short_description", projectShortDescription)
-    //onProjectLocationChanged: ExGlobals.Constants.proxy.project.editProjectInfo("location", projectLocation)
-    onProjectLocationChanged: ExGlobals.Constants.proxy.currentProjectPath = projectLocation
+    onProjectNameChanged: Globals.BackendWrapper.editProjectInfo("name", projectName)
+    onProjectShortDescriptionChanged: Globals.BackendWrapper.editProjectInfo("short_description", projectShortDescription)
+    onProjectLocationChanged: Globals.BackendWrapper.projectSetLocation(projectLocation)
 
     onAccepted: {
-        ExGlobals.Constants.proxy.project.currentProjectPath = projectLocation
-        ExGlobals.Constants.proxy.project.createProject()
+        Globals.BackendWrapper.projectSetLocation(projectLocation)
+        Globals.BackendWrapper.createProject()
     }
 
     Component.onCompleted: {
-        projectName = ExGlobals.Constants.proxy.project.projectInfoAsJson.name
-        projectShortDescription = ExGlobals.Constants.proxy.project.projectInfoAsJson.short_description
-        projectLocation = ExGlobals.Constants.proxy.project.currentProjectPath
+        projectName = Globals.BackendWrapper.projectName
+        projectShortDescription = Globals.BackendWrapper.projectInfoAsJson.short_description
+        projectLocation = Globals.BackendWrapper.projectLocation
     }
 }
 
