@@ -4,9 +4,9 @@ from PySide6.QtCore import Slot
 from PySide6.QtCore import Property
 
 from EasyApp.Logic.Utils.Utils import generalizePath
+from easyreflectometry import Project as ProjectLib
 
 from .logic.project import Project as ProjectLogic
-from easyreflectometry import Project as ProjectLib
 
 
 class Project(QObject):

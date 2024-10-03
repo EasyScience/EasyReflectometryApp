@@ -1,7 +1,5 @@
-#import time
 from copy import copy
 from pathlib import Path
-
 
 from easyreflectometry import Project as ProjectLib
 

@@ -55,7 +55,6 @@ EaComponents.ApplicationWindow {
         // Home page
         EaElements.AppBarTabButton {
             id: homeButton
-//            objectName: "applicationWindow.appBarCentralTabs.homeButton"
             fontIcon: "home"
             text: qsTr("Home")
             ToolTip.text: qsTr("Home")
