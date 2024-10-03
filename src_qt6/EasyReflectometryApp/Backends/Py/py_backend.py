@@ -1,7 +1,7 @@
 from PySide6.QtCore import QObject, Property
 
 from EasyApp.Logic.Logging import LoggerLevelHandler
-
+from easyreflectometry import Project as ProjectLib
 from. analysis import Analysis
 from .home import Home
 from .project import Project
@@ -14,13 +14,15 @@ class PyBackend(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        self._project_lib = ProjectLib()
+
         # Page specific backend parts and Status bar
         self._home = Home()
-        self._project = Project()
-        self._sample = Sample()
-        self._analysis = Analysis()
-        self._report = Report()
-        self._status = Status()
+        self._project = Project(self._project_lib)
+        self._sample = Sample(self._project_lib)
+        self._analysis = Analysis(self._project_lib)
+        self._report = Report(self._project_lib)
+        self._status = Status(self._project_lib)
 
         self._logger = LoggerLevelHandler(self)
 
@@ -66,8 +68,8 @@ class PyBackend(QObject):
         self._project.createdChanged.connect(self._relay_project_created)
 
     def _relay_project_name(self):
-        self._status.project = self._project.name
-        self._report.asHtml = self._project.name
-
+        self._status.projectChanged.emit()
+        self._report.asHtmlChanged.emit()
+ 
     def _relay_project_created(self):
-        self._report.created = self._project.created
+        self._report.createdChanged.emit()

@@ -1,87 +1,63 @@
-import os
-import time
-
-from EasyApp.Logic.Logging import console
+from copy import copy
 from pathlib import Path
-from .helpers import IO
+
+from easyreflectometry import Project as ProjectLib
 
 class Project:
-    def __init__(self):
-        self._created = False
-        self._creation_date = ''
-        self._current_path = Path(os.path.expanduser('~'))
-        self._name = 'Project Name'
-        self._description = 'Project Description'
+    def __init__(self, project_lib: ProjectLib):
+        self._project_lib = project_lib
 
     @property
     def created(self) -> bool:
-        return self._created
-
-    @created.setter
-    def created(self, new_value: bool) -> None:
-        if new_value:
-            self._creation_date = time.strftime("%d %b %Y %H:%M", time.localtime())
-            self._created = True
-        else:
-            self._creation_date = ''
-            self._created = False
+        return self._project_lib.created
 
     @property
-    def current_path(self) -> str:
-        return str(self._current_path)
+    def path(self) -> str:
+        return str(self._project_lib.path)
+    
+    @property
+    def root_path(self) -> str:
+        return str(self._project_lib.path.parent)
 
-    @current_path.setter
-    def current_path(self, new_value: str) -> None:
-        self._current_path = Path(new_value)
+    @root_path.setter
+    def root_path(self, new_value: str) -> None:
+        self._project_lib.set_path_project_parent(Path(new_value).parent)
 
     @property
     def name(self) -> str:
-        return self._name
+        return self._project_lib._info['name']
     
     @name.setter
     def name(self, new_value: str) -> None:
-        self._name = new_value
+        self._project_lib._info['name'] = new_value
 
     @property
     def description(self) -> str:
-        return self._description
+        return self._project_lib._info['short_description']
     
     @description.setter
     def description(self, new_value: str) -> None:
-        self._description = new_value
+        self._project_lib._info['short_description'] = new_value
 
     @property
     def creation_date(self) -> str:
-        return self._creation_date
+        return self._project_lib._info['modified']
 
     def info(self) -> dict:
-        return {
-            'name': self._name,
-            'description': self._description,
-            'location': self._current_path,
-            'creationDate': self._creation_date
-            } 
-
-    def create(self, project_path: str) -> None:
-        console.debug(IO.formatMsg('main', f'Creating project {self._name}'))
-        self.current_path = project_path
-        project_json = self._current_path / 'project.json'
-        samples_path = self._current_path / 'samples'
-        experiments_path = self._current_path / 'experiments'
-        calculations_path = self._current_path / 'calculations'
-        if not self._current_path.exists():
-            self._current_path.mkdir()
-            samples_path.mkdir()
-            experiments_path.mkdir()
-            calculations_path.mkdir()
-            self.created = True
-            # Must be called after created is set to True
-            with open(project_json, 'w') as file:
-                file.write(str(self.info()))
-        else:
-            print(f"ERROR: Directory {self._current_path} already exists")
+        info = copy(self._project_lib._info)
+        info['location'] = self._project_lib.path
+        return info
+    
+    def create(self) -> None:
+        self._project_lib.create()
+        self._project_lib.default_model()
+        self._project_lib.save_as_json()
 
     def save(self) -> None:
-        console.debug(IO.formatMsg('main', f'Saving project {self.name}'))
+        self._project_lib.save_as_json()
 
+    def load(self, path: str) -> None:
+        self._project_lib.load_from_json(path)
 
+    def reset(self) -> None:
+        self._project_lib.reset()

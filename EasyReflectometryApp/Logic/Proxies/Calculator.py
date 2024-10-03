@@ -4,7 +4,7 @@ from PySide2.QtCore import QObject
 from PySide2.QtCore import Signal
 from PySide2.QtCore import Property
 
-# from easyscience.Utils.UndoRedo import property_stack_deco
+# from easyscience.global_object.undo_redo import property_stack_deco
 
 
 class CalculatorProxy(QObject):

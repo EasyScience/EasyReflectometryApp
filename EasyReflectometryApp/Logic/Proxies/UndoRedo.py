@@ -7,7 +7,7 @@ from PySide2.QtCore import Signal
 from PySide2.QtCore import Property
 from PySide2.QtCore import Slot
 
-from easyscience import borg
+from easyscience import global_object
 from easyscience.Objects.Groups import BaseCollection
 from easyscience.Objects.ObjectClasses import BaseObj
 
@@ -20,8 +20,8 @@ class UndoRedoProxy(QObject):
         super().__init__(parent)
         self.parent = parent
 
-        borg.stack.enabled = True
-        borg.stack.clear()
+        global_object.stack.enabled = True
+        global_object.stack.clear()
 
         self.parent._simulation_proxy.simulationParametersChanged.connect(
             self.undoRedoChanged)
@@ -35,20 +35,20 @@ class UndoRedoProxy(QObject):
 
     @Property(bool, notify=undoRedoChanged)
     def canUndo(self) -> bool:
-        return borg.stack.canUndo()
+        return global_object.stack.canUndo()
 
     @Property(bool, notify=undoRedoChanged)
     def canRedo(self) -> bool:
-        return borg.stack.canRedo()
+        return global_object.stack.canRedo()
 
     @Slot()
     def undo(self):
         if self.canUndo:
             callback = [self.parent.sampleChanged]
-            if len(borg.stack.history[0]) > 1:
+            if len(global_object.stack.history[0]) > 1:
                 callback = [self.parent.sampleChanged]
             else:
-                old = borg.stack.history[0].current._parent
+                old = global_object.stack.history[0].current._parent
                 if isinstance(old, (BaseObj, BaseCollection)):
                     callback = [self.parent.sampleChanged]
                 elif old is self:
@@ -58,17 +58,17 @@ class UndoRedoProxy(QObject):
                     callback = []
                 else:
                     print(f'Unknown undo thing: {old}')
-            borg.stack.undo()
+            global_object.stack.undo()
             _ = [call.emit() for call in callback]
 
     @Slot()
     def redo(self):
         if self.canRedo:
             callback = [self.parent.sampleChanged]
-            if len(borg.stack.future[0]) > 1:
+            if len(global_object.stack.future[0]) > 1:
                 callback = [self.parent.sampleChanged]
             else:
-                new = borg.stack.future[0].current._parent
+                new = global_object.stack.future[0].current._parent
                 if isinstance(new, (BaseObj, BaseCollection)):
                     callback = [self.parent.sampleChanged, self.undoRedoChanged]
                 elif new is self:
@@ -78,16 +78,16 @@ class UndoRedoProxy(QObject):
                     callback = []
                 else:
                     print(f'Unknown redo thing: {new}')
-            borg.stack.redo()
+            global_object.stack.redo()
             _ = [call.emit() for call in callback]
 
     @Property(str, notify=undoRedoChanged)
     def undoText(self):
-        return self.tooltip(borg.stack.undoText())
+        return self.tooltip(global_object.stack.undoText())
 
     @Property(str, notify=undoRedoChanged)
     def redoText(self):
-        return self.tooltip(borg.stack.redoText())
+        return self.tooltip(global_object.stack.redoText())
 
     def tooltip(self, orig_tooltip=""):
         if 'Parameter' not in orig_tooltip:
@@ -116,6 +116,6 @@ class UndoRedoProxy(QObject):
 
     @Slot()
     def resetUndoRedoStack(self):
-        if borg.stack.enabled:
-            borg.stack.clear()
+        if global_object.stack.enabled:
+            global_object.stack.clear()
             self.undoRedoChanged.emit()

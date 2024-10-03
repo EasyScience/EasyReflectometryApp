@@ -1,7 +1,6 @@
 __author__ = 'github.com/arm61'
 
 import os
-import datetime
 import json
 
 from PySide2.QtCore import QObject
@@ -11,13 +10,11 @@ from PySide2.QtCore import Slot
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-
 import numpy as np
-from easyApp.Logic.Utils.Utils import generalizePath
+from pathlib import Path
 
-from EasyReflectometryApp.Logic.DataStore import DataSet1D
-from easyreflectometry.sample import MaterialCollection
-from easyreflectometry.experiment.model_collection import ModelCollection
+from easyApp.Logic.Utils.Utils import generalizePath
+from easyreflectometry import Project
 
 
 class ProjectProxy(QObject):
@@ -29,26 +26,10 @@ class ProjectProxy(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
+        self._project = Project()
 
         self._project_created = False
-        self._project_info = self._defaultProjectInfo()
-        self.project_save_filepath = ""
-        self._currentProjectPath = os.path.expanduser('~')
-
         self._report = ""
-
-    # # #
-    # Defaults
-    # # #
-
-    def _defaultProjectInfo(self):
-        return dict(
-            name="Example Project",
-            # location=os.path.join(os.path.expanduser("~"), "Example Project"),
-            short_description="reflectometry, 1D",
-            samples="None",
-            experiments="None",
-            modified=datetime.datetime.now().strftime("%d.%m.%Y %H:%M"))
 
     # # #
     # Setters and getters
@@ -67,11 +48,11 @@ class ProjectProxy(QObject):
 
     @Property('QVariant', notify=projectInfoChanged)
     def projectInfoAsJson(self):
-        return self._project_info
+        return self._project._info
 
     @projectInfoAsJson.setter
     def projectInfoAsJson(self, json_str):
-        self._project_info = json.loads(json_str)
+        self._project._info = json.loads(json_str)
         self.projectInfoChanged.emit()
 
     @Property(str, notify=projectInfoChanged)
@@ -87,23 +68,23 @@ class ProjectProxy(QObject):
     @Slot(str, str)
     def editProjectInfo(self, key, value):
         if key == 'location':
-            self.currentProjectPath = value
+            self._project.path = value
             return
         else:
-            if self._project_info[key] == value:
+            if self._project._info[key] == value:
                 return
-            self._project_info[key] = value
+            self._project._info[key] = value
         self.projectInfoChanged.emit()
 
     @Property(str, notify=projectInfoChanged)
     def currentProjectPath(self):
-        return self._currentProjectPath
+        return str(self._project.path)
 
     @currentProjectPath.setter
     def currentProjectPath(self, new_path):
-        if self._currentProjectPath == new_path:
+        if self._project.path == new_path:
             return
-        self._currentProjectPath = new_path
+        self._project.set_path_project_parent(Path(new_path).parent)
         self.projectInfoChanged.emit()
 
     # # #
@@ -112,199 +93,39 @@ class ProjectProxy(QObject):
 
     @Slot()
     def createProject(self):
-        projectPath = self.currentProjectPath
-        mainCif = os.path.join(projectPath, 'project.cif')
-        samplesPath = os.path.join(projectPath, 'samples')
-        experimentsPath = os.path.join(projectPath, 'experiments')
-        calculationsPath = os.path.join(projectPath, 'calculations')
-        if not os.path.exists(projectPath):
-            os.makedirs(projectPath)
-            os.makedirs(samplesPath)
-            os.makedirs(experimentsPath)
-            os.makedirs(calculationsPath)
-            with open(mainCif, 'w') as file:
-                file.write(self.projectInfoAsCif)
-        else:
-            print(f"ERROR: Directory {projectPath} already exists")
+        self._project.create()
+        self._project.default_model()
+        self._relayProjectChange()
+        self.saveProject()
 
-    @Slot()
-    def saveProject(self):
-        self._saveProject()
+    def _relayProjectChange(self):
+        self.parent._model_proxy._model = self._project._models
+        self.parent._material_proxy._materials = self._project._materials
+        self._project_created = True
+
+        self.projectCreatedChanged.emit()
+        self.parent.sampleChanged.emit()
         self.parent._state_proxy.stateChanged.emit(False)
 
     @Slot(str)
     def loadProjectAs(self, filepath):
-        self._loadProjectAs(filepath)
-        self.parent._state_proxy.stateChanged.emit(False)
+        self._project.load_from_json(generalizePath(filepath))
+        self._relayProjectChange()
+        self.projectInfoChanged.emit()
 
     @Slot()
     def loadProject(self):
-        self._loadProject()
+        self._project.load_from_json()
+        self._relayProjectChange()
+
+    @Slot()
+    def saveProject(self):
+        self._project.save_as_json(overwrite=True)
         self.parent._state_proxy.stateChanged.emit(False)
 
     @Property(str, notify=dummySignal)
     def projectFilePath(self):
-        return self.project_save_filepath
-
-    def _saveProject(self):
-        """
-        """
-        projectPath = self.currentProjectPath
-        project_save_filepath = os.path.join(projectPath, 'project.json')
-        materials_in_model = []
-        for model in self.parent._model_proxy._model:
-            for assembly in model.sample:
-                for layer in assembly.layers:
-                    materials_in_model.append(layer.material)
-        materials_not_in_model = []
-        for material in self.parent._material_proxy._materials:
-            if material not in materials_in_model:
-                materials_not_in_model.append(material)
-        descr = {
-            'model':
-                self.parent._model_proxy._model.as_dict(skip=['interface']),
-            'materials_not_in_model':
-                MaterialCollection(materials_not_in_model).as_dict(skip=['interface'])
-        }
-
-        if self.parent._data_proxy._data.experiments:
-            descr['experiments'] = []
-            descr['experiments_models'] = []
-            descr['experiments_names'] = []
-            for experiment in self.parent._data_proxy._data.experiments:
-                if self.parent._data_proxy._data.experiments[0].xe is not None:
-                    descr['experiments'].append([
-                        experiment.x, experiment.y, experiment.ye, experiment.xe
-                    ])
-                else:
-                    descr['experiments'].append([experiment.x, experiment.y, experiment.ye])
-                descr['experiments_models'].append(experiment.model.name)
-                descr['experiments_names'].append(experiment.name)
-
-        descr['experiment_skipped'] = self.parent._data_proxy._experiment_skipped
-        descr['project_info'] = self._project_info
-
-        descr['interface'] = [self.parent._interface.current_interface_name]
-
-        descr['colors'] = self.parent._model_proxy._colors
-
-        descr['minimizer'] = {
-            'engine': self.parent._fitter_proxy.eFitter.easy_f.current_engine.name,
-            'method': self.parent._minimizer_proxy._current_minimizer_method_name
-        }
-
-        content_json = json.dumps(descr, indent=4, default=self.default)
-        path = generalizePath(project_save_filepath)
-        self.createFile(path, content_json)
-
-    def default(self, obj):
-        if type(obj).__module__ == np.__name__:
-            if isinstance(obj, np.ndarray):
-                return obj.tolist()
-            else:
-                return obj.item()
-        raise TypeError('Unknown type:', type(obj))
-
-    def _loadProjectAs(self, filepath):
-        """
-        """
-        self.project_load_filepath = filepath
-        print("LoadProjectAs " + filepath)
-        self.loadProject()
-
-    def _loadProject(self):
-        """
-        """
-        path = generalizePath(self.project_load_filepath)
-        if not os.path.isfile(path):
-            print("Failed to find project: '{0}'".format(path))
-            return
-        self.currentProjectPath = os.path.split(path)[0]
-        with open(path, 'r') as xml_file:
-            descr: dict = json.load(xml_file)
-
-        interface_name = descr.get('interface', None)
-        for i, inter in enumerate(interface_name):
-            if inter is not None:
-                old_interface_name = self.parent._interface.current_interface_name
-                if old_interface_name != inter:
-                    self.parent._interface.switch(inter)
-
-        self.parent._model_proxy._colors = descr['colors']
-        self.parent._model_proxy._model = ModelCollection.from_dict(descr['model'])
-        self.parent._material_proxy._materials = MaterialCollection([])  # Should be initialized with empty list to enforce no elements in collection
-        for model in self.parent._model_proxy._model:
-            for sample in model.sample:
-                for layer in sample.layers:
-                    self.parent._material_proxy._materials.append(layer.material)
-            model.interface = self.parent._interface
-        mats = descr['materials_not_in_model']
-        if mats['data']:
-            for material in MaterialCollection.from_dict(mats):
-                self.parent._material_proxy._materials.append(material)
-
-        # experiment
-        if 'experiments' in descr:
-            #self.parent._data_proxy.experimentLoaded = True
-            for i, e in enumerate(descr['experiments']):
-                x = np.array(e[0])
-                y = np.array(e[1])
-                ye = np.array(e[2])
-                if len(e) == 4:
-                    xe = np.array(e[3])
-                else:
-                    xe = np.zeros_like(ye)
-                name = descr['experiments_names'][i]
-                model_name = descr['experiments_models'][i]
-                model = None
-                for i in self.parent._model_proxy._model:
-                    if i.name == model_name:
-                        model = i
-                        break
-                ds = DataSet1D(name=name, x=x, y=y, ye=ye, xe=xe,
-                               model=model,
-                               x_label='q (1/angstrom)',
-                               y_label='Reflectivity')
-                self.parent._data_proxy._data.append(ds)
-
-            self.parent._data_proxy.experimentLoaded = True
-            self.parent._data_proxy.experimentSkipped = False
-            self.parent._data_proxy.experimentChanged.emit()
-            self.parent._parameter_proxy._onParametersChanged()
-
-        else:
-            # delete existing experiment
-            try:
-                for index, data in enumerate(self.parent.data):
-                    data.removeExperiment(index)
-            except TypeError:
-                pass
-            self.parent._data_proxy.experimentLoaded = False
-            if descr['experiment_skipped']:
-                self.parent._data_proxy.experimentSkipped = True
-                self.parent._data_proxy.experimentSkippedChanged.emit()
-            else:
-                self.parent._data_proxy.experimentSkipped = False
-
-        # project info
-        self.projectInfoAsJson = json.dumps(descr['project_info'])
-        self.parent.sampleChanged.emit()
-
-        new_minimizer_settings = descr.get('minimizer', None)
-        if new_minimizer_settings is not None:
-            new_engine = new_minimizer_settings['engine']
-            new_method = new_minimizer_settings['method']
-            new_engine_index = self.parent._minimizer_proxy.minimizerNames.index(new_engine)
-            self.currentMinimizerIndex = new_engine_index
-            try:
-                new_method_index = self.parent._minimizer_proxy.minimizerMethodNames.index(new_method)
-            except ValueError:
-                new_method_index = self.parent._minimizer_proxy.minimizerMethodNames[0]
-            self.currentMinimizerMethodIndex = new_method_index
-
-        self.parent._undoredo_proxy.resetUndoRedoStack()
-
-        self.projectCreated = True
+        return self._project.path_json
 
     @staticmethod
     def createFile(path, content):
@@ -341,9 +162,12 @@ class ProjectProxy(QObject):
 
     def resetProject(self):
         self._project_created = False
-        self._project_info = self._defaultProjectInfo()
-        self.parent._model_proxy._setModelsAsXml()
+        self._project.reset()
+        self._relayProjectChange()
+
+        self.parent._model_proxy._model = self._project._models
         self.projectInfoChanged.emit()
+        self.parent.sampleChanged.emit()
 
     @Slot(str, float, float)
     def savePlot(self, filename: str, figsize_x: float, figsize_y: float):
@@ -374,7 +198,7 @@ class ProjectProxy(QObject):
             for i, d in enumerate(data):
                 model_index = self.parent._model_proxy._model.index(d.model)
                 color = self.parent._model_proxy._colors[model_index]
-                y = self.parent._interface.fit_func(d.x, d.model.uid)
+                y = self.parent._interface.fit_func(d.x, d.model.unique_name)
                 if self.parent._simulation_proxy._plot_rq4:
                     ax1.errorbar(d.x, (d.y * d.x ** 4) * 10 ** i, (d.ye * d.x ** 4) * 10 ** i, marker='', ls='',
                                  color=color, alpha=0.5)
@@ -382,7 +206,7 @@ class ProjectProxy(QObject):
                 else:
                     ax1.errorbar(d.x, d.y * 10 ** i, d.ye * 10 ** i, marker='', ls='', color=color, alpha=0.5)
                     ax1.plot(d.x, y * 10 ** i, ls='-', color=color, zorder=10, label=d.name)
-                sld_profile = self.parent._interface.sld_profile(d.model.uid)
+                sld_profile = self.parent._interface.sld_profile(d.model.unique_name)
                 ax2.plot(sld_profile[0], sld_profile[1] + 10 * i, color=color, ls='-')
             ax1.set_yscale('log')
         else:
@@ -393,12 +217,12 @@ class ProjectProxy(QObject):
             model = self.parent._model_proxy._model
             for i, m in enumerate(model):
                 color = self.parent._model_proxy._colors[i]
-                y = self.parent._interface.fit_func(x, m.uid)
+                y = self.parent._interface.fit_func(x, m.unique_name)
                 if self.parent._simulation_proxy._plot_rq4:
                     ax1.plot(x, (y * d.x ** 4) * 10 ** i, ls='-', color=color, zorder=10, label=m.name)
                 else:
                     ax1.plot(x, y * 10 ** i, ls='-', color=color, zorder=10, label=m.name)
-                sld_profile = self.parent._interface.sld_profile(m.uid)
+                sld_profile = self.parent._interface.sld_profile(m.unique_name)
                 ax2.plot(sld_profile[0], sld_profile[1] + 10 * i, color=color, ls='-')
             ax1.set_yscale('log')
         ax1.legend()

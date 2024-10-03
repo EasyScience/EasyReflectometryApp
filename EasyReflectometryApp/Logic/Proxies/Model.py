@@ -6,10 +6,10 @@ from PySide2.QtCore import Property
 from PySide2.QtCore import Slot
 
 import numpy as np
-from easyscience import borg
-from easyscience.Utils.io.xml import XMLSerializer
-from easyscience.Utils.UndoRedo import property_stack_deco
 
+from easyscience import global_object
+from easyscience.Utils.io.xml import XMLSerializer
+from easyscience.global_object.undo_redo import property_stack_deco
 from easyreflectometry.sample import Layer
 from easyreflectometry.sample import LayerAreaPerMolecule
 from easyreflectometry.sample import Multilayer
@@ -17,9 +17,9 @@ from easyreflectometry.sample import RepeatingMultilayer
 from easyreflectometry.sample import SurfactantLayer
 from easyreflectometry.sample import Sample
 from easyreflectometry.sample import Material
-from easyreflectometry.experiment import Model
-from easyreflectometry.experiment import ModelCollection
-from easyreflectometry.experiment import PercentageFhwm
+from easyreflectometry.model import Model
+from easyreflectometry.model import ModelCollection
+from easyreflectometry.model import PercentageFhwm
 from easyreflectometry.calculators import CalculatorFactory
 
 ITEM_LOOKUP = {'Multi-layer': Multilayer, 'Repeating Multi-layer': RepeatingMultilayer, 'Surfactant Layer': SurfactantLayer}
@@ -208,7 +208,7 @@ class ModelProxy(QObject):
         if self._model[self.currentModelIndex].sample[
                 self.currentItemsIndex].type != 'Repeating Multi-layer':
             return 1
-        return self._model[self.currentModelIndex].sample[self.currentItemsIndex].repetitions.raw_value
+        return self._model[self.currentModelIndex].sample[self.currentItemsIndex].repetitions.value
 
     @currentItemsRepetitions.setter
     def currentItemsRepetitions(self, new_repetitions: int):
@@ -217,7 +217,7 @@ class ModelProxy(QObject):
             return
         if self._model[self.currentModelIndex].sample[
                 self.
-                currentItemsIndex].repetitions.raw_value == new_repetitions or new_repetitions == -1:
+                currentItemsIndex].repetitions.value == new_repetitions or new_repetitions == -1:
             return
         self._model[self.currentModelIndex].sample[self.currentItemsIndex].repetitions = new_repetitions
         self.parent.layersChanged.emit()
@@ -237,7 +237,7 @@ class ModelProxy(QObject):
         if self._model[self.currentModelIndex].sample[self.currentItemsIndex].type == 'Surfactant Layer':
             current_layers = Layer(self.parent._material_proxy._materials[0], 10, 3)
         target_position = self.currentItemsIndex
-        self._model[self.currentModelIndex].remove_item(self.currentItemsIndex)
+        self._model[self.currentModelIndex].remove_assembly(self.currentItemsIndex)
         if type == 'Multi-layer':
             new_item = Multilayer(
                 layers=current_layers,
@@ -284,7 +284,7 @@ class ModelProxy(QObject):
                 head_layer=head_layer,
                 name=type
             )
-        self._model[self.currentModelIndex].add_item(new_item)
+        self._model[self.currentModelIndex].add_assemblies(new_item)
         self.parent._parameter_proxy._setParametersAsObj()
         if target_position != len(self._model[self.currentModelIndex].sample) - 1:
             new_items_list = []
@@ -300,10 +300,10 @@ class ModelProxy(QObject):
                 else:
                     new_items_list.append(item)
             while len(self._model[self.currentModelIndex].sample) != 0:
-                self._model[self.currentModelIndex].remove_item(0)
+                self._model[self.currentModelIndex].remove_assembly(0)
             for i in range(len(new_items_list)):
-                self._model[self.currentModelIndex].add_item(new_items_list[i])
-            borg.stack.enabled = True
+                self._model[self.currentModelIndex].add_assemblies(new_items_list[i])
+            global_object.stack.enabled = True
             self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
             self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
             self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
@@ -395,7 +395,7 @@ class ModelProxy(QObject):
                 else:
                     j.name = j.material.name + ' Layer'
         sample = self._model[self.currentModelIndex].sample
-        structure_dict = sample.as_dict()
+        structure_dict = sample.as_dict(skip=['unique_name'])
 
         self._pure = Model(
             sample=Sample.from_dict(structure_dict),
@@ -507,150 +507,34 @@ class ModelProxy(QObject):
 
     @Slot()
     def addNewItems(self):
-        self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = True
-        self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = True
-        self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = True
-        try:
-            self._model[self.currentModelIndex].add_item(
-                Multilayer(
-                    Layer(
-                        material=self.parent._material_proxy._materials[0],
-                        thickness=10.,
-                        roughness=1.2
-                    ),
-                    name=f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'
-                )
-            )
-        except IndexError:
-            self.parent._material_proxy.addNewMaterials()
-            self._model[self.currentModelIndex].add_item(
-                Multilayer(
-                    Layer(
-                        material=self.parent._material_proxy._materials[0],
-                        thicness=10.,
-                        roughness=1.2),
-                    name=f'Multi-layer {len(self._model[self.currentModelIndex].sample)+1}'
-                )
-            )
-        self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
-        self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
-        self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
+        self._model[self.currentModelIndex].add_assemblies()
+        self._model[self.currentModelIndex].sample[-1].layers[-1].material = self.parent._material_proxy.last_material
         self.parent.layersChanged.emit()
         self.parent.itemsChanged.emit()
+        self.parent.layersMaterialsChanged.emit()
+
 
     @Slot()
     def duplicateSelectedItems(self):
-        # This is a fix until deepcopy is worked out
-        # Manual duplication instead of creating a copy
-        self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = True
-        self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = True
-        self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = True
-        to_dup = self._model[self.currentModelIndex].sample[self.currentItemsIndex]
-        if isinstance(to_dup, RepeatingMultilayer):
-            to_dup_layers = []
-            for i in to_dup.layers:
-                to_dup_layers.append(
-                    Layer(
-                        material=i.material,
-                        thickness=i.thickness.raw_value,
-                        roughness=i.roughness.raw_value,
-                        name=i.name,
-                        interface=self.parent._interface
-                    )
-                )
-            dup_item = RepeatingMultilayer(
-                *to_dup_layers, 
-                repetitions=to_dup.repetitions.raw_value,
-                name=to_dup.name
-            )
-        elif isinstance(to_dup, SurfactantLayer):
-            dup_item = SurfactantLayer.from_dict(to_dup.as_dict())
-            for i, layer in enumerate(dup_item.layers):
-                layer.solvent = to_dup.layers[i].solvent
-        elif isinstance(to_dup, Multilayer):
-            to_dup_layers = []
-            for i in to_dup.layers:
-                to_dup_layers.append(
-                    Layer(
-                        material=i.material,
-                        thickness=i.thickness.raw_value,
-                        roughness=i.roughness.raw_value,
-                        name=i.name,
-                        interface=self.parent._interface
-                    )
-                )
-            dup_item = Multilayer(
-                *to_dup_layers,
-                name=to_dup.name
-            )
-        self._model[self.currentModelIndex].add_item(dup_item)
-        self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
-        self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
-        self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
+        self._model[self.currentModelIndex].duplicate_assembly(self.currentItemsIndex)
         self.parent.layersChanged.emit()
         self.parent.itemsChanged.emit()
 
     @Slot()
     def moveSelectedItemsUp(self):
-        # if borg.stack.enabled:
-        #    borg.stack.beginMacro('Loaded default item')
-        borg.stack.enabled = False
-        # This convoluted approach is necessary as currently the BaseCollection
-        # does not allow insertion or popping. In future, this could be
-        # replaced with the approach for moving items around
-        old_index = self.currentItemsIndex
-        new_items_list = []
-        if old_index != 0:
-            self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = True
-            self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = True
-            self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = True
-            for i, item in enumerate(self._model[self.currentModelIndex].sample):
-                if i == old_index - 1:
-                    new_items_list.append(self._model[self.currentModelIndex].sample[old_index])
-                elif i == old_index:
-                    new_items_list.append(self._model[self.currentModelIndex].sample[old_index - 1])
-                else:
-                    new_items_list.append(item)
-            while len(self._model[self.currentModelIndex].sample) != 0:
-                self._model[self.currentModelIndex].remove_item(0)
-            for i in range(len(new_items_list)):
-                self._model[self.currentModelIndex].add_item(new_items_list[i])
-            borg.stack.enabled = True
-            self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
-            self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
-            self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
-            self.parent.layersChanged.emit()
-            self.parent.itemsChanged.emit()
+        global_object.stack.enabled = False
+        self._model[self.currentModelIndex].sample.move_assembly_up(self.currentItemsIndex)
+        global_object.stack.enabled = True
+        self.parent.layersChanged.emit()
+        self.parent.itemsChanged.emit()
 
     @Slot()
     def moveSelectedItemsDown(self):
-        # This convoluted approach is necessary as currently the BaseCollection
-        # does not allow insertion or popping. In future, this could be
-        # replaced with the approach for moving items around
-        old_index = self.currentItemsIndex
-        new_items_list = []
-        if old_index != len(self._model[self.currentModelIndex].sample):
-            borg.stack.enabled = False
-            self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = True
-            self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = True
-            self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = True
-            for i, item in enumerate(self._model[self.currentModelIndex].sample):
-                if i == old_index:
-                    new_items_list.append(self._model[self.currentModelIndex].sample[old_index + 1])
-                elif i == old_index + 1:
-                    new_items_list.append(self._model[self.currentModelIndex].sample[old_index])
-                else:
-                    new_items_list.append(item)
-            while len(self._model[self.currentModelIndex].sample) != 0:
-                self._model[self.currentModelIndex].remove_item(0)
-            for i in range(len(new_items_list)):
-                self._model[self.currentModelIndex].add_item(new_items_list[i])
-            borg.stack.enabled = True
-            self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
-            self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
-            self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
-            self.parent.layersChanged.emit()
-            self.parent.itemsChanged.emit()
+        global_object.stack.enabled = False
+        self._model[self.currentModelIndex].sample.move_assembly_down(self.currentItemsIndex)
+        global_object.stack.enabled = True
+        self.parent.layersChanged.emit()
+        self.parent.itemsChanged.emit()
 
     @Slot(str)
     def removeItems(self, i: str):
@@ -660,13 +544,7 @@ class ModelProxy(QObject):
         :param i: Index of the item
         :type i: str
         """
-        self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = True
-        self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = True
-        self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = True
-        self._model[self.currentModelIndex].remove_item(int(i))
-        self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
-        self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
-        self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
+        self._model[self.currentModelIndex].remove_assembly(int(i))
         self.parent.layersChanged.emit()
         self.parent.itemsChanged.emit()
 
@@ -725,8 +603,8 @@ class ModelProxy(QObject):
         self._model[self.currentModelIndex].sample[self.currentItemsIndex].add_layer(
             Layer(
                 material=to_dup.material,
-                thickness=to_dup.thickness.raw_value,
-                roughness=to_dup.roughness.raw_value,
+                thickness=to_dup.thickness.value,
+                roughness=to_dup.roughness.value,
                 name=to_dup.name
                 )
             )
@@ -745,7 +623,7 @@ class ModelProxy(QObject):
         # not allow insertion or popping. In future, this could be replaced with the
         # approach for moving items around
         if old_index != 0:
-            borg.stack.enabled = False
+            global_object.stack.enabled = False
             self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = True
             self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = True
             self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = True
@@ -760,7 +638,7 @@ class ModelProxy(QObject):
                 item.remove_layer(0)
             for i in range(len(new_layers_list)):
                 item.add_layer(new_layers_list[i])
-            borg.stack.enabled = True
+            global_object.stack.enabled = True
             self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
             self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
             self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
@@ -779,7 +657,7 @@ class ModelProxy(QObject):
             self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = True
             self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = True
             self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = True
-            borg.stack.enabled = False
+            global_object.stack.enabled = False
             for i, l in enumerate(layers):
                 if i == old_index:
                     new_layers_list.append(layers[old_index + 1])
@@ -791,7 +669,7 @@ class ModelProxy(QObject):
                 item.remove_layer(0)
             for i in range(len(new_layers_list)):
                 item.add_layer(new_layers_list[i])
-            borg.stack.enabled = True
+            global_object.stack.enabled = True
             self._model[self.currentModelIndex].sample[0].layers[0].thickness.enabled = False
             self._model[self.currentModelIndex].sample[0].layers[0].roughness.enabled = False
             self._model[self.currentModelIndex].sample[-1].layers[-1].thickness.enabled = False
@@ -839,7 +717,7 @@ class ModelProxy(QObject):
         :param sld: New thickness value
         """
         if self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[
-                self.currentLayersIndex].thickness.raw_value == thickness:
+                self.currentLayersIndex].thickness.value == thickness:
             return
         self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[
             self.currentLayersIndex].thickness = thickness
@@ -853,7 +731,7 @@ class ModelProxy(QObject):
         :param sld: New roughness value
         """
         layer = self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[self.currentLayersIndex]
-        if layer.roughness.raw_value == roughness:
+        if layer.roughness.value == roughness:
             return 
         layer.roughness = roughness
         self.parent.layersChanged.emit()
@@ -879,7 +757,7 @@ class ModelProxy(QObject):
         :param solvation: New solvation value
         """
         layer = self._model[self.currentModelIndex].sample[self.currentItemsIndex].layers[self.currentLayersIndex]
-        if layer.material.fraction.raw_value == solvation:
+        if layer.material.fraction.value == solvation:
             return
         layer.material.fraction = solvation
         self.parent.layersChanged.emit()
@@ -928,10 +806,10 @@ class ModelProxy(QObject):
     # # #
 
     def getPureModelReflectometry(self, x):
-        return self._pure.interface.fit_func(x, self._pure.uid)
+        return self._pure.interface.fit_func(x, self._pure.unique_name)
 
     def getPureModelSld(self):
-        return self._pure.interface.sld_profile(self._pure.uid)
+        return self._pure.interface.sld_profile(self._pure.unique_name)
 
     def resetModel(self):
         self._structure = self._defaultStructure()

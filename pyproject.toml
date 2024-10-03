@@ -8,7 +8,7 @@ build-backend = "hatchling.build"
 # Note that while the project is called EasyReflectometryApp
 # the application itself is EasyReflectometry. 
 name = "EasyReflectometryApp"
-version = "0.0.10"
+version = "0.0.12"
 description = "Making reflectometry data analysis and modelling easy."
 authors = [
     {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"}, 
@@ -28,13 +28,12 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Development Status :: 3 - Alpha"
 ]
-requires-python = ">=3.9, <3.10"
+requires-python = ">=3.9, <3.11"
 dependencies = [
     'darkdetect>=0.3.1',
-    'easyscience==0.6.1',
-    'easyreflectometry==1.0.2',
-    'easyApp @ git+https://github.com/EasyScience/EasyApp.git@develop',
-    'matplotlib>=3.4.2',
+    'easyreflectometry @ git+https://github.com/EasyScience/EasyReflectometryLib.git@develop',
+    'easyApp @ git+https://github.com/easyScience/easyApp.git@pyside2',
+    'scipy<1.14',
     'toml>=0.10.2',
     'pyobjc-core>=7.1; platform_system == "Darwin"',
     'pyobjc-framework-cocoa>=7.1; platform_system == "Darwin"'
@@ -44,8 +43,7 @@ dependencies = [
 # These optional dependencies are for building the
 # application as a part of a Github Action.
 ci = [
-    'pyinstaller==6.5.*',
-    'scipy==1.12.*',
+    'pyinstaller==6.10.*',
     'dephell_licenses>=0.1.7',
     'pywin32-ctypes>=0.2.0; platform_system == "win32"', 
     'pypiwin32>=223; platform_system == "win32"',

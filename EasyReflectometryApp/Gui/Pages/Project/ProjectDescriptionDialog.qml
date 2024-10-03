@@ -1,5 +1,4 @@
 import QtQuick 2.13
-
 import easyApp.Gui.Globals 1.0 as EaGlobals
 import easyApp.Gui.Components 1.0 as EaComponents
 
@@ -25,5 +24,3 @@ EaComponents.ProjectDescriptionDialog {
         projectLocation = ExGlobals.Constants.proxy.project.currentProjectPath
     }
 }
-
-
