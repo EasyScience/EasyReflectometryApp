@@ -5,6 +5,7 @@
 from PySide6.QtCore import QObject
 from PySide6.QtCore import Signal
 from PySide6.QtCore import Property
+
 from easyreflectometry import Project as ProjectLib
 from .logic.status import Status as StatusLogic
 

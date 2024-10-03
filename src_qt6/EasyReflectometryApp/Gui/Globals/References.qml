@@ -15,9 +15,8 @@ QtObject {
             'homeButton': null,
             'projectButton': null,
             'sampleButton': null,
-/*            'experimentButton': null,
+            'experimentButton': null,
             'analysisButton': null,
-*/
             'summaryButton': null,
         }
     }
@@ -28,7 +27,8 @@ QtObject {
             'sidebar': {
                 'basic': {
                     'popups': {
-                        'openCifFile': null
+                        'openJsonFileDialog': null,
+                        'projectDescriptionDialog': null
                     }
                 }
             }

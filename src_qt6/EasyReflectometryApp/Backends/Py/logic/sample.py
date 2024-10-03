@@ -1,6 +1,7 @@
 from typing import Union
-from easyscience import global_object
+# from easyscience import global_object
 from easyreflectometry.sample import Sample as SampleLib
+from easyreflectometry import Project as ProjectLib
 
 MATERIALS = [
     {
@@ -21,7 +22,8 @@ MATERIALS = [
 ]
 
 class Sample:
-    def __init__(self):
+    def __init__(self, project_lib: ProjectLib):
+        self._project_lib = project_lib
         self._material_index = -1
         self._sample = SampleLib()
         self._materials: list[dict[str, str]] = MATERIALS

@@ -3,6 +3,7 @@ from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
 from PySide6.QtCore import Property
 
+from easyreflectometry import Project as ProjectLib
 from .logic.sample import Sample as SampleLogic
 
 
@@ -10,9 +11,9 @@ class Sample(QObject):
     materialsChanged = Signal()
 #    currentMaterialIndexChanged = Signal()
 
-    def __init__(self, parent=None):
+    def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
-        self._logic = SampleLogic()
+        self._logic = SampleLogic(project_lib)
 
 ##    @Property(str)
 ##    def currentMaterialIndex(self, notify=currentMaterialIndexChanged) -> str:

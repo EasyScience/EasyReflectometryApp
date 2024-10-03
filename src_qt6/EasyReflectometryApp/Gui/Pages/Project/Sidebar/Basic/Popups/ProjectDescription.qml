@@ -9,6 +9,8 @@ import Gui.Globals as Globals
 
 EaComponents.ProjectDescriptionDialog {
 
+    id: projectDescriptionDialog
+
     visible: EaGlobals.Vars.showProjectDescriptionDialog
     onClosed: {
         EaGlobals.Vars.showProjectDescriptionDialog = false
@@ -22,10 +24,12 @@ EaComponents.ProjectDescriptionDialog {
         Globals.BackendWrapper.projectSetLocation(projectLocation)
 
         Globals.BackendWrapper.projectCreate()
-        Globals.References.applicationWindow.appBarCentralTabs.summaryButton.enabled = true
+        Globals.References.applicationWindow.appBarCentralTabs.sampleButton.enabled = true
     }
 
     Component.onCompleted: {
+        Globals.References.pages.project.sidebar.basic.popups.projectDescriptionDialog = projectDescriptionDialog
+
         projectName = Globals.BackendWrapper.projectName
         projectDescription = Globals.BackendWrapper.projectDescription
         projectLocation = Globals.BackendWrapper.projectLocation
