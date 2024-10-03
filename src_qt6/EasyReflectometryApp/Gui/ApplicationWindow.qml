@@ -29,7 +29,10 @@ EaComponents.ApplicationWindow {
             enabled: Globals.BackendWrapper.projectCreated
             fontIcon: "backspace"
             ToolTip.text: qsTr("Reset to initial state without project, models and data")
-            onClicked: Globals.BackendWrapper.projectReset()
+            onClicked: {
+                Globals.BackendWrapper.projectReset()
+                Globals.References.applicationWindow.appBarCentralTabs.projectButton.toggle()
+            }
         }
 
     ]

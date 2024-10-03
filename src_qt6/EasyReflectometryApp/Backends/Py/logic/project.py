@@ -23,7 +23,7 @@ class Project:
 
     @root_path.setter
     def root_path(self, new_value: str) -> None:
-        self._project_lib.set_root_path(Path(new_value).parent)
+        self._project_lib.set_path_project_parent(Path(new_value).parent)
 
     @property
     def name(self) -> str:
