@@ -3,6 +3,9 @@ from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
 from PySide6.QtCore import Property
 
+from EasyApp.Logic.Utils.Utils import generalizePath
+from easyreflectometry import Project as ProjectLib
+
 from .logic.project import Project as ProjectLogic
 
 
@@ -12,22 +15,32 @@ class Project(QObject):
     descriptionChanged = Signal()
     locationChanged = Signal()
 
-    def __init__(self, parent=None):
+    def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
-        self._logic = ProjectLogic()
+        self._logic = ProjectLogic(project_lib)
 
-    # Setters and getters
-
+    # Properties
+    
     @Property(bool, notify=createdChanged)
     def created(self) -> bool:
-        return self._logic._created
+        return self._logic.created
 
+    @Property(str, notify=createdChanged)
+    def creationDate(self) -> str:
+        return self._logic.creation_date
+
+    @Property(str)
+    def currentProjectPath(self) -> str:
+        return self._logic.path
+
+    # Properties with setters
+    
     @Property(str, notify=nameChanged)
     def name(self) -> str:
         return self._logic.name
 
-    @name.setter
-    def name(self, new_value: str) -> None:
+    @Slot(str)
+    def setName(self, new_value: str) -> None:
         if self._logic.name != new_value:
             self._logic.name = new_value
             self.nameChanged.emit()
@@ -36,36 +49,45 @@ class Project(QObject):
     def description(self) -> str:
         return self._logic.description
 
-    @description.setter
-    def description(self, new_value: str) -> None:
+    @Slot(str)
+    def setDescription(self, new_value: str) -> None:
         if self._logic.description != new_value:
             self._logic.description = new_value
             self.descriptionChanged.emit()
 
     @Property(str, notify=locationChanged)
     def location(self) -> str:
-        return self._logic.current_path
-
-    @location.setter
-    def location(self, new_value: str) -> None:
-        if self._logic.current_path != new_value:
-            self._logic.current_path = new_value
-            self.locationChanged.emit()
-
-    @Property(str, notify=createdChanged)
-    def creationDate(self) -> str:
-        return self._logic.creation_date
-
-    @Property(str)
-    def currentProjectPath(self) -> str:
-        return self._logic.current_path
+        return self._logic.root_path
 
     @Slot(str)
-    def create(self, project_path: str) -> None:
-        self._logic.create(project_path)
+    def setLocation(self, new_value: str) -> None:
+        if self._logic.root_path != new_value:
+            self._logic.root_path = new_value
+            self.locationChanged.emit()
+
+    # Methods
+
+    @Slot()
+    def create(self) -> None:
+        self._logic.create()
         self.createdChanged.emit()
+
+    @Slot(str)
+    def load(self, path: str) -> None:
+        self._logic.load(generalizePath(path))
+        self.createdChanged.emit()
+        self.nameChanged.emit()
+        self.descriptionChanged.emit()
+        self.locationChanged.emit()
 
     @Slot()
     def save(self) -> None:
         self._logic.save()
 
+    @Slot()
+    def reset(self) -> None:
+        self._logic.reset()
+        self.createdChanged.emit()
+        self.nameChanged.emit()
+        self.descriptionChanged.emit()
+        self.locationChanged.emit()

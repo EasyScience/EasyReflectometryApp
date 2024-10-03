@@ -17,6 +17,7 @@ FileDialog{
 
     onAccepted: {
         Globals.References.applicationWindow.appBarCentralTabs.summaryButton.enabled = true
+        Globals.BackendWrapper.projectLoad(selectedFile)
     }
 
     Component.onCompleted: {
