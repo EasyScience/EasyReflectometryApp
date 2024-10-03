@@ -25,7 +25,7 @@ class Material:
     @property
     def material_names(self) -> list[str]:
         return [element['label'] for element in self.materials]
-    
+
     def set_name_at_current_index(self, new_value: str) -> None:
         self._materials[self._index].name = new_value
 
@@ -46,12 +46,12 @@ class Material:
 
     def move_selected_material_up(self) -> None:
         if self._index > 0:
-            self._materials.move_material_up(self._index)
+            self._materials.move_up(self._index)
             self._index = self._index - 1
     
     def move_selected_material_down(self) -> None:
         if self._index < len(self._materials) - 1:
-            self._materials.move_material_down(self._index)
+            self._materials.move_down(self._index)
             self._index = self._index + 1
 
 def _from_materials_collection_to_list_of_dicts(materials_collection: MaterialCollection) -> list[dict[str, str]]:

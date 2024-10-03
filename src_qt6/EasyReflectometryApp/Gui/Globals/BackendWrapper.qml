@@ -81,14 +81,9 @@ QtObject {
     readonly property var sampleMaterials: activeBackend.sample.materials
     readonly property var sampleMaterialNames: activeBackend.sample.materialNames
 
-    readonly property int sampleCurrentMaterialIndex: activeBackend.sample.currentMaterialIndex
+//    readonly property int sampleCurrentMaterialIndex: activeBackend.sample.currentMaterialIndex
     function sampleSetCurrentMaterialIndex(value) { activeBackend.sample.setCurrentMaterialIndex(value) }
-//    onSampleCurrentMaterialIndexChanged: activeBackend.sample.currentMaterialIndex = sampleCurrentMaterialIndex
 
-//    function sampleSetCurrentMaterialIndex(value) {
-//        sampleCurrentMaterialIndex = value
-//        activeBackend.sample.setCurrentMaterialIndex(value)
-//    }
     function sampleSetCurrentMaterialName(value) { activeBackend.sample.setCurrentMaterialName(value) }
     function sampleSetCurrentMaterialSld(value) { activeBackend.sample.setCurrentMaterialSld(value) } 
     function sampleSetCurrentMaterialISld(value) { activeBackend.sample.setCurrentMaterialISld(value) }
@@ -102,14 +97,9 @@ QtObject {
     readonly property var sampleModels: activeBackend.sample.models
     readonly property string sampleCurrentModelName: activeBackend.sample.currentModelName
 
-    readonly property int sampleCurrentModelIndex: activeBackend.sample.currentModelIndex
+//    readonly property int sampleCurrentModelIndex: activeBackend.sample.currentModelIndex
     function sampleSetCurrentModelIndex(value) { activeBackend.sample.setCurrentModelIndex(value) }
-//    onSampleCurrentModelIndexChanged: activeBackend.sample.currentModelIndex = sampleCurrentModelIndex
 
-//    function sampleSetCurrentModelIndex(value) {
-//        sampleCurrentModelIndex = value
-//        activeBackend.sample.setCurrentModelIndex(value)
-//    }
     function sampleSetCurrentModelName(value) { activeBackend.sample.setCurrentModelName(value) }
     function sampleRemoveModel(value) { activeBackend.sample.removeModel(value) }
     function sampleAddNewModel() { activeBackend.sample.addNewModel() }
@@ -121,23 +111,15 @@ QtObject {
     readonly property var sampleAssemblies: activeBackend.sample.assemblies
     readonly property string sampleCurrentAssemblyName: activeBackend.sample.currentAssemblyName
 
-    readonly property int sampleCurrentAssemblyIndex: activeBackend.sample.currentAssemblyIndex
+//    readonly property int sampleCurrentAssemblyIndex: activeBackend.sample.currentAssemblyIndex
     function sampleSetCurrentAssemblyIndex(value) { activeBackend.sample.setCurrentAssemblyIndex(value) }
-//    onSampleCurrentAssemblyIndexChanged: activeBackend.sample.currentAssemblyIndex = sampleCurrentAssemblyIndex
     readonly property bool sampleConstrainAPM: activeBackend.sample.constrainAPM
     function sampleSetConstrainAPM(value) { activeBackend.sample.setConstrainAPM(value) }
-//    onSampleConstrainAPMChanged: activeBackend.sample.constrainAPM = sampleConstrainAPM
     readonly property bool sampleConformalRoughness: activeBackend.sample.conformalRoughness
     function sampleSetConformalRoughness(value) { activeBackend.sample.setConformalRoughness(value) }
-//    onSampleConformalRoughnessChanged: activeBackend.sample.conformalRoughness = sampleConformalRoughness
     readonly property int sampleRepeatedLayerReptitions: activeBackend.sample.repeatedLayerReptitions
     function sampleSetRepeatedLayerReptitions(value) { activeBackend.sample.setRepeatedLayerReptitions(value) }
-//    onSampleRepeatedLayerReptitionsChanged: activeBackend.sample.repeatedLayerReptitions = sampleRepeatedLayerReptitions
 
-//    function sampleSetCurrentAssemblyIndex(value) {
-//        sampleCurrentAssemblyIndex = value
-//        activeBackend.sample.setCurrentAssemblyIndex(value)
-//    }
     function sampleSetCurrentAssemblyName(value) { activeBackend.sample.setCurrentAssemblyName(value) }
     function sampleSetCurrentAssemblyType(value) { activeBackend.sample.setCurrentAssemblyType(value) }
     function sampleRemoveAssembly(value) { activeBackend.sample.removeAssembly(value) }
@@ -149,14 +131,9 @@ QtObject {
     // Layer
     readonly property var sampleLayers: activeBackend.sample.layers
 
-    readonly property int sampleCurrentLayerIndex: activeBackend.sample.currentLayerIndex
+//    readonly property int sampleCurrentLayerIndex: activeBackend.sample.currentLayerIndex
     function sampleSetCurrentLayerIndex(value) { activeBackend.sample.setCurrentLayerIndex(value) }
-//    onSampleCurrentLayerIndexChanged: activeBackend.sample.currentLayerIndex = sampleCurrentLayerIndex
 
-//    function sampleSetCurrentLayerIndex(value) {
-//        sampleCurrentLayerIndex = value
-//        activeBackend.sample.setCurrentLayerIndex(value)
-//    }
     function sampleSetCurrentLayerFormula(value) { activeBackend.sample.setCurrentLayerFormula(value) }
     function sampleSetCurrentLayerMaterialIndex(value) { activeBackend.sample.setCurrentLayerMaterialIndex(value) }
     function sampleSetCurrentLayerSolvent(value) { activeBackend.sample.setCurrentLayerSolvent(value) }

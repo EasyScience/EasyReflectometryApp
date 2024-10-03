@@ -10,6 +10,7 @@ from .logic.models import Models
 
 class Sample(QObject):
     materialsChanged = Signal()
+    modelsChanged = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
@@ -23,7 +24,7 @@ class Sample(QObject):
     def materials(self) -> list[dict[str, str]]:
         return self._material_logic.materials
 
-    @Property('QVariantList')
+    @Property('QVariantList', notify=materialsChanged)
     def materialNames(self) -> list[str]:
         return self._material_logic.material_names
 
@@ -47,6 +48,7 @@ class Sample(QObject):
         self._material_logic.set_isld_at_current_index(new_value)
         self.materialsChanged.emit()
 
+    # Actions
     @Slot(str)
     def removeMaterial(self, value: str) -> None:
         self._material_logic.remove_material_at_index(value)
@@ -75,3 +77,46 @@ class Sample(QObject):
     # # #
     # Models
     # # #
+    @Property('QVariantList', notify=modelsChanged)
+    def models(self) -> list[dict[str, str]]:
+        return self._models_logic.models
+
+    @Property('QVariantList', notify=modelsChanged)
+    def modelslNames(self) -> list[str]:
+        return self._models_logic.models_names
+
+    # Setters
+    @Slot(str)
+    def setCurrentModelIndex(self, new_value: str) -> None:
+        self._models_logic.index = new_value
+
+    @Slot(str)
+    def setCurrentModelName(self, value: str) -> None:
+        self._models_logic.set_name_at_current_index(value)
+        self.modelsChanged.emit()
+
+    # Actions
+    @Slot(str)
+    def removeModel(self, value: str) -> None:
+        self._models_logic.remove_model_at_index(value)
+        self.modelsChanged.emit()
+
+    @Slot()
+    def addNewModel(self) -> None:
+        self._models_logic.add_new_model()
+        self.modelsChanged.emit()
+
+    @Slot()
+    def duplicateSelectedModel(self) -> None:
+        self._models_logic.duplicate_selected_model()
+        self.modelsChanged.emit()
+
+    @Slot()
+    def moveSelectedModelUp(self) -> None:
+        self._models_logic.move_selected_model_up()
+        self.modelsChanged.emit()
+
+    @Slot()
+    def moveSelectedModelDown(self)-> None:
+        self._models_logic.move_selected_model_down()
+        self.modelsChanged.emit()
