@@ -11,6 +11,7 @@ from PySide2.QtCore import Slot
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
+from pathlib import Path
 
 from easyApp.Logic.Utils.Utils import generalizePath
 from easyreflectometry import Project
@@ -83,7 +84,7 @@ class ProjectProxy(QObject):
     def currentProjectPath(self, new_path):
         if self._project.path == new_path:
             return
-        self._project.path = new_path
+        self._project.set_path_project_parent(Path(new_path).parent)
         self.projectInfoChanged.emit()
 
     # # #
@@ -92,7 +93,7 @@ class ProjectProxy(QObject):
 
     @Slot()
     def createProject(self):
-        self._project.create_project_dir()
+        self._project.create()
         self._project.default_model()
         self._relayProjectChange()
         self.saveProject()
@@ -108,18 +109,18 @@ class ProjectProxy(QObject):
 
     @Slot(str)
     def loadProjectAs(self, filepath):
-        self._project.load_project_json(generalizePath(filepath))
+        self._project.load_from_json(generalizePath(filepath))
         self._relayProjectChange()
         self.projectInfoChanged.emit()
 
     @Slot()
     def loadProject(self):
-        self._project.load_project_json()
+        self._project.load_from_json()
         self._relayProjectChange()
 
     @Slot()
     def saveProject(self):
-        self._project.save_project_json()
+        self._project.save_as_json(overwrite=True)
         self.parent._state_proxy.stateChanged.emit(False)
 
     @Property(str, notify=dummySignal)
