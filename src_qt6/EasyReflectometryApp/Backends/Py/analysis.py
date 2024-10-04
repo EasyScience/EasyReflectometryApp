@@ -8,6 +8,8 @@ from easyreflectometry import Project as ProjectLib
 
 
 class Analysis(QObject):
+    fitFinishedChanged = Signal()
+
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
@@ -15,7 +17,7 @@ class Analysis(QObject):
 
     # Setters and getters
 
-    @Property(bool)
+    @Property(bool, notify=fitFinishedChanged)
     def isFitFinished(self) -> bool:
         return True
 

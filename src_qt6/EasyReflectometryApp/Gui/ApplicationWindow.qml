@@ -108,7 +108,7 @@ EaComponents.ApplicationWindow {
             fontIcon: "microscope"
             text: qsTr("Experiment")
             ToolTip.text: qsTr("Experimental settings and data page")
-            Component.onCompleted: ExGlobals.Variables.experimentTabButton = experimentTabButton
+            Component.onCompleted:Globals.References.applicationWindow.appBarCentralTabs.experimentTabButton = experimentTabButton
         },
 
         // Analysis tab
@@ -120,7 +120,7 @@ EaComponents.ApplicationWindow {
             fontIcon: "calculator"
             text: qsTr("Analysis")
             ToolTip.text: qsTr("Simulation and fitting page")
-            Component.onCompleted: ExGlobals.Variables.analysisTabButton = analysisTabButton
+            Component.onCompleted: Globals.References.applicationWindow.appBarCentralTabs.analysisTabButton = analysisTabButton
         },
 
         // Summary page

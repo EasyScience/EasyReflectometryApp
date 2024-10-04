@@ -22,7 +22,7 @@ EaElements.GroupColumn {
             to: 9999
             value: Globals.BackendWrapper.sampleRepeatedLayerReptitions
             onValueChanged: {
-                Globals.BackendWrapper.sampleRepeatedLayerReptitions = value
+                Globals.BackendWrapper.sampleSetRepeatedLayerReptitions(value)
             }
         }
 
