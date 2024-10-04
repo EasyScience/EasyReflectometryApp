@@ -26,6 +26,25 @@ class Material:
     def material_names(self) -> list[str]:
         return [element['label'] for element in self.materials]
 
+    def remove_at_index(self, value: str) -> None:
+        self._materials.pop(int(value))
+    
+    def add_new(self) -> None:
+        self._materials.add_material()
+
+    def duplicate_selected(self) -> None:
+        self._materials.duplicate_material(self._index)
+
+    def move_selected_up(self) -> None:
+        if self._index > 0:
+            self._materials.move_up(self._index)
+            self._index = self._index - 1
+    
+    def move_selected_down(self) -> None:
+        if self._index < len(self._materials) - 1:
+            self._materials.move_down(self._index)
+            self._index = self._index + 1
+
     def set_name_at_current_index(self, new_value: str) -> None:
         self._materials[self._index].name = new_value
 
@@ -34,25 +53,6 @@ class Material:
 
     def set_isld_at_current_index(self, new_value: str) -> None:
         self._materials[self._index].isld.value = float(new_value)
-
-    def remove_material_at_index(self, value: str) -> None:
-        self._materials.pop(int(value))
-    
-    def add_new_material(self) -> None:
-        self._materials.add_material()
-
-    def duplicate_selected_material(self) -> None:
-        self._materials.duplicate_material(self._index)
-
-    def move_selected_material_up(self) -> None:
-        if self._index > 0:
-            self._materials.move_up(self._index)
-            self._index = self._index - 1
-    
-    def move_selected_material_down(self) -> None:
-        if self._index < len(self._materials) - 1:
-            self._materials.move_down(self._index)
-            self._index = self._index + 1
 
 def _from_materials_collection_to_list_of_dicts(materials_collection: MaterialCollection) -> list[dict[str, str]]:
     materials_list = []

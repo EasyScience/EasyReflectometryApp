@@ -107,18 +107,12 @@ QtObject {
     function sampleMoveSelectedModelUp() { activeBackend.sample.moveSelectedModelUp() }
     function sampleMoveSelectedModelDown() { activeBackend.sample.moveSelectedModelDown() }
 
-    // Assembly
+    // Sample
     readonly property var sampleAssemblies: activeBackend.sample.assemblies
     readonly property string sampleCurrentAssemblyName: activeBackend.sample.currentAssemblyName
 
 //    readonly property int sampleCurrentAssemblyIndex: activeBackend.sample.currentAssemblyIndex
     function sampleSetCurrentAssemblyIndex(value) { activeBackend.sample.setCurrentAssemblyIndex(value) }
-    readonly property bool sampleConstrainAPM: activeBackend.sample.constrainAPM
-    function sampleSetConstrainAPM(value) { activeBackend.sample.setConstrainAPM(value) }
-    readonly property bool sampleConformalRoughness: activeBackend.sample.conformalRoughness
-    function sampleSetConformalRoughness(value) { activeBackend.sample.setConformalRoughness(value) }
-    readonly property int sampleRepeatedLayerReptitions: activeBackend.sample.repeatedLayerReptitions
-    function sampleSetRepeatedLayerReptitions(value) { activeBackend.sample.setRepeatedLayerReptitions(value) }
 
     function sampleSetCurrentAssemblyName(value) { activeBackend.sample.setCurrentAssemblyName(value) }
     function sampleSetCurrentAssemblyType(value) { activeBackend.sample.setCurrentAssemblyType(value) }
@@ -127,6 +121,13 @@ QtObject {
     function sampleDuplicateSelectedAssembly() { activeBackend.sample.duplicateSelectedAssembly() }
     function sampleMoveSelectedAssemblyUp() { activeBackend.sample.moveSelectedAssemblyUp() }
     function sampleMoveSelectedAssemblyDown() { activeBackend.sample.moveSelectedAssemblyDown() }
+
+    readonly property bool sampleConstrainAPM: activeBackend.sample.constrainAPM
+    function sampleSetConstrainAPM(value) { activeBackend.sample.setConstrainAPM(value) }
+    readonly property bool sampleConformalRoughness: activeBackend.sample.conformalRoughness
+    function sampleSetConformalRoughness(value) { activeBackend.sample.setConformalRoughness(value) }
+    readonly property int sampleRepeatedLayerReptitions: activeBackend.sample.repeatedLayerReptitions
+    function sampleSetRepeatedLayerReptitions(value) { activeBackend.sample.setRepeatedLayerReptitions(value) }
 
     // Layer
     readonly property var sampleLayers: activeBackend.sample.layers

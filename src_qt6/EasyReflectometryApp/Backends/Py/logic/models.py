@@ -29,21 +29,21 @@ class Models:
     def set_name_at_current_index(self, new_value: str) -> None:
         self._models[self._index].name = new_value
 
-    def remove_model_at_index(self, value: str) -> None:
+    def remove_at_index(self, value: str) -> None:
         self._models.pop(int(value))
     
-    def add_new_model(self) -> None:
+    def add_new(self) -> None:
         self._models.add_model()
 
     def duplicate_selected_model(self) -> None:
         self._models.duplicate_model(self._index)
 
-    def move_selected_model_up(self) -> None:
+    def move_selected_up(self) -> None:
         if self._index > 0:
             self._models.move_up(self._index)
             self._index = self._index - 1
     
-    def move_selected_model_down(self) -> None:
+    def move_selected_down(self) -> None:
         if self._index < len(self._models) - 1:
             self._models.move_down(self._index)
             self._index = self._index + 1
