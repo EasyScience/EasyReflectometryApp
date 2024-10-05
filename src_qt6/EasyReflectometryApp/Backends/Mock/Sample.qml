@@ -212,7 +212,7 @@ QtObject {
     function setCurrentLayerFormula(value) {
         console.debug(`setCurrentLayerFormula ${value}`)
     }
-    function setCurrentLayerMaterialIndex(value) {
+    function setCurrentLayerMaterial(value) {
         console.debug(`setCurrentLayerMaterialIndex ${value}`)
     }
     function setCurrentLayerSolvent(value) {
