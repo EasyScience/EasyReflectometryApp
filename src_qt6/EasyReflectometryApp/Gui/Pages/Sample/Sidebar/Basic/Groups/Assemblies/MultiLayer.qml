@@ -59,7 +59,7 @@ EaElements.GroupColumn {
             EaComponents.TableViewComboBox{
                 horizontalAlignment: Text.AlignLeft
                 onActivated: {
-                    Globals.BackendWrapper.sampleSetCurrentLayerMaterialIndex(currentIndex)
+                    Globals.BackendWrapper.sampleSetCurrentLayerMaterial(currentIndex)
                 }
                 model: Globals.BackendWrapper.sampleMaterialNames
                 onModelChanged: {
@@ -94,7 +94,6 @@ EaElements.GroupColumn {
 
         onCurrentIndexChanged: {
             Globals.BackendWrapper.sampleSetCurrentLayerIndex(layersView.currentIndex)
-//            Globals.BackendWrapper.sampleCurrentLayersIndex = layersView.currentIndex
         }
     }
     // Control buttons below table

@@ -2,6 +2,9 @@ from typing import Union
 
 from easyreflectometry import Project as ProjectLib
 from easyreflectometry.sample import Sample
+from easyreflectometry.sample import Multilayer
+from easyreflectometry.sample import RepeatingMultilayer
+from easyreflectometry.sample import SurfactantLayer
 
 
 class Assemblies:
@@ -27,7 +30,11 @@ class Assemblies:
     @property
     def name_at_current_index(self) -> str:
         return self._assemblies[self._assembly_index].name
-
+    
+    @property
+    def type_at_current_index(self) -> str:
+        return self._assemblies[self._assembly_index].type
+    
     @property
     def assemblies(self) -> list[dict[str, str]]:
         return _from_assemblies_collection_to_list_of_dicts(self._assemblies)
@@ -57,6 +64,38 @@ class Assemblies:
 
     def set_name_at_current_index(self, new_value: str) -> None:
         self._assemblies[self._assembly_index].name = new_value
+
+    def set_type_at_current_index(self, new_value: str) -> None:
+        if new_value == self._assemblies[self._assembly_index].type:
+            return
+
+        if new_value == 'Multi-layer':
+            if 'Si' not in [material.name for material in self._project_lib._materials]:
+                self._project_lib._materials.add_material('Si', 2.07, 0.0)
+            index_si = [material.name for material in self._project_lib._materials].index('Si')
+            new_assembly = Multilayer()
+            new_assembly.layers[0].material = self._project_lib._materials[index_si]
+        elif new_value == 'Repeating Multi-layer':
+            if 'Si' not in [material.name for material in self._project_lib._materials]:
+                self._project_lib._materials.add_material('Si', 2.07, 0.0)
+            index_si = [material.name for material in self._project_lib._materials].index('Si')
+            new_assembly = RepeatingMultilayer()
+            new_assembly.layers[0].material = self._project_lib._materials[index_si]
+        elif new_value == 'Surfactant Layer':
+            if 'Air' not in [material.name for material in self._project_lib._materials]:
+                self._project_lib._materials.add_material('Air', 0.0, 0.0)
+            if 'D2O' not in [material.name for material in self._project_lib._materials]:
+                self._project_lib._materials.add_material('D2O', 6.36, 0.0)
+            index_air = [material.name for material in self._project_lib._materials].index('Air')
+            index_d2o = [material.name for material in self._project_lib._materials].index('D2O')
+            new_assembly = SurfactantLayer()
+            new_assembly.layers[0].solvent = self._project_lib._materials[index_air]
+            new_assembly.layers[1].solvent = self._project_lib._materials[index_d2o]
+
+        new_assembly.name = self._assemblies[self._assembly_index].name
+
+        self._assemblies[self._assembly_index] = new_assembly
+        self._project_lib._models[self._model_index].sample._disable_changes_to_outermost_layers()
 
 def _from_assemblies_collection_to_list_of_dicts(assemblies_collection: Sample) -> list[dict[str, str]]:
     assemblies_list = []

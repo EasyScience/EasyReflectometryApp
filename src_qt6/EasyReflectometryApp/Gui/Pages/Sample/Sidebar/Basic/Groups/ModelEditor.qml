@@ -68,8 +68,8 @@ EaElements.GroupBox {
                     horizontalAlignment: Text.AlignLeft
                     model: ["Multi-layer", "Repeating Multi-layer", "Surfactant Layer"]
                     onActivated: {
-                        Globals.BackendWrapper.sampleSetCurrentAssemblyName(currentValue)
-                        currentAssemblyType = currentValue
+                        Globals.BackendWrapper.sampleSetCurrentAssemblyType(currentValue)
+//                        currentAssemblyType = currentValue
                     }
                     Component.onCompleted: {
                         currentIndex = indexOfValue(Globals.BackendWrapper.sampleAssemblies[index].type)
@@ -88,7 +88,7 @@ EaElements.GroupBox {
             onCurrentIndexChanged: {
                 Globals.BackendWrapper.sampleSetCurrentAssemblyIndex(assembliesView.currentIndex)
                 // MAYBE DO DIFFERENTLY THAN HAVING PROPERTY IN PARENT OBJECT
-                currentAssemblyType: assembliesView.currentIndex
+//                currentAssemblyType: assembliesView.currentIndex
                 // NEED TO CONNECT THIS
                 // repsSpinBox.value = ExGlobals.Constants.proxy.model.currentItemsRepetitions
             }

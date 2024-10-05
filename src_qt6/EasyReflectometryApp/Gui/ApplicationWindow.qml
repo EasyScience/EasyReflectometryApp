@@ -100,7 +100,7 @@ EaComponents.ApplicationWindow {
             }
         },
         // Sample page
-
+/*
         // Experiment tab
         EaElements.AppBarTabButton {
             id: experimentTabButton
@@ -122,7 +122,7 @@ EaComponents.ApplicationWindow {
             ToolTip.text: qsTr("Simulation and fitting page")
             Component.onCompleted: Globals.References.applicationWindow.appBarCentralTabs.analysisTabButton = analysisTabButton
         },
-
+*/
         // Summary page
         EaElements.AppBarTabButton {
             id: summaryButton
@@ -146,8 +146,8 @@ EaComponents.ApplicationWindow {
         Loader { source: 'Pages/Home/Layout.qml' },
         Loader { source: 'Pages/Project/Layout.qml' },
         Loader { source: 'Pages/Sample/Layout.qml' },
-        Loader { source: 'Pages/Experiment/Layout.qml' },
-        Loader { source: 'Pages/Analysis/Layout.qml' },
+//        Loader { source: 'Pages/Experiment/Layout.qml' },
+//        Loader { source: 'Pages/Analysis/Layout.qml' },
         Loader { source: 'Pages/Report/Layout.qml' }
     ]
 

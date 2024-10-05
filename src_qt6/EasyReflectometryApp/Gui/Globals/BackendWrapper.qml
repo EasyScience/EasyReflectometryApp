@@ -110,6 +110,7 @@ QtObject {
     // Sample
     readonly property var sampleAssemblies: activeBackend.sample.assemblies
     readonly property string sampleCurrentAssemblyName: activeBackend.sample.currentAssemblyName
+    readonly property string sampleCurrentAssemblyType: activeBackend.sample.currentAssemblyType
 
 //    readonly property int sampleCurrentAssemblyIndex: activeBackend.sample.currentAssemblyIndex
     function sampleSetCurrentAssemblyIndex(value) { activeBackend.sample.setCurrentAssemblyIndex(value) }
@@ -143,7 +144,7 @@ QtObject {
     function sampleMoveSelectedLayerDown() { activeBackend.sample.moveSelectedLayerDown() }
 
     function sampleSetCurrentLayerFormula(value) { activeBackend.sample.setCurrentLayerFormula(value) }
-    function sampleSetCurrentLayerMaterialIndex(value) { activeBackend.sample.setCurrentLayerMaterialIndex(value) }
+    function sampleSetCurrentLayerMaterial(value) { activeBackend.sample.setCurrentLayerMaterial(value) }
     function sampleSetCurrentLayerSolvent(value) { activeBackend.sample.setCurrentLayerSolvent(value) }
     function sampleSetCurrentLayerThickness(value) { activeBackend.sample.setCurrentLayerThickness(value) }
     function sampleSetCurrentLayerRoughness(value) { activeBackend.sample.setCurrentLayerRoughness(value) }

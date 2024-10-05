@@ -39,6 +39,9 @@ QtObject {
     function setCurrentMaterialISld(value) {
         console.debug(`setCurrentMaterialISld ${value}`)
     }
+    function setRepeatedLayerReptitions(value) {
+        console.debug(`setRepeatedLayerReptitions ${value}`)
+    }
 
     // Table functions
     function removeMaterial(value) {
@@ -108,6 +111,8 @@ QtObject {
     property int repeatedLayerReptitions: 1
 
     property string currentAssemblyName: 'currentAssemblyName'
+    property string currentAssemblyType: 'Surfactant Layer'
+
 
     // Getters
     readonly property var assemblies: [
@@ -117,12 +122,12 @@ QtObject {
         },
         {
             'label': 'label 2',
-            'type': 'Multi-layer'
+            'type': 'Repeating Multi-layer'
 
         },
         {
             'label': 'label 3',
-            'type': 'Multi-layer'
+            'type': 'Surfactant Layer'
         },
     ]
 
@@ -134,6 +139,7 @@ QtObject {
         console.debug(`setCurrentAssemblyType ${value}`)
     }
     function setCurrentAssemblyIndex(value) {
+        currentAssemblyType = assemblies[value].type
         console.debug(`setCurrentAssemblyIndex ${value}`)
     }
 

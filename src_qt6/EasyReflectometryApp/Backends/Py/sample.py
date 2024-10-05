@@ -8,25 +8,27 @@ from .logic.material import Material
 from .logic.models import Models
 from .logic.assemblies import Assemblies
 from .logic.layers import Layers
+from .logic.sample import Sample as SampleLogic
 
 class Sample(QObject):
     materialsChanged = Signal()
     materialIndexChanged = Signal(int)
 
-    modelsChanged = Signal()
+    modelsUpdate = Signal()
     modelsTableChanged = Signal()
     modelsIndexChanged = Signal(int)
 
-    assembliesChanged = Signal()
+    assembliesUpdate = Signal()
     assembliesTableChanged = Signal()
     assembliesIndexChanged = Signal(int)
 
-    layersChanged = Signal()
+    layersUpdate = Signal()
     layersTableChanged = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
         self._material_logic = Material(project_lib)
+        self._sample_logic = SampleLogic(project_lib)
         self._models_logic = Models(project_lib)
         self._assemblies_logic = Assemblies(project_lib)
         self._layers_logic = Layers(project_lib)
@@ -34,19 +36,45 @@ class Sample(QObject):
         self.connect_logic()
     
     def connect_logic(self) -> None:
-        self.modelsIndexChanged.connect(self.updateModels)
-        self.modelsTableChanged.connect(self.updateModels)
+        self.modelsIndexChanged.connect(self.modelsChanged)
+        self.modelsTableChanged.connect(self.modelsChanged)
 
-        self.modelsIndexChanged.connect(self.updateAssemblies)
+        self.modelsIndexChanged.connect(self.assembliesChanged)
         self.modelsIndexChanged.connect(self._assemblies_logic.set_model_index)
-        self.assembliesIndexChanged.connect(self.updateAssemblies)
-        self.assembliesTableChanged.connect(self.updateAssemblies)
+        self.assembliesIndexChanged.connect(self.assembliesChanged)
 
         self.modelsIndexChanged.connect(self._layers_logic.set_model_index)
-        self.modelsIndexChanged.connect(self.updateLayers)
+        self.modelsIndexChanged.connect(self.layersChanged)
         self.assembliesIndexChanged.connect(self._layers_logic.set_assembly_index)
-        self.assembliesIndexChanged.connect(self.updateLayers)
-        self.layersTableChanged.connect(self.updateLayers)
+        self.assembliesIndexChanged.connect(self.layersChanged)
+        self.layersTableChanged.connect(self.layersChanged)
+
+    # # #
+    # Sample
+    # # #
+    @Property(bool, notify=assembliesUpdate)
+    def constrainAPM(self) -> bool:
+        return self._sample_logic.constrain_apm
+    
+    @Slot(str)
+    def setConstrainAPM(self, new_value: str) -> None:
+        self._sample_logic.set_constrain_apm(new_value)
+
+    @Property(bool, notify=assembliesUpdate)
+    def conformalRoughness(self) -> bool:
+        return self._sample_logic.conformal_roughness
+    
+    @Slot(str)
+    def setConformalRoughness(self, new_value: str) -> None:
+        self._sample_logic.set_conformal_roughness(new_value)
+
+    @Property(int, notify=assembliesUpdate)
+    def repeatedLayerReptitions(self) -> int:
+        return self._sample_logic.repeated_layer_reptitions
+    
+    @Slot(str)
+    def setRepeatedLayerReptitions(self, new_value: str) -> None:
+        self._sample_logic.set_repeated_layer_reptitions(new_value)
 
     # # #
     # Materials
@@ -113,14 +141,14 @@ class Sample(QObject):
     # # #
     # Models
     # # #
-    def updateModels(self) -> None:
-        self.modelsChanged.emit()
+    def modelsChanged(self) -> None:
+        self.modelsUpdate.emit()
 
-    @Property('QVariantList', notify=modelsChanged)
+    @Property('QVariantList', notify=modelsUpdate)
     def models(self) -> list[dict[str, str]]:
         return self._models_logic.models
 
-    @Property('QVariantList', notify=modelsChanged)
+    @Property('QVariantList', notify=modelsUpdate)
     def modelslNames(self) -> list[str]:
         return self._models_logic.models_names
 
@@ -168,20 +196,24 @@ class Sample(QObject):
     # # #
     # Assemblies
     # # #
-    def updateAssemblies(self) -> None:
-        self.assembliesChanged.emit()
+    def assembliesChanged(self) -> None:
+        self.assembliesUpdate.emit()
 
-    @Property('QVariantList', notify=assembliesChanged)
+    @Property('QVariantList', notify=assembliesUpdate)
     def assemblies(self) -> list[dict[str, str]]:
         return self._assemblies_logic.assemblies
 
-    @Property('QVariantList', notify=assembliesChanged)
+    @Property('QVariantList', notify=assembliesUpdate)
     def assembliesNames(self) -> list[str]:
         return self._assemblies_logic.assemblies_names
 
-    @Property(str, notify=assembliesChanged)
+    @Property(str, notify=assembliesUpdate)
     def currentAssemblyName(self) -> str:
         return self._assemblies_logic.name_at_current_index
+
+    @Property(str, notify=assembliesUpdate)
+    def currentAssemblyType(self) -> str:
+        return self._assemblies_logic.type_at_current_index
 
     # Setters
     @Slot(str)
@@ -192,6 +224,11 @@ class Sample(QObject):
     @Slot(str)
     def setCurrentAssemblyName(self, new_value: str) -> None:
         self._assemblies_logic.set_name_at_current_index(new_value)
+        self.assembliesTableChanged.emit()
+
+    @Slot(str)
+    def setCurrentAssemblyType(self, new_value: str) -> None:
+        self._assemblies_logic.set_type_at_current_index(new_value)
         self.assembliesTableChanged.emit()
 
     # Actions
@@ -223,18 +260,18 @@ class Sample(QObject):
     # # #
     # Layers
     # # #
-    def updateLayers(self) -> None:
-        self.layersChanged.emit()
+    def layersChanged(self) -> None:
+        self.layersUpdate.emit()
 
-    @Property('QVariantList', notify=layersChanged)
+    @Property('QVariantList', notify=layersUpdate)
     def layers(self) -> list[dict[str, str]]:
         return self._layers_logic.layers
 
-    @Property('QVariantList', notify=layersChanged)
+    @Property('QVariantList', notify=layersUpdate)
     def layersNames(self) -> list[str]:
         return self._layers_logic.layers_names
 
-    @Property(str, notify=layersChanged)
+    @Property(str, notify=layersUpdate)
     def currentLayerName(self) -> str:
         return self._layers_logic.name_at_current_index
 
@@ -246,6 +283,16 @@ class Sample(QObject):
     @Slot(str)
     def setCurrentLayerName(self, new_value: str) -> None:
         self._layers_logic.set_name_at_current_index(new_value)
+        self.layersTableChanged.emit()
+
+    @Slot(str)
+    def setCurrentLayerMaterial(self, new_value: str) -> None:
+        self._layers_logic.set_material_at_current_index(new_value)
+        self.layersTableChanged.emit()
+
+    @Slot(str)
+    def setCurrentLayerSolvent(self, new_value: str) -> None:
+        self._layers_logic.set_solvent_at_current_index(new_value)
         self.layersTableChanged.emit()
 
     # Actions

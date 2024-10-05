@@ -105,7 +105,7 @@ EaElements.GroupColumn {
         }
 
         onCurrentIndexChanged: {
-            Globals.BackendWrapper.sampleCurrentLayersIndex = surfactantView.currentIndex
+            Globals.BackendWrapper.sampleSetCurrentLayerIndex(surfactantView.currentIndex)
         }
     }
     /* NOT FUNCTIONAL YET

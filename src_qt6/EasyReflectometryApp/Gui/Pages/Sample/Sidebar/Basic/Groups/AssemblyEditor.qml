@@ -10,11 +10,11 @@ EaElements.GroupBox {
     title: qsTr("Layer editor: " + Globals.BackendWrapper.sampleCurrentAssemblyName)
     collapsible: true
     collapsed: false
+    property string currentAssemblyType: Globals.BackendWrapper.sampleCurrentAssemblyType
 
     EaElements.GroupColumn {
 
         Assemblies.MultiLayer{
-            id: multiLayerEditor
             visible: (currentAssemblyType == 'Multi-layer') ? true : false
         }
 
