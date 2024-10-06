@@ -57,12 +57,16 @@ EaElements.GroupColumn {
             }
 
             EaComponents.TableViewComboBox{
+                property string currentAssemblyName: Globals.BackendWrapper.sampleCurrentAssemblyName
                 horizontalAlignment: Text.AlignLeft
                 model: Globals.BackendWrapper.sampleMaterialNames
                 onActivated: {
                     Globals.BackendWrapper.sampleSetCurrentLayerMaterial(currentIndex)
                 }
                 onModelChanged: {
+                    currentIndex = indexOfValue(Globals.BackendWrapper.sampleLayers[index].material)
+                }
+                onCurrentAssemblyNameChanged: {
                     currentIndex = indexOfValue(Globals.BackendWrapper.sampleLayers[index].material)
                 }
                 Component.onCompleted: {

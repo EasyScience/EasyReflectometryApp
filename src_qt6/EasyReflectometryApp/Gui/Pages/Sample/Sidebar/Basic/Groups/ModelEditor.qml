@@ -69,7 +69,6 @@ EaElements.GroupBox {
                     model: ["Multi-layer", "Repeating Multi-layer", "Surfactant Layer"]
                     onActivated: {
                         Globals.BackendWrapper.sampleSetCurrentAssemblyType(currentValue)
-//                        currentAssemblyType = currentValue
                     }
                     Component.onCompleted: {
                         currentIndex = indexOfValue(Globals.BackendWrapper.sampleAssemblies[index].type)

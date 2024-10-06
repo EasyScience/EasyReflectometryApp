@@ -122,11 +122,15 @@ QtObject {
         },
         {
             'label': 'label 2',
+            'type': 'Multi-layer'
+        },
+        {
+            'label': 'label 3',
             'type': 'Repeating Multi-layer'
 
         },
         {
-            'label': 'label 3',
+            'label': 'label 4',
             'type': 'Surfactant Layer'
         },
     ]

@@ -36,16 +36,17 @@ class Sample(QObject):
         self.connect_logic()
     
     def connect_logic(self) -> None:
+        self.modelsIndexChanged.connect(self._assemblies_logic.set_model_index)
+        self.modelsIndexChanged.connect(self._layers_logic.set_model_index)
+        self.assembliesIndexChanged.connect(self._layers_logic.set_assembly_index)
+
         self.modelsIndexChanged.connect(self.modelsChanged)
         self.modelsTableChanged.connect(self.modelsChanged)
 
         self.modelsIndexChanged.connect(self.assembliesChanged)
-        self.modelsIndexChanged.connect(self._assemblies_logic.set_model_index)
         self.assembliesIndexChanged.connect(self.assembliesChanged)
 
-        self.modelsIndexChanged.connect(self._layers_logic.set_model_index)
         self.modelsIndexChanged.connect(self.layersChanged)
-        self.assembliesIndexChanged.connect(self._layers_logic.set_assembly_index)
         self.assembliesIndexChanged.connect(self.layersChanged)
         self.layersTableChanged.connect(self.layersChanged)
 

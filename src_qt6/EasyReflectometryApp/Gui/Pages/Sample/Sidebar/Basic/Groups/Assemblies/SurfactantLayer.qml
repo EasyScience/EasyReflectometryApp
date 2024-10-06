@@ -8,6 +8,7 @@ import EasyApp.Gui.Components as EaComponents
 import Gui.Globals as Globals
 
 EaElements.GroupColumn {
+    
     EaComponents.TableView {
         id: surfactantView
         tallRows: false
@@ -90,12 +91,16 @@ EaElements.GroupColumn {
             }
 
             EaComponents.TableViewComboBox{
+                property string currentAssemblyName: Globals.BackendWrapper.sampleCurrentAssemblyName
                 horizontalAlignment: Text.AlignLeft
                 model: Globals.BackendWrapper.sampleMaterialNames
                 onActivated: {
                     Globals.BackendWrapper.sampleSetCurrentLayerSolvent(currentIndex)
                 }
                 onModelChanged: {
+                    currentIndex = indexOfValue(Globals.BackendWrapper.sampleLayers[index].solvent)
+                }
+                onCurrentAssemblyNameChanged: {
                     currentIndex = indexOfValue(Globals.BackendWrapper.sampleLayers[index].solvent)
                 }
                 Component.onCompleted: {
