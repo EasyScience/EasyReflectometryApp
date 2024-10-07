@@ -52,11 +52,11 @@ class Material:
     def set_name_at_current_index(self, new_value: str) -> None:
         self._materials[self._material_index].name = new_value
 
-    def set_sld_at_current_index(self, new_value: str) -> None:
-        self._materials[self._material_index].sld.value = float(new_value)
+    def set_sld_at_current_index(self, new_value: float) -> None:
+        self._materials[self._material_index].sld.value = new_value
 
-    def set_isld_at_current_index(self, new_value: str) -> None:
-        self._materials[self._material_index].isld.value = float(new_value)
+    def set_isld_at_current_index(self, new_value: float) -> None:
+        self._materials[self._material_index].isld.value = new_value
 
 def _from_materials_collection_to_list_of_dicts(materials_collection: MaterialCollection) -> list[dict[str, str]]:
     materials_list = []

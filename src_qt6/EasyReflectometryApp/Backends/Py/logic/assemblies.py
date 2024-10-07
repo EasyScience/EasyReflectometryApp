@@ -98,21 +98,18 @@ class Assemblies:
         self._project_lib._models[self._model_index].sample._disable_changes_to_outermost_layers()
 
     # Only for repeating multilayer
-    def set_repeated_layer_reptitions(self, new_value: str) -> None:
+    def set_repeated_layer_reptitions(self, new_value: int) -> None:
         if isinstance(self._assemblies[self._assembly_index], RepeatingMultilayer):
-            self._assemblies[self._assembly_index].repetitions.value = int(new_value)
-        return
+            self._assemblies[self._assembly_index].repetitions.value = new_value
 
     # # Only for surfactant layer
+    def set_constrain_apm(self, new_value: str) -> None:
+        if isinstance(self._assemblies[self._assembly_index], SurfactantLayer):
+            self._assemblies[self._assembly_index].constrain_area_per_molecule = new_value
 
-    # def set_constrain_apm(self, new_value: str) -> None:
-    #     if isinstance(self._assemblies[self._assembly_index], SurfactantLayer):
-    #         self._assemblies[self._assembly_index].apm_enabled.value = bool(new_value)
-        
-    # @property
-    # def set_conformal_roughness(self, new_value: str) -> None:
-    #     if isinstance(self._assemblies[self._assembly_index], SurfactantLayer):
-    #         self._assemblies[self._assembly_index].roughness_enabled.value = bool(new_value)
+    def set_conformal_roughness(self, new_value: str) -> None:
+        if isinstance(self._assemblies[self._assembly_index], SurfactantLayer):
+            self._assemblies[self._assembly_index].conformal_roughness = new_value
 
 
 def _from_assemblies_collection_to_list_of_dicts(assemblies_collection: Sample) -> list[dict[str, str]]:
@@ -123,17 +120,15 @@ def _from_assemblies_collection_to_list_of_dicts(assemblies_collection: Sample) 
                 'label': assembly.name,
                 'type': assembly.type,
                 'repetetions': 1,
-#                'thickness_enabled': 'False',
-#                'roughness_enabled': 'False',   
-#                'apm_enabled': 'False',
+                'constrain_apm': 'False',
+                'conformal_roughness': 'False',   
             }
         )
         if isinstance(assembly, RepeatingMultilayer):
             assemblies_list[-1]['repetetions'] = assembly.repetitions
 
-#        if isinstance(assembly, SurfactantLayer):
-#            assemblies_list[-1]['thickness_enabled'] = assembly.thickness_enabled 
-#            assemblies_list[-1]['roughness_enabled'] = assembly.roughness_enabled
-#            assemblies_list[-1]['apm_enabled'] = assembly.apm_enabled
+        if isinstance(assembly, SurfactantLayer):
+            assemblies_list[-1]['constrain_apm'] = assembly.constrain_area_per_molecule 
+            assemblies_list[-1]['conformal_roughness'] = assembly.conformal_roughness
 
     return assemblies_list

@@ -74,13 +74,13 @@ class Sample(QObject):
         self._material_logic.set_name_at_current_index(new_value)
         self.materialsChanged.emit()
 
-    @Slot(str)
-    def setCurrentMaterialSld(self, new_value: str) -> None:
+    @Slot(float)
+    def setCurrentMaterialSld(self, new_value: float) -> None:
         self._material_logic.set_sld_at_current_index(new_value)
         self.materialsChanged.emit()
 
-    @Slot(str)
-    def setCurrentMaterialISld(self, new_value: str) -> None:
+    @Slot(float)
+    def setCurrentMaterialISld(self, new_value: float) -> None:
         self._material_logic.set_isld_at_current_index(new_value)
         self.materialsChanged.emit()
 
@@ -187,10 +187,6 @@ class Sample(QObject):
     def currentAssemblyType(self) -> str:
         return self._assemblies_logic.type_at_current_index
 
-    @Property(int, notify=assembliesUpdate)
-    def repeatedLayerReptitions(self) -> int:
-        return self._assemblies_logic.repeated_layer_reptitions
-
     # Setters
     @Slot(str)
     def setCurrentAssemblyIndex(self, new_value: str) -> None:
@@ -207,17 +203,17 @@ class Sample(QObject):
         self._assemblies_logic.set_type_at_current_index(new_value)
         self.assembliesTableChanged.emit()
     
-    @Slot(str)
-    def setCurrentAssemblyRepeatedLayerReptitions(self, new_value: str) -> None:
+    @Slot(int)
+    def setCurrentAssemblyRepeatedLayerReptitions(self, new_value: int) -> None:
         self._assemblies_logic.set_repeated_layer_reptitions(new_value)
 
-    # @Slot(str)
-    # def setCurrentAssemblyConstrainAPM(self, new_value: str) -> None:
-    #     self._assemblies_logic.set_constrain_apm(new_value)
+    @Slot(bool)
+    def setCurrentAssemblyConstrainAPM(self, new_value: bool) -> None:
+        self._assemblies_logic.set_constrain_apm(new_value)
 
-    # @Slot(str)
-    # def setCurrentAssemblyConformalRoughness(self, new_value: str) -> None:
-    #     self._assemblies_logic.set_conformal_roughness(new_value)
+    @Slot(bool)
+    def setCurrentAssemblyConformalRoughness(self, new_value: bool) -> None:
+        self._assemblies_logic.set_conformal_roughness(new_value)
 
     # Actions
     @Slot(str)
@@ -273,33 +269,38 @@ class Sample(QObject):
         self._layers_logic.set_name_at_current_index(new_value)
         self.layersTableChanged.emit()
 
-    @Slot(str)
-    def setCurrentLayerMaterial(self, new_value: str) -> None:
+    @Slot(int)
+    def setCurrentLayerMaterial(self, new_value: int) -> None:
         self._layers_logic.set_material_at_current_index(new_value)
         self.layersTableChanged.emit()
 
-    @Slot(str)
-    def setCurrentLayerSolvent(self, new_value: str) -> None:
+    @Slot(int)
+    def setCurrentLayerSolvent(self, new_value: int) -> None:
         self._layers_logic.set_solvent_at_current_index(new_value)
         self.layersTableChanged.emit()
 
-    @Slot(str)
-    def setCurrentLayerThickness(self, new_value: str) -> None:
+    @Slot(float)
+    def setCurrentLayerThickness(self, new_value: float) -> None:
         self._layers_logic.set_thickness_at_current_index(new_value)
         self.layersTableChanged.emit()
 
-    @Slot(str)
-    def setCurrentLayerRoughness(self, new_value: str) -> None:
+    @Slot(float)
+    def setCurrentLayerRoughness(self, new_value: float) -> None:
         self._layers_logic.set_roughness_at_current_index(new_value)
         self.layersTableChanged.emit()
 
     @Slot(str)
-    def setCurrentLayerAPM(self, new_value: str) -> None:
+    def setCurrentLayerFormula(self, new_value: str) -> None:
+        self._layers_logic.set_formula(new_value)
+        self.layersTableChanged.emit()
+
+    @Slot(float)
+    def setCurrentLayerAPM(self, new_value: float) -> None:
         self._layers_logic.set_apm_at_current_index(new_value)
         self.layersTableChanged.emit()
 
-    @Slot(str)
-    def setCurrentLayerSolvation(self, new_value: str) -> None:
+    @Slot(float)
+    def setCurrentLayerSolvation(self, new_value: float) -> None:
         self._layers_logic.set_solvation_at_current_index(new_value)
         self.layersTableChanged.emit()
 

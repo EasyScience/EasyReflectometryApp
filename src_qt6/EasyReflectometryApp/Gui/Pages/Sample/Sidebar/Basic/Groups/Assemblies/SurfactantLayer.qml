@@ -113,7 +113,6 @@ EaElements.GroupColumn {
             Globals.BackendWrapper.sampleSetCurrentLayerIndex(surfactantView.currentIndex)
         }
     }
-    /* NOT FUNCTIONAL YET
     Row {
         EaElements.CheckBox {
             checked: false
@@ -130,6 +129,7 @@ EaElements.GroupColumn {
             onCheckedChanged: Globals.BackendWrapper.sampleSetCurrentAssemblyConformalRoughness(checked)
         }
     }
+    /* NOT FUNCTIONAL YET
 
     Row {
         EaElements.CheckBox {

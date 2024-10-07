@@ -70,23 +70,27 @@ class Layers:
     def set_name_at_current_index(self, new_value: str) -> None:
         self._layers[self._layer_index].name = new_value
 
-    def set_thickness_at_current_index(self, new_value: str) -> None:
-        self._layers[self._layer_index].thickness.value = float(new_value)
+    def set_thickness_at_current_index(self, new_value: float) -> None:
+        self._layers[self._layer_index].thickness.value = new_value
 
-    def set_roughness_at_current_index(self, new_value: str) -> None:
-        self._layers[self._layer_index].roughness.value = float(new_value)
+    def set_roughness_at_current_index(self, new_value: float) -> None:
+        self._layers[self._layer_index].roughness.value = new_value
 
-    def set_material_at_current_index(self, new_value: str) -> None:
-        self._layers[self._layer_index].material = self._project_lib._materials[int(new_value)]
+    def set_material_at_current_index(self, new_value: int) -> None:
+        self._layers[self._layer_index].material = self._project_lib._materials[new_value]
 
-    def set_solvent_at_current_index(self, new_value: str) -> None:
-        self._layers[self._layer_index].solvent = self._project_lib._materials[int(new_value)]
+    def set_solvent_at_current_index(self, new_value: int) -> None:
+        self._layers[self._layer_index].solvent = self._project_lib._materials[new_value]
 
-    def set_apm_at_current_index(self, new_value: str) -> None:
-        self._layers[self._layer_index].area_per_molecule = float(new_value)
+    def set_apm_at_current_index(self, new_value: float) -> None:
+        self._layers[self._layer_index].area_per_molecule = new_value
 
-    def set_solvation_at_current_index(self, new_value: str) -> None:
-        self._layers[self._layer_index].solvent_fraction = float(new_value)
+    def set_solvation_at_current_index(self, new_value: float) -> None:
+        self._layers[self._layer_index].solvent_fraction = new_value
+
+    def set_formula(self, new_value: str) -> None:
+        self._layers[self._layer_index].molecular_formula = new_value
+
 
 def _from_layers_collection_to_list_of_dicts(layers_collection: LayerCollection) -> list[dict[str, str]]:
     layers_list = []
@@ -95,14 +99,14 @@ def _from_layers_collection_to_list_of_dicts(layers_collection: LayerCollection)
             {
                 'label': layer.name,
                 'roughness': str(layer.roughness.value),
+                'roughness_enabled': str(layer.roughness.enabled),
                 'thickness': str(layer.thickness.value),
+                'thickness_enabled': str(layer.thickness.enabled),
                 'material': layer.material.name,
                 'formula': 'formula',
                 'apm': '0.1',
                 'solvent': 'solvent',
                 'solvation': '0.2',
-                'thickness_enabled': 'True',
-                'roughness_enabled': 'True',   
                 'apm_enabled': 'True',
 
             }
