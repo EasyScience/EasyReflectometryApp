@@ -98,34 +98,18 @@ class Assemblies:
         self._project_lib._models[self._model_index].sample._disable_changes_to_outermost_layers()
 
     # Only for repeating multilayer
-    @property
-    def repeated_layer_reptitions(self) -> int:
-        if isinstance(self._assemblies[self._assembly_index], RepeatingMultilayer):
-            return int(self._assemblies[self._assembly_index].repetitions.value)
-        return 1
-    
     def set_repeated_layer_reptitions(self, new_value: str) -> None:
         if isinstance(self._assemblies[self._assembly_index], RepeatingMultilayer):
             self._assemblies[self._assembly_index].repetitions.value = int(new_value)
         return
 
     # # Only for surfactant layer
-    # @property
-    # def constrain_apm(self) -> bool:
-    #     if isinstance(self._assemblies[self._assembly_index], SurfactantLayer):
-    #         return self._assemblies[self._assembly_index].apm_enabled
-    #     return False
 
     # def set_constrain_apm(self, new_value: str) -> None:
     #     if isinstance(self._assemblies[self._assembly_index], SurfactantLayer):
     #         self._assemblies[self._assembly_index].apm_enabled.value = bool(new_value)
         
     # @property
-    # def conformal_roughness(self) -> bool:
-    #     if isinstance(self._assemblies[self._assembly_index], SurfactantLayer):
-    #         return self._assemblies[self._assembly_index].apm_enabled
-    #     return False
-
     # def set_conformal_roughness(self, new_value: str) -> None:
     #     if isinstance(self._assemblies[self._assembly_index], SurfactantLayer):
     #         self._assemblies[self._assembly_index].roughness_enabled.value = bool(new_value)

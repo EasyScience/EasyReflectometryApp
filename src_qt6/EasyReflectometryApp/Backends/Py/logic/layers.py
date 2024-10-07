@@ -70,11 +70,23 @@ class Layers:
     def set_name_at_current_index(self, new_value: str) -> None:
         self._layers[self._layer_index].name = new_value
 
+    def set_thickness_at_current_index(self, new_value: str) -> None:
+        self._layers[self._layer_index].thickness.value = float(new_value)
+
+    def set_roughness_at_current_index(self, new_value: str) -> None:
+        self._layers[self._layer_index].roughness.value = float(new_value)
+
     def set_material_at_current_index(self, new_value: str) -> None:
         self._layers[self._layer_index].material = self._project_lib._materials[int(new_value)]
 
     def set_solvent_at_current_index(self, new_value: str) -> None:
         self._layers[self._layer_index].solvent = self._project_lib._materials[int(new_value)]
+
+    def set_apm_at_current_index(self, new_value: str) -> None:
+        self._layers[self._layer_index].area_per_molecule = float(new_value)
+
+    def set_solvation_at_current_index(self, new_value: str) -> None:
+        self._layers[self._layer_index].solvent_fraction = float(new_value)
 
 def _from_layers_collection_to_list_of_dicts(layers_collection: LayerCollection) -> list[dict[str, str]]:
     layers_list = []
@@ -89,9 +101,9 @@ def _from_layers_collection_to_list_of_dicts(layers_collection: LayerCollection)
                 'apm': '0.1',
                 'solvent': 'solvent',
                 'solvation': '0.2',
-                'thickness_enabled': 'False',
-                'roughness_enabled': 'False',   
-                'apm_enabled': 'False',
+                'thickness_enabled': 'True',
+                'roughness_enabled': 'True',   
+                'apm_enabled': 'True',
 
             }
         )
@@ -100,8 +112,8 @@ def _from_layers_collection_to_list_of_dicts(layers_collection: LayerCollection)
             layers_list[-1]['apm'] = str(layer.area_per_molecule)
             layers_list[-1]['solvent'] = layer.solvent.name
             layers_list[-1]['solvation'] = str(layer.solvent_fraction)
-            layers_list[-1]['thickness_enabled'] = ''
-            layers_list[-1]['roughness_enabled'] = ''
-            layers_list[-1]['apm_enabled'] = ''
+            # layers_list[-1]['thickness_enabled'] = ''
+            # layers_list[-1]['roughness_enabled'] = ''
+            # layers_list[-1]['apm_enabled'] = ''
 
     return layers_list

@@ -123,12 +123,10 @@ QtObject {
     function sampleMoveSelectedAssemblyUp() { activeBackend.sample.moveSelectedAssemblyUp() }
     function sampleMoveSelectedAssemblyDown() { activeBackend.sample.moveSelectedAssemblyDown() }
 
-    readonly property bool sampleConstrainAPM: activeBackend.sample.constrainAPM
-    function sampleSetConstrainAPM(value) { activeBackend.sample.setConstrainAPM(value) }
-    readonly property bool sampleConformalRoughness: activeBackend.sample.conformalRoughness
-    function sampleSetConformalRoughness(value) { activeBackend.sample.setConformalRoughness(value) }
-    readonly property int sampleRepeatedLayerReptitions: activeBackend.sample.repeatedLayerReptitions
-    function sampleSetRepeatedLayerReptitions(value) { activeBackend.sample.setRepeatedLayerReptitions(value) }
+    // Assembly specific methods
+    function sampleSetCurrentAssemblyConstrainAPM(value) { activeBackend.sample.setCurrentAssemblyConstrainAPM(value) }
+    function sampleSetCurrentAssemblyConformalRoughness(value) { activeBackend.sample.setCurrentAssemblyConformalRoughness(value) }
+    function sampleSetCurrentAssemblyRepeatedLayerReptitions(value) { activeBackend.sample.setCurrentAssemblyRepeatedLayerReptitions(value) }
 
     // Layer
     readonly property var sampleLayers: activeBackend.sample.layers

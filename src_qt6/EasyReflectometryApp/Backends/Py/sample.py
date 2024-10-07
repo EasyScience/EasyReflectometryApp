@@ -8,7 +8,6 @@ from .logic.material import Material
 from .logic.models import Models
 from .logic.assemblies import Assemblies
 from .logic.layers import Layers
-from .logic.sample import Sample as SampleLogic
 
 class Sample(QObject):
     materialsChanged = Signal()
@@ -28,7 +27,6 @@ class Sample(QObject):
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
         self._material_logic = Material(project_lib)
-        self._sample_logic = SampleLogic(project_lib)
         self._models_logic = Models(project_lib)
         self._assemblies_logic = Assemblies(project_lib)
         self._layers_logic = Layers(project_lib)
@@ -49,27 +47,6 @@ class Sample(QObject):
         self.modelsIndexChanged.connect(self.layersChanged)
         self.assembliesIndexChanged.connect(self.layersChanged)
         self.layersTableChanged.connect(self.layersChanged)
-
-    # # #
-    # Sample
-    # # #
-    @Property(bool, notify=assembliesUpdate)
-    def constrainAPM(self) -> bool:
-        return self._sample_logic.constrain_apm
-    
-    @Slot(str)
-    def setConstrainAPM(self, new_value: str) -> None:
-        self._sample_logic.set_constrain_apm(new_value)
-
-    @Property(bool, notify=assembliesUpdate)
-    def conformalRoughness(self) -> bool:
-        return self._sample_logic.conformal_roughness
-    
-    @Slot(str)
-    def setConformalRoughness(self, new_value: str) -> None:
-        self._sample_logic.set_conformal_roughness(new_value)
-
-
 
     # # #
     # Materials
@@ -231,8 +208,16 @@ class Sample(QObject):
         self.assembliesTableChanged.emit()
     
     @Slot(str)
-    def setRepeatedLayerReptitions(self, new_value: str) -> None:
+    def setCurrentAssemblyRepeatedLayerReptitions(self, new_value: str) -> None:
         self._assemblies_logic.set_repeated_layer_reptitions(new_value)
+
+    # @Slot(str)
+    # def setCurrentAssemblyConstrainAPM(self, new_value: str) -> None:
+    #     self._assemblies_logic.set_constrain_apm(new_value)
+
+    # @Slot(str)
+    # def setCurrentAssemblyConformalRoughness(self, new_value: str) -> None:
+    #     self._assemblies_logic.set_conformal_roughness(new_value)
 
     # Actions
     @Slot(str)
@@ -296,6 +281,26 @@ class Sample(QObject):
     @Slot(str)
     def setCurrentLayerSolvent(self, new_value: str) -> None:
         self._layers_logic.set_solvent_at_current_index(new_value)
+        self.layersTableChanged.emit()
+
+    @Slot(str)
+    def setCurrentLayerThickness(self, new_value: str) -> None:
+        self._layers_logic.set_thickness_at_current_index(new_value)
+        self.layersTableChanged.emit()
+
+    @Slot(str)
+    def setCurrentLayerRoughness(self, new_value: str) -> None:
+        self._layers_logic.set_roughness_at_current_index(new_value)
+        self.layersTableChanged.emit()
+
+    @Slot(str)
+    def setCurrentLayerAPM(self, new_value: str) -> None:
+        self._layers_logic.set_apm_at_current_index(new_value)
+        self.layersTableChanged.emit()
+
+    @Slot(str)
+    def setCurrentLayerSolvation(self, new_value: str) -> None:
+        self._layers_logic.set_solvation_at_current_index(new_value)
         self.layersTableChanged.emit()
 
     # Actions

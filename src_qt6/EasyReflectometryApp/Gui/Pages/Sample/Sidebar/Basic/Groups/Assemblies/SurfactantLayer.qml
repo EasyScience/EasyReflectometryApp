@@ -80,14 +80,14 @@ EaElements.GroupColumn {
             EaComponents.TableViewTextInput {
                 horizontalAlignment: Text.AlignHCenter
                 text: (isNaN(Globals.BackendWrapper.sampleLayers[index].solvation)) ? '--' : Number(Globals.BackendWrapper.sampleLayers[index].solvation).toFixed(2)
-                onEditingFinished: Globals.BackendWrapper.sampleSetCurrentLayersSolvation(text)
+                onEditingFinished: Globals.BackendWrapper.sampleSetCurrentLayerSolvation(text)
             }
 
             EaComponents.TableViewTextInput {
                 horizontalAlignment: Text.AlignHCenter
                 enabled: Globals.BackendWrapper.sampleLayers[index].apm_enabled === "True"
                 text: (isNaN(Globals.BackendWrapper.sampleLayers[index].apm)) ? '--' : Number(Globals.BackendWrapper.sampleLayers[index].apm).toFixed(2)
-                onEditingFinished: Globals.BackendWrapper.sampleSetCurrentItemApm(text)
+                onEditingFinished: Globals.BackendWrapper.sampleSetCurrentLayerAPM(text)
             }
 
             EaComponents.TableViewComboBox{
@@ -120,14 +120,14 @@ EaElements.GroupColumn {
             id: apm_check
             text: qsTr("Area-per-molecule")
             ToolTip.text: qsTr("Checking this box will ensure that the area-per-molecule of the head and tail layers is the same")
-            onCheckedChanged: Globals.BackendWrapper.sampleConstrainApm = checked
+            onCheckedChanged: Globals.BackendWrapper.sampleSetCurrentAssemblyConstrainAPM(checked)
         }
         EaElements.CheckBox {
             checked: false
             id: conformal
             text: qsTr("Conformal roughness")
             ToolTip.text: qsTr("Checking this box will ensure that the interfacial roughness is the same for all interfaces of the surfactant")
-            onCheckedChanged: Globals.BackendWrapper.sampleConformalRoughness = checked
+            onCheckedChanged: Globals.BackendWrapper.sampleSetCurrentAssemblyConformalRoughness(checked)
         }
     }
 
