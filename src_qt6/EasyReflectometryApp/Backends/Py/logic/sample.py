@@ -19,9 +19,9 @@ class Sample:
     def set_conformal_roughness(self, new_value: str) -> None:
         print(f"Set set_conformal_roughness to {new_value}")
 
-    @property
-    def repeated_layer_reptitions(self) -> str:
-        return "Should return the constrain repeated_layer_reptitions"
+    # @property
+    # def repeated_layer_reptitions(self) -> str:
+    #     return "Should return the constrain repeated_layer_reptitions"
     
-    def set_repeated_layer_reptitions(self, new_value: str) -> None:
-        print(f"Set set_repeated_layer_reptitions to {new_value}")
+    # def set_repeated_layer_reptitions(self, new_value: str) -> None:
+    #     print(f"Set set_repeated_layer_reptitions to {new_value}")

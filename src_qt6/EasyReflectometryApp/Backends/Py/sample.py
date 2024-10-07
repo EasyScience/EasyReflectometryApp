@@ -69,13 +69,7 @@ class Sample(QObject):
     def setConformalRoughness(self, new_value: str) -> None:
         self._sample_logic.set_conformal_roughness(new_value)
 
-    @Property(int, notify=assembliesUpdate)
-    def repeatedLayerReptitions(self) -> int:
-        return self._sample_logic.repeated_layer_reptitions
-    
-    @Slot(str)
-    def setRepeatedLayerReptitions(self, new_value: str) -> None:
-        self._sample_logic.set_repeated_layer_reptitions(new_value)
+
 
     # # #
     # Materials
@@ -216,6 +210,10 @@ class Sample(QObject):
     def currentAssemblyType(self) -> str:
         return self._assemblies_logic.type_at_current_index
 
+    @Property(int, notify=assembliesUpdate)
+    def repeatedLayerReptitions(self) -> int:
+        return self._assemblies_logic.repeated_layer_reptitions
+
     # Setters
     @Slot(str)
     def setCurrentAssemblyIndex(self, new_value: str) -> None:
@@ -231,6 +229,10 @@ class Sample(QObject):
     def setCurrentAssemblyType(self, new_value: str) -> None:
         self._assemblies_logic.set_type_at_current_index(new_value)
         self.assembliesTableChanged.emit()
+    
+    @Slot(str)
+    def setRepeatedLayerReptitions(self, new_value: str) -> None:
+        self._assemblies_logic.set_repeated_layer_reptitions(new_value)
 
     # Actions
     @Slot(str)
