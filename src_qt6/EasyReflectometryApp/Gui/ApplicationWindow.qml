@@ -32,16 +32,16 @@ EaComponents.ApplicationWindow {
             onClicked: {
                 Globals.BackendWrapper.projectReset()
                 Globals.References.applicationWindow.appBarCentralTabs.projectButton.toggle()
-                if (Globals.References.applicationWindow.appBarCentralTabs.sampleButton != null) {
+                if (Globals.References.applicationWindow.appBarCentralTabs.sampleButton !== null) {
                     Globals.References.applicationWindow.appBarCentralTabs.sampleButton.enabled = false
                 }
-                if (Globals.References.applicationWindow.appBarCentralTabs.experimentButton != null) {
+                if (Globals.References.applicationWindow.appBarCentralTabs.experimentButton !== null) {
                     Globals.References.applicationWindow.appBarCentralTabs.experimentButton.enabled = false
                 }
-                if (Globals.References.applicationWindow.appBarCentralTabs.analysisButton != null) {
+                if (Globals.References.applicationWindow.appBarCentralTabs.analysisButton !== null) {
                     Globals.References.applicationWindow.appBarCentralTabs.analysisButton.enabled = false
                 }
-                if (Globals.References.applicationWindow.appBarCentralTabs.summaryButton != null) {
+                if (Globals.References.applicationWindow.appBarCentralTabs.summaryButton !== null) {
                     Globals.References.applicationWindow.appBarCentralTabs.summaryButton.enabled = false
                 }
             }

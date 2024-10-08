@@ -14,7 +14,7 @@ from uncertainties import ufloat
 
 #from PySide6.QtCore import Qt, QObject, QCoreApplication, QUrl, Signal, Slot, Property
 #from PySide6.QtGui import QStyleHints
-#from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication
 
 #from EasyApp.Logic.Logging import console
 
@@ -224,12 +224,12 @@ class IO:
 #         #return formattedJsonStr
 
 
-# class Application(QApplication):  # QGuiApplication crashes when using in combination with QtCharts
-#     def __init__(self, sysArgv):
-#         super(Application, self).__init__(sysArgv)
-#         self.setApplicationName('EasyDiffraction')  # NEED FIX
-#         self.setOrganizationName('EasyScience')
-#         self.setOrganizationDomain('easyscience.software')
+class Application(QApplication):  # QGuiApplication crashes when using in combination with QtCharts
+    def __init__(self, sysArgv):
+        super(Application, self).__init__(sysArgv)
+        self.setApplicationName('EasyReflectometry')
+        self.setOrganizationName('EasyScience')
+        self.setOrganizationDomain('easyscience.software')
 
 
 # class ColorSchemeHandler(QObject):

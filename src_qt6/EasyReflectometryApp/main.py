@@ -7,13 +7,13 @@ import sys
 from pathlib import Path
 
 from PySide6.QtCore import qInstallMessageHandler
-from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQml import qmlRegisterSingletonType
 
 from EasyApp.Logic.Logging import console
 
 from Backends.Py import PyBackend
+from Backends.Py.helpers import Application
 
 CURRENT_DIR = Path(__file__).parent                                 # path to qml components of the current project
 EASYAPP_DIR = CURRENT_DIR / '..' / '..' / '..' / 'EasyApp' / 'src'  # path to qml components of the easyapp module
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     qInstallMessageHandler(console.qmlMessageHandler)
     console.debug('Custom Qt message handler defined')
 
-    app = QGuiApplication(sys.argv)
+    app = Application(sys.argv)  # Create the QApplication (Not QGuiApplication)
     console.debug(f'Qt Application created {app}')
 
     engine = QQmlApplicationEngine()

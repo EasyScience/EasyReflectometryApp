@@ -23,8 +23,8 @@ Rectangle {
 
     }
 
-//    EaCharts.QtCharts1dMeasVsCalc {
-//        id: chartView
+    EaCharts.QtCharts1dMeasVsCalc {
+        id: chartView
 
         // property var experimentDataBlocksNoMeas: Globals.Proxies.main.experiment.dataBlocksNoMeas
         // onExperimentDataBlocksNoMeasChanged: {
@@ -181,7 +181,7 @@ Rectangle {
         //                                                       chartView.bkgSerie)
         // }
 
-//    }
+    }
 
     Timer {
         id: saveImgTimer
