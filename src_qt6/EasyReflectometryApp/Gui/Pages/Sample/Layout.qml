@@ -15,15 +15,18 @@ EaComponents.ContentPage {
                      '' :
                      qsTr('No project defined')
 
-    mainView: EaComponents.MainContent {
-        tabs: [
-            EaElements.TabButton { text: qsTr('Model view') }
-        ]
+   mainView: EaComponents.MainContent {
+       tabs: [
+           EaElements.TabButton { text: qsTr('Model view') }
+       ]
 
-//        items: [
-//            Loader { source: 'MainArea/ModelView.qml' }
-//        ]
-    }
+        items: [
+            Loader {
+                source: `MainContent/ModelView2.qml`
+//                onStatusChanged: if (status === Loader.Ready) console.debug(`${source} loaded`)
+            }
+        ]
+   }
 
     sideBar: EaComponents.SideBar {
         tabs: [

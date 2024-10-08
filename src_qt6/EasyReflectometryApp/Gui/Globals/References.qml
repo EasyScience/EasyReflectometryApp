@@ -28,11 +28,15 @@ QtObject {
                 'basic': {
                     'popups': {
                         'openJsonFileDialog': null,
-                        'projectDescriptionDialog': null
+                        'projectDescriptionDialog': null,
                     }
                 }
             }
         }
     }
 
+    // Populated in PagPes/...
+    readonly property var plotting: {
+        'graph1d': null,
+    }
 }

@@ -21,7 +21,7 @@ EaComponents.ContentPage {
         ]
 
         items: [
-            Loader { source: 'MainArea/Description.qml' }
+            Loader { source: 'MainContent/Description.qml' }
         ]
     }
 

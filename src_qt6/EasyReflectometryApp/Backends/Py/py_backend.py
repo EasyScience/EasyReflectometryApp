@@ -4,6 +4,7 @@ from EasyApp.Logic.Logging import LoggerLevelHandler
 from easyreflectometry import Project as ProjectLib
 from. analysis import Analysis
 from .home import Home
+from .plotting_1d import Plotting1d
 from .project import Project
 from .sample import Sample
 from .status import Status
@@ -17,13 +18,16 @@ class PyBackend(QObject):
         self._project_lib = ProjectLib()
         self._project_lib.default_model()
 
-        # Page specific backend parts and Status bar
+        # Page and Status bar backend parts 
         self._home = Home()
         self._project = Project(self._project_lib)
         self._sample = Sample(self._project_lib)
         self._analysis = Analysis(self._project_lib)
         self._report = Report(self._project_lib)
         self._status = Status(self._project_lib)
+
+        # Plotting backend part
+        self._plotting = Plotting1d(self._project_lib)
 
         self._logger = LoggerLevelHandler(self)
 
