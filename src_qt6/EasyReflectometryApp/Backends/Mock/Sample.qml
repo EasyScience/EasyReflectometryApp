@@ -39,9 +39,7 @@ QtObject {
     function setCurrentMaterialISld(value) {
         console.debug(`setCurrentMaterialISld ${value}`)
     }
-    function setRepeatedLayerReptitions(value) {
-        console.debug(`setRepeatedLayerReptitions ${value}`)
-    }
+
 
     // Table functions
     function removeMaterial(value) {
@@ -162,6 +160,21 @@ QtObject {
     }
     function moveSelectedAssemblyDown() {
         console.debug(`moveSelectedAssemblyDown ${currentAssemblyIndex}`)
+    }
+
+    // Assembly specific
+    property int currentAssemblyRepeatedLayerReptitions: 3
+
+    function setCurrentAssemblyRepeatedLayerReptitions(value) {
+        console.debug(`setCurrentAssemblyRepeatedLayerReptitions ${value}`)
+    }
+
+    function setCurrentAssemblyConstrainAPM(value) {
+        console.debug(`setCurrentAssemblyConstrainAPM ${value}`)
+    }
+
+    function setCurrentAssemblyConformalRoughness(value) {
+        console.debug(`setCurrentAssemblyConformalRoughness ${value}`)
     }
 
     // LAYERS

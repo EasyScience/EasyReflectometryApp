@@ -124,6 +124,7 @@ QtObject {
     function sampleMoveSelectedAssemblyDown() { activeBackend.sample.moveSelectedAssemblyDown() }
 
     // Assembly specific methods
+    readonly property int sampleCurrentAssemblyRepeatedLayerReptitions: activeBackend.sample.currentAssemblyRepeatedLayerReptitions
     function sampleSetCurrentAssemblyConstrainAPM(value) { activeBackend.sample.setCurrentAssemblyConstrainAPM(value) }
     function sampleSetCurrentAssemblyConformalRoughness(value) { activeBackend.sample.setCurrentAssemblyConformalRoughness(value) }
     function sampleSetCurrentAssemblyRepeatedLayerReptitions(value) { activeBackend.sample.setCurrentAssemblyRepeatedLayerReptitions(value) }
@@ -160,5 +161,11 @@ QtObject {
     ///////////////
     readonly property bool summaryCreated: activeBackend.report.created
     readonly property string summaryAsHtml: activeBackend.report.asHtml
+
+    ///////////////
+    // Plotting
+    ///////////////
+
+     function plottingSetQtChartsSerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsSerieRef(value1, value2, value3) }
 
 }

@@ -205,6 +205,11 @@ class Sample(QObject):
         self._assemblies_logic.set_type_at_current_index(new_value)
         self.assembliesTableChanged.emit()
     
+    # Assembly specific
+    @Property(str, notify=assembliesChange)
+    def currentAssemblyRepeatedLayerReptitions(self) -> str:
+        return self._assemblies_logic.repetitions_at_current_index
+
     @Slot(int)
     def setCurrentAssemblyRepeatedLayerReptitions(self, new_value: int) -> None:
         self._assemblies_logic.set_repeated_layer_reptitions(new_value)
