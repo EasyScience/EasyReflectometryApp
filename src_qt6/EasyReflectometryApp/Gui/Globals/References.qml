@@ -32,10 +32,16 @@ QtObject {
                     }
                 }
             }
+        },
+        'sample':{
+            'mainContent': {
+                'modelView': null,
+            }
+
         }
     }
 
-    // Populated in PagPes/...
+    // Populated in plotting/...
     readonly property var plotting: {
         'graph1d': null,
     }

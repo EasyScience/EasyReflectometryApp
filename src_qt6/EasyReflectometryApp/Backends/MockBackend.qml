@@ -12,7 +12,7 @@ QtObject {
     property var report: Backend.Report
     property var sample: Backend.Sample
     property var status: Backend.Status
-
+    property var plotting: Backend.Plotting
 }
 
 

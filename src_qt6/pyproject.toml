@@ -27,9 +27,9 @@ classifiers = [
   'Operating System :: POSIX :: Linux'
 ]
 
-requires-python = '>=3.10'
+requires-python = '>=3.11'
 dependencies = [
-  'EasyApp @ git+https://github.com/EasyScience/EasyApp.git@new-easy-app2',
+  'EasyApp @ git+https://github.com/EasyScience/EasyApp.git@develop',
   'easyreflectometry @ git+https://github.com/EasyScience/EasyReflectometryLib.git@191-adjust-model-and-modelcollection-to-hold-functionality-from-app',
   'PySide6==6.6',
   'toml',

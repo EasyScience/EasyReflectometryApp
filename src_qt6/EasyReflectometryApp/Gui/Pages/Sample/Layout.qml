@@ -16,9 +16,10 @@ EaComponents.ContentPage {
 //                     qsTr('No project defined')
 
     mainView: EaComponents.MainContent {
-       tabs: [
-           EaElements.TabButton { text: qsTr('Model view') }
-       ]
+//       tabs: [
+//           EaElements.TabButton { text: qsTr('Model view') }
+//           EaElements.TabButton {}
+//       ]
 
         items: [
             Loader {

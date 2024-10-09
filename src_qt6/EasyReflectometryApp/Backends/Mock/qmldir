@@ -6,3 +6,4 @@ singleton Project Project.qml
 singleton Report Report.qml
 singleton Sample Sample.qml
 singleton Status Status.qml
+singleton Plotting Plotting.qml

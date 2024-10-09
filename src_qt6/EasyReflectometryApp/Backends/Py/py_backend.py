@@ -60,15 +60,19 @@ class PyBackend(QObject):
         return self._status
 
     @Property('QVariant', constant=True)
+    def plotting(self) -> Status:
+        return self._plotting
+    
+    @Property('QVariant', constant=True)
     def logger(self):
         return self._logger
 
     ######### Connections to relay info between the backend parts
     def _connect_backend_parts(self) -> None:
-        self._connect_project()
+        self._connect_project_page()
 
     ######### Project
-    def _connect_project(self) -> None:
+    def _connect_project_page(self) -> None:
         self._project.nameChanged.connect(self._relay_project_name)
         self._project.createdChanged.connect(self._relay_project_created)
 
@@ -78,3 +82,9 @@ class PyBackend(QObject):
  
     def _relay_project_created(self):
         self._report.createdChanged.emit()
+
+    def _connect_sample_page(self) -> None:
+        self._sample.modelsIndexChanged.connect(self._relay_models_index)
+
+    def _relay_models_index(self, index: int):
+        self._plotting.setModelIndex(index)

@@ -7,9 +7,9 @@ from PySide6.QtCore import QObject
 from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
 from PySide6.QtCore import Property
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QImage
-from PySide6.QtGui import QBrush
+# from PySide6.QtCore import Qt
+# from PySide6.QtGui import QImage
+# from PySide6.QtGui import QBrush
 #from PySide6 import QtCharts
 
 from EasyApp.Logic.Logging import console
@@ -22,6 +22,7 @@ from .helpers import IO
 
 #_LIBS_1D = ['QtCharts', 'Plotly']
 
+PLOT_BACKEND = 'QtCharts'
 
 class Plotting1d(QObject):
     currentLib1dChanged = Signal()
@@ -35,6 +36,7 @@ class Plotting1d(QObject):
         self._proxy = parent
         self._currentLib1d = 'QtCharts'
         self._useAcceleration1d = True
+        self._model_index = 0
         self._chartRanges = {}
         self._chartRefs = {
             # 'Plotly': {
@@ -43,21 +45,21 @@ class Plotting1d(QObject):
             #     'analysisPage': None
             # },
             'QtCharts': {
-                'experimentPage': {
-                    'measSerie': None,  # QtCharts.QXYSeries,
-                    'bkgSerie': None,  # QtCharts.QXYSeries
-                },
-                'modelPage': {
+#                'experimentPage': {
+#                    'measSerie': None,  # QtCharts.QXYSeries,
+#                    'bkgSerie': None,  # QtCharts.QXYSeries
+#                },
+                'samplePage': {
                     'calcSerie': None,  # QtCharts.QXYSeries,
-                    'braggSerie': None,  # QtCharts.QXYSeries
+#                    'braggSerie': None,  # QtCharts.QXYSeries
                 },
-                'analysisPage': {
-                    'measSerie': None,  # QtCharts.QXYSeries,
-                    'bkgSerie': None,  # QtCharts.QXYSeries,
-                    'totalCalcSerie': None,  # QtCharts.QXYSeries,
-                    'residSerie': None,  # QtCharts.QXYSeries,
-                    'braggSeries': {}  # QtCharts.QXYSeries
-                }
+#                'analysisPage': {
+#                    'measSerie': None,  # QtCharts.QXYSeries,
+#                    'bkgSerie': None,  # QtCharts.QXYSeries,
+#                    'totalCalcSerie': None,  # QtCharts.QXYSeries,
+#                    'residSerie': None,  # QtCharts.QXYSeries,
+#                    'braggSeries': {}  # QtCharts.QXYSeries
+#                }
             }
         }
 
@@ -95,16 +97,21 @@ class Plotting1d(QObject):
 
     # Frontend/Backend public methods
 
+    @Slot(int)
+    def setModelIndex(self, value: int) -> None:
+        self._model_index = value
+
     @Slot(str, str, 'QVariant')
-    def setQtChartsSerieRef(self, page, serie, ref):
+    def setQtChartsSerieRef(self, page:str, serie:str, ref: QObject):
         #if self._chartRefs['QtCharts'][page][serie] == ref:
         #    return
-        if ref.name():  # braggSeries
-            self._chartRefs['QtCharts'][page][serie][ref.name()] = ref
-            console.debug(IO.formatMsg('sub', f'{serie} with name {ref.name()} on {page}: {ref}'))
-        else:  # other series
-            self._chartRefs['QtCharts'][page][serie] = ref
-            console.debug(IO.formatMsg('sub', f'{serie} on {page}: {ref}'))
+#        if ref.objectName():  # braggSeries
+#            self._chartRefs['QtCharts'][page][serie][ref.objectName()] = ref
+#            console.debug(IO.formatMsg('sub', f'{serie} with name {ref.objectName()} on {page}: {ref}'))
+#        else:  # other series
+        self._chartRefs['QtCharts'][page][serie] = ref
+        console.debug(IO.formatMsg('sub', f'{serie} on {page}: {ref}'))
+        self.drawCalculatedOnSampleChart()
         self.chartRefsChanged.emit()
 
     # @Slot(str, 'QVariant')
@@ -114,172 +121,198 @@ class Plotting1d(QObject):
     #     self._chartRefs['Plotly'][page] = ref
     #     self.chartRefsChanged.emit()
 
-    @Slot(int, str, result='QBrush')
-    def verticalLine(self, size, color):
-        width = size
-        height = size
-        textureImage = QImage(width, height, QImage.Format_ARGB32)
-        # Transparent background
-        for row in range(height):
-            for column in range(width):
-                textureImage.setPixelColor(column, row, Qt.transparent)
-        # Vertical line
-        for row in range(height):
-            column = int(width/2)
-            textureImage.setPixelColor(column, row, color)
-        brush = QBrush()
-        brush.setTextureImage(textureImage)
-        return brush
+    # @Slot(int, str, result='QBrush')
+    # def verticalLine(self, size, color):
+    #     width = size
+    #     height = size
+    #     textureImage = QImage(width, height, QImage.Format_ARGB32)
+    #     # Transparent background
+    #     for row in range(height):
+    #         for column in range(width):
+    #             textureImage.setPixelColor(column, row, Qt.transparent)
+    #     # Vertical line
+    #     for row in range(height):
+    #         column = int(width/2)
+    #         textureImage.setPixelColor(column, row, color)
+    #     brush = QBrush()
+    #     brush.setTextureImage(textureImage)
+    #     return brush
 
 
     # Backend public methods
 
+    # Sample
+
+    def drawCalculatedOnSampleChart(self):
+        if PLOT_BACKEND == 'QtCharts':
+            self.qtchartsReplaceCalculatedOnSampleChartAndRedraw()
+
     # Experiment
 
-    def drawMeasuredOnExperimentChart(self):
-        lib = self._proxy.plotting.currentLib1d
-        if lib == 'QtCharts':
-            self.qtchartsReplaceMeasuredOnExperimentChartAndRedraw()
-        # elif lib == 'Plotly':
-        #     self.plotlyReplaceXOnExperimentChart()
-        #     self.plotlyReplaceMeasuredYOnExperimentChart()
-        #     self.plotlyRedrawExperimentChart()
+    # def drawMeasuredOnExperimentChart(self):
+    #     lib = self._proxy.plotting.currentLib1d
+    #     if lib == 'QtCharts':
+    #         self.qtchartsReplaceMeasuredOnExperimentChartAndRedraw()
+    #     # elif lib == 'Plotly':
+    #     #     self.plotlyReplaceXOnExperimentChart()
+    #     #     self.plotlyReplaceMeasuredYOnExperimentChart()
+    #     #     self.plotlyRedrawExperimentChart()
 
-    def drawBackgroundOnExperimentChart(self):
-        lib = self._proxy.plotting.currentLib1d
-        if lib == 'QtCharts':
-            self.qtchartsReplaceBackgroundOnExperimentChartAndRedraw()
-        # elif lib == 'Plotly':
-        #     pass
+    # def drawBackgroundOnExperimentChart(self):
+    #     lib = self._proxy.plotting.currentLib1d
+    #     if lib == 'QtCharts':
+    #         self.qtchartsReplaceBackgroundOnExperimentChartAndRedraw()
+    #     # elif lib == 'Plotly':
+    #     #     pass
 
-    # Analysis
+    # # Analysis
 
-    def drawMeasuredOnAnalysisChart(self):
-        lib = self._proxy.plotting.currentLib1d
-        if lib == 'QtCharts':
-            self.qtchartsReplaceMeasuredOnAnalysisChartAndRedraw()
-        # elif lib == 'Plotly':
-        #     self.plotlyReplaceXOnAnalysisChart()
-        #     self.plotlyReplaceMeasuredYOnAnalysisChart()
+    # def drawMeasuredOnAnalysisChart(self):
+    #     lib = self._proxy.plotting.currentLib1d
+    #     if lib == 'QtCharts':
+    #         self.qtchartsReplaceMeasuredOnAnalysisChartAndRedraw()
+    #     # elif lib == 'Plotly':
+    #     #     self.plotlyReplaceXOnAnalysisChart()
+    #     #     self.plotlyReplaceMeasuredYOnAnalysisChart()
 
-    def drawBackgroundOnAnalysisChart(self):
-        lib = self._proxy.plotting.currentLib1d
-        if lib == 'QtCharts':
-            self.qtchartsReplaceBackgroundOnAnalysisChartAndRedraw()
-        # elif lib == 'Plotly':
-        #     pass
+    # def drawBackgroundOnAnalysisChart(self):
+    #     lib = self._proxy.plotting.currentLib1d
+    #     if lib == 'QtCharts':
+    #         self.qtchartsReplaceBackgroundOnAnalysisChartAndRedraw()
+    #     # elif lib == 'Plotly':
+    #     #     pass
 
-    def drawCalculatedOnAnalysisChart(self):
-        lib = self._proxy.plotting.currentLib1d
-        if lib == 'QtCharts':
-            self.qtchartsReplaceTotalCalculatedOnAnalysisChartAndRedraw()
-        elif lib == 'Plotly':
-            self.plotlyReplaceTotalCalculatedYOnAnalysisChartAndRedraw()
+    # def drawCalculatedOnAnalysisChart(self):
+    #     lib = self._proxy.plotting.currentLib1d
+    #     if lib == 'QtCharts':
+    #         self.qtchartsReplaceTotalCalculatedOnAnalysisChartAndRedraw()
+    #     # elif lib == 'Plotly':
+    #     #     self.plotlyReplaceTotalCalculatedYOnAnalysisChartAndRedraw()
 
-    def drawResidualOnAnalysisChart(self):
-        lib = self._proxy.plotting.currentLib1d
-        if lib == 'QtCharts':
-            self.qtchartsReplaceResidualOnAnalysisChartAndRedraw()
-        # elif lib == 'Plotly':
-        #     pass
+    # def drawResidualOnAnalysisChart(self):
+    #     lib = self._proxy.plotting.currentLib1d
+    #     if lib == 'QtCharts':
+    #         self.qtchartsReplaceResidualOnAnalysisChartAndRedraw()
+    #     # elif lib == 'Plotly':
+    #     #     pass
 
-    def drawBraggOnAnalysisChart(self):
-        lib = self._proxy.plotting.currentLib1d
-        if lib == 'QtCharts':
-            self.qtchartsReplaceBraggOnAnalysisChartAndRedraw()
-        # elif lib == 'Plotly':
-        #     pass
+    # def drawBraggOnAnalysisChart(self):
+    #     lib = self._proxy.plotting.currentLib1d
+    #     if lib == 'QtCharts':
+    #         self.qtchartsReplaceBraggOnAnalysisChartAndRedraw()
+    #     # elif lib == 'Plotly':
+    #     #     pass
 
     # Backend private methods
 
-    # QtCharts: Experiment
+    # QtCharts: Sample
 
-    def qtchartsReplaceMeasuredOnExperimentChartAndRedraw(self):
-        index = self._proxy.experiment.currentIndex
+    def qtchartsReplaceCalculatedOnSampleChartAndRedraw(self):
+#        index = self._project_lib.samp.currentIndex
         try:
-            xArray = self._proxy.experiment._xArrays[index]
-            yMeasArray = self._proxy.experiment._yMeasArrays[index]
+            xArray = self._project_lib._xArrays[self._model_index]
+            yCalcArray = self._project_lib._yCalcArrays[self._model_index]
         except IndexError:
             xArray = np.empty(0)
-            yMeasArray = np.empty(0)
-        measSerie = self._chartRefs['QtCharts']['experimentPage']['measSerie']
-        measSerie.replaceNp(xArray, yMeasArray)
-        console.debug(IO.formatMsg('sub', 'Meas curve', f'{xArray.size} points', 'on experiment page', 'replaced'))
+            yCalcArray = np.empty(0)
+        calcSerie = self._chartRefs['QtCharts']['samplePage']['calcSerie']
+        for point in zip(xArray, yCalcArray):
+            calcSerie.append(point[0], point[1])
+        console.debug(IO.formatMsg('sub', 'Calc curve', f'{xArray.size} points', 'on sample page', 'replaced'))
 
-    def qtchartsReplaceBackgroundOnExperimentChartAndRedraw(self):
-        index = self._proxy.experiment.currentIndex
-        try:
-            xArray = self._proxy.experiment._xArrays[index]
-            yBkgArray = self._proxy.experiment._yBkgArrays[index]
-        except IndexError:
-            xArray = np.empty(0)
-            yBkgArray = np.empty(0)
-        bkgSerie = self._chartRefs['QtCharts']['experimentPage']['bkgSerie']
-        bkgSerie.replaceNp(xArray, yBkgArray)
-        console.debug(IO.formatMsg('sub', 'Bkg curve', f'{xArray.size} points', 'on experiment page', 'replaced'))
 
-    # QtCharts: Analysis
+    # # QtCharts: Experiment
 
-    def qtchartsReplaceMeasuredOnAnalysisChartAndRedraw(self):
-        index = self._proxy.experiment.currentIndex
-        try:
-            xArray = self._proxy.experiment._xArrays[index]
-            yMeasArray = self._proxy.experiment._yMeasArrays[index]
-        except IndexError:
-            xArray = np.empty(0)
-            yMeasArray = np.empty(0)
-        measSerie = self._chartRefs['QtCharts']['analysisPage']['measSerie']
-        measSerie.replaceNp(xArray, yMeasArray)
-        console.debug(IO.formatMsg('sub', 'Meas curve', f'{xArray.size} points', 'on analysis page', 'replaced'))
+    # def qtchartsReplaceMeasuredOnExperimentChartAndRedraw(self):
+    #     index = self._proxy.experiment.currentIndex
+    #     try:
+    #         xArray = self._proxy.experiment._xArrays[index]
+    #         yMeasArray = self._proxy.experiment._yMeasArrays[index]
+    #     except IndexError:
+    #         xArray = np.empty(0)
+    #         yMeasArray = np.empty(0)
+    #     measSerie = self._chartRefs['QtCharts']['experimentPage']['measSerie']
+    #     measSerie.replaceNp(xArray, yMeasArray)
+    #     console.debug(IO.formatMsg('sub', 'Meas curve', f'{xArray.size} points', 'on experiment page', 'replaced'))
 
-    def qtchartsReplaceBackgroundOnAnalysisChartAndRedraw(self):
-        index = self._proxy.experiment.currentIndex
-        try:
-            xArray = self._proxy.experiment._xArrays[index]
-            yBkgArray = self._proxy.experiment._yBkgArrays[index]
-        except IndexError:
-            xArray = np.empty(0)
-            yBkgArray = np.empty(0)
-        bkgSerie = self._chartRefs['QtCharts']['analysisPage']['bkgSerie']
-        bkgSerie.replaceNp(xArray, yBkgArray)
-        console.debug(IO.formatMsg('sub', 'Bkg curve', f'{xArray.size} points', 'on analysis page', 'replaced'))
+    # def qtchartsReplaceBackgroundOnExperimentChartAndRedraw(self):
+    #     index = self._proxy.experiment.currentIndex
+    #     try:
+    #         xArray = self._proxy.experiment._xArrays[index]
+    #         yBkgArray = self._proxy.experiment._yBkgArrays[index]
+    #     except IndexError:
+    #         xArray = np.empty(0)
+    #         yBkgArray = np.empty(0)
+    #     bkgSerie = self._chartRefs['QtCharts']['experimentPage']['bkgSerie']
+    #     bkgSerie.replaceNp(xArray, yBkgArray)
+    #     console.debug(IO.formatMsg('sub', 'Bkg curve', f'{xArray.size} points', 'on experiment page', 'replaced'))
 
-    def qtchartsReplaceTotalCalculatedOnAnalysisChartAndRedraw(self):
-        index = self._proxy.experiment.currentIndex
-        try:
-            xArray = self._proxy.experiment._xArrays[index]
-            yCalcTotalArray = self._proxy.experiment._yCalcTotalArrays[index]
-        except IndexError:
-            xArray = np.empty(0)
-            yCalcTotalArray = np.empty(0)
-        calcSerie = self._chartRefs['QtCharts']['analysisPage']['totalCalcSerie']
-        calcSerie.replaceNp(xArray, yCalcTotalArray)
-        console.debug(IO.formatMsg('sub', 'Calc (total) curve', f'{xArray.size} points', 'on analysis page', 'replaced'))
+    # # QtCharts: Analysis
 
-    def qtchartsReplaceResidualOnAnalysisChartAndRedraw(self):
-        index = self._proxy.experiment.currentIndex
-        try:
-            xArray = self._proxy.experiment._xArrays[index]
-            yResidArray = self._proxy.experiment._yResidArrays[index]
-        except IndexError:
-            xArray = np.empty(0)
-            yResidArray = np.empty(0)
-        residSerie = self._chartRefs['QtCharts']['analysisPage']['residSerie']
-        residSerie.replaceNp(xArray, yResidArray)
-        console.debug(IO.formatMsg('sub', 'Resid curve', f'{xArray.size} points', 'on analysis page', 'replaced'))
+    # def qtchartsReplaceMeasuredOnAnalysisChartAndRedraw(self):
+    #     index = self._proxy.experiment.currentIndex
+    #     try:
+    #         xArray = self._proxy.experiment._xArrays[index]
+    #         yMeasArray = self._proxy.experiment._yMeasArrays[index]
+    #     except IndexError:
+    #         xArray = np.empty(0)
+    #         yMeasArray = np.empty(0)
+    #     measSerie = self._chartRefs['QtCharts']['analysisPage']['measSerie']
+    #     measSerie.replaceNp(xArray, yMeasArray)
+    #     console.debug(IO.formatMsg('sub', 'Meas curve', f'{xArray.size} points', 'on analysis page', 'replaced'))
 
-    def qtchartsReplaceBraggOnAnalysisChartAndRedraw(self):
-        index = self._proxy.experiment.currentIndex
-        try:
-            xBraggDict = self._proxy.experiment._xBraggDicts[index]
-            for phaseIdx, phaseName in enumerate(xBraggDict):
-                xBraggArray = xBraggDict[phaseName]
-                yBraggArray = np.full_like(xBraggArray, -phaseIdx * 0.5)
-                braggSerie = self._chartRefs['QtCharts']['analysisPage']['braggSeries'][phaseName]
-                braggSerie.replaceNp(xBraggArray, yBraggArray)
-                console.debug(IO.formatMsg('sub', f'Bragg peaks {phaseName}', f'{xBraggArray.size} points', 'on analysis page', 'replaced'))
-        except IndexError:
-            pass
+    # def qtchartsReplaceBackgroundOnAnalysisChartAndRedraw(self):
+    #     index = self._proxy.experiment.currentIndex
+    #     try:
+    #         xArray = self._proxy.experiment._xArrays[index]
+    #         yBkgArray = self._proxy.experiment._yBkgArrays[index]
+    #     except IndexError:
+    #         xArray = np.empty(0)
+    #         yBkgArray = np.empty(0)
+    #     bkgSerie = self._chartRefs['QtCharts']['analysisPage']['bkgSerie']
+    #     bkgSerie.replaceNp(xArray, yBkgArray)
+    #     console.debug(IO.formatMsg('sub', 'Bkg curve', f'{xArray.size} points', 'on analysis page', 'replaced'))
+
+    # def qtchartsReplaceTotalCalculatedOnAnalysisChartAndRedraw(self):
+    #     index = self._proxy.experiment.currentIndex
+    #     try:
+    #         xArray = self._proxy.experiment._xArrays[index]
+    #         yCalcTotalArray = self._proxy.experiment._yCalcTotalArrays[index]
+    #     except IndexError:
+    #         xArray = np.empty(0)
+    #         yCalcTotalArray = np.empty(0)
+    #     calcSerie = self._chartRefs['QtCharts']['analysisPage']['totalCalcSerie']
+    #     calcSerie.replaceNp(xArray, yCalcTotalArray)
+    #     console.debug(IO.formatMsg('sub', 'Calc (total) curve', f'{xArray.size} points', 'on analysis page', 'replaced'))
+
+    # def qtchartsReplaceResidualOnAnalysisChartAndRedraw(self):
+    #     index = self._proxy.experiment.currentIndex
+    #     try:
+    #         xArray = self._proxy.experiment._xArrays[index]
+    #         yResidArray = self._proxy.experiment._yResidArrays[index]
+    #     except IndexError:
+    #         xArray = np.empty(0)
+    #         yResidArray = np.empty(0)
+    #     residSerie = self._chartRefs['QtCharts']['analysisPage']['residSerie']
+    #     residSerie.replaceNp(xArray, yResidArray)
+    #     console.debug(IO.formatMsg('sub', 'Resid curve', f'{xArray.size} points', 'on analysis page', 'replaced'))
+
+    # def qtchartsReplaceBraggOnAnalysisChartAndRedraw(self):
+    #     index = self._proxy.experiment.currentIndex
+    #     try:
+    #         xBraggDict = self._proxy.experiment._xBraggDicts[index]
+    #         for phaseIdx, phaseName in enumerate(xBraggDict):
+    #             xBraggArray = xBraggDict[phaseName]
+    #             yBraggArray = np.full_like(xBraggArray, -phaseIdx * 0.5)
+    #             braggSerie = self._chartRefs['QtCharts']['analysisPage']['braggSeries'][phaseName]
+    #             braggSerie.replaceNp(xBraggArray, yBraggArray)
+    #             console.debug(IO.formatMsg('sub', f'Bragg peaks {phaseName}', f'{xBraggArray.size} points', 'on analysis page', 'replaced'))
+    #     except IndexError:
+    #         pass
+
+
+
+
 
     # # Plotly: Experiment
 
