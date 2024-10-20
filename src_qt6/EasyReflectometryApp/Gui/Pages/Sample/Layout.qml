@@ -22,8 +22,12 @@ EaComponents.ContentPage {
 //       ]
 
         items: [
-            Loader {
-                source: `MainContent/ModelView.qml`
+/*            Loader {
+                source: `MainContent/SampleView.qml`
+                onStatusChanged: if (status === Loader.Ready) console.debug(`${source} loaded`)
+            }
+*/            Loader {
+                source: `MainContent/SldView.qml`
                 onStatusChanged: if (status === Loader.Ready) console.debug(`${source} loaded`)
             }
         ]

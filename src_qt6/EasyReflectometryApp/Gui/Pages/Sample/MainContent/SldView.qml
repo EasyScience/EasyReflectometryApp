@@ -36,19 +36,20 @@ Rectangle {
         anchors.topMargin: EaStyle.Sizes.toolButtonHeight - EaStyle.Sizes.fontPixelSize - 1
 
         useOpenGL: EaGlobals.Vars.useOpenGL //Globals.Proxies.main.plotting.useWebGL1d
-        
-        axisX.title: "X-axis"
-        axisX.min: 0// Globals.Proxies.rangeValue('xMin')
-        axisX.max: 10//Globals.Proxies.rangeValue('xMax')
-        axisX.minAfterReset: 0//Globals.Proxies.rangeValue('xMin')
-        axisX.maxAfterReset: 10//Globals.Proxies.rangeValue('xMax')
+
+        axisX.title: "z (Å)"
+        axisX.min: -10// Globals.Proxies.rangeValue('xMin')
+        axisX.max: 110//Globals.Proxies.rangeValue('xMax')
+        axisX.minAfterReset: -10//Globals.Proxies.rangeValue('xMin')
+        axisX.maxAfterReset: 110//Globals.Proxies.rangeValue('xMax')
         //axisX.onRangeChanged: if (Globals.Proxies.main.project.created) saveImgTimer.restart()
 
-        axisY.title: "Y-axis"
+        axisY.title: "SLD (10⁻⁶Å⁻²)"
         axisY.min: 0//Globals.Proxies.rangeValue('yMin')
-        axisY.max: 10//Globals.Proxies.rangeValue('yMax')
+        axisY.max: 7//Globals.Proxies.rangeValue('yMax')
         axisY.minAfterReset: 0//Globals.Proxies.rangeValue('yMin')
-        axisY.maxAfterReset: 10//Globals.Proxies.rangeValue('yMax')
+        axisY.maxAfterReset: 7//Globals.Proxies.rangeValue('yMax')
+
         //axisY.onRangeChanged: if (Globals.Proxies.main.project.created) saveImgTimer.restart()
 
 //        measSerie.pointsVisible: true
@@ -160,7 +161,7 @@ Rectangle {
                 bottomPadding: EaStyle.Sizes.fontPixelSize * 0.5
 
                 EaElements.Label {
-                    text: '━  I (sample)'
+                    text: '━  SLD'
                     color: chartView.calcSerie.color
                 }
 //                EaElements.Label {
@@ -184,8 +185,8 @@ Rectangle {
 
         Component.onCompleted: {
             Globals.References.pages.sample.mainContent.modelView = chartView
-            Globals.BackendWrapper.plottingSetQtChartsSerieRef('samplePage',
-                                                                'calcSerie',
+            Globals.BackendWrapper.plottingSetQtChartsSldSerieRef('samplePage',
+                                                                'sldSerie',
                                                                  chartView.calcSerie)
 //            Globals.BackendWrapper.plotting.setQtChartsSerieRef('samplePage',
 //#                                                              'bkgSerie',
@@ -194,12 +195,12 @@ Rectangle {
 
     }
 
-    Timer {
-        id: saveImgTimer
-
-        interval: 5000
-        onTriggered: saveImg()
-    }
+//    Timer {
+//        id: saveImgTimer
+//
+//        interval: 5000
+//        onTriggered: saveImg()
+//    }
 
     // Logic
 

@@ -15,6 +15,8 @@ from PySide6.QtCore import Property
 from EasyApp.Logic.Logging import console
 
 from easyreflectometry import Project as ProjectLib
+from easyreflectometry.data import DataSet1D
+
 #from .helpers import Converter
 from .helpers import IO 
 #from .helpers importWebEngine
@@ -51,6 +53,7 @@ class Plotting1d(QObject):
 #                },
                 'samplePage': {
                     'calcSerie': None,  # QtCharts.QXYSeries,
+                    'sldSerie': None,
 #                    'braggSerie': None,  # QtCharts.QXYSeries
                 },
 #                'analysisPage': {
@@ -102,7 +105,7 @@ class Plotting1d(QObject):
         self._model_index = value
 
     @Slot(str, str, 'QVariant')
-    def setQtChartsSerieRef(self, page:str, serie:str, ref: QObject):
+    def setQtChartsReflectometrySerieRef(self, page:str, serie:str, ref: QObject):
         #if self._chartRefs['QtCharts'][page][serie] == ref:
         #    return
 #        if ref.objectName():  # braggSeries
@@ -114,6 +117,18 @@ class Plotting1d(QObject):
         self.drawCalculatedOnSampleChart()
         self.chartRefsChanged.emit()
 
+    @Slot(str, str, 'QVariant')
+    def setQtChartsSldSerieRef(self, page:str, serie:str, ref: QObject):
+        #if self._chartRefs['QtCharts'][page][serie] == ref:
+        #    return
+#        if ref.objectName():  # braggSeries
+#            self._chartRefs['QtCharts'][page][serie][ref.objectName()] = ref
+#            console.debug(IO.formatMsg('sub', f'{serie} with name {ref.objectName()} on {page}: {ref}'))
+#        else:  # other series
+        self._chartRefs['QtCharts'][page][serie] = ref
+        console.debug(IO.formatMsg('sub', f'{serie} on {page}: {ref}'))
+        self.drawCalculatedOnSldChart()
+        self.chartRefsChanged.emit()
     # @Slot(str, 'QVariant')
     # def setPlotlyChartRef(self, page, ref):
     #     if self._chartRefs['Plotly'][page] == ref:
@@ -147,6 +162,9 @@ class Plotting1d(QObject):
         if PLOT_BACKEND == 'QtCharts':
             self.qtchartsReplaceCalculatedOnSampleChartAndRedraw()
 
+    def drawCalculatedOnSldChart(self):
+        if PLOT_BACKEND == 'QtCharts':
+            self.qtchartsReplaceCalculatedOnSldChartAndRedraw()
     # Experiment
 
     # def drawMeasuredOnExperimentChart(self):
@@ -210,16 +228,40 @@ class Plotting1d(QObject):
     def qtchartsReplaceCalculatedOnSampleChartAndRedraw(self):
 #        index = self._project_lib.samp.currentIndex
         try:
-            xArray = self._project_lib._xArrays[self._model_index]
-            yCalcArray = self._project_lib._yCalcArrays[self._model_index]
+            sample_data = self._project_lib.sample_data_for_model_at_index()
+#            xArray = self._project_lib._xArrays[self._model_index]
+#            yCalcArray = self._project_lib._yCalcArrays[self._model_index]
         except IndexError:
-            xArray = np.empty(0)
-            yCalcArray = np.empty(0)
+            sample_data = DataSet1D(
+                name='Sample Data empty',
+                    x=np.empty(0),
+                    y=np.empty(0),
+            )
         calcSerie = self._chartRefs['QtCharts']['samplePage']['calcSerie']
-        for point in zip(xArray, yCalcArray):
+        nr_points = 0
+        for point in sample_data.data_points():
             calcSerie.append(point[0], point[1])
-        console.debug(IO.formatMsg('sub', 'Calc curve', f'{xArray.size} points', 'on sample page', 'replaced'))
+            nr_points = nr_points + 1
+        console.debug(IO.formatMsg('sub', 'Calc curve', f'{nr_points} points', 'on sample page', 'replaced'))
 
+    def qtchartsReplaceCalculatedOnSldChartAndRedraw(self):
+#        index = self._project_lib.samp.currentIndex
+        try:
+            sample_data = self._project_lib.sld_data_for_model_at_index()
+#            xArray = self._project_lib._xArrays[self._model_index]
+#            yCalcArray = self._project_lib._yCalcArrays[self._model_index]
+        except IndexError:
+            sample_data = DataSet1D(
+                name='Sample Data empty',
+                    x=np.empty(0),
+                    y=np.empty(0),
+            )
+        sldSerie = self._chartRefs['QtCharts']['samplePage']['sldSerie']
+        nr_points = 0
+        for point in sample_data.data_points():
+            sldSerie.append(point[0], point[1])
+            nr_points = nr_points + 1
+        console.debug(IO.formatMsg('sub', 'Sld curve', f'{nr_points} points', 'on sample page', 'replaced'))
 
     # # QtCharts: Experiment
 
