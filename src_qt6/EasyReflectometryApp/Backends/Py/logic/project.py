@@ -50,7 +50,6 @@ class Project:
     
     def create(self) -> None:
         self._project_lib.create()
-##        self._project_lib.default_model()
         self._project_lib.save_as_json()
 
     def save(self) -> None:

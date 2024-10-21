@@ -86,10 +86,6 @@ EaElements.GroupBox {
 
             onCurrentIndexChanged: {
                 Globals.BackendWrapper.sampleSetCurrentAssemblyIndex(assembliesView.currentIndex)
-                // MAYBE DO DIFFERENTLY THAN HAVING PROPERTY IN PARENT OBJECT
-//                currentAssemblyType: assembliesView.currentIndex
-                // NEED TO CONNECT THIS
-                // repsSpinBox.value = ExGlobals.Constants.proxy.model.currentItemsRepetitions
             }
 
             onModelChanged: currentIndex = 0

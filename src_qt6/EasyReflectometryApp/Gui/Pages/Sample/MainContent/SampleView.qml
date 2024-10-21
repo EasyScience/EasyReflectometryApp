@@ -22,20 +22,9 @@ Rectangle {
     EaCharts.QtCharts1dMeasVsCalc {
         id: chartView
 
-        // property var experimentDataBlocksNoMeas: Globals.Proxies.main.experiment.dataBlocksNoMeas
-        // onExperimentDataBlocksNoMeasChanged: {
-        //     if (Globals.Proxies.experimentMainParam('_diffrn_radiation', 'type').value === 'cwl') {
-        //         axisX.title = '2θ (degree)'
-        //     } else if (Globals.Proxies.experimentMainParam('_diffrn_radiation', 'type').value === 'tof') {
-        //         axisX.title = 'TOF (µs)'
-        //     } else {
-        //         axisX.title = ''
-        //     }
-        // }
-
         anchors.topMargin: EaStyle.Sizes.toolButtonHeight - EaStyle.Sizes.fontPixelSize - 1
 
-        useOpenGL: EaGlobals.Vars.useOpenGL //Globals.Proxies.main.plotting.useWebGL1d
+        useOpenGL: EaGlobals.Vars.useOpenGL
         
         property double xRange: Globals.BackendWrapper.plottingSampleMaxX - Globals.BackendWrapper.plottingSampleMinX
         axisX.title: "q (Å⁻¹)"
@@ -43,7 +32,6 @@ Rectangle {
         axisX.max: Globals.BackendWrapper.plottingSampleMaxX + xRange * 0.01
         axisX.minAfterReset: Globals.BackendWrapper.plottingSampleMinX - xRange * 0.01
         axisX.maxAfterReset: Globals.BackendWrapper.plottingSampleMaxX + xRange * 0.01
-        //axisX.onRangeChanged: if (Globals.Proxies.main.project.created) saveImgTimer.restart()
 
         property double yRange: Globals.BackendWrapper.plottingSampleMaxY - Globals.BackendWrapper.plottingSampleMinY
         axisY.title: "Log10 R(q)"
@@ -51,31 +39,8 @@ Rectangle {
         axisY.max: Globals.BackendWrapper.plottingSampleMaxY + yRange * 0.01
         axisY.minAfterReset: Globals.BackendWrapper.plottingSampleMinY - yRange * 0.01
         axisY.maxAfterReset: Globals.BackendWrapper.plottingSampleMaxY + yRange * 0.01
-//        axisY.base: 10
-
-        //axisY.onRangeChanged: if (Globals.Proxies.main.project.created) saveImgTimer.restart()
-
-//        measSerie.pointsVisible: true
 
         calcSerie.onHovered: (point, state) => showMainTooltip(chartView, point, state)
-
-//        measSerie.onHovered: (point, state) => showMainTooltip(chartView, point, state)
-//        bkgSerie.onHovered: (point, state) => showMainTooltip(chartView, point, state)
-
-//        // Calculated curve
-//        LineSeries {
-//            id: calcSerie
-//
-//            axisX: mainChart.axisX
-//            axisY: mainChart.axisY
-//
-//            useOpenGL: mainChart.useOpenGL
-//
-//            color: calcSerieColor
-//            width: 2
-//
-//            onHovered: (point, state) => showMainTooltip(mainChart, point, state)
-//        }
 
         // Tool buttons
         Row {
@@ -169,10 +134,6 @@ Rectangle {
                     text: '━  I (sample)'
                     color: chartView.calcSerie.color
                 }
-//                EaElements.Label {
-//                    text: '─  Ibkg (background)'
-//                    color: chartView.bkgSerie.color
-//                }
             }
         }
         // Legend
@@ -193,19 +154,9 @@ Rectangle {
             Globals.BackendWrapper.plottingSetQtChartsReflectometrySerieRef('samplePage',
                                                                             'sampleSerie',
                                                                             chartView.calcSerie)
-//            Globals.BackendWrapper.plotting.setQtChartsSerieRef('samplePage',
-//#                                                              'bkgSerie',
-//                                                              chartView.bkgSerie)
         }
 
     }
-
-//    Timer {
-//        id: saveImgTimer
-//
-//        interval: 5000
-//        onTriggered: saveImg()
-//    }
 
     // Logic
 
@@ -220,24 +171,5 @@ Rectangle {
         dataToolTip.parent = chart
         dataToolTip.visible = state
     }
-
-    // function saveImg() {
-    //     if (Globals.BackendWrapper.project.location) {
-    //         const experimentCurrenIndex = Globals.BackendWrapper..experiment.currentIndex
-    //         const cifFileName =Globals.BackendWrapper.project.dataBlock.loops._experiment[experimentCurrenIndex].cif_file_name.value
-    //         let split = cifFileName.split('.')
-    //         split.pop()
-    //         const baseFileName = split.join(".")
-    //         const suffix = EaStyle.Colors.isDarkPalette ? '_dark' : '_light'
-    //         const imgFileName = baseFileName + suffix + '.png'
-    //         const path = Globals.BackendWrapper.project.location + '/' +
-    //                   Globals.BackendWrapper.project.dirNames.experiments + '/' +
-    //                    imgFileName
-    //         container.grabToImage(function(result) {
-    //             result.saveToFile(path)
-    //         })
-    //     }
-    // }
-
 }
 

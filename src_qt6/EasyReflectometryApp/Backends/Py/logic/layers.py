@@ -116,8 +116,5 @@ def _from_layers_collection_to_list_of_dicts(layers_collection: LayerCollection)
             layers_list[-1]['apm'] = str(layer.area_per_molecule)
             layers_list[-1]['solvent'] = layer.solvent.name
             layers_list[-1]['solvation'] = str(layer.solvent_fraction)
-            # layers_list[-1]['thickness_enabled'] = ''
-            # layers_list[-1]['roughness_enabled'] = ''
-            # layers_list[-1]['apm_enabled'] = ''
 
     return layers_list
