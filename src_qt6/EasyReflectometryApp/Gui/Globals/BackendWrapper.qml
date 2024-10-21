@@ -41,6 +41,7 @@ QtObject {
     readonly property string statusMinimizer: activeBackend.status.minimizer
     readonly property string statusVariables: activeBackend.status.variables
 
+
     ///////////////
     // Home page
     ///////////////
@@ -51,6 +52,7 @@ QtObject {
     readonly property string homeUrlsLicense: activeBackend.home.urls.license
     readonly property string homeUrlsDocumentation: activeBackend.home.urls.documentation
     readonly property string homeUrlsDependencies: activeBackend.home.urls.dependencies
+
 
     ///////////////
     // Project page
@@ -70,10 +72,106 @@ QtObject {
     function projectSave() { activeBackend.project.save() }
     function projectLoad(value) { activeBackend.project.load(value) }
 
+
+    ///////////////
+    // Sample page
+    ///////////////
+
+    // Material
+    readonly property var sampleMaterials: activeBackend.sample.materials
+    readonly property var sampleMaterialNames: activeBackend.sample.materialNames
+
+    function sampleSetCurrentMaterialIndex(value) { activeBackend.sample.setCurrentMaterialIndex(value) }
+
+    function sampleSetCurrentMaterialName(value) { activeBackend.sample.setCurrentMaterialName(value) }
+    function sampleSetCurrentMaterialSld(value) { activeBackend.sample.setCurrentMaterialSld(value) } 
+    function sampleSetCurrentMaterialISld(value) { activeBackend.sample.setCurrentMaterialISld(value) }
+    function sampleRemoveMaterial(value) { activeBackend.sample.removeMaterial(value) }
+    function sampleAddNewMaterial() { activeBackend.sample.addNewMaterial() }
+    function sampleDuplicateSelectedMaterial() { activeBackend.sample.duplicateSelectedMaterial() }
+    function sampleMoveSelectedMaterialUp() { activeBackend.sample.moveSelectedMaterialUp() }
+    function sampleMoveSelectedMaterialDown() { activeBackend.sample.moveSelectedMaterialDown() }
+
+    // Model
+    readonly property var sampleModels: activeBackend.sample.models
+    readonly property string sampleCurrentModelName: activeBackend.sample.currentModelName
+
+    function sampleSetCurrentModelIndex(value) { activeBackend.sample.setCurrentModelIndex(value) }
+
+    function sampleSetCurrentModelName(value) { activeBackend.sample.setCurrentModelName(value) }
+    function sampleRemoveModel(value) { activeBackend.sample.removeModel(value) }
+    function sampleAddNewModel() { activeBackend.sample.addNewModel() }
+    function sampleDuplicateSelectedModel() { activeBackend.sample.duplicateSelectedModel() }
+    function sampleMoveSelectedModelUp() { activeBackend.sample.moveSelectedModelUp() }
+    function sampleMoveSelectedModelDown() { activeBackend.sample.moveSelectedModelDown() }
+
+    // Sample
+    readonly property var sampleAssemblies: activeBackend.sample.assemblies
+    readonly property string sampleCurrentAssemblyName: activeBackend.sample.currentAssemblyName
+    readonly property string sampleCurrentAssemblyType: activeBackend.sample.currentAssemblyType
+
+    function sampleSetCurrentAssemblyIndex(value) { activeBackend.sample.setCurrentAssemblyIndex(value) }
+
+    function sampleSetCurrentAssemblyName(value) { activeBackend.sample.setCurrentAssemblyName(value) }
+    function sampleSetCurrentAssemblyType(value) { activeBackend.sample.setCurrentAssemblyType(value) }
+    function sampleRemoveAssembly(value) { activeBackend.sample.removeAssembly(value) }
+    function sampleAddNewAssembly() { activeBackend.sample.addNewAssembly() }
+    function sampleDuplicateSelectedAssembly() { activeBackend.sample.duplicateSelectedAssembly() }
+    function sampleMoveSelectedAssemblyUp() { activeBackend.sample.moveSelectedAssemblyUp() }
+    function sampleMoveSelectedAssemblyDown() { activeBackend.sample.moveSelectedAssemblyDown() }
+
+    // Assembly specific methods
+    readonly property int sampleCurrentAssemblyRepeatedLayerReptitions: activeBackend.sample.currentAssemblyRepeatedLayerReptitions
+    function sampleSetCurrentAssemblyConstrainAPM(value) { activeBackend.sample.setCurrentAssemblyConstrainAPM(value) }
+    function sampleSetCurrentAssemblyConformalRoughness(value) { activeBackend.sample.setCurrentAssemblyConformalRoughness(value) }
+    function sampleSetCurrentAssemblyRepeatedLayerReptitions(value) { activeBackend.sample.setCurrentAssemblyRepeatedLayerReptitions(value) }
+
+    // Layer
+    readonly property var sampleLayers: activeBackend.sample.layers
+    readonly property string sampleCurrentLayerName: activeBackend.sample.currentLayerName
+
+    function sampleSetCurrentLayerIndex(value) { activeBackend.sample.setCurrentLayerIndex(value) }
+
+    function sampleRemoveLayer(value) { activeBackend.sample.removeLayer(value) }
+    function sampleAddNewLayer() { activeBackend.sample.addNewLayer() }
+    function sampleDuplicateSelectedLayer() { activeBackend.sample.duplicateSelectedLayer() }
+    function sampleMoveSelectedLayerUp() { activeBackend.sample.moveSelectedLayerUp() }
+    function sampleMoveSelectedLayerDown() { activeBackend.sample.moveSelectedLayerDown() }
+
+    function sampleSetCurrentLayerFormula(value) { activeBackend.sample.setCurrentLayerFormula(value) }
+    function sampleSetCurrentLayerMaterial(value) { activeBackend.sample.setCurrentLayerMaterial(value) }
+    function sampleSetCurrentLayerSolvent(value) { activeBackend.sample.setCurrentLayerSolvent(value) }
+    function sampleSetCurrentLayerThickness(value) { activeBackend.sample.setCurrentLayerThickness(value) }
+    function sampleSetCurrentLayerRoughness(value) { activeBackend.sample.setCurrentLayerRoughness(value) }
+    function sampleSetCurrentLayerAPM(value) { activeBackend.sample.setCurrentLayerAPM(value) }
+    function sampleSetCurrentLayerSolvation(value) { activeBackend.sample.setCurrentLayerSolvation(value) }
+
+    ///////////////
+    // Analysis page
+    ///////////////
+    readonly property bool analysisIsFitFinished: activeBackend.analysis.isFitFinished
+
+
     ///////////////
     // Summary page
     ///////////////
     readonly property bool summaryCreated: activeBackend.report.created
     readonly property string summaryAsHtml: activeBackend.report.asHtml
+
+    ///////////////
+    // Plotting
+    ///////////////
+    readonly property var plottingSldMinX: activeBackend.plotting.sldMinX
+    readonly property var plottingSldMaxX: activeBackend.plotting.sldMaxX
+    readonly property var plottingSldMinY: activeBackend.plotting.sldMinY
+    readonly property var plottingSldMaxY: activeBackend.plotting.sldMaxY
+
+    readonly property var plottingSampleMinX: activeBackend.plotting.sampleMinX
+    readonly property var plottingSampleMaxX: activeBackend.plotting.sampleMaxX
+    readonly property var plottingSampleMinY: activeBackend.plotting.sampleMinY
+    readonly property var plottingSampleMaxY: activeBackend.plotting.sampleMaxY
+
+    function plottingSetQtChartsReflectometrySerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsReflectometrySerieRef(value1, value2, value3) }
+    function plottingSetQtChartsSldSerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsSldSerieRef(value1, value2, value3) }
 
 }

@@ -14,6 +14,9 @@ QtObject {
         'appBarCentralTabs': {
             'homeButton': null,
             'projectButton': null,
+            'sampleButton': null,
+            'experimentButton': null,
+            'analysisButton': null,
             'summaryButton': null,
         }
     }
@@ -24,11 +27,23 @@ QtObject {
             'sidebar': {
                 'basic': {
                     'popups': {
-                        'openCifFile': null
+                        'openJsonFileDialog': null,
+                        'projectDescriptionDialog': null,
                     }
                 }
             }
+        },
+        'sample':{
+            'mainContent': {
+                'sampleView': null,
+                'sldView': null,
+            }
+
         }
     }
 
+    // Populated in plotting/...
+    readonly property var plotting: {
+        'graph1d': null,
+    }
 }

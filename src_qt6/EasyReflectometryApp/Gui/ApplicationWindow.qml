@@ -32,9 +32,20 @@ EaComponents.ApplicationWindow {
             onClicked: {
                 Globals.BackendWrapper.projectReset()
                 Globals.References.applicationWindow.appBarCentralTabs.projectButton.toggle()
+                if (Globals.References.applicationWindow.appBarCentralTabs.sampleButton !== null) {
+                    Globals.References.applicationWindow.appBarCentralTabs.sampleButton.enabled = false
+                }
+                if (Globals.References.applicationWindow.appBarCentralTabs.experimentButton !== null) {
+                    Globals.References.applicationWindow.appBarCentralTabs.experimentButton.enabled = false
+                }
+                if (Globals.References.applicationWindow.appBarCentralTabs.analysisButton !== null) {
+                    Globals.References.applicationWindow.appBarCentralTabs.analysisButton.enabled = false
+                }
+                if (Globals.References.applicationWindow.appBarCentralTabs.summaryButton !== null) {
+                    Globals.References.applicationWindow.appBarCentralTabs.summaryButton.enabled = false
+                }
             }
         }
-
     ]
 
     // Right group of application bar tool buttons
@@ -77,6 +88,41 @@ EaComponents.ApplicationWindow {
         },
         // Project page
 
+        // Sample page
+        EaElements.AppBarTabButton {
+            id: sampleButton
+            enabled: false
+            fontIcon: "layer-group"
+            text: qsTr("Sample")
+            ToolTip.text: qsTr("Sample description page")
+            Component.onCompleted: {
+                Globals.References.applicationWindow.appBarCentralTabs.sampleButton = sampleButton
+            }
+        },
+        // Sample page
+/*
+        // Experiment tab
+        EaElements.AppBarTabButton {
+            id: experimentTabButton
+            enabled: false //ExGlobals.Variables.samplePageEnabled
+            fontIcon: "microscope"
+            text: qsTr("Experiment")
+            ToolTip.text: qsTr("Experimental settings and data page")
+            Component.onCompleted:Globals.References.applicationWindow.appBarCentralTabs.experimentTabButton = experimentTabButton
+        },
+
+        // Analysis tab
+        EaElements.AppBarTabButton {
+            id: analysisTabButton
+            enabled: false //ExGlobals.Variables.samplePageEnabled &&
+                     //(ExGlobals.Constants.proxy.data.experimentSkipped ||
+                     // ExGlobals.Constants.proxy.data.experimentLoaded)
+            fontIcon: "calculator"
+            text: qsTr("Analysis")
+            ToolTip.text: qsTr("Simulation and fitting page")
+            Component.onCompleted: Globals.References.applicationWindow.appBarCentralTabs.analysisTabButton = analysisTabButton
+        },
+*/
         // Summary page
         EaElements.AppBarTabButton {
             id: summaryButton
@@ -99,6 +145,9 @@ EaComponents.ApplicationWindow {
     contentArea: [
         Loader { source: 'Pages/Home/Layout.qml' },
         Loader { source: 'Pages/Project/Layout.qml' },
+        Loader { source: 'Pages/Sample/Layout.qml' },
+//        Loader { source: 'Pages/Experiment/Layout.qml' },
+//        Loader { source: 'Pages/Analysis/Layout.qml' },
         Loader { source: 'Pages/Report/Layout.qml' }
     ]
 
