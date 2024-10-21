@@ -52,7 +52,7 @@ class Plotting1d(QObject):
 #                    'bkgSerie': None,  # QtCharts.QXYSeries
 #                },
                 'samplePage': {
-                    'calcSerie': None,  # QtCharts.QXYSeries,
+                    'sampleSerie': None,  # QtCharts.QXYSeries,
                     'sldSerie': None,
 #                    'braggSerie': None,  # QtCharts.QXYSeries
                 },
@@ -265,11 +265,11 @@ class Plotting1d(QObject):
 #                     x=np.empty(0),
 #                     y=np.empty(0),
 #             )
-        calcSerie = self._chartRefs['QtCharts']['samplePage']['calcSerie']
-        calcSerie.clear()
+        sampleSerie = self._chartRefs['QtCharts']['samplePage']['sampleSerie']
+        sampleSerie.clear()
         nr_points = 0
         for point in self.sample_data.data_points():
-            calcSerie.append(point[0], np.log10(point[1]))
+            sampleSerie.append(point[0], np.log10(point[1]))
             nr_points = nr_points + 1
         console.debug(IO.formatMsg('sub', 'Calc curve', f'{nr_points} points', 'on sample page', 'replaced'))
 

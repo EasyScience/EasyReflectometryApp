@@ -35,7 +35,7 @@ QtObject {
         },
         'sample':{
             'mainContent': {
-                'modelView': null,
+                'sampleView': null,
                 'sldView': null,
             }
 

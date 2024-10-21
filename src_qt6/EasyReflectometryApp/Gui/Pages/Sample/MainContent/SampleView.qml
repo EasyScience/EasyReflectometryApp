@@ -187,10 +187,10 @@ Rectangle {
         // Data is set in python backend
 
         Component.onCompleted: {
-            Globals.References.pages.sample.mainContent.modelView = chartView
+            Globals.References.pages.sample.mainContent.sampleView = chartView
             Globals.BackendWrapper.plottingSetQtChartsReflectometrySerieRef('samplePage',
-                                                                'calcSerie',
-                                                                 chartView.calcSerie)
+                                                                            'sampleSerie',
+                                                                            chartView.calcSerie)
 //            Globals.BackendWrapper.plotting.setQtChartsSerieRef('samplePage',
 //#                                                              'bkgSerie',
 //                                                              chartView.bkgSerie)
