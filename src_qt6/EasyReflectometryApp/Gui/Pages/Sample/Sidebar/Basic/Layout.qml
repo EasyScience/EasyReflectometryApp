@@ -10,9 +10,6 @@ import "./Groups" as Groups
 
 
 EaComponents.SideBarColumn {
-
-//    property string currentAssemblyType: 'Multi-layer'
-
     Groups.MaterialEditor{
         enabled: Globals.BackendWrapper.analysisIsFitFinished
     }
