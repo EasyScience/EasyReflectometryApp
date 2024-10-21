@@ -19,7 +19,7 @@ Rectangle {
 
     color: EaStyle.Colors.chartBackground
 
-    EaCharts.QtCharts1dLogMeasVsCalc {
+    EaCharts.QtCharts1dMeasVsCalc {
         id: chartView
 
         // property var experimentDataBlocksNoMeas: Globals.Proxies.main.experiment.dataBlocksNoMeas
@@ -44,16 +44,18 @@ Rectangle {
         axisX.maxAfterReset: 0.3//Globals.Proxies.rangeValue('xMax')
         //axisX.onRangeChanged: if (Globals.Proxies.main.project.created) saveImgTimer.restart()
 
-        axisY.title: "R(q)"
-        axisY.min: 1e-8//Globals.Proxies.rangeValue('yMin')
+        axisY.title: "Log10 R(q)"
+        axisY.min: -8//Globals.Proxies.rangeValue('yMin')
         axisY.max: 0//Globals.Proxies.rangeValue('yMax')
-        axisY.minAfterReset: 1e-8//Globals.Proxies.rangeValue('yMin')
+        axisY.minAfterReset: -8//Globals.Proxies.rangeValue('yMin')
         axisY.maxAfterReset: 0//Globals.Proxies.rangeValue('yMax')
-        axisY.base: 10
+//        axisY.base: 10
 
         //axisY.onRangeChanged: if (Globals.Proxies.main.project.created) saveImgTimer.restart()
 
 //        measSerie.pointsVisible: true
+
+        calcSerie.onHovered: (point, state) => showMainTooltip(chartView, point, state)
 
 //        measSerie.onHovered: (point, state) => showMainTooltip(chartView, point, state)
 //        bkgSerie.onHovered: (point, state) => showMainTooltip(chartView, point, state)
@@ -212,7 +214,7 @@ Rectangle {
         const pos = chart.mapToPosition(Qt.point(point.x, point.y))
         dataToolTip.x = pos.x
         dataToolTip.y = pos.y
-        dataToolTip.text = `<p align="left">x: ${point.x.toFixed(2)}<br\>y: ${point.y.toFixed(2)}</p>`
+        dataToolTip.text = `<p align="left">x: ${point.x.toFixed(3)}<br\>y: ${point.y.toFixed(3)}</p>`
         dataToolTip.parent = chart
         dataToolTip.visible = state
     }

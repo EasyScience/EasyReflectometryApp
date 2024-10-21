@@ -49,6 +49,16 @@ class Sample(QObject):
         self.modelsIndexChanged.connect(self.modelsConnectChanges)
         self.modelsTableChanged.connect(self.modelsConnectChanges)
 
+        self.materialsChanged.connect(self.sampleConnectChanges)
+        self.modelsChange.connect(self.sampleConnectChanges)
+        self.assembliesChange.connect(self.sampleConnectChanges)
+        self.layersChange.connect(self.sampleConnectChanges)
+
+    # # #
+    # Sample
+    # # #
+    def sampleConnectChanges(self) -> None:
+        self.sampleChanged.emit()
 
     # # #
     # Materials

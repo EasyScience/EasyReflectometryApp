@@ -54,7 +54,7 @@ Rectangle {
 
 //        measSerie.pointsVisible: true
 
-//        measSerie.onHovered: (point, state) => showMainTooltip(chartView, point, state)
+        calcSerie.onHovered: (point, state) => showMainTooltip(chartView, point, state)
 //        bkgSerie.onHovered: (point, state) => showMainTooltip(chartView, point, state)
 
 //        // Calculated curve
@@ -211,7 +211,7 @@ Rectangle {
         const pos = chart.mapToPosition(Qt.point(point.x, point.y))
         dataToolTip.x = pos.x
         dataToolTip.y = pos.y
-        dataToolTip.text = `<p align="left">x: ${point.x.toFixed(2)}<br\>y: ${point.y.toFixed(2)}</p>`
+        dataToolTip.text = `<p align="left">x: ${point.x.toFixed(3)}<br\>y: ${point.y.toFixed(3)}</p>`
         dataToolTip.parent = chart
         dataToolTip.visible = state
     }

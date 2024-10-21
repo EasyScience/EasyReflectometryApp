@@ -70,21 +70,26 @@ class PyBackend(QObject):
     ######### Connections to relay info between the backend parts
     def _connect_backend_parts(self) -> None:
         self._connect_project_page()
+        self._connect_sample_page()
 
     ######### Project
     def _connect_project_page(self) -> None:
-        self._project.nameChanged.connect(self._relay_project_name)
-        self._project.createdChanged.connect(self._relay_project_created)
+        self._project.nameChanged.connect(self._relay_project_page_name)
+        self._project.createdChanged.connect(self._relay_project_page_created)
 
-    def _relay_project_name(self):
+    def _connect_sample_page(self) -> None:
+        self._sample.modelsIndexChanged.connect(self._relay_sample_page_models_index)
+        self._sample.sampleChanged.connect(self._relay_sample_page_sample_changed)
+
+    def _relay_project_page_name(self):
         self._status.projectChanged.emit()
         self._report.asHtmlChanged.emit()
  
-    def _relay_project_created(self):
+    def _relay_project_page_created(self):
         self._report.createdChanged.emit()
 
-    def _connect_sample_page(self) -> None:
-        self._sample.modelsIndexChanged.connect(self._relay_models_index)
-
-    def _relay_models_index(self, index: int):
+    def _relay_sample_page_models_index(self, index: int):
         self._plotting.setModelIndex(index)
+
+    def _relay_sample_page_sample_changed(self):
+        self._plotting.refreshSamplePage()

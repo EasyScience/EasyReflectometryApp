@@ -16,17 +16,17 @@ EaComponents.ContentPage {
 //                     qsTr('No project defined')
 
     mainView: EaComponents.MainContent {
-//       tabs: [
-//           EaElements.TabButton { text: qsTr('Model view') }
-//           EaElements.TabButton {}
-//       ]
+        tabs: [
+            EaElements.TabButton { text: qsTr('Reflectivity') },
+            EaElements.TabButton { text: qsTr('SLD') }
+       ]
 
         items: [
-/*            Loader {
+            Loader {
                 source: `MainContent/SampleView.qml`
                 onStatusChanged: if (status === Loader.Ready) console.debug(`${source} loaded`)
-            }
-*/            Loader {
+            },
+            Loader {
                 source: `MainContent/SldView.qml`
                 onStatusChanged: if (status === Loader.Ready) console.debug(`${source} loaded`)
             }

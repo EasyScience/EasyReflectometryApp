@@ -72,6 +72,30 @@ class Plotting1d(QObject):
     def currentLib1d(self):
         return self._currentLib1d
 
+    @property
+    def sample_data(self) -> DataSet1D:
+        try:
+            sample_data = self._project_lib.sample_data_for_model_at_index()
+        except IndexError:
+            sample_data = DataSet1D(
+                name='Sample Data empty',
+                    x=np.empty(0),
+                    y=np.empty(0),
+            )
+        return sample_data
+
+    @property
+    def sld_data(self) -> DataSet1D:
+        try:
+            sld_data = self._project_lib.sld_data_for_model_at_index()
+        except IndexError:
+            sld_data = DataSet1D(
+                name='Sample Data empty',
+                    x=np.empty(0),
+                    y=np.empty(0),
+            )
+        return sld_data
+
     @currentLib1d.setter
     def currentLib1d(self, newValue):
         if self._currentLib1d == newValue:
@@ -156,6 +180,10 @@ class Plotting1d(QObject):
 
     # Backend public methods
 
+    def refreshSamplePage(self):
+        self.drawCalculatedOnSampleChart()
+        self.drawCalculatedOnSldChart()
+
     # Sample
 
     def drawCalculatedOnSampleChart(self):
@@ -227,38 +255,40 @@ class Plotting1d(QObject):
 
     def qtchartsReplaceCalculatedOnSampleChartAndRedraw(self):
 #        index = self._project_lib.samp.currentIndex
-        try:
-            sample_data = self._project_lib.sample_data_for_model_at_index()
-#            xArray = self._project_lib._xArrays[self._model_index]
-#            yCalcArray = self._project_lib._yCalcArrays[self._model_index]
-        except IndexError:
-            sample_data = DataSet1D(
-                name='Sample Data empty',
-                    x=np.empty(0),
-                    y=np.empty(0),
-            )
+#         try:
+#             sample_data = self._project_lib.sample_data_for_model_at_index()
+# #            xArray = self._project_lib._xArrays[self._model_index]
+# #            yCalcArray = self._project_lib._yCalcArrays[self._model_index]
+#         except IndexError:
+#             sample_data = DataSet1D(
+#                 name='Sample Data empty',
+#                     x=np.empty(0),
+#                     y=np.empty(0),
+#             )
         calcSerie = self._chartRefs['QtCharts']['samplePage']['calcSerie']
+        calcSerie.clear()
         nr_points = 0
-        for point in sample_data.data_points():
-            calcSerie.append(point[0], point[1])
+        for point in self.sample_data.data_points():
+            calcSerie.append(point[0], np.log10(point[1]))
             nr_points = nr_points + 1
         console.debug(IO.formatMsg('sub', 'Calc curve', f'{nr_points} points', 'on sample page', 'replaced'))
 
     def qtchartsReplaceCalculatedOnSldChartAndRedraw(self):
 #        index = self._project_lib.samp.currentIndex
-        try:
-            sample_data = self._project_lib.sld_data_for_model_at_index()
-#            xArray = self._project_lib._xArrays[self._model_index]
-#            yCalcArray = self._project_lib._yCalcArrays[self._model_index]
-        except IndexError:
-            sample_data = DataSet1D(
-                name='Sample Data empty',
-                    x=np.empty(0),
-                    y=np.empty(0),
-            )
+#         try:
+#             sample_data = self._project_lib.sld_data_for_model_at_index()
+# #            xArray = self._project_lib._xArrays[self._model_index]
+# #            yCalcArray = self._project_lib._yCalcArrays[self._model_index]
+#         except IndexError:
+#             sample_data = DataSet1D(
+#                 name='Sample Data empty',
+#                     x=np.empty(0),
+#                     y=np.empty(0),
+#             )
         sldSerie = self._chartRefs['QtCharts']['samplePage']['sldSerie']
+        sldSerie.clear()
         nr_points = 0
-        for point in sample_data.data_points():
+        for point in self.sld_data.data_points():
             sldSerie.append(point[0], point[1])
             nr_points = nr_points + 1
         console.debug(IO.formatMsg('sub', 'Sld curve', f'{nr_points} points', 'on sample page', 'replaced'))
