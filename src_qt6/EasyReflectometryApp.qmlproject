@@ -38,5 +38,5 @@ Project {
         recursive: true
     }
 
-    mainUiFile: "EasyReflectometryApp/Gui/Pages/Sample/Sidebar/Basic/Groups/MaterialEditor.qml"
+    mainUiFile: "EasyReflectometryApp/mail.qml"
 }
