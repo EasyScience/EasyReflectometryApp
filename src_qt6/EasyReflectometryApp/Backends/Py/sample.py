@@ -10,6 +10,8 @@ from .logic.assemblies import Assemblies
 from .logic.layers import Layers
 
 class Sample(QObject):
+    sampleChanged = Signal()
+
     materialsChanged = Signal()
     materialIndexChanged = Signal(int)
 
