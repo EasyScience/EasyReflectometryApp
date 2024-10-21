@@ -30,7 +30,7 @@ classifiers = [
 requires-python = '>=3.11'
 dependencies = [
   'EasyApp @ git+https://github.com/EasyScience/EasyApp.git@develop',
-  'easyreflectometry @ git+https://github.com/EasyScience/EasyReflectometryLib.git@194-pass-real-reflectivity-data-from-the-project-method-exposing-lib-data',
+  'easyreflectometry @ git+https://github.com/EasyScience/EasyReflectometryLib.git@develop',
   'PySide6==6.6',
   'toml',
 ]

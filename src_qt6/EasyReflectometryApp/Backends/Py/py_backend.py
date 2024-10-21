@@ -1,4 +1,5 @@
-from PySide6.QtCore import QObject, Property
+from PySide6.QtCore import QObject
+from PySide6.QtCore import Property
 
 from EasyApp.Logic.Logging import LoggerLevelHandler
 from easyreflectometry import Project as ProjectLib
