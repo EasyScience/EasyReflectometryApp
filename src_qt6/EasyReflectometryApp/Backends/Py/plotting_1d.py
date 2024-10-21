@@ -30,7 +30,9 @@ class Plotting1d(QObject):
     currentLib1dChanged = Signal()
     useAcceleration1dChanged = Signal()
     chartRefsChanged = Signal()
-    chartRangesChanged = Signal()
+#    chartRangesChanged = Signal()
+    sldChartRangesChanged = Signal()
+    sampleChartRangesChanged = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
@@ -39,7 +41,7 @@ class Plotting1d(QObject):
         self._currentLib1d = 'QtCharts'
         self._useAcceleration1d = True
         self._model_index = 0
-        self._chartRanges = {}
+#        self._chartRanges = {}
         self._chartRefs = {
             # 'Plotly': {
             #     'experimentPage': None,
@@ -66,12 +68,6 @@ class Plotting1d(QObject):
             }
         }
 
-    # Frontend/Backend public properties
-
-    @Property(str, notify=currentLib1dChanged)
-    def currentLib1d(self):
-        return self._currentLib1d
-
     @property
     def sample_data(self) -> DataSet1D:
         try:
@@ -96,6 +92,44 @@ class Plotting1d(QObject):
             )
         return sld_data
 
+    # Frontend/Backend public properties
+
+    @Property(float, notify=sampleChartRangesChanged)
+    def sampleMaxX(self):
+        return self.sample_data.x.max()
+
+    @Property(float, notify=sampleChartRangesChanged)
+    def sampleMinX(self):
+        return self.sample_data.x.min()
+    
+    @Property(float, notify=sampleChartRangesChanged)
+    def sampleMaxY(self):
+        return np.log10(self.sample_data.y.max())
+
+    @Property(float, notify=sampleChartRangesChanged)
+    def sampleMinY(self):
+        return np.log10(self.sample_data.y.min())
+    
+    @Property(float, notify=sldChartRangesChanged)
+    def sldMaxX(self):
+        return self.sld_data.x.max()
+
+    @Property(float, notify=sldChartRangesChanged)
+    def sldMinX(self):
+        return self.sld_data.x.min()
+    
+    @Property(float, notify=sldChartRangesChanged)
+    def sldMaxY(self):
+        return self.sld_data.y.max()
+
+    @Property(float, notify=sldChartRangesChanged)
+    def sldMinY(self):
+        return self.sld_data.y.min()
+
+    @Property(str, notify=currentLib1dChanged)
+    def currentLib1d(self):
+        return self._currentLib1d
+
     @currentLib1d.setter
     def currentLib1d(self, newValue):
         if self._currentLib1d == newValue:
@@ -114,9 +148,9 @@ class Plotting1d(QObject):
         self._useAcceleration1d = newValue
         self.useAcceleration1dChanged.emit()
 
-    @Property('QVariant', notify=chartRangesChanged)
-    def chartRanges(self):
-        return self._chartRanges
+    # @Property('QVariant', notify=chartRangesChanged)
+    # def chartRanges(self):
+    #     return self._chartRanges
 
     @Property('QVariant', notify=chartRefsChanged)
     def chartRefs(self):

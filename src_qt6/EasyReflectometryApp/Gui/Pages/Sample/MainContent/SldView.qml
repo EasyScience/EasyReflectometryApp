@@ -37,18 +37,20 @@ Rectangle {
 
         useOpenGL: EaGlobals.Vars.useOpenGL //Globals.Proxies.main.plotting.useWebGL1d
 
+        property double xRange: Globals.BackendWrapper.plottingSldMaxX - Globals.BackendWrapper.plottingSldMinX
         axisX.title: "z (Å)"
-        axisX.min: -10// Globals.Proxies.rangeValue('xMin')
-        axisX.max: 110//Globals.Proxies.rangeValue('xMax')
-        axisX.minAfterReset: -10//Globals.Proxies.rangeValue('xMin')
-        axisX.maxAfterReset: 110//Globals.Proxies.rangeValue('xMax')
+        axisX.min: Globals.BackendWrapper.plottingSldMinX - xRange * 0.01
+        axisX.max: Globals.BackendWrapper.plottingSldMaxX + xRange * 0.01
+        axisX.minAfterReset: Globals.BackendWrapper.plottingSldMinX - xRange * 0.01
+        axisX.maxAfterReset: Globals.BackendWrapper.plottingSldMaxX + xRange * 0.01
         //axisX.onRangeChanged: if (Globals.Proxies.main.project.created) saveImgTimer.restart()
 
+        property double yRange: Globals.BackendWrapper.plottingSldMaxY - Globals.BackendWrapper.plottingSldMinY
         axisY.title: "SLD (10⁻⁶Å⁻²)"
-        axisY.min: 0//Globals.Proxies.rangeValue('yMin')
-        axisY.max: 7//Globals.Proxies.rangeValue('yMax')
-        axisY.minAfterReset: 0//Globals.Proxies.rangeValue('yMin')
-        axisY.maxAfterReset: 7//Globals.Proxies.rangeValue('yMax')
+        axisY.min: Globals.BackendWrapper.plottingSldMinY - yRange * 0.01
+        axisY.max: Globals.BackendWrapper.plottingSldMaxY + yRange * 0.01
+        axisY.minAfterReset: Globals.BackendWrapper.plottingSldMinY - yRange * 0.01
+        axisY.maxAfterReset: Globals.BackendWrapper.plottingSldMaxY + yRange * 0.01
 
         //axisY.onRangeChanged: if (Globals.Proxies.main.project.created) saveImgTimer.restart()
 
@@ -186,8 +188,8 @@ Rectangle {
         Component.onCompleted: {
             Globals.References.pages.sample.mainContent.sldView = chartView
             Globals.BackendWrapper.plottingSetQtChartsSldSerieRef('samplePage',
-                                                                'sldSerie',
-                                                                 chartView.calcSerie)
+                                                                  'sldSerie',
+                                                                  chartView.calcSerie)
 //            Globals.BackendWrapper.plotting.setQtChartsSerieRef('samplePage',
 //#                                                              'bkgSerie',
 //                                                              chartView.bkgSerie)

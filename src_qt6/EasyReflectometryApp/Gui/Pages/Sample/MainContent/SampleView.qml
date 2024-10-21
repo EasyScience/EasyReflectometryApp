@@ -37,18 +37,20 @@ Rectangle {
 
         useOpenGL: EaGlobals.Vars.useOpenGL //Globals.Proxies.main.plotting.useWebGL1d
         
+        property double xRange: Globals.BackendWrapper.plottingSampleMaxX - Globals.BackendWrapper.plottingSampleMinX
         axisX.title: "q (Å⁻¹)"
-        axisX.min: 0// Globals.Proxies.rangeValue('xMin')
-        axisX.max: 0.3//Globals.Proxies.rangeValue('xMax')
-        axisX.minAfterReset: 0//Globals.Proxies.rangeValue('xMin')
-        axisX.maxAfterReset: 0.3//Globals.Proxies.rangeValue('xMax')
+        axisX.min: Globals.BackendWrapper.plottingSampleMinX - xRange * 0.01
+        axisX.max: Globals.BackendWrapper.plottingSampleMaxX + xRange * 0.01
+        axisX.minAfterReset: Globals.BackendWrapper.plottingSampleMinX - xRange * 0.01
+        axisX.maxAfterReset: Globals.BackendWrapper.plottingSampleMaxX + xRange * 0.01
         //axisX.onRangeChanged: if (Globals.Proxies.main.project.created) saveImgTimer.restart()
 
+        property double yRange: Globals.BackendWrapper.plottingSampleMaxY - Globals.BackendWrapper.plottingSampleMinY
         axisY.title: "Log10 R(q)"
-        axisY.min: -8//Globals.Proxies.rangeValue('yMin')
-        axisY.max: 0//Globals.Proxies.rangeValue('yMax')
-        axisY.minAfterReset: -8//Globals.Proxies.rangeValue('yMin')
-        axisY.maxAfterReset: 0//Globals.Proxies.rangeValue('yMax')
+        axisY.min: Globals.BackendWrapper.plottingSampleMinY - yRange * 0.01
+        axisY.max: Globals.BackendWrapper.plottingSampleMaxY + yRange * 0.01
+        axisY.minAfterReset: Globals.BackendWrapper.plottingSampleMinY - yRange * 0.01
+        axisY.maxAfterReset: Globals.BackendWrapper.plottingSampleMaxY + yRange * 0.01
 //        axisY.base: 10
 
         //axisY.onRangeChanged: if (Globals.Proxies.main.project.created) saveImgTimer.restart()

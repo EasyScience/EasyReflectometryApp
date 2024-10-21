@@ -165,8 +165,17 @@ QtObject {
     ///////////////
     // Plotting
     ///////////////
+    readonly property var plottingSldMinX: activeBackend.plotting.sldMinX
+    readonly property var plottingSldMaxX: activeBackend.plotting.sldMaxX
+    readonly property var plottingSldMinY: activeBackend.plotting.sldMinY
+    readonly property var plottingSldMaxY: activeBackend.plotting.sldMaxY
 
-     function plottingSetQtChartsReflectometrySerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsReflectometrySerieRef(value1, value2, value3) }
-     function plottingSetQtChartsSldSerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsSldSerieRef(value1, value2, value3) }
+    readonly property var plottingSampleMinX: activeBackend.plotting.sampleMinX
+    readonly property var plottingSampleMaxX: activeBackend.plotting.sampleMaxX
+    readonly property var plottingSampleMinY: activeBackend.plotting.sampleMinY
+    readonly property var plottingSampleMaxY: activeBackend.plotting.sampleMaxY
+
+    function plottingSetQtChartsReflectometrySerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsReflectometrySerieRef(value1, value2, value3) }
+    function plottingSetQtChartsSldSerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsSldSerieRef(value1, value2, value3) }
 
 }

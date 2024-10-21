@@ -92,4 +92,6 @@ class PyBackend(QObject):
         self._plotting.setModelIndex(index)
 
     def _relay_sample_page_sample_changed(self):
+        self._plotting.sldChartRangesChanged.emit()
+        self._plotting.sampleChartRangesChanged.emit()
         self._plotting.refreshSamplePage()
