@@ -146,6 +146,25 @@ QtObject {
     function sampleSetCurrentLayerAPM(value) { activeBackend.sample.setCurrentLayerAPM(value) }
     function sampleSetCurrentLayerSolvation(value) { activeBackend.sample.setCurrentLayerSolvation(value) }
 
+
+    //////////////////
+    // Experiment page
+    //////////////////
+    readonly property var experimentScaling: activeBackend.experiment.scaling
+    function experimentSetScaling(value) { activeBackend.experiment.setScaling(value) }
+    readonly property var experimentBackground: activeBackend.experiment.background
+    function experimentSetBackground(value) { activeBackend.experiment.setBackground(value) }
+    readonly property var experimentResolution: activeBackend.experiment.resolution
+    function experimentSetResolution(value) { activeBackend.experiment.setResolution(value) }
+    readonly property var experimentQMin: activeBackend.experiment.q_min
+    function experimentSetQMin(value) { activeBackend.experiment.setQMin(value) }
+    readonly property var experimentQMax: activeBackend.experiment.q_max
+    function experimentSetQMax(value) { activeBackend.experiment.setQMax(value) }
+    readonly property var experimentQStep: activeBackend.experiment.q_step
+    function experimentSetQStep(value) { activeBackend.experiment.setQStep(value) }
+
+    function experimentLoad(value) { activeBackend.experiment.load(value) }
+
     ///////////////
     // Analysis page
     ///////////////
@@ -170,6 +189,11 @@ QtObject {
     readonly property var plottingSampleMaxX: activeBackend.plotting.sampleMaxX
     readonly property var plottingSampleMinY: activeBackend.plotting.sampleMinY
     readonly property var plottingSampleMaxY: activeBackend.plotting.sampleMaxY
+
+    readonly property var plottingExperimentMinX: activeBackend.plotting.sampleMinX
+    readonly property var plottingExperimentMaxX: activeBackend.plotting.sampleMaxX
+    readonly property var plottingExperimentMinY: activeBackend.plotting.sampleMinY
+    readonly property var plottingExperimentMaxY: activeBackend.plotting.sampleMaxY
 
     function plottingSetQtChartsReflectometrySerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsReflectometrySerieRef(value1, value2, value3) }
     function plottingSetQtChartsSldSerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsSldSerieRef(value1, value2, value3) }

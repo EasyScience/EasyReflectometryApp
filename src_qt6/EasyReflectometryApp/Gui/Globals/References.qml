@@ -38,7 +38,18 @@ QtObject {
                 'sampleView': null,
                 'sldView': null,
             }
-
+        },
+        'experiment':{
+            'mainContent': {
+                'experimentView': null,
+            },
+            'sidebar': {
+                'basic': {
+                    'popups': {
+                        'loadExperimentFileDialog': null,
+                    }
+                }
+            }
         }
     }
 

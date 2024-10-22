@@ -41,7 +41,6 @@ EaComponents.ApplicationWindow {
                 if (Globals.References.applicationWindow.appBarCentralTabs.analysisButton !== null) {
                     Globals.References.applicationWindow.appBarCentralTabs.analysisButton.enabled = false
                 }
-
                 if (Globals.References.applicationWindow.appBarCentralTabs.summaryButton !== null) {
                     Globals.References.applicationWindow.appBarCentralTabs.summaryButton.enabled = false
                 }
@@ -105,7 +104,7 @@ EaComponents.ApplicationWindow {
         // Experiment tab
         EaElements.AppBarTabButton {
             id: experimentTabButton
-            enabled: false
+            enabled: true
             fontIcon: "microscope"
             text: qsTr("Experiment")
             ToolTip.text: qsTr("Experimental settings and data page")

@@ -1,6 +1,7 @@
 module MockLogic
 
 singleton Analysis Analysis.qml
+singleton Experiment Experiment.qml
 singleton Home Home.qml
 singleton Project Project.qml
 singleton Report Report.qml

@@ -1,24 +1,40 @@
 import QtQuick 2.14
 import QtQuick.Controls 2.14
-import QtQuick.Dialogs 1.3 as Dialogs1
+//import QtQuick.Dialogs as Dialogs1
 
-import easyApp.Gui.Globals 1.0 as EaGlobals
-import easyApp.Gui.Style 1.0 as EaStyle
-import easyApp.Gui.Elements 1.0 as EaElements
-import easyApp.Gui.Components 1.0 as EaComponents
-import easyApp.Gui.Logic 1.0 as EaLogic
+//import easyApp.Gui.Globals as EaGlobals
+//import easyApp.Gui.Style as EaStyle
+//import easyApp.Gui.Elements as EaElements
+import easyApp.Gui.Components as EaComponents
+//import easyApp.Gui.Logic as EaLogic
 
-import Gui.Globals 1.0 as ExGlobals
-import Gui.Components 1.0 as ExComponents
+import Gui.Globals as Globals
+import "./Groups" as Groups
+
+//import Gui.Components 1.0 as ExComponents
+
+
 
 EaComponents.SideBarColumn {
+    Groups.ExperimentalData{
+        enabled: Globals.BackendWrapper.analysisIsFitFinished
+    }
 
+    Groups.InstrumentParameters{
+        enabled: Globals.BackendWrapper.analysisIsFitFinished
+    }
+
+    Groups.SimulationRange{
+        enabled: Globals.BackendWrapper.analysisIsFitFinished
+    }
+
+/*
     EaElements.GroupBox {
         title: qsTr("Experimental data")
         collapsible: false
-        enabled: ExGlobals.Constants.proxy.fitter.isFitFinished
+        enabled: Globals.Constants.proxy.fitter.isFitFinished
 
-        ExComponents.ExperimentDataExplorer {}
+//        ExComponents.ExperimentDataExplorer {}
 
         Row {
             spacing: EaStyle.Sizes.fontPixelSize
@@ -33,25 +49,28 @@ EaComponents.SideBarColumn {
             }
 
             EaElements.SideBarButton {
-                enabled: !ExGlobals.Constants.proxy.data.experimentLoaded &&
-                         !ExGlobals.Constants.proxy.data.experimentSkipped
+                enabled: !Globals.Constants.proxy.data.experimentLoaded &&
+                         !Globals.Constants.proxy.data.experimentSkipped
 
                 fontIcon: "arrow-circle-right"
                 text: qsTr("Continue without experiment data")
 
-                onClicked: ExGlobals.Constants.proxy.data.experimentSkipped = true
+                onClicked: Globals.Constants.proxy.data.experimentSkipped = true
 
-                Component.onCompleted: ExGlobals.Variables.continueWithoutExperimentDataButton = this
+                Component.onCompleted: Globals.Variables.continueWithoutExperimentDataButton = this
             }
         }
 
-        Component.onCompleted: ExGlobals.Variables.experimentalDataGroup = this
+        Component.onCompleted: Globals.Variables.experimentalDataGroup = this
     }
+*/
+
+
 
     // EaElements.GroupBox {
     //     title: qsTr("Instrument and experiment type")
-    //     enabled: ExGlobals.Constants.proxy.data.experimentLoaded ||
-    //              ExGlobals.Constants.proxy.data.experimentSkipped
+    //     enabled: Globals.Constants.proxy.data.experimentLoaded ||
+    //              Globals.Constants.proxy.data.experimentSkipped
 
     //     Column {
 
@@ -103,9 +122,10 @@ EaComponents.SideBarColumn {
     //     }
     // }
 
+/*
     EaElements.GroupBox {
-        title: qsTr(ExGlobals.Constants.proxy.data.currentDataName + " instrumental parameters")
-        visible: ExGlobals.Constants.proxy.data.experimentLoaded
+        title: qsTr(Globals.Constants.proxy.data.currentDataName + " instrumental parameters")
+        visible: Globals.Constants.proxy.data.experimentLoaded
         collapsed: false
         Row {
             spacing: EaStyle.Sizes.fontPixelSize
@@ -120,8 +140,8 @@ EaComponents.SideBarColumn {
                 enabled: true
                 width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
                 units: ""
-                text: ExGlobals.Constants.proxy.data.currentScaling.toFixed(3)
-                onEditingFinished: ExGlobals.Constants.proxy.data.setScaling(text)
+                text: Globals.Constants.proxy.data.currentScaling.toFixed(3)
+                onEditingFinished: Globals.Constants.proxy.data.setScaling(text)
             }
 
             // Max
@@ -134,8 +154,8 @@ EaComponents.SideBarColumn {
                 id: xMax
                 width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
                 units: ""
-                text: ExGlobals.Constants.proxy.data.currentBackground.toExponential(2)
-                onEditingFinished: ExGlobals.Constants.proxy.data.setBackground(text)
+                text: Globals.Constants.proxy.data.currentBackground.toExponential(2)
+                onEditingFinished: Globals.Constants.proxy.data.setBackground(text)
             }
 
             // Step
@@ -148,31 +168,31 @@ EaComponents.SideBarColumn {
                 id: xStep
                 width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
                 units: "%"
-                text: ExGlobals.Constants.proxy.data.currentResolution.toFixed(2)
-                onEditingFinished: ExGlobals.Constants.proxy.data.setResolution(text)
+                text: Globals.Constants.proxy.data.currentResolution.toFixed(2)
+                onEditingFinished: Globals.Constants.proxy.data.setResolution(text)
             }
         }
     }
-
-
+*/
+/*
     EaElements.GroupBox {
         title: qsTr("Simulation range")
-        visible: ExGlobals.Constants.proxy.data.experimentSkipped
+        visible: Globals.Constants.proxy.data.experimentSkipped
 
-        enabled: ExGlobals.Constants.proxy.data.experimentSkipped 
+        enabled: Globals.Constants.proxy.data.experimentSkipped 
 
-        ExComponents.ExperimentSimulationSetup {}
+//        ExComponents.ExperimentSimulationSetup {}
     }
-
+*/
     // Load experimental data file dialog
-
+/*
     Dialogs1.FileDialog{
         id: loadExperimentDataFileDialog
 
         nameFilters: [ qsTr("Data files") + " (*.dat *.txt *.ort)" ]
 
-        onAccepted: ExGlobals.Constants.proxy.data.addExperimentDataFromOrt(fileUrl)
+        onAccepted: Globals.Constants.proxy.data.addExperimentDataFromOrt(fileUrl)
     }
-
+*/
 }
 
