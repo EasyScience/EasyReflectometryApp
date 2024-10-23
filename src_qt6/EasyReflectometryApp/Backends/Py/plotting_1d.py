@@ -11,14 +11,12 @@ from easyreflectometry.data import DataSet1D
 
 from .helpers import IO 
 
-
 PLOT_BACKEND = 'QtCharts'
 
 class Plotting1d(QObject):
     currentLib1dChanged = Signal()
     useAcceleration1dChanged = Signal()
     chartRefsChanged = Signal()
-#    chartRangesChanged = Signal()
     sldChartRangesChanged = Signal()
     sampleChartRangesChanged = Signal()
     experimentChartRangesChanged = Signal()
@@ -33,10 +31,6 @@ class Plotting1d(QObject):
         self._chartRefs = {
 
             'QtCharts': {
-#                'experimentPage': {
-#                    'measSerie': None,  # QtCharts.QXYSeries,
-#                    'bkgSerie': None,  # QtCharts.QXYSeries
-#                },
                 'samplePage': {
                     'sampleSerie': None,
                     'sldSerie': None,
@@ -46,10 +40,6 @@ class Plotting1d(QObject):
                     'varianceUpperSerie': None,
                     'varianceLowerSerie': None,
                 },
-#                'analysisPage': {
-#                    'measSerie': None,  # QtCharts.QXYSeries,
-#                    'bkgSerie': None,  # QtCharts.QXYSeries,
-#                }
             }
         }
 
@@ -168,8 +158,6 @@ class Plotting1d(QObject):
     def chartRefs(self):
         return self._chartRefs
 
-    # Frontend/Backend public methods
-
     @Slot(int)
     def setModelIndex(self, value: int) -> None:
         self._model_index = value
@@ -178,22 +166,16 @@ class Plotting1d(QObject):
     def setQtChartsReflectometrySerieRef(self, page:str, serie:str, ref: QObject):
         self._chartRefs['QtCharts'][page][serie] = ref
         console.debug(IO.formatMsg('sub', f'{serie} on {page}: {ref}'))
-#        self.drawCalculatedOnSampleChart()
-#        self.chartRefsChanged.emit()
 
     @Slot(str, str, 'QVariant')
     def setQtChartsSldSerieRef(self, page:str, serie:str, ref: QObject):
         self._chartRefs['QtCharts'][page][serie] = ref
         console.debug(IO.formatMsg('sub', f'{serie} on {page}: {ref}'))
-#        self.drawCalculatedOnSldChart()
-#        self.chartRefsChanged.emit()
 
     @Slot(str, str, 'QVariant')
     def setQtChartsExperimentSerieRef(self, page:str, serie:str, ref: QObject):
         self._chartRefs['QtCharts'][page][serie] = ref
         console.debug(IO.formatMsg('sub', f'{serie} on {page}: {ref}'))
-#        self.drawMeasuredOnExperimentChart()
-#        self.chartRefsChanged.emit()
 
     def refreshSamplePage(self):
         self.drawCalculatedOnSampleChart()
@@ -234,16 +216,17 @@ class Plotting1d(QObject):
 
     def qtchartsReplaceMeasuredOnExperimentChartAndRedraw(self):
         series_measured = self._chartRefs['QtCharts']['experimentPage']['measuredSerie']
-        series_variance_upper = self._chartRefs['QtCharts']['experimentPage']['varianceUpperSerie']
-        series_variance_lower = self._chartRefs['QtCharts']['experimentPage']['varianceLowerSerie']
         series_measured.clear()
+        series_variance_upper = self._chartRefs['QtCharts']['experimentPage']['varianceUpperSerie']
         series_variance_upper.clear()
+        series_variance_lower = self._chartRefs['QtCharts']['experimentPage']['varianceLowerSerie']
         series_variance_lower.clear()
         nr_points = 0
         for point in self.experiment_data.data_points():
-            series_measured.append(point[0], np.log10(point[1]))
-            series_variance_upper.append(point[0], np.log10(point[1] + np.sqrt(point[2])))
-            series_variance_lower.append(point[0], np.log10(point[1] - np.sqrt(point[2])))
-            nr_points = nr_points + 1
+            if point[0] < self._project_lib.q_max and self._project_lib.q_min < point[0]:
+                series_measured.append(point[0], np.log10(point[1]))
+                series_variance_upper.append(point[0], np.log10(point[1] + np.sqrt(point[2])))
+                series_variance_lower.append(point[0], np.log10(point[1] - np.sqrt(point[2])))
+                nr_points = nr_points + 1
 
         console.debug(IO.formatMsg('sub', 'Measurede curve', f'{nr_points} points', 'on experiment page', 'replaced'))
