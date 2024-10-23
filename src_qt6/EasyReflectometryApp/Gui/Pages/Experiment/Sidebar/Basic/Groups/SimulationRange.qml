@@ -71,14 +71,5 @@ EaElements.GroupBox {
     function textFieldWidth() {
         return EaStyle.Sizes.fontPixelSize * 7.0
     }
-/*
-    function updateParameters() {
-        const json = {
-            "x_min": parseFloat(xMin.text),
-            "x_max": parseFloat(xMax.text),
-            "x_step": parseFloat(xStep.text)
-        }
-        ExGlobals.Constants.proxy.simulation.qRangeAsObj = JSON.stringify(json)
-    }*/
 }
 
