@@ -112,3 +112,4 @@ class PyBackend(QObject):
     
     def _relay_experiment_page_experiment_changed(self):
         self._plotting.refreshExperimentPage()
+        self._status.experimentsCountChanged.emit()
