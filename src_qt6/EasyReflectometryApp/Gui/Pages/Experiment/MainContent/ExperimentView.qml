@@ -131,9 +131,20 @@ Rectangle {
                 bottomPadding: EaStyle.Sizes.fontPixelSize * 0.5
 
                 EaElements.Label {
-                    text: '━  I (experiment)'
+                    text: '━  I (Measured)'
+                    color: chartView.measSerie.color
+                }
+
+                EaElements.Label {
+                    text: '━  I (Error upper)'
                     color: chartView.calcSerie.color
                 }
+
+                EaElements.Label {
+                    text: '━  I (Error lower)'
+                    color: chartView.bkgSerie.color
+                }
+
             }
         }
         // Legend
@@ -151,11 +162,16 @@ Rectangle {
 
         Component.onCompleted: {
             Globals.References.pages.experiment.mainContent.experimentView = chartView
-            Globals.BackendWrapper.plottingSetQtChartsReflectometrySerieRef('experimentPage',
-                                                                            'experimentSerie',
-                                                                            chartView.calcSerie)
+            Globals.BackendWrapper.plottingSetQtChartsExperimentSerieRef('experimentPage',
+                                                                         'measuredSerie',
+                                                                         chartView.measSerie)
+            Globals.BackendWrapper.plottingSetQtChartsExperimentSerieRef('experimentPage',
+                                                                         'varianceUpperSerie',
+                                                                         chartView.calcSerie)        
+            Globals.BackendWrapper.plottingSetQtChartsExperimentSerieRef('experimentPage',
+                                                                         'varianceLowerSerie',
+                                                                         chartView.bkgSerie)
         }
-
     }
 
     // Logic

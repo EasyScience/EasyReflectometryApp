@@ -25,5 +25,7 @@ QtObject {
         console.debug(`setQtChartsSldSerieRef ${value1}, ${value2}, ${value3}`)
     }
 
-
+    function setQtChartsExperimentSerieRef(value1, value2, value3) {
+        console.debug(`setQtChartsSldSerieRef ${value1}, ${value2}, ${value3}`)
+    }
 }

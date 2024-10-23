@@ -11,7 +11,7 @@ from .logic.project import Project as ProjectLogic
 
 
 class Experiment(QObject):
-    modelChanged = Signal()
+    experimentChanged = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
@@ -19,27 +19,27 @@ class Experiment(QObject):
         self._project_logic = ProjectLogic(project_lib)
 
 
-    @Property(float, notify=modelChanged)
+    @Property(float, notify=experimentChanged)
     def scaling(self) -> float:
         return self._model_logic.scaling_at_current_index
 
-    @Property(float, notify=modelChanged)
+    @Property(float, notify=experimentChanged)
     def background(self) -> float:
         return self._model_logic.background_at_current_index
 
-    @Property(float, notify=modelChanged)
+    @Property(float, notify=experimentChanged)
     def resolution(self) -> float:
         return self._model_logic.resolution_at_current_index
 
-    @Property(float, notify=modelChanged)
+    @Property(float, notify=experimentChanged)
     def q_min(self) -> float:
         return self._project_logic.q_min
 
-    @Property(float, notify=modelChanged)
+    @Property(float, notify=experimentChanged)
     def q_max(self) -> float:
         return self._project_logic.q_max
 
-    @Property(int, notify=modelChanged)
+    @Property(int, notify=experimentChanged)
     def q_elements(self) -> float:
         return self._project_logic.q_elements
 
@@ -51,35 +51,35 @@ class Experiment(QObject):
     @Slot(float)
     def setScaling(self, new_value: float) -> None:
         self._model_logic.set_scaling_at_current_index(new_value)
-        self.modelChanged.emit()
+        self.experimentChanged.emit()
 
     @Slot(float)
     def setBackground(self, new_value: float) -> None:
         self._model_logic.set_background_at_current_index(new_value)
-        self.modelChanged.emit()
+        self.experimentChanged.emit()
 
     @Slot(float)
     def setResolution(self, new_value: float) -> None:
         self._model_logic.set_resolution_at_current_index(new_value)
-        self.modelChanged.emit()
+        self.experimentChanged.emit()
 
     @Slot(float)
     def setQMin(self, new_value: float) -> None:
         self._project_logic.set_q(new_value)
-        self.modelChanged.emit()
+        self.experimentChanged.emit()
 
     @Slot(float)
     def setQMax(self, new_value: float) -> None:
         self._project_logic.set_q_max(new_value)
-        self.modelChanged.emit()
+        self.experimentChanged.emit()
 
     @Slot(int)
     def setQElements(self, new_value: float) -> None:
         self._project_logic.set_q_elements(new_value)
-        self.modelChanged.emit()
+        self.experimentChanged.emit()
 
     # Actions
     @Slot(str)
     def load(self, path: str) -> None:
         self._project_logic.load_experiment(generalizePath(path))
-        self.modelChanged.emit()
+        self.experimentChanged.emit()

@@ -80,6 +80,7 @@ class PyBackend(QObject):
     def _connect_backend_parts(self) -> None:
         self._connect_project_page()
         self._connect_sample_page()
+        self._connect_example_page()
 
     ######### Project
     def _connect_project_page(self) -> None:
@@ -89,6 +90,9 @@ class PyBackend(QObject):
     def _connect_sample_page(self) -> None:
         self._sample.modelsIndexChanged.connect(self._relay_sample_page_models_index)
         self._sample.sampleChanged.connect(self._relay_sample_page_sample_changed)
+
+    def _connect_example_page(self) -> None:
+        self._experiment.experimentChanged.connect(self._relay_experiment_page_experiment_changed)
 
     def _relay_project_page_name(self):
         self._status.projectChanged.emit()
@@ -105,3 +109,6 @@ class PyBackend(QObject):
         self._plotting.sldChartRangesChanged.emit()
         self._plotting.sampleChartRangesChanged.emit()
         self._plotting.refreshSamplePage()
+    
+    def _relay_experiment_page_experiment_changed(self):
+        self._plotting.refreshExperimentPage()

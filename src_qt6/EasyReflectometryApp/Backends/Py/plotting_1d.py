@@ -21,6 +21,7 @@ class Plotting1d(QObject):
 #    chartRangesChanged = Signal()
     sldChartRangesChanged = Signal()
     sampleChartRangesChanged = Signal()
+    experimentChartRangesChanged = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
@@ -41,9 +42,10 @@ class Plotting1d(QObject):
                     'sldSerie': None,
                 },
                 'experimentPage': {
-                    'experimentSerie': None,
+                    'measuredSerie': None,
+                    'varianceUpperSerie': None,
+                    'varianceLowerSerie': None,
                 },
-
 #                'analysisPage': {
 #                    'measSerie': None,  # QtCharts.QXYSeries,
 #                    'bkgSerie': None,  # QtCharts.QXYSeries,
@@ -54,29 +56,42 @@ class Plotting1d(QObject):
     @property
     def sample_data(self) -> DataSet1D:
         try:
-            sample_data = self._project_lib.sample_data_for_model_at_index()
+            data = self._project_lib.sample_data_for_model_at_index()
         except IndexError:
-            sample_data = DataSet1D(
+            data = DataSet1D(
                 name='Sample Data empty',
                     x=np.empty(0),
                     y=np.empty(0),
             )
-        return sample_data
+        return data
 
     @property
     def sld_data(self) -> DataSet1D:
         try:
-            sld_data = self._project_lib.sld_data_for_model_at_index()
+            data = self._project_lib.sld_data_for_model_at_index()
         except IndexError:
-            sld_data = DataSet1D(
-                name='Sample Data empty',
+            data = DataSet1D(
+                name='SLD Data empty',
                     x=np.empty(0),
                     y=np.empty(0),
             )
-        return sld_data
+        return data
 
-    # Frontend/Backend public properties
+    @property
+    def experiment_data(self) -> DataSet1D:
+        try:
+            data = self._project_lib.experimental_data_for_model_at_index()
+        except IndexError:
+            data = DataSet1D(
+                name='Experiment Data empty',
+                    x=np.empty(0),
+                    y=np.empty(0),
+                    ey=np.empty(0),
+                    ex=np.empty(0),
+            )
+        return data
 
+    # Sample
     @Property(float, notify=sampleChartRangesChanged)
     def sampleMaxX(self):
         return self.sample_data.x.max()
@@ -93,6 +108,7 @@ class Plotting1d(QObject):
     def sampleMinY(self):
         return np.log10(self.sample_data.y.min())
     
+    # SLD
     @Property(float, notify=sldChartRangesChanged)
     def sldMaxX(self):
         return self.sld_data.x.max()
@@ -108,6 +124,23 @@ class Plotting1d(QObject):
     @Property(float, notify=sldChartRangesChanged)
     def sldMinY(self):
         return self.sld_data.y.min()
+
+    # Experiment
+    @Property(float, notify=experimentChartRangesChanged)
+    def experimentMaxX(self):
+        return self.experiment_data.x.max()
+
+    @Property(float, notify=experimentChartRangesChanged)
+    def experimentMinX(self):
+        return self.experiment_data.x.min()
+    
+    @Property(float, notify=experimentChartRangesChanged)
+    def experimentMaxY(self):
+        return np.log10(self.experiment_data.y.max())
+
+    @Property(float, notify=experimentChartRangesChanged)
+    def experimentMinY(self):
+        return np.log10(self.experiment_data.y.min())
 
     @Property(str, notify=currentLib1dChanged)
     def currentLib1d(self):
@@ -145,23 +178,29 @@ class Plotting1d(QObject):
     def setQtChartsReflectometrySerieRef(self, page:str, serie:str, ref: QObject):
         self._chartRefs['QtCharts'][page][serie] = ref
         console.debug(IO.formatMsg('sub', f'{serie} on {page}: {ref}'))
-        self.drawCalculatedOnSampleChart()
-        self.chartRefsChanged.emit()
+#        self.drawCalculatedOnSampleChart()
+#        self.chartRefsChanged.emit()
 
     @Slot(str, str, 'QVariant')
     def setQtChartsSldSerieRef(self, page:str, serie:str, ref: QObject):
         self._chartRefs['QtCharts'][page][serie] = ref
         console.debug(IO.formatMsg('sub', f'{serie} on {page}: {ref}'))
-        self.drawCalculatedOnSldChart()
-        self.chartRefsChanged.emit()
+#        self.drawCalculatedOnSldChart()
+#        self.chartRefsChanged.emit()
 
-    # Backend public methods
+    @Slot(str, str, 'QVariant')
+    def setQtChartsExperimentSerieRef(self, page:str, serie:str, ref: QObject):
+        self._chartRefs['QtCharts'][page][serie] = ref
+        console.debug(IO.formatMsg('sub', f'{serie} on {page}: {ref}'))
+#        self.drawMeasuredOnExperimentChart()
+#        self.chartRefsChanged.emit()
 
     def refreshSamplePage(self):
         self.drawCalculatedOnSampleChart()
         self.drawCalculatedOnSldChart()
 
-    # Sample
+    def refreshExperimentPage(self):
+        self.drawMeasuredOnExperimentChart()
 
     def drawCalculatedOnSampleChart(self):
         if PLOT_BACKEND == 'QtCharts':
@@ -171,22 +210,40 @@ class Plotting1d(QObject):
         if PLOT_BACKEND == 'QtCharts':
             self.qtchartsReplaceCalculatedOnSldChartAndRedraw()
 
-    # QtCharts: Sample
+    def drawMeasuredOnExperimentChart(self):
+        if PLOT_BACKEND == 'QtCharts':
+            self.qtchartsReplaceMeasuredOnExperimentChartAndRedraw()
 
     def qtchartsReplaceCalculatedOnSampleChartAndRedraw(self):
-        sampleSerie = self._chartRefs['QtCharts']['samplePage']['sampleSerie']
-        sampleSerie.clear()
+        series = self._chartRefs['QtCharts']['samplePage']['sampleSerie']
+        series.clear()
         nr_points = 0
         for point in self.sample_data.data_points():
-            sampleSerie.append(point[0], np.log10(point[1]))
+            series.append(point[0], np.log10(point[1]))
             nr_points = nr_points + 1
         console.debug(IO.formatMsg('sub', 'Calc curve', f'{nr_points} points', 'on sample page', 'replaced'))
 
     def qtchartsReplaceCalculatedOnSldChartAndRedraw(self):
-        sldSerie = self._chartRefs['QtCharts']['samplePage']['sldSerie']
-        sldSerie.clear()
+        series = self._chartRefs['QtCharts']['samplePage']['sldSerie']
+        series.clear()
         nr_points = 0
         for point in self.sld_data.data_points():
-            sldSerie.append(point[0], point[1])
+            series.append(point[0], point[1])
             nr_points = nr_points + 1
         console.debug(IO.formatMsg('sub', 'Sld curve', f'{nr_points} points', 'on sample page', 'replaced'))
+
+    def qtchartsReplaceMeasuredOnExperimentChartAndRedraw(self):
+        series_measured = self._chartRefs['QtCharts']['experimentPage']['measuredSerie']
+        series_variance_upper = self._chartRefs['QtCharts']['experimentPage']['varianceUpperSerie']
+        series_variance_lower = self._chartRefs['QtCharts']['experimentPage']['varianceLowerSerie']
+        series_measured.clear()
+        series_variance_upper.clear()
+        series_variance_lower.clear()
+        nr_points = 0
+        for point in self.experiment_data.data_points():
+            series_measured.append(point[0], np.log10(point[1]))
+            series_variance_upper.append(point[0], np.log10(point[1] + np.sqrt(point[2])))
+            series_variance_lower.append(point[0], np.log10(point[1] - np.sqrt(point[2])))
+            nr_points = nr_points + 1
+
+        console.debug(IO.formatMsg('sub', 'Measurede curve', f'{nr_points} points', 'on experiment page', 'replaced'))
