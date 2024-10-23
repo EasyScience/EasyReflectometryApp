@@ -58,8 +58,8 @@ EaElements.GroupBox {
  //           enabled: !ExGlobals.Constants.proxy.data.experimentLoaded
             width: textFieldWidth()
             units: "Å<sup>-1</sup>"
-            text: Globals.BackendWrapper.experimentQStep.toFixed(3)
-            onEditingFinished: Globals.BackendWrapper.experimentSetQStep(text)
+            text: Globals.BackendWrapper.experimentQElements
+            onEditingFinished: Globals.BackendWrapper.experimentSetQElements(text)
         }
     }
     // Logic

@@ -2,6 +2,7 @@ from typing import Union
 
 from easyreflectometry import Project as ProjectLib
 from easyreflectometry.model import ModelCollection
+from easyreflectometry.model.resolution_functions import PercentageFhwm
 
 
 class Models:
@@ -23,6 +24,21 @@ class Models:
         return self._models[self._model_index].name
 
     @property
+    def scaling_at_current_index(self) -> float:
+        return self._models[self._model_index].scale.value
+
+    @property
+    def background_at_current_index(self) -> float:
+        return self._models[self._model_index].background.value
+    
+    @property
+    def resolution_at_current_index(self) -> float:
+        if isinstance(self._models[self._model_index].resolution_function, PercentageFhwm):
+            return self._models[self._model_index].resolution_function.constant
+        else:
+            return '-'
+    
+    @property
     def models(self) -> list[dict[str, str]]:
         return _from_models_collection_to_list_of_dicts(self._models)
 
@@ -32,6 +48,16 @@ class Models:
 
     def set_name_at_current_index(self, new_value: str) -> None:
         self._models[self._model_index].name = new_value
+
+    def set_scaling_at_current_index(self, new_value: str) -> None:
+        self._models[self._model_index].scale.value = new_value
+
+    def set_background_at_current_index(self, new_value: str) -> None:
+        self._models[self._model_index].background.value = new_value
+
+    def set_resolution_at_current_index(self, new_value: str) -> None:
+        if isinstance(self._models[self._model_index].resolution_function, PercentageFhwm):
+            self._models[self._model_index].resolution_function.constant = float(new_value)
 
     def remove_at_index(self, value: str) -> None:
         self._models.pop(int(value))

@@ -40,6 +40,10 @@ class Plotting1d(QObject):
                     'sampleSerie': None,
                     'sldSerie': None,
                 },
+                'experimentPage': {
+                    'experimentSerie': None,
+                },
+
 #                'analysisPage': {
 #                    'measSerie': None,  # QtCharts.QXYSeries,
 #                    'bkgSerie': None,  # QtCharts.QXYSeries,

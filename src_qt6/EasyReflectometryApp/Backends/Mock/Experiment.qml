@@ -9,7 +9,7 @@ QtObject {
 
     property double q_min: 4.
     property double q_max: 5.
-    property double q_step: 6.
+    property int q_elements: 6
 
     // Setters
     function setScaling(value) {
@@ -28,8 +28,8 @@ QtObject {
     function setQMax(value) {
         console.debug(`setQMax ${value}`)
     }
-    function setQStep(value) {
-        console.debug(`setQStep ${value}`)
+    function setQElements(value) {
+        console.debug(`setQElements ${value}`)
     }
 
     function load(path) {
