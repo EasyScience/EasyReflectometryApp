@@ -151,9 +151,9 @@ Rectangle {
 
         Component.onCompleted: {
             Globals.References.pages.sample.mainContent.sldView = chartView
-            Globals.BackendWrapper.plottingSetQtChartsSldSerieRef('samplePage',
-                                                                  'sldSerie',
-                                                                  chartView.calcSerie)
+            Globals.BackendWrapper.plottingSetQtChartsSerieRef('samplePage',
+                                                               'sldSerie',
+                                                               chartView.calcSerie)
         }
 
     }

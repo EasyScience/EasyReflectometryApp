@@ -162,15 +162,15 @@ Rectangle {
 
         Component.onCompleted: {
             Globals.References.pages.experiment.mainContent.experimentView = chartView
-            Globals.BackendWrapper.plottingSetQtChartsExperimentSerieRef('experimentPage',
-                                                                         'measuredSerie',
-                                                                         chartView.measSerie)
-            Globals.BackendWrapper.plottingSetQtChartsExperimentSerieRef('experimentPage',
-                                                                         'varianceUpperSerie',
-                                                                         chartView.calcSerie)        
-            Globals.BackendWrapper.plottingSetQtChartsExperimentSerieRef('experimentPage',
-                                                                         'varianceLowerSerie',
-                                                                         chartView.bkgSerie)
+            Globals.BackendWrapper.plottingSetQtChartsSerieRef('experimentPage',
+                                                               'measuredSerie',
+                                                               chartView.measSerie)
+            Globals.BackendWrapper.plottingSetQtChartsSerieRef('experimentPage',
+                                                               'varianceUpperSerie',
+                                                               chartView.calcSerie)        
+            Globals.BackendWrapper.plottingSetQtChartsSerieRef('experimentPage',
+                                                               'varianceLowerSerie',
+                                                               chartView.bkgSerie)
         }
     }
 

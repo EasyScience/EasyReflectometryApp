@@ -17,7 +17,11 @@ QtObject {
     property double experimentMinY: -20.
     property double experimentMaxY: 20.
 
-    function setQtChartsReflectometrySerieRef(value1, value2, value3) {
+    function setQtChartsSerieRef(value1, value2, value3) {
+        console.debug(`setQtChartsSerieRef ${value1}, ${value2}, ${value3}`)
+    }
+
+/*    function setQtChartsReflectometrySerieRef(value1, value2, value3) {
         console.debug(`setQtChartsReflectometrySerieRef ${value1}, ${value2}, ${value3}`)
     }
 
@@ -27,5 +31,5 @@ QtObject {
 
     function setQtChartsExperimentSerieRef(value1, value2, value3) {
         console.debug(`setQtChartsSldSerieRef ${value1}, ${value2}, ${value3}`)
-    }
+    }*/
 }

@@ -163,17 +163,7 @@ class Plotting1d(QObject):
         self._model_index = value
 
     @Slot(str, str, 'QVariant')
-    def setQtChartsReflectometrySerieRef(self, page:str, serie:str, ref: QObject):
-        self._chartRefs['QtCharts'][page][serie] = ref
-        console.debug(IO.formatMsg('sub', f'{serie} on {page}: {ref}'))
-
-    @Slot(str, str, 'QVariant')
-    def setQtChartsSldSerieRef(self, page:str, serie:str, ref: QObject):
-        self._chartRefs['QtCharts'][page][serie] = ref
-        console.debug(IO.formatMsg('sub', f'{serie} on {page}: {ref}'))
-
-    @Slot(str, str, 'QVariant')
-    def setQtChartsExperimentSerieRef(self, page:str, serie:str, ref: QObject):
+    def setQtChartsSerieRef(self, page:str, serie:str, ref: QObject):
         self._chartRefs['QtCharts'][page][serie] = ref
         console.debug(IO.formatMsg('sub', f'{serie} on {page}: {ref}'))
 
