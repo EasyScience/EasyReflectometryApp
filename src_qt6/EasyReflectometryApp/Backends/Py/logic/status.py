@@ -3,8 +3,6 @@ from easyreflectometry import Project as ProjectLib
 class Status:
     def __init__(self, project_lib: ProjectLib):
         self._project_lib = project_lib
-        self._phaseCount = '1'
-        self._experimentsCount = '1'
         self._variables = '31 (3 free, 28 fixed)'
     
     @property
@@ -13,19 +11,15 @@ class Status:
     
     @property
     def minimizer(self):
-        return self._project_lib._minimizer
+        return self._project_lib._minimizer.name
     
     @property
     def calculator(self):
-        return self._project_lib._calculator
-    
-    @property
-    def phase_count(self):
-        return self._phaseCount
+        return self._project_lib._calculator().name
 
     @property
     def experiments_count(self):
-        return self._experimentsCount
+        return str(len(self._project_lib._experiments.keys()))
 
     @property
     def variables(self):

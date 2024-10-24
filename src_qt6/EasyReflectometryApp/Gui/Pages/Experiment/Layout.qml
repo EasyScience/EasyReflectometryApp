@@ -1,4 +1,4 @@
-import QtQuick
+ import QtQuick
 import QtQuick.Controls
 
 import EasyApp.Gui.Style as EaStyle
@@ -10,19 +10,11 @@ import Gui.Globals as Globals
 
 
 EaComponents.ContentPage {
-    mainView: EaComponents.MainContent {
-        tabs: [
-            EaElements.TabButton { text: qsTr('Reflectivity') },
-            EaElements.TabButton { text: qsTr('SLD') }
-       ]
 
+    mainView: EaComponents.MainContent {
         items: [
             Loader {
-                source: `MainContent/SampleView.qml`
-                onStatusChanged: if (status === Loader.Ready) console.debug(`${source} loaded`)
-            },
-            Loader {
-                source: `MainContent/SldView.qml`
+                source: `MainContent/ExperimentView.qml`
                 onStatusChanged: if (status === Loader.Ready) console.debug(`${source} loaded`)
             }
         ]
@@ -39,15 +31,15 @@ EaComponents.ContentPage {
  //           Loader { source: 'Sidebar/Advanced/Layout.qml' }
         ]
 
-
         continueButton.text: qsTr('Continue') 
         continueButton.onClicked: {            
             console.debug(`Clicking '${continueButton.text}' button ::: ${this}`)
-            Globals.References.applicationWindow.appBarCentralTabs.experimentButton.enabled = true
-            Globals.References.applicationWindow.appBarCentralTabs.experimentButton.toggle()
+            Globals.References.applicationWindow.appBarCentralTabs.analysisButton.enabled = true
+            Globals.References.applicationWindow.appBarCentralTabs.anslysisButton.toggle()
         }
     }
 
-    Component.onCompleted: console.debug(`Sample page loaded ::: ${this}`)
-    Component.onDestruction: console.debug(`Sample page destroyed ::: ${this}`)
+    Component.onCompleted: console.debug(`Experiment page loaded ::: ${this}`)
+    Component.onDestruction: console.debug(`Experiment page destroyed ::: ${this}`)
+
 }

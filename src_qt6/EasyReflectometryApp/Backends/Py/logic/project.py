@@ -43,6 +43,37 @@ class Project:
     def creation_date(self) -> str:
         return self._project_lib._info['modified']
 
+    @property
+    def q_min(self) -> float:
+        return self._project_lib.q_min
+    
+    def set_q_min(self, new_value: str) -> None:
+        self._project_lib.q_min = float(new_value)
+
+    @property
+    def q_max(self) -> float:
+        return self._project_lib.q_max
+
+    def set_q_max(self, new_value: str) -> None:
+        self._project_lib.q_max = float(new_value)
+
+    @property
+    def q_resolution(self) -> int:
+        return self._project_lib.q_resolution
+
+    def set_q_resolution(self, new_value: str) -> None:
+        self._project_lib.q_resolution = int(new_value)
+
+    @property
+    def experimental_data_at_current_index(self) -> bool:
+        experimental_data = False
+        try:
+            self._project_lib.experimental_data_for_model_at_index()
+            experimental_data = True
+        except IndexError:
+            pass
+        return experimental_data
+
     def info(self) -> dict:
         info = copy(self._project_lib._info)
         info['location'] = self._project_lib.path
@@ -57,6 +88,9 @@ class Project:
 
     def load(self, path: str) -> None:
         self._project_lib.load_from_json(path)
+
+    def load_experiment(self, path: str) -> None:
+        self._project_lib.load_experiment_for_model_at_index(path)
 
     def reset(self) -> None:
         self._project_lib.reset()

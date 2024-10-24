@@ -30,10 +30,6 @@ class Status(QObject):
             self._logic.project = new_value
             self.projectChanged.emit()
 
-    @Property(str, notify=phaseCountChanged)
-    def phaseCount(self):
-        return self._logic.phase_count
-
     @Property(str, notify=experimentsCountChanged)
     def experimentsCount(self):
         return self._logic.experiments_count
@@ -50,3 +46,6 @@ class Status(QObject):
     def variables(self):
         return self._logic.variables
 
+    @Property(str, notify=phaseCountChanged)
+    def phaseCount(self):
+        return None

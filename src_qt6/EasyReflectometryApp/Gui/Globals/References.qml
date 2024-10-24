@@ -38,12 +38,23 @@ QtObject {
                 'sampleView': null,
                 'sldView': null,
             }
-
+        },
+        'experiment':{
+            'mainContent': {
+                'experimentView': null,
+            },
+            'sidebar': {
+                'basic': {
+                    'popups': {
+                        'loadExperimentFileDialog': null,
+                    }
+                }
+            }
         }
     }
 
-    // Populated in plotting/...
-    readonly property var plotting: {
-        'graph1d': null,
-    }
+//    // Populated in plotting/...
+//    readonly property var plotting: {
+//        'graph1d': null,
+//    }
 }

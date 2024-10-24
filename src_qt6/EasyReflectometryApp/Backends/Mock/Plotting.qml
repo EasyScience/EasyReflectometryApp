@@ -12,14 +12,12 @@ QtObject {
     property double sldMaxX: 2.
     property double sldMinY: -20.
     property double sldMaxY: 20.
+    property double experimentMinX: -2.
+    property double experimentMaxX: 2.
+    property double experimentMinY: -20.
+    property double experimentMaxY: 20.
 
-    function setQtChartsReflectometrySerieRef(value1, value2, value3) {
-        console.debug(`setQtChartsReflectometrySerieRef ${value1}, ${value2}, ${value3}`)
+    function setQtChartsSerieRef(value1, value2, value3) {
+        console.debug(`setQtChartsSerieRef ${value1}, ${value2}, ${value3}`)
     }
-
-    function setQtChartsSldSerieRef(value1, value2, value3) {
-        console.debug(`setQtChartsSldSerieRef ${value1}, ${value2}, ${value3}`)
-    }
-
-
 }

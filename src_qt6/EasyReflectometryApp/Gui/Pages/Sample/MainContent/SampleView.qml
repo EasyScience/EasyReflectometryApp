@@ -138,28 +138,24 @@ Rectangle {
         }
         // Legend
 
-        // ToolTips
         EaElements.ToolTip {
             id: dataToolTip
 
             arrowLength: 0
             textFormat: Text.RichText
         }
-        // ToolTips
 
-        // Data is set in python backend
-
+        // Data is set in python backend (plotting_1d.py)
         Component.onCompleted: {
             Globals.References.pages.sample.mainContent.sampleView = chartView
-            Globals.BackendWrapper.plottingSetQtChartsReflectometrySerieRef('samplePage',
-                                                                            'sampleSerie',
-                                                                            chartView.calcSerie)
+            Globals.BackendWrapper.plottingSetQtChartsSerieRef('samplePage',
+                                                               'sampleSerie',
+                                                               chartView.calcSerie)
         }
 
     }
 
     // Logic
-
     function showMainTooltip(chart, point, state) {
         if (!chartView.allowHover) {
             return

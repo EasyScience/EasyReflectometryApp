@@ -18,27 +18,33 @@ Rectangle {
     id: container
 
     color: EaStyle.Colors.chartBackground
-
     EaCharts.QtCharts1dMeasVsCalc {
         id: chartView
+
+        property alias measured: chartView.calcSerie
+        property alias errorUpper: chartView.measSerie
+        property alias errorLower: chartView.bkgSerie
+        bkgSerie.color: measSerie.color
+        measSerie.width: 1
+        bkgSerie.width: 1
 
         anchors.topMargin: EaStyle.Sizes.toolButtonHeight - EaStyle.Sizes.fontPixelSize - 1
 
         useOpenGL: EaGlobals.Vars.useOpenGL
+        
+        property double xRange: Globals.BackendWrapper.plottingExperimentMaxX - Globals.BackendWrapper.plottingExperimentMinX
+        axisX.title: "q (Å⁻¹)"
+        axisX.min: Globals.BackendWrapper.plottingExperimentMinX - xRange * 0.01
+        axisX.max: Globals.BackendWrapper.plottingExperimentMaxX + xRange * 0.01
+        axisX.minAfterReset: Globals.BackendWrapper.plottingExperimentMinX - xRange * 0.01
+        axisX.maxAfterReset: Globals.BackendWrapper.plottingExperimentMaxX + xRange * 0.01
 
-        property double xRange: Globals.BackendWrapper.plottingSldMaxX - Globals.BackendWrapper.plottingSldMinX
-        axisX.title: "z (Å)"
-        axisX.min: Globals.BackendWrapper.plottingSldMinX - xRange * 0.01
-        axisX.max: Globals.BackendWrapper.plottingSldMaxX + xRange * 0.01
-        axisX.minAfterReset: Globals.BackendWrapper.plottingSldMinX - xRange * 0.01
-        axisX.maxAfterReset: Globals.BackendWrapper.plottingSldMaxX + xRange * 0.01
-
-        property double yRange: Globals.BackendWrapper.plottingSldMaxY - Globals.BackendWrapper.plottingSldMinY
-        axisY.title: "SLD (10⁻⁶Å⁻²)"
-        axisY.min: Globals.BackendWrapper.plottingSldMinY - yRange * 0.01
-        axisY.max: Globals.BackendWrapper.plottingSldMaxY + yRange * 0.01
-        axisY.minAfterReset: Globals.BackendWrapper.plottingSldMinY - yRange * 0.01
-        axisY.maxAfterReset: Globals.BackendWrapper.plottingSldMaxY + yRange * 0.01
+        property double yRange: Globals.BackendWrapper.plottingExperimentMaxY - Globals.BackendWrapper.plottingExperimentMinY
+        axisY.title: "Log10 R(q)"
+        axisY.min: Globals.BackendWrapper.plottingExperimentMinY - yRange * 0.01
+        axisY.max: Globals.BackendWrapper.plottingExperimentMaxY + yRange * 0.01
+        axisY.minAfterReset: Globals.BackendWrapper.plottingExperimentMinY - yRange * 0.01
+        axisY.maxAfterReset: Globals.BackendWrapper.plottingExperimentMaxY + yRange * 0.01
 
         calcSerie.onHovered: (point, state) => showMainTooltip(chartView, point, state)
 
@@ -131,8 +137,12 @@ Rectangle {
                 bottomPadding: EaStyle.Sizes.fontPixelSize * 0.5
 
                 EaElements.Label {
-                    text: '━  SLD'
+                    text: '━  I (Measured)'
                     color: chartView.calcSerie.color
+                }
+                EaElements.Label {
+                    text: '━ Error'
+                    color: chartView.measSerie.color
                 }
             }
         }
@@ -147,12 +157,17 @@ Rectangle {
 
         // Data is set in python backend (plotting_1d.py)
         Component.onCompleted: {
-            Globals.References.pages.sample.mainContent.sldView = chartView
-            Globals.BackendWrapper.plottingSetQtChartsSerieRef('samplePage',
-                                                               'sldSerie',
-                                                               chartView.calcSerie)
+            Globals.References.pages.experiment.mainContent.experimentView = chartView
+            Globals.BackendWrapper.plottingSetQtChartsSerieRef('experimentPage',
+                                                               'errorUpperSerie',
+                                                               errorUpper)
+            Globals.BackendWrapper.plottingSetQtChartsSerieRef('experimentPage',
+                                                               'errorLowerSerie',
+                                                               errorLower)
+            Globals.BackendWrapper.plottingSetQtChartsSerieRef('experimentPage',
+                                                               'measuredSerie',
+                                                               measured)
         }
-
     }
 
     // Logic
@@ -169,4 +184,3 @@ Rectangle {
         dataToolTip.visible = state
     }
 }
-

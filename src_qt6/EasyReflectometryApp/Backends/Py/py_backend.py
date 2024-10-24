@@ -4,6 +4,7 @@ from PySide6.QtCore import Property
 from EasyApp.Logic.Logging import LoggerLevelHandler
 from easyreflectometry import Project as ProjectLib
 from. analysis import Analysis
+from .experiment import Experiment
 from .home import Home
 from .plotting_1d import Plotting1d
 from .project import Project
@@ -23,6 +24,7 @@ class PyBackend(QObject):
         self._home = Home()
         self._project = Project(self._project_lib)
         self._sample = Sample(self._project_lib)
+        self._experiment = Experiment(self._project_lib)
         self._analysis = Analysis(self._project_lib)
         self._report = Report(self._project_lib)
         self._status = Status(self._project_lib)
@@ -35,11 +37,12 @@ class PyBackend(QObject):
         # Must be last to ensure all backend parts are created
         self._connect_backend_parts()
 
-    ######### Enable dot access in QML code to the page specific backend parts
+    # Enable dot access in QML code to the page specific backend parts
+    # Pages
     @Property('QVariant', constant=True)
     def home(self) -> Home:
         return self._home
-    
+
     @Property('QVariant', constant=True)
     def project(self) -> Project:
         return self._project
@@ -49,6 +52,10 @@ class PyBackend(QObject):
         return self._sample
 
     @Property('QVariant', constant=True)
+    def experiment(self) -> Experiment:
+        return self._experiment
+    
+    @Property('QVariant', constant=True)
     def analysis(self) -> Analysis:
         return self._analysis
 
@@ -56,12 +63,13 @@ class PyBackend(QObject):
     def report(self) -> Report:
         return self._report
 
+    # Other elements
     @Property('QVariant', constant=True)
     def status(self) -> Status:
         return self._status
 
     @Property('QVariant', constant=True)
-    def plotting(self) -> Status:
+    def plotting(self) -> Plotting1d:
         return self._plotting
     
     @Property('QVariant', constant=True)
@@ -72,6 +80,7 @@ class PyBackend(QObject):
     def _connect_backend_parts(self) -> None:
         self._connect_project_page()
         self._connect_sample_page()
+        self._connect_example_page()
 
     ######### Project
     def _connect_project_page(self) -> None:
@@ -82,6 +91,9 @@ class PyBackend(QObject):
         self._sample.modelsIndexChanged.connect(self._relay_sample_page_models_index)
         self._sample.sampleChanged.connect(self._relay_sample_page_sample_changed)
 
+    def _connect_example_page(self) -> None:
+        self._experiment.experimentChanged.connect(self._relay_experiment_page_experiment_changed)
+
     def _relay_project_page_name(self):
         self._status.projectChanged.emit()
         self._report.asHtmlChanged.emit()
@@ -91,8 +103,14 @@ class PyBackend(QObject):
 
     def _relay_sample_page_models_index(self, index: int):
         self._plotting.setModelIndex(index)
+        self._experiment.setModelIndex(index)
 
     def _relay_sample_page_sample_changed(self):
         self._plotting.sldChartRangesChanged.emit()
         self._plotting.sampleChartRangesChanged.emit()
         self._plotting.refreshSamplePage()
+    
+    def _relay_experiment_page_experiment_changed(self):
+        self._plotting.refreshExperimentPage()
+        self._status.experimentsCountChanged.emit()
+        self._sample.sampleChanged.emit()
