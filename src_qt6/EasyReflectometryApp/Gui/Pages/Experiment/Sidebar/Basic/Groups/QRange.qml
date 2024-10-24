@@ -57,8 +57,7 @@ EaElements.GroupBox {
             id: xStep
  //           enabled: !ExGlobals.Constants.proxy.data.experimentLoaded
             width: textFieldWidth()
-//            units: "Å<sup>-1</sup>"
-            text: Globals.BackendWrapper.experimentQElements
+            text: Globals.BackendWrapper.experimentQResolution
             onEditingFinished: Globals.BackendWrapper.experimentSetQElements(text)
         }
     }

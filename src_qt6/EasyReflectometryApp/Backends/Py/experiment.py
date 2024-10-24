@@ -40,8 +40,8 @@ class Experiment(QObject):
         return self._project_logic.q_max
 
     @Property(int, notify=experimentChanged)
-    def q_elements(self) -> float:
-        return self._project_logic.q_elements
+    def q_resolution(self) -> int:
+        return self._project_logic.q_resolution
 
     # Setters
     @Slot(int)
@@ -75,7 +75,7 @@ class Experiment(QObject):
 
     @Slot(int)
     def setQElements(self, new_value: float) -> None:
-        self._project_logic.set_q_elements(new_value)
+        self._project_logic.set_q_resolution(new_value)
         self.experimentChanged.emit()
 
     # Actions

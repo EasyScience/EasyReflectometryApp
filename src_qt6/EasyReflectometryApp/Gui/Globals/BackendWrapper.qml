@@ -160,7 +160,7 @@ QtObject {
     function experimentSetQMin(value) { activeBackend.experiment.setQMin(value) }
     readonly property var experimentQMax: activeBackend.experiment.q_max
     function experimentSetQMax(value) { activeBackend.experiment.setQMax(value) }
-    readonly property var experimentQElements: activeBackend.experiment.q_elements
+    readonly property var experimentQResolution: activeBackend.experiment.q_resolution
     function experimentSetQElements(value) { activeBackend.experiment.setQElements(value) }
 
     function experimentLoad(value) { activeBackend.experiment.load(value) }

@@ -22,6 +22,13 @@ Rectangle {
     EaCharts.QtCharts1dMeasVsCalc {
         id: chartView
 
+        property alias measured: chartView.measSerie
+        property alias errorUpper: chartView.calcSerie
+        property alias errorLower: chartView.bkgSerie
+        errorLower.color: errorUpper.color
+//        errorUpper.width: 1
+//        errorLower.width: 1
+
         anchors.topMargin: EaStyle.Sizes.toolButtonHeight - EaStyle.Sizes.fontPixelSize - 1
 
         useOpenGL: EaGlobals.Vars.useOpenGL
@@ -136,15 +143,9 @@ Rectangle {
                 }
 
                 EaElements.Label {
-                    text: '━  I (Error upper)'
+                    text: '━ (Error)'
                     color: chartView.calcSerie.color
                 }
-
-                EaElements.Label {
-                    text: '━  I (Error lower)'
-                    color: chartView.bkgSerie.color
-                }
-
             }
         }
         // Legend
@@ -164,13 +165,13 @@ Rectangle {
             Globals.References.pages.experiment.mainContent.experimentView = chartView
             Globals.BackendWrapper.plottingSetQtChartsSerieRef('experimentPage',
                                                                'measuredSerie',
-                                                               chartView.measSerie)
+                                                               measured)
             Globals.BackendWrapper.plottingSetQtChartsSerieRef('experimentPage',
                                                                'varianceUpperSerie',
-                                                               chartView.calcSerie)        
+                                                               errorUpper)
             Globals.BackendWrapper.plottingSetQtChartsSerieRef('experimentPage',
                                                                'varianceLowerSerie',
-                                                               chartView.bkgSerie)
+                                                               errorLower)
         }
     }
 
@@ -188,4 +189,3 @@ Rectangle {
         dataToolTip.visible = state
     }
 }
-

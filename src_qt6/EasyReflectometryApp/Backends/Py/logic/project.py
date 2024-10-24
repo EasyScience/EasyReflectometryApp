@@ -58,11 +58,11 @@ class Project:
         self._project_lib.q_max = float(new_value)
 
     @property
-    def q_elements(self) -> int:
-        return self._project_lib.q_elements
+    def q_resolution(self) -> int:
+        return self._project_lib.q_resolution
 
-    def set_q_elements(self, new_value: str) -> None:
-        self._project_lib.q_elements = int(new_value)
+    def set_q_resolution(self, new_value: str) -> None:
+        self._project_lib.q_resolution = int(new_value)
     
     def info(self) -> dict:
         info = copy(self._project_lib._info)

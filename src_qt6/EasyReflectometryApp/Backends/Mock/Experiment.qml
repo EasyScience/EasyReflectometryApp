@@ -9,7 +9,7 @@ QtObject {
 
     property double q_min: 4.
     property double q_max: 5.
-    property int q_elements: 6
+    property int q_resolution: 6
 
     // Setters
     function setScaling(value) {
