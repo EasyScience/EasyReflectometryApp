@@ -10,11 +10,6 @@ import Gui.Globals as Globals
 
 
 EaComponents.ContentPage {
-
-//    defaultInfo: Globals.BackendWrapper.projectCreated ?
-//                     '' :
-//                     qsTr('No project defined')
-
     mainView: EaComponents.MainContent {
         tabs: [
             EaElements.TabButton { text: qsTr('Reflectivity') },
@@ -44,15 +39,10 @@ EaComponents.ContentPage {
  //           Loader { source: 'Sidebar/Advanced/Layout.qml' }
         ]
 
-//        continueButton.visible: false
 
-        continueButton.text: qsTr('Continue') //Globals.BackendWrapper.projectCreated ?
-                                    //qsTr('Continue') :
-                                    // qsTr('Continue without project')
-
+        continueButton.text: qsTr('Continue') 
         continueButton.onClicked: {            
             console.debug(`Clicking '${continueButton.text}' button ::: ${this}`)
-//            Globals.References.applicationWindow.appBarCentralTabs.sampleButton.enabled = true
             Globals.References.applicationWindow.appBarCentralTabs.experimentButton.enabled = true
             Globals.References.applicationWindow.appBarCentralTabs.experimentButton.toggle()
         }
@@ -60,5 +50,4 @@ EaComponents.ContentPage {
 
     Component.onCompleted: console.debug(`Sample page loaded ::: ${this}`)
     Component.onDestruction: console.debug(`Sample page destroyed ::: ${this}`)
-
 }

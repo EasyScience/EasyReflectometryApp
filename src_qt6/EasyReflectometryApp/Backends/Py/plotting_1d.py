@@ -37,8 +37,8 @@ class Plotting1d(QObject):
                 },
                 'experimentPage': {
                     'measuredSerie': None,
-                    'varianceUpperSerie': None,
-                    'varianceLowerSerie': None,
+                    'errorUpperSerie': None,
+                    'errorLowerSerie': None,
                 },
             }
         }
@@ -207,16 +207,16 @@ class Plotting1d(QObject):
     def qtchartsReplaceMeasuredOnExperimentChartAndRedraw(self):
         series_measured = self._chartRefs['QtCharts']['experimentPage']['measuredSerie']
         series_measured.clear()
-        series_variance_upper = self._chartRefs['QtCharts']['experimentPage']['varianceUpperSerie']
-        series_variance_upper.clear()
-        series_variance_lower = self._chartRefs['QtCharts']['experimentPage']['varianceLowerSerie']
-        series_variance_lower.clear()
+        series_error_upper = self._chartRefs['QtCharts']['experimentPage']['errorUpperSerie']
+        series_error_upper.clear()
+        series_error_lower = self._chartRefs['QtCharts']['experimentPage']['errorLowerSerie']
+        series_error_lower.clear()
         nr_points = 0
         for point in self.experiment_data.data_points():
             if point[0] < self._project_lib.q_max and self._project_lib.q_min < point[0]:
                 series_measured.append(point[0], np.log10(point[1]))
-                series_variance_upper.append(point[0], np.log10(point[1] + np.sqrt(point[2])))
-                series_variance_lower.append(point[0], np.log10(point[1] - np.sqrt(point[2])))
+                series_error_upper.append(point[0], np.log10(point[1] + np.sqrt(point[2])))
+                series_error_lower.append(point[0], np.log10(point[1] - np.sqrt(point[2])))
                 nr_points = nr_points + 1
 
         console.debug(IO.formatMsg('sub', 'Measurede curve', f'{nr_points} points', 'on experiment page', 'replaced'))

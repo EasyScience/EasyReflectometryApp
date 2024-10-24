@@ -11,16 +11,7 @@ import Gui.Globals as Globals
 
 EaComponents.ContentPage {
 
-//    defaultInfo: Globals.BackendWrapper.projectCreated ?
-//                     '' :
-//                     qsTr('No project defined')
-
     mainView: EaComponents.MainContent {
-/*        tabs: [
-            EaElements.TabButton { text: qsTr('Reflectivity') },
-            EaElements.TabButton { text: qsTr('SLD') }
-       ]*/
-
         items: [
             Loader {
                 source: `MainContent/ExperimentView.qml`
@@ -40,12 +31,7 @@ EaComponents.ContentPage {
  //           Loader { source: 'Sidebar/Advanced/Layout.qml' }
         ]
 
-//        continueButton.visible: false
-
-        continueButton.text: qsTr('Continue') //Globals.BackendWrapper.projectCreated ?
-                                    //qsTr('Continue') :
-                                    // qsTr('Continue without project')
-
+        continueButton.text: qsTr('Continue') 
         continueButton.onClicked: {            
             console.debug(`Clicking '${continueButton.text}' button ::: ${this}`)
             Globals.References.applicationWindow.appBarCentralTabs.analysisButton.enabled = true

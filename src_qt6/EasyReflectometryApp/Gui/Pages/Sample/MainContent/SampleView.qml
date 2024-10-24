@@ -138,15 +138,14 @@ Rectangle {
         }
         // Legend
 
-        // ToolTips
         EaElements.ToolTip {
             id: dataToolTip
 
             arrowLength: 0
             textFormat: Text.RichText
         }
-        // ToolTips
 
+        // Data is set in python backend (plotting_1d.py)
         Component.onCompleted: {
             Globals.References.pages.sample.mainContent.sampleView = chartView
             Globals.BackendWrapper.plottingSetQtChartsSerieRef('samplePage',
