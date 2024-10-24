@@ -20,7 +20,6 @@ EaElements.GroupBox {
             width: labelWidth()
         }
         EaElements.Parameter {
-//            id: xMin
             enabled: Globals.BackendWrapper.experimentExperimentalData
             width: textFieldWidth()
             units: "Å<sup>-1</sup>"
@@ -34,7 +33,6 @@ EaElements.GroupBox {
             width: labelWidth()
         }
         EaElements.Parameter {
-//            id: xMax
             enabled: Globals.BackendWrapper.experimentExperimentalData
             width: textFieldWidth()
             units: "Å<sup>-1</sup>"
@@ -48,19 +46,17 @@ EaElements.GroupBox {
             width: labelWidth()
         }
         EaElements.Parameter {
- //           id: xStep
             enabled: Globals.BackendWrapper.experimentExperimentalData
             width: textFieldWidth()
             text: Globals.BackendWrapper.experimentQResolution
             onEditingFinished: Globals.BackendWrapper.experimentSetQElements(text)
         }
     }
+    
     // Logic
-
     function labelWidth() {
         return (EaStyle.Sizes.sideBarContentWidth - spacing * 5 - textFieldWidth() * 3) / 3
     }
-
     function textFieldWidth() {
         return EaStyle.Sizes.fontPixelSize * 7.0
     }

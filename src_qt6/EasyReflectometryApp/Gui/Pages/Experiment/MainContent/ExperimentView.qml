@@ -140,7 +140,6 @@ Rectangle {
                     text: '━  I (Measured)'
                     color: chartView.calcSerie.color
                 }
-
                 EaElements.Label {
                     text: '━ Error'
                     color: chartView.measSerie.color
@@ -159,7 +158,6 @@ Rectangle {
         // ToolTips
 
         // Data is set in python backend
-
         Component.onCompleted: {
             Globals.References.pages.experiment.mainContent.experimentView = chartView
             Globals.BackendWrapper.plottingSetQtChartsSerieRef('experimentPage',
