@@ -73,7 +73,6 @@ EaComponents.ApplicationWindow {
                 Globals.References.applicationWindow.appBarCentralTabs.homeButton = homeButton
             }
         },
-        // Home page
 
         // Project page
         EaElements.AppBarTabButton {
@@ -86,7 +85,6 @@ EaComponents.ApplicationWindow {
                 Globals.References.applicationWindow.appBarCentralTabs.projectButton = projectButton
             }
         },
-        // Project page
 
         // Sample page
         EaElements.AppBarTabButton {
@@ -99,7 +97,6 @@ EaComponents.ApplicationWindow {
                 Globals.References.applicationWindow.appBarCentralTabs.sampleButton = sampleButton
             }
         },
-        // Sample page
 
         // Experiment tab
         EaElements.AppBarTabButton {
@@ -133,7 +130,6 @@ EaComponents.ApplicationWindow {
                 Globals.References.applicationWindow.appBarCentralTabs.summaryButton = summaryButton
             }
         }
-        // Summary page
     ]
 
     //////////////////////////////////
@@ -147,7 +143,7 @@ EaComponents.ApplicationWindow {
         Loader { source: 'Pages/Sample/Layout.qml' },
         Loader { source: 'Pages/Experiment/Layout.qml' },
         Loader { source: 'Pages/Analysis/Layout.qml' },
-        Loader { source: 'Pages/Report/Layout.qml' }
+        Loader { source: 'Pages/Summary/Layout.qml' }
     ]
 
     /////////////

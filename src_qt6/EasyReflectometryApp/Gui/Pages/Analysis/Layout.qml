@@ -12,10 +12,10 @@ import Gui.Globals as Globals
 
 
 EaComponents.ContentPage {
-    defaultInfo: Globals.Proxies.main.model.defined &&
-                 Globals.Proxies.main.experiment.defined ?
-                     "" :
-                     qsTr("No analysis done")
+//    defaultInfo: Globals.Proxies.main.model.defined &&
+//                 Globals.Proxies.main.experiment.defined ?
+//                     "" :
+//                     qsTr("No analysis done")
 
     mainView: EaComponents.MainContent {
 /*        tabs: [
@@ -56,11 +56,11 @@ EaComponents.ContentPage {
 
         continueButton.onClicked: {
             console.debug(`Clicking '${continueButton.text}' button: ${this}`)
-            Globals.Vars.summaryPageEnabled = true
-            Globals.Refs.app.appbar.summaryButton.toggle()
+            Globals.References.applicationWindow.appBarCentralTabs.summaryButton.enabled = true
+            Globals.References.applicationWindow.appBarCentralTabs.summaryButton.toggle()
         }
 
-        Component.onCompleted: Globals.Refs.app.analysisPage.continueButton = continueButton
+//        Component.onCompleted: Globals.Refs.app.analysisPage.continueButton = continueButton
     }
 
     Component.onCompleted: console.debug(`Analysis page loaded: ${this}`)
