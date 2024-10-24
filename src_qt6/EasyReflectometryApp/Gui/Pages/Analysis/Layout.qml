@@ -40,18 +40,16 @@ EaComponents.ContentPage {
     }
 
     sideBar: EaComponents.SideBar {
-/*        tabs: [
+        tabs: [
             EaElements.TabButton { text: qsTr("Basic controls") },
-            EaElements.TabButton { text: qsTr("Extra controls"); enabled: Globals.Proxies.main.analysis.defined },
-            EaElements.TabButton { text: qsTr("Text mode"); enabled: false }
+            EaElements.TabButton { text: qsTr("Extra controls") } //; enabled: Globals.Proxies.main.analysis.defined }
         ]
 
         items: [
-            Loader { source: 'SideBarBasic.qml' },
-            Loader { source: 'SideBarAdvanced.qml' },
-            Loader { source: 'SideBarText.qml' }
+            Loader { source: 'Sidebar/Basic/Layout.qml' },
+            Loader { source: 'Sidebar/Advanced/Layout.qml' }
         ]
-*/
+
 //        continueButton.enabled: Globals.Proxies.main.summary.isCreated
 
         continueButton.onClicked: {
