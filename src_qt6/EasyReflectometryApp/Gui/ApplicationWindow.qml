@@ -104,26 +104,24 @@ EaComponents.ApplicationWindow {
         // Experiment tab
         EaElements.AppBarTabButton {
             id: experimentTabButton
-            enabled: false
+            enabled: true
             fontIcon: "microscope"
             text: qsTr("Experiment")
             ToolTip.text: qsTr("Experimental settings and data page")
             Component.onCompleted:Globals.References.applicationWindow.appBarCentralTabs.experimentButton = experimentTabButton
         },
 
-/*
+
         // Analysis tab
         EaElements.AppBarTabButton {
             id: analysisTabButton
-            enabled: false //ExGlobals.Variables.samplePageEnabled &&
-                     //(ExGlobals.Constants.proxy.data.experimentSkipped ||
-                     // ExGlobals.Constants.proxy.data.experimentLoaded)
+            enabled: true
             fontIcon: "calculator"
             text: qsTr("Analysis")
             ToolTip.text: qsTr("Simulation and fitting page")
             Component.onCompleted: Globals.References.applicationWindow.appBarCentralTabs.analysisButton = analysisTabButton
         },
-*/
+
         // Summary page
         EaElements.AppBarTabButton {
             id: summaryButton
@@ -148,7 +146,7 @@ EaComponents.ApplicationWindow {
         Loader { source: 'Pages/Project/Layout.qml' },
         Loader { source: 'Pages/Sample/Layout.qml' },
         Loader { source: 'Pages/Experiment/Layout.qml' },
-//        Loader { source: 'Pages/Analysis/Layout.qml' },
+        Loader { source: 'Pages/Analysis/Layout.qml' },
         Loader { source: 'Pages/Report/Layout.qml' }
     ]
 
