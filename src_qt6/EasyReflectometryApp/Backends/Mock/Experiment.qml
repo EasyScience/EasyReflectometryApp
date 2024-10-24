@@ -5,7 +5,7 @@ import QtQuick
 QtObject {
     property double scaling: 1.
     property double background: 2.
-    property double resolution: 3.
+    property string resolution: '3.00'
 
     property double q_min: 4.
     property double q_max: 5.

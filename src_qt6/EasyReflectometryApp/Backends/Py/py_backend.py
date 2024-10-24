@@ -52,7 +52,7 @@ class PyBackend(QObject):
         return self._sample
 
     @Property('QVariant', constant=True)
-    def experiment(self) -> Home:
+    def experiment(self) -> Experiment:
         return self._experiment
     
     @Property('QVariant', constant=True)
@@ -69,7 +69,7 @@ class PyBackend(QObject):
         return self._status
 
     @Property('QVariant', constant=True)
-    def plotting(self) -> Status:
+    def plotting(self) -> Plotting1d:
         return self._plotting
     
     @Property('QVariant', constant=True)

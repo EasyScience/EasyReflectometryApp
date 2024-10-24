@@ -55,7 +55,8 @@ EaElements.GroupBox {
             id: xStep
             width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
             units: "%"
-            text: Globals.BackendWrapper.experimentResolution.toFixed(2)
+            text: Globals.BackendWrapper.experimentResolution
+            enabled: Globals.BackendWrapper.experimentResolution !== "-"
             onEditingFinished: Globals.BackendWrapper.experimentSetResolution(text)
         }
     }

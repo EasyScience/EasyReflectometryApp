@@ -196,8 +196,4 @@ QtObject {
     readonly property var plottingExperimentMaxY: activeBackend.plotting.sampleMaxY
 
     function plottingSetQtChartsSerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsSerieRef(value1, value2, value3) }
-
-    // function plottingSetQtChartsReflectometrySerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsReflectometrySerieRef(value1, value2, value3) }
-    // function plottingSetQtChartsSldSerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsSldSerieRef(value1, value2, value3) }
-    // function plottingSetQtChartsExperimentSerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsExperimentSerieRef(value1, value2, value3) }
 }

@@ -32,9 +32,9 @@ class Models:
         return self._models[self._model_index].background.value
     
     @property
-    def resolution_at_current_index(self) -> float:
+    def resolution_at_current_index(self) -> str:
         if isinstance(self._models[self._model_index].resolution_function, PercentageFhwm):
-            return self._models[self._model_index].resolution_function.constant
+            return str(self._models[self._model_index].resolution_function.constant)
         else:
             return '-'
     

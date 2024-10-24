@@ -27,8 +27,8 @@ class Experiment(QObject):
     def background(self) -> float:
         return self._model_logic.background_at_current_index
 
-    @Property(float, notify=experimentChanged)
-    def resolution(self) -> float:
+    @Property(str, notify=experimentChanged)
+    def resolution(self) -> str:
         return self._model_logic.resolution_at_current_index
 
     @Property(float, notify=experimentChanged)
@@ -65,7 +65,7 @@ class Experiment(QObject):
 
     @Slot(float)
     def setQMin(self, new_value: float) -> None:
-        self._project_logic.set_q(new_value)
+        self._project_logic.set_q_min(new_value)
         self.experimentChanged.emit()
 
     @Slot(float)

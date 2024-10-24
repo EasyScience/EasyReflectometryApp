@@ -24,7 +24,7 @@ EaComponents.SideBarColumn {
         enabled: Globals.BackendWrapper.analysisIsFitFinished
     }
 
-    Groups.SimulationRange{
+    Groups.QRange{
         enabled: Globals.BackendWrapper.analysisIsFitFinished
     }
 

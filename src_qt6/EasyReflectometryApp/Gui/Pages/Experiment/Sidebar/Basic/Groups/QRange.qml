@@ -9,7 +9,7 @@ import easyApp.Gui.Logic as EaLogic
 import Gui.Globals as Globals
 
 EaElements.GroupBox {
-    title: qsTr("Simulation range")
+    title: qsTr("Q range of interest")
 //    visible: Globals.Constants.proxy.data.experimentSkipped
 
 //    enabled: Globals.Constants.proxy.data.experimentSkipped
@@ -47,17 +47,17 @@ EaElements.GroupBox {
             onEditingFinished: Globals.BackendWrapper.experimentSetQMax(text)
         }
 
-        // Step
+        // Resolution
         EaComponents.TableViewLabel{
             horizontalAlignment: Text.AlignRight
             width: labelWidth()
-            text: qsTr("q-step:")
+            text: qsTr("q-res:")
         }
         EaElements.Parameter {
             id: xStep
  //           enabled: !ExGlobals.Constants.proxy.data.experimentLoaded
             width: textFieldWidth()
-            units: "Å<sup>-1</sup>"
+//            units: "Å<sup>-1</sup>"
             text: Globals.BackendWrapper.experimentQElements
             onEditingFinished: Globals.BackendWrapper.experimentSetQElements(text)
         }
