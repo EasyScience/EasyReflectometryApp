@@ -8,31 +8,40 @@ import EasyApp.Gui.Style 1.0 as EaStyle
 import EasyApp.Gui.Elements as EaElements
 import EasyApp.Gui.Components as EaComponents
 
+import "./Groups" as Groups
 import Gui.Globals as Globals
 
 
 EaComponents.SideBarColumn {
 
-    EaElements.GroupBox {
-        collapsible: false
-        last: true
+    Groups.Experiments{}
+//        enabled: Globals.BackendWrapper.analysisIsFitFinished
+//    }
 
-        Loader { source: 'Experiments.qml' }
-    }
+//    EaElements.GroupBox {
+//        collapsible: false
+//        last: true
+//
+//        Loader { source: 'Experiments.qml' }
+//    }
 
-    EaElements.GroupBox {
+    Groups.Fittables{}
+
+/*    EaElements.GroupBox {
         //title: qsTr("Parameters")
         collapsible: false
         last: true
 
         Loader { source: 'Fittables.qml' }
     }
+*/
+    Groups.Fitting{}
 
-    EaElements.GroupBox {
+/*    EaElements.GroupBox {
         //title: qsTr("Fitting")
         collapsible: false
 
         Loader { source: 'Fitting.qml' }
     }
-
+*/
 }

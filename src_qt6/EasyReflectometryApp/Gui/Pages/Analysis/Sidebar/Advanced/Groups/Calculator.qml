@@ -10,12 +10,15 @@ import EasyApp.Gui.Elements as EaElements
 
 import Gui.Globals as Globals
 
+EaElements.GroupBox {
+    title: qsTr("Calculation engine")
+    icon: 'calculator'
+    EaElements.GroupRow {
 
-EaElements.GroupRow {
+        EaElements.ComboBox {
+            width: EaStyle.Sizes.sideBarContentWidth
+            model: ['CrysPy']
+        }
 
-    EaElements.ComboBox {
-        width: EaStyle.Sizes.sideBarContentWidth
-        model: ['CrysPy']
     }
-
 }

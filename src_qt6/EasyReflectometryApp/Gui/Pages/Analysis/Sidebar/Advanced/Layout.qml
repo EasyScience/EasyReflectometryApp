@@ -7,9 +7,13 @@ import QtQuick
 import EasyApp.Gui.Elements as EaElements
 import EasyApp.Gui.Components as EaComponents
 
+import "./Groups" as Groups
+
 
 EaComponents.SideBarColumn {
 
+    Groups.ParamNames {}
+/*
     EaElements.GroupBox {
         title: qsTr("Parameter names")
         icon: "paint-brush"
@@ -17,18 +21,23 @@ EaComponents.SideBarColumn {
 
         Loader { source: 'SideBarAdvanced/ParamNames.qml' }
     }
-
+*/
+    Groups.Calculator {}
+/*
     EaElements.GroupBox {
         title: qsTr("Calculation engine")
         icon: 'calculator'
 
         Loader { source: 'SideBarAdvanced/Calculator.qml' }
     }
-
+*/
+    Groups.Minimizer {}
+/*
     EaElements.GroupBox {
         title: qsTr("Minimization engine")
         icon: 'level-down-alt'
 
         Loader { source: 'SideBarAdvanced/Minimizer.qml' }
     }
+    */
 }
