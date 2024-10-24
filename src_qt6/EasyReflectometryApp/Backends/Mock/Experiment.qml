@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 
 QtObject {
+    property bool experimentalData: true
     property double scaling: 1.
     property double background: 2.
     property string resolution: '3.00'

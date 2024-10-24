@@ -18,7 +18,6 @@ class Experiment(QObject):
         self._model_logic = ModelsLogic(project_lib)
         self._project_logic = ProjectLogic(project_lib)
 
-
     @Property(float, notify=experimentChanged)
     def scaling(self) -> float:
         return self._model_logic.scaling_at_current_index
@@ -42,6 +41,10 @@ class Experiment(QObject):
     @Property(int, notify=experimentChanged)
     def q_resolution(self) -> int:
         return self._project_logic.q_resolution
+
+    @Property(bool, notify=experimentChanged)
+    def experimentalData(self) -> bool:
+        return self._project_logic.experimental_data_at_current_index
 
     # Setters
     @Slot(int)

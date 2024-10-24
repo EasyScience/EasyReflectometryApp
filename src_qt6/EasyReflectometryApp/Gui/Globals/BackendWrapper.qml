@@ -150,6 +150,8 @@ QtObject {
     //////////////////
     // Experiment page
     //////////////////
+    readonly property bool experimentExperimentalData: activeBackend.experiment.experimentalData
+
     readonly property var experimentScaling: activeBackend.experiment.scaling
     function experimentSetScaling(value) { activeBackend.experiment.setScaling(value) }
     readonly property var experimentBackground: activeBackend.experiment.background

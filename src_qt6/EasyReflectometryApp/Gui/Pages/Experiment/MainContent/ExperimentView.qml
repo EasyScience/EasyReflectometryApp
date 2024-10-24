@@ -18,16 +18,15 @@ Rectangle {
     id: container
 
     color: EaStyle.Colors.chartBackground
-
     EaCharts.QtCharts1dMeasVsCalc {
         id: chartView
 
-        property alias measured: chartView.measSerie
-        property alias errorUpper: chartView.calcSerie
+        property alias measured: chartView.calcSerie
+        property alias errorUpper: chartView.measSerie
         property alias errorLower: chartView.bkgSerie
-        errorLower.color: errorUpper.color
-//        errorUpper.width: 1
-//        errorLower.width: 1
+        bkgSerie.color: measSerie.color
+        measSerie.width: 1
+        bkgSerie.width: 1
 
         anchors.topMargin: EaStyle.Sizes.toolButtonHeight - EaStyle.Sizes.fontPixelSize - 1
 
@@ -139,12 +138,12 @@ Rectangle {
 
                 EaElements.Label {
                     text: '━  I (Measured)'
-                    color: chartView.measSerie.color
+                    color: chartView.calcSerie.color
                 }
 
                 EaElements.Label {
-                    text: '━ (Error)'
-                    color: chartView.calcSerie.color
+                    text: '━ Error'
+                    color: chartView.measSerie.color
                 }
             }
         }
@@ -164,14 +163,14 @@ Rectangle {
         Component.onCompleted: {
             Globals.References.pages.experiment.mainContent.experimentView = chartView
             Globals.BackendWrapper.plottingSetQtChartsSerieRef('experimentPage',
-                                                               'measuredSerie',
-                                                               measured)
-            Globals.BackendWrapper.plottingSetQtChartsSerieRef('experimentPage',
                                                                'varianceUpperSerie',
                                                                errorUpper)
             Globals.BackendWrapper.plottingSetQtChartsSerieRef('experimentPage',
                                                                'varianceLowerSerie',
                                                                errorLower)
+            Globals.BackendWrapper.plottingSetQtChartsSerieRef('experimentPage',
+                                                               'measuredSerie',
+                                                               measured)
         }
     }
 

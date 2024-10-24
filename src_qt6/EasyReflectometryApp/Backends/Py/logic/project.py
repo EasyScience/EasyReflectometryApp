@@ -63,7 +63,17 @@ class Project:
 
     def set_q_resolution(self, new_value: str) -> None:
         self._project_lib.q_resolution = int(new_value)
-    
+
+    @property
+    def experimental_data_at_current_index(self) -> bool:
+        experimental_data = False
+        try:
+            self._project_lib.experimental_data_for_model_at_index()
+            experimental_data = True
+        except IndexError:
+            pass
+        return experimental_data
+
     def info(self) -> dict:
         info = copy(self._project_lib._info)
         info['location'] = self._project_lib.path

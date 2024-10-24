@@ -10,52 +10,46 @@ import Gui.Globals as Globals
 
 EaElements.GroupBox {
     title: qsTr("Q range of interest")
-//    visible: Globals.Constants.proxy.data.experimentSkipped
-
-//    enabled: Globals.Constants.proxy.data.experimentSkipped
-
+    visible: Globals.BackendWrapper.experimentExperimentalData
     Row {
         spacing: EaStyle.Sizes.fontPixelSize * 0.5
 
-        // Min
         EaComponents.TableViewLabel{
+            text: qsTr("q-min:")
             horizontalAlignment: Text.AlignRight
             width: labelWidth()
-            text: qsTr("q-min:")
         }
         EaElements.Parameter {
-            id: xMin
-//            enabled: !ExGlobals.Constants.proxy.data.experimentLoaded
+//            id: xMin
+            enabled: Globals.BackendWrapper.experimentExperimentalData
             width: textFieldWidth()
             units: "Å<sup>-1</sup>"
             text: Globals.BackendWrapper.experimentQMin.toFixed(3)
             onEditingFinished: Globals.BackendWrapper.experimentSetQMin(text)
         }
 
-        // Max
         EaComponents.TableViewLabel{
+            text: qsTr("q-max:")
             horizontalAlignment: Text.AlignRight
             width: labelWidth()
-            text: qsTr("q-max:")
         }
         EaElements.Parameter {
-            id: xMax
-//            enabled: !ExGlobals.Constants.proxy.data.experimentLoaded
+//            id: xMax
+            enabled: Globals.BackendWrapper.experimentExperimentalData
             width: textFieldWidth()
             units: "Å<sup>-1</sup>"
             text: Globals.BackendWrapper.experimentQMax.toFixed(3)
             onEditingFinished: Globals.BackendWrapper.experimentSetQMax(text)
         }
 
-        // Resolution
         EaComponents.TableViewLabel{
+            text: qsTr("q-res:")
             horizontalAlignment: Text.AlignRight
             width: labelWidth()
-            text: qsTr("q-res:")
         }
         EaElements.Parameter {
-            id: xStep
- //           enabled: !ExGlobals.Constants.proxy.data.experimentLoaded
+ //           id: xStep
+            enabled: Globals.BackendWrapper.experimentExperimentalData
             width: textFieldWidth()
             text: Globals.BackendWrapper.experimentQResolution
             onEditingFinished: Globals.BackendWrapper.experimentSetQElements(text)
