@@ -10,7 +10,7 @@ QtObject {
     readonly property var experimentsAvailable: ['experiment_1', 'experiment_2', 'experiment_3']
 
     readonly property int experimentsCurrentIndex: 0
-    readonly property var minimizerStatus: 'Success'
+    readonly property string minimizerStatus: none //'Success'
 
     readonly property string minimizerCurrent: 'minimizer_1'
     readonly property double minimizerTolerance: 1.0

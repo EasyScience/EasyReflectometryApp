@@ -173,6 +173,7 @@ QtObject {
     readonly property bool analysisIsFitFinished: activeBackend.analysis.isFitFinished
     readonly property var analysisMinimizersAvailable: activeBackend.analysis.minimizersAvailable
     readonly property var analysisCalculatorsAvailable: activeBackend.analysis.calculatorsAvailable
+    readonly property var analysisExperimentsAvailable: activeBackend.analysis.experimentsAvailable
 
     readonly property string analysisMinimizerStatus: activeBackend.analysis.minimizerStatus
 
