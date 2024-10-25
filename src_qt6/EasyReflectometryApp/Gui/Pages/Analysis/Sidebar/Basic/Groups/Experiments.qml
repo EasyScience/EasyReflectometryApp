@@ -32,7 +32,6 @@ EaElements.GroupBox {
 
         model: Globals.BackendWrapper.analysisExperimentsAvailable.length
         currentIndex: Globals.BackendWrapper.analysisExperimentsCurrentIndex
-
         onActivated: Globals.BackendWrapper.analysisExperimentsSetCurrentIndex(currentIndex)
 
         // ComboBox delegate (popup rows)

@@ -10,20 +10,23 @@ QtObject {
     readonly property var experimentsAvailable: ['experiment_1', 'experiment_2', 'experiment_3']
 
     readonly property int experimentsCurrentIndex: 0
-    readonly property string minimizerStatus: none //'Success'
+    readonly property string minimizerStatus: undefined  //'Success'
 
     readonly property string minimizerCurrent: 'minimizer_1'
     readonly property double minimizerTolerance: 1.0
     readonly property int minimizerMaxIterations: 2
 
     // Setters
-    function setExperimentsCurrentIndex(value) {
+    function setCalculatorCurrentIndex(value) {
+        console.debug(`setCalculatorCurrentIndex ${value}`)
+    }
+    function setExperimentCurrentIndex(value) {
         console.debug(`setExperimentCurrentIndex ${value}`)
     }
-
-    function setMinimizerCurrent(value) {
+    function setMinimizerCurrentIndex(value) {
         console.debug(`setMinimizer ${value}`)
     }
+
     function setMinimizerTolerance(value) {
         console.debug(`setMinimizerTolerance ${value}`)
     }

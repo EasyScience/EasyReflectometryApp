@@ -29,6 +29,8 @@ EaElements.GroupBox {
                     text: qsTr("Minimizer")
                     color: EaStyle.Colors.themeForegroundMinor
                 }
+                currentIndex: Globals.BackendWrapper.analysisMinimizerCurrentIndex
+                onCurrentIndexChanged: Globals.BackendWrapper.analysisSetMinimizerCurrentIndex(currentIndex)
             }
 //        }
 /*        Row{
@@ -60,7 +62,7 @@ EaElements.GroupBox {
             //text: Globals.Proxies.main.fitting.minimizerTol
             //onTextEdited: Globals.Proxies.main.fitting.minimizerTol = text
             text: Globals.BackendWrapper.analysisMinimizerTolerance.toFixed(3)
-            onTextEdited: Globals.BackendWrapper.analysisMinimizerSetTolerance(text)
+            onTextEdited: Globals.BackendWrapper.analysisSetMinimizerTolerance(text)
             EaElements.Label {
                 id: toleranceLabel
                 text: qsTr("Tolerance")
@@ -77,7 +79,7 @@ EaElements.GroupBox {
             //text: Globals.Proxies.main.fitting.minimizerMaxIter
             //onTextEdited: Globals.Proxies.main.fitting.minimizerMaxIter = text
             text: Globals.BackendWrapper.analysisMinimizerMaxIterations
-            onTextEdited: Globals.Proxies.main.fittingMinimizerMaxIterations(text)
+            onTextEdited: Globals.BackendWrapper.analysisSetMinimizerMaxIterations(text)
             EaElements.Label {
                 id: maxIterLabel
                 text: qsTr("Max iterations")

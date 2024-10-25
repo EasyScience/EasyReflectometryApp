@@ -18,7 +18,8 @@ EaElements.GroupBox {
         EaElements.ComboBox {
             width: EaStyle.Sizes.sideBarContentWidth
             model: Globals.BackendWrapper.analysisCalculatorsAvailable
+            currentIndex: Globals.BackendWrapper.analysisCalculatorCurrentIndex
+            onCurrentIndexChanged: Globals.BackendWrapper.analysisSetCalculatorCurrentIndex(currentIndex)
         }
-
     }
 }

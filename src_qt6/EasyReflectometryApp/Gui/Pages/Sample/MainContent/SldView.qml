@@ -52,16 +52,16 @@ Rectangle {
             spacing: 0.25 * EaStyle.Sizes.fontPixelSize
 
             EaElements.TabButton {
-                checked: Globals.Variables.showLegendOnExperimentPage
+                checked: Globals.Variables.showLegendOnSamplePage
                 autoExclusive: false
                 height: EaStyle.Sizes.toolButtonHeight
                 width: EaStyle.Sizes.toolButtonHeight
                 borderColor: EaStyle.Colors.chartAxis
                 fontIcon: "align-left"
-                ToolTip.text: Globals.Variables.showLegendOnExperimentPage ?
+                ToolTip.text: Globals.Variables.showLegendOnSamplePage ?
                                   qsTr("Hide legend") :
                                   qsTr("Show legend")
-                onClicked: Globals.Variables.showLegendOnExperimentPage = checked
+                onClicked: Globals.Variables.showLegendOnSamplePage = checked
             }
 
             EaElements.TabButton {
