@@ -31,8 +31,8 @@ EaElements.GroupBox {
                 Globals.Proxies.main.fitting.startStop()
             }
 
-            Component.onCompleted: Globals.Refs.app.analysisPage.startFittingButton = this
-
+            //Component.onCompleted: Globals.Refs.app.analysisPage.startFittingButton = this
+            Component.onCompleted: Globals.References.pages.analysis.sidebar.basic.popups.startFittingButton = this
             Loader { source: "../Popups/FitStatusDialog.qml" }
         }
 

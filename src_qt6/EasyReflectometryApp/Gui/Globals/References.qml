@@ -50,6 +50,19 @@ QtObject {
                     }
                 }
             }
+        },
+        'analysis': {
+            'mainContent': {
+                'analysisView': null,
+            },
+            'sidebar': {
+                'basic': {
+                    'popups': {
+                        'startFittingButton': null,
+                        'fitStatusDialogOkButton': null
+                    }
+                }
+            }
         }
     }
 

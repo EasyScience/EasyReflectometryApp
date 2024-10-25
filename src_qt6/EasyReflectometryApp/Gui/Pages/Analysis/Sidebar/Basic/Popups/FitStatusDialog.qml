@@ -15,21 +15,21 @@ import Gui.Globals as Globals
 EaElements.Dialog {
     id: dialog
 
-    visible: Globals.Proxies.main.status.fitStatus
+    visible: Globals.BackendWrapper.analysisMinimizerStatus
     title: qsTr("Fit status")
     standardButtons: Dialog.Ok
 
-    Component.onCompleted: Globals.Refs.app.analysisPage.fitStatusDialogOkButton = okButtonRef()
+    Component.onCompleted: Globals.References.pages.analysis.sidebar.basic.popups.fitStatusDialogOkButton = okButtonRef()
 
     EaElements.Label {
         text: {
-            if (Globals.Proxies.main.status.fitStatus === 'Success') {
+            if ( Globals.BackendWrapper.analysisMinimizerStatus === 'Success') {
                 return 'Optimization finished successfully.'
-            } else if (Globals.Proxies.main.status.fitStatus === 'Failure') {
+            } else if (Globals.BackendWrapper.analysisMinimizerStatus === 'Failure') {
                 return 'Optimization failed.'
-            } else if (Globals.Proxies.main.status.fitStatus === 'Aborted') {
+            } else if (Globals.BackendWrapper.analysisMinimizerStatus  === 'Aborted') {
                 return 'Optimization aborted.'
-            } else if (Globals.Proxies.main.status.fitStatus === 'No free params') {
+            } else if (Globals.BackendWrapper.analysisMinimizerStatus  === 'No free params') {
                 return 'Nothing to vary. Allow some parameters to be free.'
             } else {
                 return ''

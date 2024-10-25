@@ -40,6 +40,10 @@ class Plotting1d(QObject):
                     'errorUpperSerie': None,
                     'errorLowerSerie': None,
                 },
+                'analysisPage': {
+                    'calculatedSerie': None,
+                    'measuredSerie': None,
+                },
             }
         }
 
@@ -76,8 +80,8 @@ class Plotting1d(QObject):
                 name='Experiment Data empty',
                     x=np.empty(0),
                     y=np.empty(0),
-                    ey=np.empty(0),
-                    ex=np.empty(0),
+                    ye=np.empty(0),
+                    xe=np.empty(0),
             )
         return data
 
@@ -115,23 +119,57 @@ class Plotting1d(QObject):
     def sldMinY(self):
         return self.sld_data.y.min()
 
-    # Experiment
-    @Property(float, notify=experimentChartRangesChanged)
-    def experimentMaxX(self):
-        return self.experiment_data.x.max()
+    # # Experiment
+    # @Property(float, notify=experimentChartRangesChanged)
+    # def experimentMaxX(self):
+    #     if len(self.experiment_data.x) == 0:
+    #         return None
+    #     return self.experiment_data.x.max()
 
-    @Property(float, notify=experimentChartRangesChanged)
-    def experimentMinX(self):
-        return self.experiment_data.x.min()
+    # @Property(float, notify=experimentChartRangesChanged)
+    # def experimentMinX(self):
+    #     if len(self.experiment_data.x) == 0:
+    #         return None
+    #     return self.experiment_data.x.min()
     
-    @Property(float, notify=experimentChartRangesChanged)
-    def experimentMaxY(self):
-        return np.log10(self.experiment_data.y.max())
+    # @Property(float, notify=experimentChartRangesChanged)
+    # def experimentMaxY(self):
+    #     if len(self.experiment_data.y) == 0:
+    #         return None
+    #     return np.log10(self.experiment_data.y.max())
 
-    @Property(float, notify=experimentChartRangesChanged)
-    def experimentMinY(self):
-        return np.log10(self.experiment_data.y.min())
+    # @Property(float, notify=experimentChartRangesChanged)
+    # def experimentMinY(self):
+    #     if len(self.experiment_data.y) == 0:
+    #         return None
+    #     return np.log10(self.experiment_data.y.min())
 
+    # # Analysis
+    # @Property(float, notify=sampleChartRangesChanged)
+    # def analysisMaxX(self):
+    #     if self.experimentMaxX is None:
+    #         return self.sampleMaxX
+    #     return max(self.sampleMaxX, self.experimentMaxX)
+
+    # @Property(float, notify=sampleChartRangesChanged)
+    # def analysisMinX(self):
+    #     if self.experimentMinX is None:
+    #         return self.sampleMinX
+    #     return min(self.sampleMinX, self.experimentMinX)
+    
+    # @Property(float, notify=sampleChartRangesChanged)
+    # def analysisMaxY(self):
+    #     if self.experimentMaxY is None:
+    #         return self.sampleMaxY
+    #     return max(self.sampleMaxY, self.experimentMaxY)
+
+    # @Property(float, notify=sampleChartRangesChanged)
+    # def analysisMinY(self):
+    #     if self.experimentMinY is None:
+    #         return self.sampleMinY
+    #     return min(self.sampleMinY, self.experimentMinY)
+ 
+    # Other
     @Property(str, notify=currentLib1dChanged)
     def currentLib1d(self):
         return self._currentLib1d
@@ -174,17 +212,12 @@ class Plotting1d(QObject):
     def refreshExperimentPage(self):
         self.drawMeasuredOnExperimentChart()
 
+    def refreshAnalysisPage(self):
+        self.drawCalculatedAndMeasuredOnAnalysisChart()
+
     def drawCalculatedOnSampleChart(self):
         if PLOT_BACKEND == 'QtCharts':
             self.qtchartsReplaceCalculatedOnSampleChartAndRedraw()
-
-    def drawCalculatedOnSldChart(self):
-        if PLOT_BACKEND == 'QtCharts':
-            self.qtchartsReplaceCalculatedOnSldChartAndRedraw()
-
-    def drawMeasuredOnExperimentChart(self):
-        if PLOT_BACKEND == 'QtCharts':
-            self.qtchartsReplaceMeasuredOnExperimentChartAndRedraw()
 
     def qtchartsReplaceCalculatedOnSampleChartAndRedraw(self):
         series = self._chartRefs['QtCharts']['samplePage']['sampleSerie']
@@ -195,6 +228,10 @@ class Plotting1d(QObject):
             nr_points = nr_points + 1
         console.debug(IO.formatMsg('sub', 'Calc curve', f'{nr_points} points', 'on sample page', 'replaced'))
 
+    def drawCalculatedOnSldChart(self):
+        if PLOT_BACKEND == 'QtCharts':
+            self.qtchartsReplaceCalculatedOnSldChartAndRedraw()
+
     def qtchartsReplaceCalculatedOnSldChartAndRedraw(self):
         series = self._chartRefs['QtCharts']['samplePage']['sldSerie']
         series.clear()
@@ -203,6 +240,10 @@ class Plotting1d(QObject):
             series.append(point[0], point[1])
             nr_points = nr_points + 1
         console.debug(IO.formatMsg('sub', 'Sld curve', f'{nr_points} points', 'on sample page', 'replaced'))
+
+    def drawMeasuredOnExperimentChart(self):
+        if PLOT_BACKEND == 'QtCharts':
+            self.qtchartsReplaceMeasuredOnExperimentChartAndRedraw()
 
     def qtchartsReplaceMeasuredOnExperimentChartAndRedraw(self):
         series_measured = self._chartRefs['QtCharts']['experimentPage']['measuredSerie']
@@ -220,3 +261,24 @@ class Plotting1d(QObject):
                 nr_points = nr_points + 1
 
         console.debug(IO.formatMsg('sub', 'Measurede curve', f'{nr_points} points', 'on experiment page', 'replaced'))
+
+    def drawCalculatedAndMeasuredOnAnalysisChart(self):
+        if PLOT_BACKEND == 'QtCharts':
+            self.qtchartsReplaceCalculatedAndMeasuredOnAnalysisChartAndRedraw()
+
+    def qtchartsReplaceCalculatedAndMeasuredOnAnalysisChartAndRedraw(self):
+        series_measured = self._chartRefs['QtCharts']['analysisPage']['measuredSerie']
+        series_measured.clear()
+        series_calculated = self._chartRefs['QtCharts']['analysisPage']['calculatedSerie']
+        series_calculated.clear()
+        nr_points = 0
+        for point in self.experiment_data.data_points():
+            if point[0] < self._project_lib.q_max and self._project_lib.q_min < point[0]:
+                series_measured.append(point[0], np.log10(point[1]))
+                nr_points = nr_points + 1
+        console.debug(IO.formatMsg('sub', 'Measurede curve', f'{nr_points} points', 'on analysis page', 'replaced'))
+
+        for point in self.sample_data.data_points():
+            series_calculated.append(point[0], np.log10(point[1]))
+            nr_points = nr_points + 1
+        console.debug(IO.formatMsg('sub', 'Calculated curve', f'{nr_points} points', 'on analysis page', 'replaced'))

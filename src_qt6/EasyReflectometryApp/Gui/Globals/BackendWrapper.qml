@@ -174,11 +174,13 @@ QtObject {
     readonly property var analysisMinimizersAvailable: activeBackend.analysis.minimizersAvailable
     readonly property var analysisCalculatorsAvailable: activeBackend.analysis.calculatorsAvailable
 
+    readonly property string analysisMinimizerStatus: activeBackend.analysis.minimizerStatus
+
     readonly property string analysisMinimizerCurrent: activeBackend.analysis.minimizerCurrent
     function analysisSetMinimizerCurrent(value) { activeBackend.analysis.setMinimizerCurrent(value) }
     readonly property double analysisMinimizerTolerance: activeBackend.analysis.minimizerTolerance
     function analysisSetMinimizerTolerance(value) { activeBackend.analysis.setMinimizerTolerance(value) }
-    readonly property int analysisMinimizerMaxIterations: activeBackend.analysis.mminimizerMaxIterations
+    readonly property int analysisMinimizerMaxIterations: activeBackend.analysis.minimizerMaxIterations
     function analysisSetMinimizerMaxIterations(value) { activeBackend.analysis.setMinimizerMaxIterations(value) }
     readonly property int analysisExperimentsCurrentIndex: activeBackend.analysis.experimentsCurrentIndex
     function anslysisSetExperimentsCurrentIndex(value) { activeBackend.analysis.setExperimentsCurrentIndex(value) }
@@ -207,6 +209,11 @@ QtObject {
     readonly property var plottingExperimentMaxX: activeBackend.plotting.sampleMaxX
     readonly property var plottingExperimentMinY: activeBackend.plotting.sampleMinY
     readonly property var plottingExperimentMaxY: activeBackend.plotting.sampleMaxY
+
+    readonly property var plottingAnalysisMinX: activeBackend.plotting.sampleMinX
+    readonly property var plottingAnalysisMaxX: activeBackend.plotting.sampleMaxX
+    readonly property var plottingAnalysisMinY: activeBackend.plotting.sampleMinY
+    readonly property var plottingAnalysisMaxY: activeBackend.plotting.sampleMaxY
 
     function plottingSetQtChartsSerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsSerieRef(value1, value2, value3) }
 }

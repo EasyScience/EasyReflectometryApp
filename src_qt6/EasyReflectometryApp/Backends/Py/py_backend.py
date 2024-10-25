@@ -109,8 +109,10 @@ class PyBackend(QObject):
         self._plotting.sldChartRangesChanged.emit()
         self._plotting.sampleChartRangesChanged.emit()
         self._plotting.refreshSamplePage()
+        self._plotting.refreshAnalysisPage()
     
     def _relay_experiment_page_experiment_changed(self):
         self._plotting.refreshExperimentPage()
+        self._plotting.refreshAnalysisPage()
         self._status.experimentsCountChanged.emit()
         self._sample.sampleChanged.emit()
