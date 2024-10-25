@@ -16,6 +16,8 @@ QtObject {
     readonly property double minimizerTolerance: 1.0
     readonly property int minimizerMaxIterations: 2
 
+    readonly property bool isFitting: false
+
     // Setters
     function setCalculatorCurrentIndex(value) {
         console.debug(`setCalculatorCurrentIndex ${value}`)
@@ -32,5 +34,10 @@ QtObject {
     }
     function setMinimizerMaxIterations(value) {
         console.debug(`setMinimizerMaxIterations ${value}`)
+    }
+
+    //Actions
+    function fittingStartStop() {
+        console.debug('fittingStartStop')
     }
 }

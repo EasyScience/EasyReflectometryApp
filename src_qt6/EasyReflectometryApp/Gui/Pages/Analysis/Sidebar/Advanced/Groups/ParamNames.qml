@@ -16,78 +16,80 @@ EaElements.GroupBox {
     title: qsTr("Parameter names")
     icon: "paint-brush"
     collapsed: false
-    EaComponents.TableView {
-        id: tableView
+    EaElements.GroupRow{
 
-        readonly property var param: {
-            "blockType": "model",
-            "blockIcon": "layer-group",
-            "blockIdx": 0,
-            "blockName": "co2sio4",
-            "categoryIcon": "atom",
-            "category": "_atom_site",
-            "prettyCategory": "atom",
-            "rowIndex": 2,
-            "rowName": "Si",
-            "icon": "map-marker-alt",
-            "name": "_fract_x",
-            "prettyName": "fract x",
-            "shortPrettyName": "x" }
+        EaComponents.TableView {
+            id: tableView
 
-        showHeader: false
-        tallRows: true
-        maxRowCountShow: model.length
+            readonly property var param: {
+                "blockType": "model",
+                "blockIcon": "layer-group",
+                "blockIdx": 0,
+                "blockName": "co2sio4",
+                "categoryIcon": "atom",
+                "category": "_atom_site",
+                "prettyCategory": "atom",
+                "rowIndex": 2,
+                "rowName": "Si",
+                "icon": "map-marker-alt",
+                "name": "_fract_x",
+                "prettyName": "fract x",
+                "shortPrettyName": "x" }
 
-        /*
-        model: [
-            { value: EaGlobals.Vars.ShortestWithIconsAndPrettyLabels,
-                text: qsTr('Shortest iconified name with pretty labels') },
-            { value: EaGlobals.Vars.ReducedWithIconsAndPrettyLabels,
-                text: qsTr('Shorter iconified name with pretty labels') },
-            { value: EaGlobals.Vars.FullWithIconsAndPrettyLabels,
-                text: qsTr('Full iconified name with pretty labels') },
-            { value: EaGlobals.Vars.FullWithPrettyLabels,
-                text: qsTr('Full plain text name with pretty labels') },
-            { value: EaGlobals.Vars.FullWithLabels,
-                text: qsTr('Full plain text name with labels') },
-            { value: EaGlobals.Vars.FullWithIndices,
-                text: qsTr('Full plain text name with indices') }
-        ]
-        */
+            showHeader: false
+            tallRows: true
+            maxRowCountShow: model.length
 
-        model: [
-            { value: EaGlobals.Vars.ShortestWithIconsAndPrettyLabels,
-                text: qsTr('Iconified name with pretty labels') },
-            { value: EaGlobals.Vars.PlainShortWithLabels,
-                text: qsTr('Short plain text name with labels') },
-            { value: EaGlobals.Vars.PlainFullWithLabels,
-                text: qsTr('Full plain text name with labels') }
-        ]
+            /*
+            model: [
+                { value: EaGlobals.Vars.ShortestWithIconsAndPrettyLabels,
+                    text: qsTr('Shortest iconified name with pretty labels') },
+                { value: EaGlobals.Vars.ReducedWithIconsAndPrettyLabels,
+                    text: qsTr('Shorter iconified name with pretty labels') },
+                { value: EaGlobals.Vars.FullWithIconsAndPrettyLabels,
+                    text: qsTr('Full iconified name with pretty labels') },
+                { value: EaGlobals.Vars.FullWithPrettyLabels,
+                    text: qsTr('Full plain text name with pretty labels') },
+                { value: EaGlobals.Vars.FullWithLabels,
+                    text: qsTr('Full plain text name with labels') },
+                { value: EaGlobals.Vars.FullWithIndices,
+                    text: qsTr('Full plain text name with indices') }
+            ]
+            */
 
-        header: EaComponents.TableViewHeader {
+            model: [
+                { value: EaGlobals.Vars.ShortestWithIconsAndPrettyLabels,
+                    text: qsTr('Iconified name with pretty labels') },
+                { value: EaGlobals.Vars.PlainShortWithLabels,
+                    text: qsTr('Short plain text name with labels') },
+                { value: EaGlobals.Vars.PlainFullWithLabels,
+                    text: qsTr('Full plain text name with labels') }
+            ]
 
-            EaComponents.TableViewLabel {
-                width: EaStyle.Sizes.fontPixelSize * 2.5
+            header: EaComponents.TableViewHeader {
+
+                EaComponents.TableViewLabel {
+                    width: EaStyle.Sizes.fontPixelSize * 2.5
+                }
+
+                EaComponents.TableViewLabel {
+                    flexibleWidth: true
+                }
             }
 
-            EaComponents.TableViewLabel {
-                flexibleWidth: true
+            delegate: EaComponents.TableViewDelegate {
+                mouseArea.onPressed: EaGlobals.Vars.paramNameFormat = currentIndex
+
+                EaElements.RadioButton {
+                    checked: index === EaGlobals.Vars.paramNameFormat
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                EaComponents.TableViewTwoRowsAdvancedLabel {
+                    text: tableView.model[index].text
+                    minorText: Globals.Proxies.paramName(param, tableView.model[index].value)
+                }
             }
         }
-
-        delegate: EaComponents.TableViewDelegate {
-            mouseArea.onPressed: EaGlobals.Vars.paramNameFormat = currentIndex
-
-            EaElements.RadioButton {
-                checked: index === EaGlobals.Vars.paramNameFormat
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            EaComponents.TableViewTwoRowsAdvancedLabel {
-                text: tableView.model[index].text
-                minorText: Globals.Proxies.paramName(param, tableView.model[index].value)
-            }
-        }
-
     }
 }

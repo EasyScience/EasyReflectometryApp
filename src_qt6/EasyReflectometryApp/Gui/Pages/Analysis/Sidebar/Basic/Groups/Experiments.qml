@@ -32,7 +32,7 @@ EaElements.GroupBox {
 
         model: Globals.BackendWrapper.analysisExperimentsAvailable.length
         currentIndex: Globals.BackendWrapper.analysisExperimentsCurrentIndex
-        onActivated: Globals.BackendWrapper.analysisExperimentsSetCurrentIndex(currentIndex)
+        onActivated: Globals.BackendWrapper.analysisSetExperimentsCurrentIndex(currentIndex)
 
         // ComboBox delegate (popup rows)
         delegate: ItemDelegate {
@@ -68,7 +68,9 @@ EaElements.GroupBox {
 
                     EaComponents.TableViewParameter {
                         enabled: false
-                        text: comboBox.model[index].name.value
+                        //text: comboBox.model[index]//.name.value
+                        text: Globals.BackendWrapper.analysisExperimentsAvailable[index]
+
                     }
                 }
             }

@@ -173,24 +173,25 @@ QtObject {
     readonly property bool analysisIsFitFinished: activeBackend.analysis.isFitFinished
     readonly property string analysisMinimizerStatus: activeBackend.analysis.minimizerStatus
 
-    readonly property var analysisMinimizersAvailable: activeBackend.analysis.minimizersAvailable
-    readonly property string analysisMinimizerCurrentIndex: activeBackend.analysis.minimizerCurrentIndex
-    function analysisSetMinimizerCurrentIndex(value) { activeBackend.analysis.setMinimizerCurrentIndex(value) }
+    readonly property var analysisExperimentsAvailable: activeBackend.analysis.experimentsAvailable
+    readonly property int analysisExperimentsCurrentIndex: activeBackend.analysis.experimentsCurrentIndex
+    function analysisSetExperimentsCurrentIndex(value) { activeBackend.analysis.setExperimentCurrentIndex(value) }
     
     readonly property var analysisCalculatorsAvailable: activeBackend.analysis.calculatorsAvailable
     readonly property int analysisCalculatorCurrentIndex: activeBackend.analysis.calculatorCurrentIndex
     function analysisSetCalculatorCurrentIndex(value) { activeBackend.analysis.setCalculatorCurrentIndex(value) }
 
-    readonly property var analysisExperimentsAvailable: activeBackend.analysis.experimentsAvailable
-    readonly property int analysisExperimentsCurrentIndex: activeBackend.analysis.experimentsCurrentIndex
-    function analysisSetExperimentsCurrentIndex(value) { activeBackend.analysis.setExperimentsCurrentIndex(value) }
+    readonly property var analysisMinimizersAvailable: activeBackend.analysis.minimizersAvailable
+    readonly property string analysisMinimizerCurrentIndex: activeBackend.analysis.minimizerCurrentIndex
+    function analysisSetMinimizerCurrentIndex(value) { activeBackend.analysis.setMinimizerCurrentIndex(value) }
 
     readonly property double analysisMinimizerTolerance: activeBackend.analysis.minimizerTolerance
     function analysisSetMinimizerTolerance(value) { activeBackend.analysis.setMinimizerTolerance(value) }
     readonly property int analysisMinimizerMaxIterations: activeBackend.analysis.minimizerMaxIterations
     function analysisSetMinimizerMaxIterations(value) { activeBackend.analysis.setMinimizerMaxIterations(value) }
 
-
+    readonly property bool analysisFittingRunning: activeBackend.analysis.fittingRunning
+    function analysisFittingStartStop() { activeBackend.analysis.fittingStartStop() }
 
     ///////////////
     // Summary page

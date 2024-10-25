@@ -5,15 +5,14 @@
 import QtQuick
 import QtQuick.Controls
 
-import EasyApp.Gui.Globals as EaGlobals
+//import EasyApp.Gui.Globals as EaGlobals
 import EasyApp.Gui.Style as EaStyle
 import EasyApp.Gui.Elements as EaElements
-import EasyApp.Gui.Components as EaComponents
+//import EasyApp.Gui.Components as EaComponents
 
 import Gui.Globals as Globals
 
 EaElements.GroupBox {
-    //title: qsTr("Fitting")
     collapsible: false
 
     Column {
@@ -22,16 +21,14 @@ EaElements.GroupBox {
         EaElements.SideBarButton {
             enabled: Globals.Proxies.main.experiment.defined
             wide: true
-
-            fontIcon: Globals.Proxies.main.fitting.isFittingNow ? 'stop-circle' : 'play-circle'
-            text: Globals.Proxies.main.fitting.isFittingNow ? qsTr('Cancel fitting') : qsTr('Start fitting')
+            fontIcon: Globals.BackendWrapper.analysisFittingRunning ? 'stop-circle' : 'play-circle'
+            text: Globals.BackendWrapper.analysisFittingRunning  ? qsTr('Cancel fitting') : qsTr('Start fitting')
 
             onClicked: {
                 console.debug(`Clicking '${text}' button: ${this}`)
-                Globals.Proxies.main.fitting.startStop()
+                Globals.BackendWrapper.analysisFittingStartStop()
             }
 
-            //Component.onCompleted: Globals.Refs.app.analysisPage.startFittingButton = this
             Component.onCompleted: Globals.References.pages.analysis.sidebar.basic.popups.startFittingButton = this
             Loader { source: "../Popups/FitStatusDialog.qml" }
         }
