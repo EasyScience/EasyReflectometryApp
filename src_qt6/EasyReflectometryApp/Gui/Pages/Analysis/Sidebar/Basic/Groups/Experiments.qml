@@ -30,10 +30,10 @@ EaElements.GroupBox {
 
         textRole: "name"
 
-        model: Globals.Proxies.main.experiment.dataBlocksNoMeas
-        currentIndex: Globals.Proxies.main.experiment.currentIndex
+        model: Globals.BackendWrapper.analysisExperimentsAvailable.length
+        currentIndex: Globals.BackendWrapper.analysisExperimentsCurrentIndex
 
-        onActivated: Globals.Proxies.main.experiment.currentIndex = currentIndex
+        onActivated: Globals.BackendWrapper.analysisExperimentsSetCurrentIndex(currentIndex)
 
         // ComboBox delegate (popup rows)
         delegate: ItemDelegate {
@@ -98,7 +98,7 @@ EaElements.GroupBox {
                 spacing: EaStyle.Sizes.tableColumnSpacing
 
                 EaComponents.TableViewLabel {
-                    text: currentIndex + 1
+                    text: comboBox.currentIndex + 1
                     color: EaStyle.Colors.themeForegroundMinor
                 }
 
@@ -113,8 +113,8 @@ EaElements.GroupBox {
 
                 EaComponents.TableViewParameter {
                     enabled: false
-                    text: typeof comboBox.model[currentIndex] !== 'undefined' ?
-                        comboBox.model[currentIndex].name.value :
+                    text: typeof comboBox.model[comboBox.currentIndex] !== 'undefined' ?
+                        comboBox.model[comboBox.currentIndex].name.value :
                         ''
                 }
             }

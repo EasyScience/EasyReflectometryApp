@@ -17,7 +17,7 @@ EaElements.GroupBox {
 
         EaElements.ComboBox {
             width: EaStyle.Sizes.sideBarContentWidth
-            model: ['CrysPy']
+            model: Globals.BackendWrapper.analysisCalculatorsAvailable
         }
 
     }

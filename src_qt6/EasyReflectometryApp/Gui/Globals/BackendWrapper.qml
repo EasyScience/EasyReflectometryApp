@@ -171,6 +171,17 @@ QtObject {
     // Analysis page
     ///////////////
     readonly property bool analysisIsFitFinished: activeBackend.analysis.isFitFinished
+    readonly property var analysisMinimizersAvailable: activeBackend.analysis.minimizersAvailable
+    readonly property var analysisCalculatorsAvailable: activeBackend.analysis.calculatorsAvailable
+
+    readonly property string analysisMinimizerCurrent: activeBackend.analysis.minimizerCurrent
+    function analysisSetMinimizerCurrent(value) { activeBackend.analysis.setMinimizerCurrent(value) }
+    readonly property double analysisMinimizerTolerance: activeBackend.analysis.minimizerTolerance
+    function analysisSetMinimizerTolerance(value) { activeBackend.analysis.setMinimizerTolerance(value) }
+    readonly property int analysisMinimizerMaxIterations: activeBackend.analysis.mminimizerMaxIterations
+    function analysisSetMinimizerMaxIterations(value) { activeBackend.analysis.setMinimizerMaxIterations(value) }
+    readonly property int analysisExperimentsCurrentIndex: activeBackend.analysis.experimentsCurrentIndex
+    function anslysisSetExperimentsCurrentIndex(value) { activeBackend.analysis.setExperimentsCurrentIndex(value) }
 
 
     ///////////////
