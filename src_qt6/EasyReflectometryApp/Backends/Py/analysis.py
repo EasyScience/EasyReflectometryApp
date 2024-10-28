@@ -6,7 +6,10 @@ from PySide6.QtCore import Property
 from typing import List
 
 from easyreflectometry import Project as ProjectLib
-#from .logic.Analysis import Analysis as AnalysisLogic
+from .logic.parameters import Parameters as ParametersLogic
+from .logic.fitting import Fitting as FittingLogic
+from .logic.calculators import Calculators as CalculatorsLogic
+from .logic.experiments import Experiments as ExperimentLogic
 
 
 class Analysis(QObject):
@@ -18,89 +21,50 @@ class Analysis(QObject):
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
-#        self._logic = AnalysisLogic(project_lib)
-    
+        self._paramters_logic = ParametersLogic(project_lib)
+        self._fitting_logic = FittingLogic(project_lib)
+        self._calculators_logic = CalculatorsLogic(project_lib)
+        self._experiments_logic = ExperimentLogic(project_lib)
+
     @Property('QVariantList', notify=minimizerChanged)
     def minimizersAvailable(self) -> List[str]:
-        return ["Minimizer 1", "Minimizer 2", "Minimizer 3"]
+        return self._fitting_logic.available()
     @Property(int, notify=minimizerChanged)
     def minimizerCurrentIndex(self) -> int:
-        return 0
+        return self._fitting_logic.current_index()
     @Slot(int)
     def setMinimizerCurrentIndex(self, new_value: int) -> None:
-        print(new_value)
-        #self._material_logic.index = new_value
-        #self.materialIndexChanged.emit(new_value)
+        self._fitting_logic.set_current_index(new_value)
 
     @Property('QVariantList', notify=calculatorChanged)
     def calculatorsAvailable(self) -> List[str]:
-        return ["Calculator 1", "Calculator 2", "Calculator 3"]
+        return self._calculators_logic.available()
     @Property(int, notify=calculatorChanged)
     def calculatorCurrentIndex(self) -> int:
-        return 0
+        return self._calculators_logic.current_index()
     @Slot(int)
     def setCalculatorCurrentIndex(self, new_value: int) -> None:
-        print(new_value)
-        #self._material_logic.index = new_value
-        #self.materialIndexChanged.emit(new_value)
+        self._calculators_logic.set_current_index(new_value)
 
     @Property('QVariantList', notify=experimentsChanged)
     def experimentsAvailable(self) -> List[str]:
-        return ["Experiment 1", "Experiment 2", "Experiment 3"]
+        return self._experiments_logic.available()
     @Property(int, notify=experimentsChanged)
     def experimentCurrentIndex(self) -> int:
-        return 0
+        return self._experiments_logic.current_index()
     @Slot(int)
     def setExperimentCurrentIndex(self, new_value: int) -> None:
-        print(new_value)
-        #self._material_logic.index = new_value
-        #self.materialIndexChanged.emit(new_value)
+        self._experiments_logic.set_current_index(new_value)
 
     @Property('QVariantList', notify=parametersChanged)
-    def fitableParameters(self) -> List[str]:
-        return [
-        {
-            'name': 'name 1',
-            'value': 1.0,
-            'error': -1.23456,
-            'max': 100.0,
-            'min': -100.0,
-            'units': 'u1',
-            'fit': True,
-            'from': -10.0,
-            'to': 10.0,
-        },
-        {
-            'name': 'name 2',
-            'value': 2.0,
-            'error': -2.34567,
-            'max': 200.0,
-            'min': -200.0,
-            'units': 'u2',
-            'fit': False,
-            'from': -20.0,
-            'to': 20.0,
-        },
-        {
-            'name': 'name 3',
-            'value': 3.0,
-            'error': -3.45678,
-            'max': 300.0,
-            'min': -300.0,
-            'units': 'u3',
-            'fit': True,
-            'from': -30.0,
-            'to': 30.0,
-        },
-    ]
+    def fitableParameters(self) -> List[dict[str]]:
+        return self._paramters_logic.fitable()
     @Property(int, notify=parametersChanged)
     def currentParameterIndex(self) -> int:
-        return 0
+        return self._paramters_logic.current_index()
     @Slot(int)
     def setCurrentParameterIndex(self, new_value: int) -> None:
-        print(new_value)
-        #self._material_logic.index = new_value
-        #self.materialIndexChanged.emit(new_value)
+        self._paramters_logic.set_current_index(new_value)
 
     ## Minimizer
     @Property(str, notify=fitFinishedChanged)
