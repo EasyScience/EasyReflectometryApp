@@ -174,7 +174,7 @@ QtObject {
     readonly property string analysisMinimizerStatus: activeBackend.analysis.minimizerStatus
 
     readonly property var analysisExperimentsAvailable: activeBackend.analysis.experimentsAvailable
-    readonly property int analysisExperimentsCurrentIndex: activeBackend.analysis.experimentsCurrentIndex
+    readonly property int analysisExperimentsCurrentIndex: activeBackend.analysis.experimentCurrentIndex
     function analysisSetExperimentsCurrentIndex(value) { activeBackend.analysis.setExperimentCurrentIndex(value) }
     
     readonly property var analysisCalculatorsAvailable: activeBackend.analysis.calculatorsAvailable
@@ -182,7 +182,7 @@ QtObject {
     function analysisSetCalculatorCurrentIndex(value) { activeBackend.analysis.setCalculatorCurrentIndex(value) }
 
     readonly property var analysisMinimizersAvailable: activeBackend.analysis.minimizersAvailable
-    readonly property string analysisMinimizerCurrentIndex: activeBackend.analysis.minimizerCurrentIndex
+    readonly property int analysisMinimizerCurrentIndex: activeBackend.analysis.minimizerCurrentIndex
     function analysisSetMinimizerCurrentIndex(value) { activeBackend.analysis.setMinimizerCurrentIndex(value) }
 
     readonly property double analysisMinimizerTolerance: activeBackend.analysis.minimizerTolerance

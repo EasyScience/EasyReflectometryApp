@@ -6,17 +6,19 @@ QtObject {
 
     readonly property bool isFitFinished: true
     readonly property var minimizersAvailable: ['minimizer_1', 'minimizer_2', 'minimizer_3']
+    readonly property int minimizerCurrentIndex: 0
+
     readonly property var calculatorsAvailable: ['calculator_1', 'calculator_2', 'calculator_3']
+    readonly property int calculatorCurrentIndex: 1
+
     readonly property var experimentsAvailable: ['experiment_1', 'experiment_2', 'experiment_3']
+    readonly property int experimentCurrentIndex: 2
 
-    readonly property int experimentsCurrentIndex: 0
     readonly property string minimizerStatus: undefined  //'Success'
-
-    readonly property string minimizerCurrent: 'minimizer_1'
     readonly property double minimizerTolerance: 1.0
     readonly property int minimizerMaxIterations: 2
 
-    readonly property bool isFitting: false
+    readonly property bool fittingRunning: false
 
     // Setters
     function setCalculatorCurrentIndex(value) {

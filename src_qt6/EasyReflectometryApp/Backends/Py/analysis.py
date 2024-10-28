@@ -31,7 +31,7 @@ class Analysis(QObject):
     def minimizersAvailable(self) -> List[str]:
         return ["Minimizer 1", "Minimizer 2", "Minimizer 3"]
     
-    @Property(str)
+    @Property(int)
     def minimizerCurrentIndex(self) -> int:
         return 0
 
@@ -39,7 +39,7 @@ class Analysis(QObject):
     def calculatorsAvailable(self) -> List[str]:
         return ["Calculator 1", "Calculator 2", "Calculator 3"]
     
-    @Property(str)
+    @Property(int)
     def calculatorCurrentIndex(self) -> int:
         return 0
 
@@ -47,7 +47,7 @@ class Analysis(QObject):
     def experimentsAvailable(self) -> List[str]:
         return ["Experiment 1", "Experiment 2", "Experiment 3"]
     
-    @Property(str)
+    @Property(int)
     def experimentCurrentIndex(self) -> int:
         return 0
 
