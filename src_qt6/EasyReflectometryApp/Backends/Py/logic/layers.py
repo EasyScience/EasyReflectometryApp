@@ -67,30 +67,53 @@ class Layers:
             self._layers.move_down(self._layer_index)
             self._layer_index = self._layer_index + 1
 
-    def set_name_at_current_index(self, new_value: str) -> None:
-        self._layers[self._layer_index].name = new_value
+    def set_name_at_current_index(self, new_value: str) -> bool:
+        if self._layers[self._layer_index].name != new_value:
+            self._layers[self._layer_index].name = new_value
+            return True
+        return False
 
-    def set_thickness_at_current_index(self, new_value: float) -> None:
-        self._layers[self._layer_index].thickness.value = new_value
+    def set_thickness_at_current_index(self, new_value: float) -> bool:
+        if self._layers[self._layer_index].thickness.value != new_value:
+            self._layers[self._layer_index].thickness.value = new_value
+            return True
+        return False
+    
+    def set_roughness_at_current_index(self, new_value: float) -> bool:
+        if self._layers[self._layer_index].roughness.value != new_value:
+            self._layers[self._layer_index].roughness.value = new_value
+            return True
+        return False
 
-    def set_roughness_at_current_index(self, new_value: float) -> None:
-        self._layers[self._layer_index].roughness.value = new_value
+    def set_material_at_current_index(self, new_value: int) -> bool:
+        if self._layers[self._layer_index].material != self._project_lib._materials[new_value]:
+            self._layers[self._layer_index].material = self._project_lib._materials[new_value]
+            return True
+        return False
 
-    def set_material_at_current_index(self, new_value: int) -> None:
-        self._layers[self._layer_index].material = self._project_lib._materials[new_value]
+    def set_solvent_at_current_index(self, new_value: int) -> bool:
+        if self._layers[self._layer_index].solvent != self._project_lib._materials[new_value]:
+            self._layers[self._layer_index].solvent = self._project_lib._materials[new_value]
+            return True
+        return False
 
-    def set_solvent_at_current_index(self, new_value: int) -> None:
-        self._layers[self._layer_index].solvent = self._project_lib._materials[new_value]
+    def set_apm_at_current_index(self, new_value: float) -> bool:
+        if self._layers[self._layer_index].area_per_molecule != new_value:
+            self._layers[self._layer_index].area_per_molecule = new_value
+            return True
+        return False
 
-    def set_apm_at_current_index(self, new_value: float) -> None:
-        self._layers[self._layer_index].area_per_molecule = new_value
+    def set_solvation_at_current_index(self, new_value: float) -> bool:
+        if self._layers[self._layer_index].solvent_fraction != new_value:
+            self._layers[self._layer_index].solvent_fraction = new_value
+            return True
+        return False
 
-    def set_solvation_at_current_index(self, new_value: float) -> None:
-        self._layers[self._layer_index].solvent_fraction = new_value
-
-    def set_formula(self, new_value: str) -> None:
-        self._layers[self._layer_index].molecular_formula = new_value
-
+    def set_formula(self, new_value: str) -> bool:
+        if self._layers[self._layer_index].molecular_formula != new_value:
+            self._layers[self._layer_index].molecular_formula = new_value
+            return True
+        return False
 
 def _from_layers_collection_to_list_of_dicts(layers_collection: LayerCollection) -> list[dict[str, str]]:
     layers_list = []

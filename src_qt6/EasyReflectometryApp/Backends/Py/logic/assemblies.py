@@ -63,11 +63,14 @@ class Assemblies:
             self._assembly_index = self._assembly_index + 1
 
     def set_name_at_current_index(self, new_value: str) -> None:
-        self._assemblies[self._assembly_index].name = new_value
+        if self._assemblies[self._assembly_index].name != new_value:
+            self._assemblies[self._assembly_index].name = new_value
+            return True
+        return False
 
-    def set_type_at_current_index(self, new_value: str) -> None:
+    def set_type_at_current_index(self, new_value: str) -> bool:
         if new_value == self._assemblies[self._assembly_index].type:
-            return
+            return False
 
         if new_value == 'Multi-layer':
             if 'Si' not in [material.name for material in self._project_lib._materials]:
@@ -96,6 +99,7 @@ class Assemblies:
 
         self._assemblies[self._assembly_index] = new_assembly
         self._project_lib._models[self._model_index].sample._disable_changes_to_outermost_layers()
+        return True
 
     # Only for repeating multilayer
     @property
@@ -104,18 +108,27 @@ class Assemblies:
             return str(int(self._assemblies[self._assembly_index].repetitions.value))
         return '1'
 
-    def set_repeated_layer_reptitions(self, new_value: int) -> None:
+    def set_repeated_layer_reptitions(self, new_value: int) -> bool:
         if isinstance(self._assemblies[self._assembly_index], RepeatingMultilayer):
-            self._assemblies[self._assembly_index].repetitions.value = new_value
-
+            if new_value != self._assemblies[self._assembly_index].repetitions.value:
+                self._assemblies[self._assembly_index].repetitions.value = new_value
+                return True
+        return False
+    
     # # Only for surfactant layer
-    def set_constrain_apm(self, new_value: str) -> None:
+    def set_constrain_apm(self, new_value: str) -> bool:
         if isinstance(self._assemblies[self._assembly_index], SurfactantLayer):
-            self._assemblies[self._assembly_index].constrain_area_per_molecule = new_value
-
-    def set_conformal_roughness(self, new_value: str) -> None:
+            if self._assemblies[self._assembly_index].constrain_area_per_molecule != new_value:
+                self._assemblies[self._assembly_index].constrain_area_per_molecule = new_value
+                return True
+        return False
+    
+    def set_conformal_roughness(self, new_value: str) -> bool:
         if isinstance(self._assemblies[self._assembly_index], SurfactantLayer):
-            self._assemblies[self._assembly_index].conformal_roughness = new_value
+            if self._assemblies[self._assembly_index].conformal_roughness != new_value:
+                self._assemblies[self._assembly_index].conformal_roughness = new_value
+                return True
+        return False
 
 
 def _from_assemblies_collection_to_list_of_dicts(assemblies_collection: Sample) -> list[dict[str, str]]:

@@ -46,18 +46,30 @@ class Models:
     def models_names(self) -> list[str]:
         return [element['label'] for element in self.models]
 
-    def set_name_at_current_index(self, new_value: str) -> None:
-        self._models[self._model_index].name = new_value
+    def set_name_at_current_index(self, new_value: str) -> bool:
+        if self._models[self._model_index].name != new_value:
+            self._models[self._model_index].name = new_value
+            return True
+        return False
 
-    def set_scaling_at_current_index(self, new_value: str) -> None:
-        self._models[self._model_index].scale.value = new_value
+    def set_scaling_at_current_index(self, new_value: str) -> bool:
+        if self._models[self._model_index].scale.value != new_value:
+            self._models[self._model_index].scale.value = new_value
+            return True
+        return False
 
-    def set_background_at_current_index(self, new_value: str) -> None:
-        self._models[self._model_index].background.value = new_value
-
-    def set_resolution_at_current_index(self, new_value: str) -> None:
+    def set_background_at_current_index(self, new_value: str) -> bool:
+        if self._models[self._model_index].background.value != new_value:
+            self._models[self._model_index].background.value = new_value
+            return True
+        return False
+    
+    def set_resolution_at_current_index(self, new_value: str) -> bool:
         if isinstance(self._models[self._model_index].resolution_function, PercentageFhwm):
-            self._models[self._model_index].resolution_function.constant = float(new_value)
+            if self._models[self._model_index].resolution_function.constant != float(new_value):
+                self._models[self._model_index].resolution_function.constant = float(new_value)
+                return True
+        return False
 
     def remove_at_index(self, value: str) -> None:
         self._models.pop(int(value))

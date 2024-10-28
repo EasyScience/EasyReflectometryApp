@@ -49,15 +49,24 @@ class Material:
             self._materials.move_down(self._material_index)
             self._material_index = self._material_index + 1
 
-    def set_name_at_current_index(self, new_value: str) -> None:
-        self._materials[self._material_index].name = new_value
+    def set_name_at_current_index(self, new_value: str) -> bool:
+        if self._materials[self._material_index].name != new_value:
+            self._materials[self._material_index].name = new_value
+            return True
+        return False
 
-    def set_sld_at_current_index(self, new_value: float) -> None:
-        self._materials[self._material_index].sld.value = new_value
+    def set_sld_at_current_index(self, new_value: float) -> bool:
+        if self._materials[self._material_index].sld.value != new_value:
+            self._materials[self._material_index].sld.value = new_value
+            return True
+        return False
 
-    def set_isld_at_current_index(self, new_value: float) -> None:
-        self._materials[self._material_index].isld.value = new_value
-
+    def set_isld_at_current_index(self, new_value: float) -> bool:
+        if self._materials[self._material_index].isld.value != new_value:
+            self._materials[self._material_index].isld.value = new_value
+            return True
+        return False
+    
 def _from_materials_collection_to_list_of_dicts(materials_collection: MaterialCollection) -> list[dict[str, str]]:
     materials_list = []
     for material in materials_collection:

@@ -85,18 +85,18 @@ class Sample(QObject):
 
     @Slot(str)
     def setCurrentMaterialName(self, new_value: str) -> None:
-        self._material_logic.set_name_at_current_index(new_value)
-        self.materialsChanged.emit()
+        if self._material_logic.set_name_at_current_index(new_value):
+            self.materialsChanged.emit()
 
     @Slot(float)
     def setCurrentMaterialSld(self, new_value: float) -> None:
-        self._material_logic.set_sld_at_current_index(new_value)
-        self.materialsChanged.emit()
+        if self._material_logic.set_sld_at_current_index(new_value):
+            self.materialsChanged.emit()
 
     @Slot(float)
     def setCurrentMaterialISld(self, new_value: float) -> None:
-        self._material_logic.set_isld_at_current_index(new_value)
-        self.materialsChanged.emit()
+        if self._material_logic.set_isld_at_current_index(new_value):
+            self.materialsChanged.emit()
 
     # Actions
     @Slot(str)
@@ -150,8 +150,8 @@ class Sample(QObject):
 
     @Slot(str)
     def setCurrentModelName(self, value: str) -> None:
-        self._models_logic.set_name_at_current_index(value)
-        self.modelsTableChanged.emit()
+        if self._models_logic.set_name_at_current_index(value):
+            self.modelsTableChanged.emit()
 
     # Actions
     @Slot(str)
@@ -209,13 +209,13 @@ class Sample(QObject):
 
     @Slot(str)
     def setCurrentAssemblyName(self, new_value: str) -> None:
-        self._assemblies_logic.set_name_at_current_index(new_value)
-        self.assembliesTableChanged.emit()
+        if self._assemblies_logic.set_name_at_current_index(new_value):
+            self.assembliesTableChanged.emit()
 
     @Slot(str)
     def setCurrentAssemblyType(self, new_value: str) -> None:
-        self._assemblies_logic.set_type_at_current_index(new_value)
-        self.assembliesTableChanged.emit()
+        if self._assemblies_logic.set_type_at_current_index(new_value):
+            self.assembliesTableChanged.emit()
     
     # Assembly specific
     @Property(str, notify=assembliesChange)
@@ -224,18 +224,18 @@ class Sample(QObject):
 
     @Slot(int)
     def setCurrentAssemblyRepeatedLayerReptitions(self, new_value: int) -> None:
-        self._assemblies_logic.set_repeated_layer_reptitions(new_value)
-        self.assembliesTableChanged.emit()
+        if self._assemblies_logic.set_repeated_layer_reptitions(new_value):
+            self.assembliesTableChanged.emit()
 
     @Slot(bool)
     def setCurrentAssemblyConstrainAPM(self, new_value: bool) -> None:
-        self._assemblies_logic.set_constrain_apm(new_value)
-        self.assembliesTableChanged.emit()
+        if self._assemblies_logic.set_constrain_apm(new_value):
+            self.assembliesTableChanged.emit()
 
     @Slot(bool)
     def setCurrentAssemblyConformalRoughness(self, new_value: bool) -> None:
-        self._assemblies_logic.set_conformal_roughness(new_value)
-        self.assembliesTableChanged.emit()
+        if self._assemblies_logic.set_conformal_roughness(new_value):
+            self.assembliesTableChanged.emit()
 
     # Actions
     @Slot(str)
@@ -288,43 +288,43 @@ class Sample(QObject):
 
     @Slot(str)
     def setCurrentLayerName(self, new_value: str) -> None:
-        self._layers_logic.set_name_at_current_index(new_value)
-        self.layersTableChanged.emit()
+        if self._layers_logic.set_name_at_current_index(new_value):
+            self.layersTableChanged.emit()
 
     @Slot(int)
     def setCurrentLayerMaterial(self, new_value: int) -> None:
-        self._layers_logic.set_material_at_current_index(new_value)
-        self.layersTableChanged.emit()
+        if self._layers_logic.set_material_at_current_index(new_value):
+            self.layersTableChanged.emit()
 
     @Slot(int)
     def setCurrentLayerSolvent(self, new_value: int) -> None:
-        self._layers_logic.set_solvent_at_current_index(new_value)
-        self.layersTableChanged.emit()
+        if self._layers_logic.set_solvent_at_current_index(new_value):
+            self.layersTableChanged.emit()
 
     @Slot(float)
     def setCurrentLayerThickness(self, new_value: float) -> None:
-        self._layers_logic.set_thickness_at_current_index(new_value)
-        self.layersTableChanged.emit()
+        if self._layers_logic.set_thickness_at_current_index(new_value):
+            self.layersTableChanged.emit()
 
     @Slot(float)
     def setCurrentLayerRoughness(self, new_value: float) -> None:
-        self._layers_logic.set_roughness_at_current_index(new_value)
-        self.layersTableChanged.emit()
+        if self._layers_logic.set_roughness_at_current_index(new_value):
+            self.layersTableChanged.emit()
 
     @Slot(str)
     def setCurrentLayerFormula(self, new_value: str) -> None:
-        self._layers_logic.set_formula(new_value)
-        self.layersTableChanged.emit()
+        if self._layers_logic.set_formula(new_value):
+            self.layersTableChanged.emit()
 
     @Slot(float)
     def setCurrentLayerAPM(self, new_value: float) -> None:
-        self._layers_logic.set_apm_at_current_index(new_value)
-        self.layersTableChanged.emit()
+        if self._layers_logic.set_apm_at_current_index(new_value):
+            self.layersTableChanged.emit()
 
     @Slot(float)
     def setCurrentLayerSolvation(self, new_value: float) -> None:
-        self._layers_logic.set_solvation_at_current_index(new_value)
-        self.layersTableChanged.emit()
+        if self._layers_logic.set_solvation_at_current_index(new_value):
+            self.layersTableChanged.emit()
 
     # Actions
     @Slot(str)
