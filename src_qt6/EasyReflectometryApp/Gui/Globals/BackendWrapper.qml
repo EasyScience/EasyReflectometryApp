@@ -182,6 +182,10 @@ QtObject {
     readonly property int analysisMinimizerCurrentIndex: activeBackend.analysis.minimizerCurrentIndex
     function analysisSetMinimizerCurrentIndex(value) { activeBackend.analysis.setMinimizerCurrentIndex(value) }
 
+    readonly property var analysisFitableParameters: activeBackend.analysis.fitableParameters 
+    readonly property int analysisCurrentParameterIndex: activeBackend.analysis.currentParameterIndex
+    function analysisSetCurrentParameterIndex(value) { activeBackend.analysis.setCurrentParameterIndex(value) }
+
     // Minimizer
     readonly property string analysisMinimizerStatus: activeBackend.analysis.minimizerStatus
     readonly property double analysisMinimizerTolerance: activeBackend.analysis.minimizerTolerance
@@ -195,21 +199,15 @@ QtObject {
     function analysisFittingStartStop() { activeBackend.analysis.fittingStartStop() }
 
     // Parameters
-    readonly property int analysisCurrentParameterIndex: activeBackend.analysis.currentParameterIndex
-    function analysisSetCurrentParameterIndex(value) { activeBackend.analysis.setCurrentParameterIndex(value) }
-
-    readonly property var analysisFitableParameters: activeBackend.analysis.fitableParameters 
-    function analysisSetCurrentParameterValue(value) { activeBackend.analysis.setCurrentParameterValue(value) }
-    function analysisSetCurrentParameterMin(value) { activeBackend.analysis.setCurrentParameterMin(value) }
-    function analysisSetCurrentParameterMax(value) { activeBackend.analysis.setCurrentParameterMax(value) }
-    function analysisSetCurrentParameterFit(value) { activeBackend.analysis.setCurrentParameterFit(value) }
-
     readonly property int analysisFreeParametersCount: activeBackend.analysis.freeParametersCount
     readonly property int analysisFixedParametersCount: activeBackend.analysis.fixedParametersCount
     readonly property int analysisModelParametersCount: activeBackend.analysis.modelParametersCount
     readonly property int analysisExperimentParametersCount: activeBackend.analysis.experimentParametersCount
 
-
+    function analysisSetCurrentParameterValue(value) { activeBackend.analysis.setCurrentParameterValue(value) }
+    function analysisSetCurrentParameterMin(value) { activeBackend.analysis.setCurrentParameterMin(value) }
+    function analysisSetCurrentParameterMax(value) { activeBackend.analysis.setCurrentParameterMax(value) }
+    function analysisSetCurrentParameterFit(value) { activeBackend.analysis.setCurrentParameterFit(value) }
 
     ///////////////
     // Summary page
