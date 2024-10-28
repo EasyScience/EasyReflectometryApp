@@ -5,10 +5,8 @@
 import QtQuick
 import QtQuick.Controls
 
-//import EasyApp.Gui.Globals as EaGlobals
 import EasyApp.Gui.Style as EaStyle
 import EasyApp.Gui.Elements as EaElements
-//import EasyApp.Gui.Components as EaComponents
 
 import Gui.Globals as Globals
 
@@ -19,7 +17,7 @@ EaElements.GroupBox {
         spacing: EaStyle.Sizes.fontPixelSize
 
         EaElements.SideBarButton {
-            enabled: Globals.Proxies.main.experiment.defined
+            enabled: Globals.BackendWrapper.analysisExperimentsAvailable.length //typeof Globals.BackendWrapper.analysisExperimentsAvailable !== 'undefined'//Globals.Proxies.main.experiment.defined
             wide: true
             fontIcon: Globals.BackendWrapper.analysisFittingRunning ? 'stop-circle' : 'play-circle'
             text: Globals.BackendWrapper.analysisFittingRunning  ? qsTr('Cancel fitting') : qsTr('Start fitting')
