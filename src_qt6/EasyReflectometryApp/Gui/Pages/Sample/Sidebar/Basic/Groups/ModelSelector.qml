@@ -62,16 +62,16 @@ EaElements.GroupBox {
                     enabled: (modelView.model > 1) ? true : false//When item is selected
                     ToolTip.text: qsTr("Remove this model")
                     onClicked: {
-                        Globals.BackendWrapper.sampleRemoveModel(modelView.currentIndex)
+                        Globals.BackendWrapper.sampleRemoveModel(index)
                     }
                 }
-            }
 
-            onCurrentIndexChanged: {
-                Globals.BackendWrapper.sampleSetCurrentModelIndex(modelView.currentIndex)
-                // NEED TO CONNECT THIS
-                // In ModelEditor assembliesView.currentIndex = 0
-                // In MultiLayer layersView.currentIndex = 0
+                mouseArea.onPressed: {
+                    if (Globals.BackendWrapper.sampleCurrentModelIndex !== index) {
+                        Globals.BackendWrapper.sampleSetCurrentAssemblyIndex(0)
+                        Globals.BackendWrapper.sampleSetCurrentALayerIndex(0)
+                    }
+                }
             }
         }
 

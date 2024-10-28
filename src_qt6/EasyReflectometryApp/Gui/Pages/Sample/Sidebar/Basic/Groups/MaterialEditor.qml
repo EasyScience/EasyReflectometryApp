@@ -80,11 +80,14 @@ EaElements.GroupBox {
                     enabled: materialsView !== null && materialsView.model > 1
                     fontIcon: "minus-circle"
                     ToolTip.text: qsTr("Remove this material")
-                    onClicked: Globals.BackendWrapper.sampleRemoveMaterial(materialsView.currentIndex)
+                    onClicked: Globals.BackendWrapper.sampleRemoveMaterial(index)
                 }
-            }
-            onCurrentIndexChanged: {
-                Globals.BackendWrapper.sampleSetCurrentMaterialIndex(materialsView.currentIndex)
+
+                mouseArea.onPressed: {
+                    if (Globals.BackendWrapper.sampleCurrentMaterialIndex !== index) {
+                        Globals.BackendWrapper.sampleSetCurrentMaterialIndex(index)
+                    }
+                }
             }
         }
 

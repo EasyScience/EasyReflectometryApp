@@ -61,7 +61,7 @@ EaElements.GroupColumn {
                 horizontalAlignment: Text.AlignLeft
                 model: Globals.BackendWrapper.sampleMaterialNames
                 onActivated: {
-                    Globals.BackendWrapper.sampleSetCurrentLayerMaterial(currentIndex)
+                    Globals.BackendWrapper.sampleSetCurrentLayerMaterial(index)
                 }
                 onModelChanged: {
                     currentIndex = indexOfValue(Globals.BackendWrapper.sampleLayers[index].material)
@@ -94,10 +94,12 @@ EaElements.GroupColumn {
                 enabled: layersView !== null && layersView.model > 1
                 onClicked: Globals.BackendWrapper.sampleRemoveLayer(index)
             }
-        }
 
-        onCurrentIndexChanged: {
-            Globals.BackendWrapper.sampleSetCurrentLayerIndex(layersView.currentIndex)
+            mouseArea.onPressed: {
+                if (Globals.BackendWrapper.sampleCurrentLayerIndex !== index) {
+                    Globals.BackendWrapper.sampleSetCurrentLayerIndex(index)
+                }
+            }
         }
     }
     // Control buttons below table

@@ -79,16 +79,17 @@ EaElements.GroupBox {
                     fontIcon: "minus-circle"
                     ToolTip.text: qsTr("Remove this assembly")
                     enabled: assembliesView.model > 1
-                    onClicked: Globals.BackendWrapper.sampleRemoveAssembly(assembliesView.currentIndex)
+                    onClicked: Globals.BackendWrapper.sampleRemoveAssembly(index)
+                }
+
+                mouseArea.onPressed: {
+                    if (Globals.BackendWrapper.sampleCurrentAssembyIndex !== index) {
+                        Globals.BackendWrapper.sampleSetCurrentAssemblyIndex(index)
+                    }
                 }
 
             }
-
-            onCurrentIndexChanged: {
-                Globals.BackendWrapper.sampleSetCurrentAssemblyIndex(assembliesView.currentIndex)
-            }
-
-            onModelChanged: currentIndex = 0
+            onModelChanged: Globals.BackendWrapper.sampleSetCurrentAssemblyIndex(0)
 
         }
         // Control buttons below table
