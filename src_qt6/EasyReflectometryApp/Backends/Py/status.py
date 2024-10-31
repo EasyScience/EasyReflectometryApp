@@ -10,42 +10,32 @@ from easyreflectometry import Project as ProjectLib
 from .logic.status import Status as StatusLogic
 
 class Status(QObject):
-    projectChanged = Signal()
-    phaseCountChanged = Signal()
-    experimentsCountChanged = Signal()
-    calculatorChanged = Signal()
-    minimizerChanged = Signal()
-    variablesChanged = Signal()
+    statusChanged = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
         self._logic = StatusLogic(project_lib)
 
-    @Property(str, notify=projectChanged)
+    @Property(str, notify=statusChanged)
     def project(self):
         return self._logic.project
-    
-    def setProject(self, new_value: str):
-        if self._logic.project != new_value:
-            self._logic.project = new_value
-            self.projectChanged.emit()
 
-    @Property(str, notify=experimentsCountChanged)
+    @Property(str, notify=statusChanged)
     def experimentsCount(self):
         return self._logic.experiments_count
 
-    @Property(str, notify=calculatorChanged)
+    @Property(str, notify=statusChanged)
     def calculator(self):
         return self._logic.calculator
 
-    @Property(str, notify=minimizerChanged)
+    @Property(str, notify=statusChanged)
     def minimizer(self):
         return self._logic.minimizer
 
-    @Property(str, notify=variablesChanged)
+    @Property(str, notify=statusChanged)
     def variables(self):
         return self._logic.variables
 
-    @Property(str, notify=phaseCountChanged)
+    @Property(str, notify=statusChanged)
     def phaseCount(self):
         return None

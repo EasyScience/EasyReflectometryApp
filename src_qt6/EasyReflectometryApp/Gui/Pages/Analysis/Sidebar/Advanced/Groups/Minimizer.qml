@@ -20,7 +20,6 @@ EaElements.GroupBox {
                 topInset: minimizerLabel.height
                 topPadding: topInset + padding
                 model: Globals.BackendWrapper.analysisMinimizersAvailable
-                //model: ['Lmfit']
                 EaElements.Label {
                     id: minimizerLabel
                     text: qsTr("Minimizer")
