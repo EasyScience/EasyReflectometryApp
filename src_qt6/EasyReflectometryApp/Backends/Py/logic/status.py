@@ -11,11 +11,11 @@ class Status:
     
     @property
     def minimizer(self):
-        return self._project_lib._minimizer.name
+        return self._project_lib._fitter.easy_science_multi_fitter.minimizer.name
     
     @property
     def calculator(self):
-        return self._project_lib._calculator().name
+        return self._project_lib.calculator
 
     @property
     def experiments_count(self):

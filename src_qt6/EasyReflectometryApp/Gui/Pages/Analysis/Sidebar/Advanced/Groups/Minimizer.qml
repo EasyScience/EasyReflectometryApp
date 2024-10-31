@@ -15,11 +15,8 @@ EaElements.GroupBox {
     icon: 'level-down-alt'
 
     EaElements.GroupRow{
-//        property real columnWidth: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 4
-
-//        Row{
             EaElements.ComboBox {
-                width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 4
+                width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 2
                 topInset: minimizerLabel.height
                 topPadding: topInset + padding
                 model: Globals.BackendWrapper.analysisMinimizersAvailable
@@ -32,37 +29,17 @@ EaElements.GroupBox {
                 currentIndex: Globals.BackendWrapper.analysisMinimizerCurrentIndex
                 onCurrentIndexChanged: Globals.BackendWrapper.analysisSetMinimizerCurrentIndex(currentIndex)
             }
-//        }
-/*        Row{
-        //    spacing: EaStyle.Sizes.fontPixelSize
 
-            EaElements.TextField {
-                width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 4
-                topInset: methodLabel.height
-                topPadding: topInset + padding
-                horizontalAlignment: TextInput.AlignLeft
-                onAccepted: focus = false
-                //text: Globals.Proxies.main.fitting.minimizerMethod
-                //onTextEdited: Globals.Proxies.main.fitting.minimizerMethod = text
-                text: Globals.BackendWrapper.analysisMinimizerCurrent
-                onTextEdited: Globals.BackendWrapper.analysisSetMinimizer(text)
-                EaElements.Label {
-                    id: methodLabel
-                    text: qsTr("Method")
-                    color: EaStyle.Colors.themeForegroundMinor
-                }
-            }
-        }*/
         EaElements.TextField {
             width: (EaStyle.Sizes.sideBarContentWidth - EaStyle.Sizes.fontPixelSize) / 4
             topInset: toleranceLabel.height
             topPadding: topInset + padding
             horizontalAlignment: TextInput.AlignLeft
-            onAccepted: focus = false
-            //text: Globals.Proxies.main.fitting.minimizerTol
-            //onTextEdited: Globals.Proxies.main.fitting.minimizerTol = text
-            text: Globals.BackendWrapper.analysisMinimizerTolerance.toFixed(3)
-            onTextEdited: Globals.BackendWrapper.analysisSetMinimizerTolerance(text)
+            onAccepted: {
+                onAccepted: Globals.BackendWrapper.analysisSetMinimizerTolerance(text)
+                focus = false
+            }
+            text: Globals.BackendWrapper.analysisMinimizerTolerance === undefined ? 'Defaults' : Number(Globals.BackendWrapper.analysisMinimizerTolerance).toFixed(3)
             EaElements.Label {
                 id: toleranceLabel
                 text: qsTr("Tolerance")
@@ -75,14 +52,14 @@ EaElements.GroupBox {
             topInset: maxIterLabel.height
             topPadding: topInset + padding
             horizontalAlignment: TextInput.AlignLeft
-            onAccepted: focus = false
-            //text: Globals.Proxies.main.fitting.minimizerMaxIter
-            //onTextEdited: Globals.Proxies.main.fitting.minimizerMaxIter = text
-            text: Globals.BackendWrapper.analysisMinimizerMaxIterations
-            onTextEdited: Globals.BackendWrapper.analysisSetMinimizerMaxIterations(text)
+            onAccepted: {
+                Globals.BackendWrapper.analysisSetMinimizerMaxIterations(text)
+                focus = false
+            }
+            text: Globals.BackendWrapper.analysisMinimizerMaxIterations === undefined ? 'Defaults' : Number(Globals.BackendWrapper.analysisMinimizerMaxIterations)
             EaElements.Label {
                 id: maxIterLabel
-                text: qsTr("Max iterations")
+                text: qsTr("Max evaluations")
                 color: EaStyle.Colors.themeForegroundMinor
             }
         }

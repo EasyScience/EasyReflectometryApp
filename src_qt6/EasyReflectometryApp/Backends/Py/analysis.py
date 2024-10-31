@@ -4,6 +4,7 @@ from PySide6.QtCore import Slot
 from PySide6.QtCore import Property
 
 from typing import List
+from typing import Optional
 
 from easyreflectometry import Project as ProjectLib
 from .logic.parameters import Parameters as ParametersLogic
@@ -28,13 +29,14 @@ class Analysis(QObject):
 
     @Property('QVariantList', notify=minimizerChanged)
     def minimizersAvailable(self) -> List[str]:
-        return self._fitting_logic.available()
+        return self._fitting_logic.minimizers_available()
     @Property(int, notify=minimizerChanged)
     def minimizerCurrentIndex(self) -> int:
-        return self._fitting_logic.current_index()
+        return self._fitting_logic.minimizer_current_index()
     @Slot(int)
     def setMinimizerCurrentIndex(self, new_value: int) -> None:
-        self._fitting_logic.set_current_index(new_value)
+        if self._fitting_logic.set_minimizer_current_index(new_value):
+            self.minimizerChanged.emit()
 
     @Property('QVariantList', notify=calculatorChanged)
     def calculatorsAvailable(self) -> List[str]:
@@ -66,46 +68,45 @@ class Analysis(QObject):
     def setCurrentParameterIndex(self, new_value: int) -> None:
         self._paramters_logic.set_current_index(new_value)
 
-    ## Minimizer
+    ########################
+    ## Fitting and Minimizer
     @Property(str, notify=fitFinishedChanged)
     def minimizerStatus(self) -> str:
-        return ""
+        return self._fitting_logic.status
     
-    @Property(float, notify=minimizerChanged)
-    def minimizerTolerance(self) -> float:
-        return 1.0
+    @Property('QVariant', notify=minimizerChanged)
+    def minimizerTolerance(self) -> Optional[float]:
+        return self._fitting_logic.tolerance
 
-    @Property(int, notify=minimizerChanged)
-    def minimizerMaxIterations(self) -> int:
-        return 1000
- 
-    @Slot(float)
-    def setMinimizerTolerance(self, new_value: float) -> None:
-        print(new_value)
-        self.minimizerChanged.emit()
-        #self._material_logic.index = new_value
-        #self.materialIndexChanged.emit(new_value)
-    
-    @Slot(int)
-    def setMinimizerMaxIterations(self, new_value: int) -> None:
-        print(new_value)
-        self.minimizerChanged.emit()
-                #self._material_logic.index = new_value
-        #self.materialIndexChanged.emit(new_value)
+    @Property('QVariant', notify=minimizerChanged)
+    def minimizerMaxIterations(self) -> Optional[int]:
+        return self._fitting_logic.max_iterations
 
-    ## Fitting
     @Property(bool, notify=fitFinishedChanged)
     def fittingRunning(self) -> bool:
-        return False
+        return  self._fitting_logic.running
 
     @Property(bool, notify=fitFinishedChanged)
     def isFitFinished(self) -> bool:
-        return True
+        return self._fitting_logic.fit_finished
+ 
+    @Slot(float)
+    def setMinimizerTolerance(self, new_value: float) -> None:
+        if self._fitting_logic.set_tolerance(new_value):
+            self.minimizerChanged.emit()
+    
+    @Slot(int)
+    def setMinimizerMaxIterations(self, new_value: int) -> None:
+        if self._fitting_logic.set_max_iterations(new_value):
+            self.minimizerChanged.emit()
+                #self._material_logic.index = new_value
+        #self.materialIndexChanged.emit(new_value)
     
     @Slot(None)
     def fittingStartStop(self) -> None:
         print('fittingStartStop')
 
+    #############
     ## Parameters
     @Property(int, notify=parametersChanged)
     def freeParametersCount(self) -> int:

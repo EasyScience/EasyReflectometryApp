@@ -6,13 +6,12 @@ class Experiments:
         self._project_lib = project_lib
 
     def available(self) -> list[str]:
-        experimental_data = False
+        experiments_name = []
         try:
-            self._project_lib.experimental_data_for_model_at_index()
-            experimental_data = True
+            experiments_name.append(self._project_lib.experimental_data_for_model_at_index())
         except IndexError:
             pass
-        return experimental_data
+        return experiments_name
 
     def current_index(self) -> int:
         return 0

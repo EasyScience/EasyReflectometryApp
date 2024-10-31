@@ -188,9 +188,9 @@ QtObject {
 
     // Minimizer
     readonly property string analysisMinimizerStatus: activeBackend.analysis.minimizerStatus
-    readonly property double analysisMinimizerTolerance: activeBackend.analysis.minimizerTolerance
+    readonly property var analysisMinimizerTolerance: activeBackend.analysis.minimizerTolerance
     function analysisSetMinimizerTolerance(value) { activeBackend.analysis.setMinimizerTolerance(value) }
-    readonly property int analysisMinimizerMaxIterations: activeBackend.analysis.minimizerMaxIterations
+    readonly property var analysisMinimizerMaxIterations: activeBackend.analysis.minimizerMaxIterations
     function analysisSetMinimizerMaxIterations(value) { activeBackend.analysis.setMinimizerMaxIterations(value) }
 
     // Fitting
