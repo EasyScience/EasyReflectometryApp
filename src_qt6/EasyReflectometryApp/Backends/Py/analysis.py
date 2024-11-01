@@ -19,7 +19,7 @@ class Analysis(QObject):
     calculatorChanged = Signal()
     experimentsChanged = Signal()
     parametersChanged = Signal()
-    fitFinishedChanged = Signal()
+    fittingChanged = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
@@ -31,21 +31,23 @@ class Analysis(QObject):
 
     ########################
     ## Fitting
-    @Property(str, notify=fitFinishedChanged)
+    @Property(str, notify=fittingChanged)
     def fittingStatus(self) -> str:
         return self._fitting_logic.status
 
-    @Slot(None)
-    def fittingStartStop(self) -> None:
-        print('fittingStartStop')
-
-    @Property(bool, notify=fitFinishedChanged)
+    @Property(bool, notify=fittingChanged)
     def fittingRunning(self) -> bool:
         return  self._fitting_logic.running
 
-    @Property(bool, notify=fitFinishedChanged)
+    @Property(bool, notify=fittingChanged)
     def isFitFinished(self) -> bool:
         return self._fitting_logic.fit_finished
+
+    @Slot(None)
+    def fittingStartStop(self) -> None:
+        self._fitting_logic.start_stop()
+        self.fittingChanged.emit()
+        self.parametersChanged.emit()
 
     ########################
     ## Calculators

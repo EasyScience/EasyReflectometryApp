@@ -278,7 +278,7 @@ EaElements.GroupBox {
 
                 EaComponents.TableViewLabel {
                     elide: Text.ElideNone
-                    text: Globals.BackendWrapper.analysisFitableParameters[index].error//Globals.BackendWrapper.analysisFitableParameters[index].error === 0 ?
+                    text: Number(Globals.BackendWrapper.analysisFitableParameters[index].error).toExponential(2)//Globals.BackendWrapper.analysisFitableParameters[index].error === 0 ?
 //                            '' :
 //                            1000 //Globals.Proxies.main.backendHelpers.toStdDevSmalestPrecision(item.value, item.error).std_dev
                 }
