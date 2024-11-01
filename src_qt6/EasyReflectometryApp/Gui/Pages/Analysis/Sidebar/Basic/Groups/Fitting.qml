@@ -17,7 +17,7 @@ EaElements.GroupBox {
         spacing: EaStyle.Sizes.fontPixelSize
 
         EaElements.SideBarButton {
-            enabled: Globals.BackendWrapper.analysisExperimentsAvailable.length //typeof Globals.BackendWrapper.analysisExperimentsAvailable !== 'undefined'//Globals.Proxies.main.experiment.defined
+            enabled: Globals.BackendWrapper.analysisExperimentsAvailable.length
             wide: true
             fontIcon: Globals.BackendWrapper.analysisFittingRunning ? 'stop-circle' : 'play-circle'
             text: Globals.BackendWrapper.analysisFittingRunning  ? qsTr('Cancel fitting') : qsTr('Start fitting')

@@ -187,13 +187,13 @@ QtObject {
     function analysisSetCurrentParameterIndex(value) { activeBackend.analysis.setCurrentParameterIndex(value) }
 
     // Minimizer
-    readonly property string analysisMinimizerStatus: activeBackend.analysis.minimizerStatus
     readonly property var analysisMinimizerTolerance: activeBackend.analysis.minimizerTolerance
     function analysisSetMinimizerTolerance(value) { activeBackend.analysis.setMinimizerTolerance(value) }
     readonly property var analysisMinimizerMaxIterations: activeBackend.analysis.minimizerMaxIterations
     function analysisSetMinimizerMaxIterations(value) { activeBackend.analysis.setMinimizerMaxIterations(value) }
 
     // Fitting
+    readonly property string analysisFittingStatus: activeBackend.analysis.fittingStatus
     readonly property bool analysisFittingRunning: activeBackend.analysis.fittingRunning
     readonly property bool analysisIsFitFinished: activeBackend.analysis.isFitFinished
     function analysisFittingStartStop() { activeBackend.analysis.fittingStartStop() }

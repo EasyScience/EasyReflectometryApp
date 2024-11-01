@@ -13,11 +13,11 @@ QtObject {
     readonly property int experimentCurrentIndex: 2
 
     // Minimizer
-    readonly property string minimizerStatus: ''//undefined  //'Success'
     readonly property double minimizerTolerance: 1.0
     readonly property int minimizerMaxIterations: 2
 
     // Fitting
+    readonly property string fittinStatus: ''//undefined  //'Success'
     readonly property bool isFitFinished: true
     readonly property bool fittingRunning: false
 

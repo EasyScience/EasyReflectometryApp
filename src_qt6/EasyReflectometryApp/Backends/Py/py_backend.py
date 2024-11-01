@@ -98,6 +98,7 @@ class PyBackend(QObject):
     def _connect_analysis_page(self) -> None:
         self._analysis.minimizerChanged.connect(self._relay_analysis_page_minimizer_changed)
         self._analysis.calculatorChanged.connect(self._relay_analysis_page_calculator_changed)
+        self._analysis.parametersChanged.connect(self._relay_analysis_page_parameters_changed)
 
     def _relay_project_page_name(self):
         self._status.statusChanged.emit()
@@ -117,14 +118,18 @@ class PyBackend(QObject):
         self._plotting.refreshAnalysisPage()
     
     def _relay_experiment_page_experiment_changed(self):
-        self._plotting.refreshExperimentPage()
-        self._plotting.refreshAnalysisPage()
         self._status.statusChanged.emit()
         self._sample.sampleChanged.emit()
         self._analysis.experimentsChanged.emit()
+        self._plotting.refreshExperimentPage()
+        self._plotting.refreshAnalysisPage()
 
     def _relay_analysis_page_minimizer_changed(self):
         self._status.statusChanged.emit()
 
     def _relay_analysis_page_calculator_changed(self):
         self._status.statusChanged.emit()
+    
+    def _relay_analysis_page_parameters_changed(self):
+        self._plotting.refreshSamplePage()
+        self._plotting.refreshAnalysisPage()

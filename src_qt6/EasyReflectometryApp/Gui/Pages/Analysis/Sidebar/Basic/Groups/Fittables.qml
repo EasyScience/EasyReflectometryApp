@@ -30,7 +30,7 @@ EaElements.GroupBox {
         property string selectedColor: EaStyle.Colors.themeForegroundHovered
 
         spacing: EaStyle.Sizes.fontPixelSize
-
+/*
         // Filter parameters widget
         Row {
             spacing: EaStyle.Sizes.fontPixelSize * 0.5
@@ -117,7 +117,7 @@ EaElements.GroupBox {
 
         }
         // Filter parameters widget
-
+*/
         // Table
         EaComponents.TableView {
             id: tableView
@@ -278,7 +278,7 @@ EaElements.GroupBox {
 
                 EaComponents.TableViewLabel {
                     elide: Text.ElideNone
-                    text: Globals.BackendWrapper.analysisFitableParameters[index].value//Globals.BackendWrapper.analysisFitableParameters[index].error === 0 ?
+                    text: Globals.BackendWrapper.analysisFitableParameters[index].error//Globals.BackendWrapper.analysisFitableParameters[index].error === 0 ?
 //                            '' :
 //                            1000 //Globals.Proxies.main.backendHelpers.toStdDevSmalestPrecision(item.value, item.error).std_dev
                 }
@@ -459,14 +459,23 @@ EaElements.GroupBox {
     // Logic
 
     function updateSliderValue() {
-        const value = Globals.BackendWrapper.analysisFitableParameters[Globals.BackendWrapper.analysisCurrentParameterIndex].value //[fittables.selectedParamIndex].value// Globals.Proxies.main_fittables_data[selectedParamIndex].value
+        const value = Globals.BackendWrapper.analysisFitableParameters[Globals.BackendWrapper.analysisCurrentParameterIndex].value
         slider.value = EaLogic.Utils.toDefaultPrecision(value)
 //        Globals.BackendWrapper.analysisSetCurrentParameterValue(EaLogic.Utils.toDefaultPrecision(value))
     }
 
     function updateSliderLimits() {
-        const from = Globals.BackendWrapper.analysisFitableParameters[Globals.BackendWrapper.analysisCurrentParameterIndex].from //[fittables.selectedParamIndex].from //Globals.Proxies.main_fittables_data[selectedParamIndex].from
-        const to = Globals.BackendWrapper.analysisFitableParameters[Globals.BackendWrapper.analysisCurrentParameterIndex].to //[fittables.selectedParamIndex].to //Globals.Proxies.main_fittables_data[selectedParamIndex].to
+        var from = Globals.BackendWrapper.analysisFitableParameters[Globals.BackendWrapper.analysisCurrentParameterIndex].value * 0.9
+        var to = Globals.BackendWrapper.analysisFitableParameters[Globals.BackendWrapper.analysisCurrentParameterIndex].value * 1.1
+        if (from === 0 && to === 0) {
+            to = 0.1
+        }
+        if (Globals.BackendWrapper.analysisFitableParameters[Globals.BackendWrapper.analysisCurrentParameterIndex].max < to) {
+            to = Globals.BackendWrapper.analysisFitableParameters[Globals.BackendWrapper.analysisCurrentParameterIndex].max
+        }
+        if (Globals.BackendWrapper.analysisFitableParameters[Globals.BackendWrapper.analysisCurrentParameterIndex].min > from) {
+            from = Globals.BackendWrapper.analysisFitableParameters[Globals.BackendWrapper.analysisCurrentParameterIndex].min
+        }
         slider.from = EaLogic.Utils.toDefaultPrecision(from)
         slider.to = EaLogic.Utils.toDefaultPrecision(to)
     }

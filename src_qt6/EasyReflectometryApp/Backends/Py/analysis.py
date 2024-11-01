@@ -107,21 +107,22 @@ class Analysis(QObject):
     ## Parameters
     @Property('QVariantList', notify=parametersChanged)
     def fitableParameters(self) -> List[dict[str]]:
-        return self._paramters_logic.fitable()
+        return self._paramters_logic.list_of_dicts()
     @Property(int, notify=parametersChanged)
     def currentParameterIndex(self) -> int:
         return self._paramters_logic.current_index()
     @Slot(int)
     def setCurrentParameterIndex(self, new_value: int) -> None:
-        self._paramters_logic.set_current_index(new_value)
+        if self._paramters_logic.set_current_index(new_value):
+            self.parametersChanged.emit()
 
     @Property(int, notify=parametersChanged)
     def freeParametersCount(self) -> int:
-        return 1
+        return self._paramters_logic.count_free_parameters()
 
     @Property(int, notify=parametersChanged)
     def fixedParametersCount(self) -> int:
-        return 2
+        return self._paramters_logic.count_fixed_parameters()
 
     @Property(int, notify=parametersChanged)
     def modelParametersCount(self) -> int:
@@ -133,28 +134,20 @@ class Analysis(QObject):
     
     @Slot(float)
     def setCurrentParameterValue(self, new_value: float) -> None:
-        print(new_value)
-        self.parametersChanged.emit()
-        #self._material_logic.index = new_value
-        #self.materialIndexChanged.emit(new_value)
+        if self._paramters_logic.set_current_parameter_value(new_value):
+            self.parametersChanged.emit()
 
     @Slot(float)
     def setCurrentParameterMin(self, new_value: float) -> None:
-        print(new_value)
-        self.parametersChanged.emit()
-        #self._material_logic.index = new_value
-        #self.materialIndexChanged.emit(new_value)
+        if self._paramters_logic.set_current_parameter_min(new_value):
+            self.parametersChanged.emit()
 
     @Slot(float)
     def setCurrentParameterMax(self, new_value: float) -> None:
-        print(new_value)
-        self.parametersChanged.emit()
-        #self._material_logic.index = new_value
-        #self.materialIndexChanged.emit(new_value)
+        if self._paramters_logic.set_current_parameter_max(new_value):
+            self.parametersChanged.emit()
 
     @Slot(bool)
     def setCurrentParameterFit(self, new_value: bool) -> None:
-        print(new_value)
-        self.parametersChanged.emit()
-        #self._material_logic.index = new_value
-        #self.materialIndexChanged.emit(new_value)
+        if self._paramters_logic.set_current_parameter_fit(new_value):
+            self.parametersChanged.emit()
