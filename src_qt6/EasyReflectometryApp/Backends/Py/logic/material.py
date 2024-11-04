@@ -7,7 +7,6 @@ from easyreflectometry.sample import MaterialCollection
 class Material:
     def __init__(self, project_lib: ProjectLib):
         self._project_lib = project_lib
-#        self._material_index = 0
         self._materials = self._project_lib._materials
 
     @property

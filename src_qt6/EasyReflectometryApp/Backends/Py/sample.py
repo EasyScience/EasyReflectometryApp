@@ -13,19 +13,18 @@ class Sample(QObject):
     sampleChanged = Signal()
 
     materialsChanged = Signal()
-#    materialTableChanged = Signal()#int)
-    materialIndexChanged = Signal()#int)
+    materialIndexChanged = Signal()
 
     modelsChange = Signal()
     modelsTableChanged = Signal()
-    modelsIndexChanged = Signal()#int)
+    modelsIndexChanged = Signal()
 
     assembliesChange = Signal()
     assembliesTableChanged = Signal()
-    assembliesIndexChanged = Signal()#int)
+    assembliesIndexChanged = Signal()
 
     layersChange = Signal()
-    layersIndexChanged = Signal()#int)
+    layersIndexChanged = Signal()
     layersTableChanged = Signal()
 
     refreshPlot = Signal()
@@ -45,33 +44,6 @@ class Sample(QObject):
     def connect_logic(self) -> None:
         self.assembliesIndexChanged.connect(self.layersConnectChanges)
         self.layersTableChanged.connect(self.layersConnectChanges)
-
-#        self.modelsIndexChanged.connect(self._assemblies_logic.update_assemblies)
-
-#        self.assembliesIndexChanged.connect(self._layers_logic.update_layers)
-#        self.modelsIndexChanged.connect(self._layers_logic.update_layers)
-
-        # self.modelsChange.connect(self.layersConnectChanges)
-        # self.assembliesChange.connect(self.layersConnectChanges)
-        # self.layersTableChanged.connect(self.layersConnectChanges)
-
-        # self.modelsChange.connect(self.assembliesConnectChanges)
-        # self.assembliesIndexChanged.connect(self.assembliesConnectChanges)
-        # self.assembliesTableChanged.connect(self.assembliesConnectChanges)
-
-        # self.modelsIndexChanged.connect(self.modelsConnectChanges)
-        # self.modelsTableChanged.connect(self.modelsConnectChanges)
-
-        # self.materialsChanged.connect(self.sampleConnectChanges)
-        # self.modelsChange.connect(self.sampleConnectChanges)
-        # self.assembliesChange.connect(self.sampleConnectChanges)
-        # self.layersChange.connect(self.sampleConnectChanges)
-
-    # # #
-    # Sample
-    # # #
-#    def sampleConnectChanges(self) -> None:
-#        self.sampleChanged.emit()
 
     # # #
     # Materials
@@ -144,9 +116,6 @@ class Sample(QObject):
     # # #
     # Models
     # # #
-#    def modelsConnectChanges(self) -> None:
-#        self.modelsChange.emit()
-
     @Property('QVariantList', notify=modelsChange)
     def models(self) -> list[dict[str, str]]:
         return self._models_logic.models
@@ -167,8 +136,7 @@ class Sample(QObject):
     @Slot(int)
     def setCurrentModelIndex(self, new_value: int) -> None:
         self._project_lib.current_model_index = new_value
-#        self._models_logic.index = new_value
-        self.modelsIndexChanged.emit()#new_value)
+        self.modelsIndexChanged.emit()
         self.refreshPlot.emit()
 
     @Slot(str)
@@ -235,7 +203,6 @@ class Sample(QObject):
         self.layersTableChanged.emit()
         self.assembliesTableChanged.emit()
         self.assembliesIndexChanged.emit()
-        #        self.refreshPlot.emit()
 
     @Slot(str)
     def setCurrentAssemblyName(self, new_value: str) -> None:
@@ -249,10 +216,6 @@ class Sample(QObject):
         self.assembliesTableChanged.emit()
         self.assembliesIndexChanged.emit()
         self.refreshPlot.emit()
-        # if self._assemblies_logic.set_type_at_current_index(new_value):
-        #     self.layersChange.emit()
-        #     self.assembliesTableChanged.emit()
-        #     self.refreshPlot.emit()
     
     # Assembly specific
     @Property(str, notify=assembliesChange)
@@ -335,7 +298,6 @@ class Sample(QObject):
     def setCurrentLayerIndex(self, new_value: int) -> None:
         self._project_lib.current_layer_index = new_value
         self.layersIndexChanged.emit()
-#        self._layers_logic.index = new_value
 
     @Slot(str)
     def setCurrentLayerName(self, new_value: str) -> None:

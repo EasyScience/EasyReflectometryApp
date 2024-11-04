@@ -118,25 +118,17 @@ class PyBackend(QObject):
         self._plotting.sldChartRangesChanged.emit()
         self._plotting.sampleChartRangesChanged.emit()
         self._analysis.parametersChanged.emit()
-        # self._plotting.refreshSamplePage()
-        # self._plotting.refreshAnalysisPage()
     
     def _relay_experiment_page_experiment_changed(self):
         self._status.statusChanged.emit()
         self._sample.sampleChanged.emit()
         self._analysis.experimentsChanged.emit()
-#        self._plotting.refreshExperimentPage()
-#        self._plotting.refreshAnalysisPage()
 
     def _relay_analysis_page_minimizer_changed(self):
         self._status.statusChanged.emit()
 
     def _relay_analysis_page_calculator_changed(self):
         self._status.statusChanged.emit()
-    
-    # def _relay_analysis_page_parameters_changed(self):
-    #     self._plotting.refreshSamplePage()
-    #     self._plotting.refreshAnalysisPage()
     
     def _refresh_plots(self):
         self._plotting.refreshSamplePage()

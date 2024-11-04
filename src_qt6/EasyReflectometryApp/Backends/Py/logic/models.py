@@ -8,17 +8,15 @@ from easyreflectometry.model.resolution_functions import PercentageFhwm
 class Models:
     def __init__(self, project_lib: ProjectLib):
         self._project_lib = project_lib
-#        self._model_index = 0
         self._models = project_lib._models
 
     @property
     def index(self) -> int:
-        return self._project_lib.current_model_index #self._model_index
+        return self._project_lib.current_model_index
     
     @index.setter
     def index(self, new_value: Union[int, str]) -> None:
-        self._project_lib.current_model_index = int(new_value) #
-#        self._model_index = int(new_value)
+        self._project_lib.current_model_index = int(new_value)
 
     @property
     def name_at_current_index(self) -> str:

@@ -10,28 +10,18 @@ from easyreflectometry.sample import SurfactantLayer
 class Assemblies:
     def __init__(self, project_lib: ProjectLib):
         self._project_lib = project_lib
-#        self.update_assemblies()
-#        self._model_index = 0
-#        self._assembly_index = 0
-#        self._assemblies: Sample = project_lib._models[self._project_lib.current_model_index].sample  # Sample is a collection of assemblies
 
     @property
     def _assemblies(self) -> Sample:
         return self._project_lib._models[self._project_lib.current_model_index].sample # Sample is a collection of assemblies
 
-#    def set_model_index(self, new_value: int) -> None:
-#        self._model_index = new_value
-#        self._assembly_index = 0
-#        self._assemblies = self._project_lib._models[self._model_index].sample
-
     @property
     def index(self) -> int:
-        return self._project_lib.current_assembly_index #_assembly_index
+        return self._project_lib.current_assembly_index
     
     @index.setter
     def index(self, new_value: Union[int, str]) -> None:
         self._project_lib.current_assembly_index = int(new_value)
-#        self.update_assemblies()
 
     @property
     def name_at_current_index(self) -> str:
@@ -75,8 +65,8 @@ class Assemblies:
         return False
 
     def set_type_at_current_index(self, new_value: str) -> bool:
-#        if new_value == self._assemblies[self.index].type:
-#            return False
+        if new_value == self._assemblies[self.index].type:
+            return False
 
         if new_value == 'Multi-layer':
             if 'Si' not in [material.name for material in self._project_lib._materials]:

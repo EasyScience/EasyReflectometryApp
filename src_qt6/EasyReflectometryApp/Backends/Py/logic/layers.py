@@ -8,25 +8,10 @@ from easyreflectometry.sample import LayerAreaPerMolecule
 class Layers:
     def __init__(self, project_lib: ProjectLib):
         self._project_lib = project_lib
-#        self.update_layers()
-#        self._model_index = 0
-#        self._assembly_index = 0
-#        self._layer_index = 0
 
     @property
     def _layers(self) -> LayerCollection:
          return self._project_lib._models[self._project_lib.current_model_index].sample[self._project_lib.current_assembly_index].layers
-
-    # def set_model_index(self, new_value: int) -> None:
-    #     self._model_index = new_value
-    #     self._assembly_index = 0
-    #     self._layer_index = 0
-    #     self._layers = self._project_lib._models[self._model_index].sample[self._assembly_index].layers
-
-    # def set_assembly_index(self, new_value: int) -> None:
-    #     self._assembly_index = new_value
-    #     self._layer_index = 0
-    #     self._layers = self._project_lib._models[self._model_index].sample[self._assembly_index].layers
 
     @property
     def index(self) -> int:
@@ -35,7 +20,6 @@ class Layers:
     @index.setter
     def index(self, new_value: Union[int, str]) -> None:
         self._project_lib.current_layer_index = int(new_value)
-#        self.update_layers()
 
     @property
     def name_at_current_index(self) -> str:
