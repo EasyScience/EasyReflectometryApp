@@ -17,7 +17,7 @@ QtObject {
     readonly property int minimizerMaxIterations: 2
 
     // Fitting
-    readonly property string fittinStatus: ''//undefined  //'Success'
+    readonly property string fittingStatus: ''//undefined  //'Success'
     readonly property bool isFitFinished: true
     readonly property bool fittingRunning: false
 

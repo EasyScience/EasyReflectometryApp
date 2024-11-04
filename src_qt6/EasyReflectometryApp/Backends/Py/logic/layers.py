@@ -8,33 +8,38 @@ from easyreflectometry.sample import LayerAreaPerMolecule
 class Layers:
     def __init__(self, project_lib: ProjectLib):
         self._project_lib = project_lib
-        self._model_index = 0
-        self._assembly_index = 0
-        self._layer_index = 0
-        self._layers: LayerCollection = self._project_lib._models[self._model_index].sample[self._assembly_index].layers
+#        self.update_layers()
+#        self._model_index = 0
+#        self._assembly_index = 0
+#        self._layer_index = 0
 
-    def set_model_index(self, new_value: int) -> None:
-        self._model_index = new_value
-        self._assembly_index = 0
-        self._layer_index = 0
-        self._layers = self._project_lib._models[self._model_index].sample[self._assembly_index].layers
+    @property
+    def _layers(self) -> LayerCollection:
+         return self._project_lib._models[self._project_lib.current_model_index].sample[self._project_lib.current_assembly_index].layers
 
-    def set_assembly_index(self, new_value: int) -> None:
-        self._assembly_index = new_value
-        self._layer_index = 0
-        self._layers = self._project_lib._models[self._model_index].sample[self._assembly_index].layers
+    # def set_model_index(self, new_value: int) -> None:
+    #     self._model_index = new_value
+    #     self._assembly_index = 0
+    #     self._layer_index = 0
+    #     self._layers = self._project_lib._models[self._model_index].sample[self._assembly_index].layers
+
+    # def set_assembly_index(self, new_value: int) -> None:
+    #     self._assembly_index = new_value
+    #     self._layer_index = 0
+    #     self._layers = self._project_lib._models[self._model_index].sample[self._assembly_index].layers
 
     @property
     def index(self) -> int:
-        return self._layer_index
+        return self._project_lib.current_layer_index
     
     @index.setter
     def index(self, new_value: Union[int, str]) -> None:
-        self._layer_index = int(new_value)
+        self._project_lib.current_layer_index = int(new_value)
+#        self.update_layers()
 
     @property
     def name_at_current_index(self) -> str:
-        return self._layers[self._layer_index].name
+        return self._layers[self.index].name
 
     @property
     def layers(self) -> list[dict[str, str]]:
@@ -55,63 +60,63 @@ class Layers:
         self._layers[-1].material = self._project_lib._materials[index_si]
 
     def duplicate_selected(self) -> None:
-        self._layers.duplicate_layer(self._layer_index)
+        self._layers.duplicate_layer(self.index)
 
     def move_selected_up(self) -> None:
-        if self._layer_index > 0:
-            self._layers.move_up(self._layer_index)
-            self._layer_index = self._layer_index - 1
+        if self.index > 0:
+            self._layers.move_up(self.index)
+            self.index = self.index - 1
     
     def move_selected_down(self) -> None:
-        if self._layer_index < len(self._layers) - 1:
-            self._layers.move_down(self._layer_index)
-            self._layer_index = self._layer_index + 1
+        if self.index < len(self._layers) - 1:
+            self._layers.move_down(self.index)
+            self.index = self.index + 1
 
     def set_name_at_current_index(self, new_value: str) -> bool:
-        if self._layers[self._layer_index].name != new_value:
-            self._layers[self._layer_index].name = new_value
+        if self._layers[self.index].name != new_value:
+            self._layers[self.index].name = new_value
             return True
         return False
 
     def set_thickness_at_current_index(self, new_value: float) -> bool:
-        if self._layers[self._layer_index].thickness.value != new_value:
-            self._layers[self._layer_index].thickness.value = new_value
+        if self._layers[self.index].thickness.value != new_value:
+            self._layers[self.index].thickness.value = new_value
             return True
         return False
     
     def set_roughness_at_current_index(self, new_value: float) -> bool:
-        if self._layers[self._layer_index].roughness.value != new_value:
-            self._layers[self._layer_index].roughness.value = new_value
+        if self._layers[self.index].roughness.value != new_value:
+            self._layers[self.index].roughness.value = new_value
             return True
         return False
 
     def set_material_at_current_index(self, new_value: int) -> bool:
-        if self._layers[self._layer_index].material != self._project_lib._materials[new_value]:
-            self._layers[self._layer_index].material = self._project_lib._materials[new_value]
+        if self._layers[self.index].material != self._project_lib._materials[new_value]:
+            self._layers[self.index].material = self._project_lib._materials[new_value]
             return True
         return False
 
     def set_solvent_at_current_index(self, new_value: int) -> bool:
-        if self._layers[self._layer_index].solvent != self._project_lib._materials[new_value]:
-            self._layers[self._layer_index].solvent = self._project_lib._materials[new_value]
+        if self._layers[self.index].solvent != self._project_lib._materials[new_value]:
+            self._layers[self.index].solvent = self._project_lib._materials[new_value]
             return True
         return False
 
     def set_apm_at_current_index(self, new_value: float) -> bool:
-        if self._layers[self._layer_index].area_per_molecule != new_value:
-            self._layers[self._layer_index].area_per_molecule = new_value
+        if self._layers[self.index].area_per_molecule != new_value:
+            self._layers[self.index].area_per_molecule = new_value
             return True
         return False
 
     def set_solvation_at_current_index(self, new_value: float) -> bool:
-        if self._layers[self._layer_index].solvent_fraction != new_value:
-            self._layers[self._layer_index].solvent_fraction = new_value
+        if self._layers[self.index].solvent_fraction != new_value:
+            self._layers[self.index].solvent_fraction = new_value
             return True
         return False
 
     def set_formula(self, new_value: str) -> bool:
-        if self._layers[self._layer_index].molecular_formula != new_value:
-            self._layers[self._layer_index].molecular_formula = new_value
+        if self._layers[self.index].molecular_formula != new_value:
+            self._layers[self.index].molecular_formula = new_value
             return True
         return False
 

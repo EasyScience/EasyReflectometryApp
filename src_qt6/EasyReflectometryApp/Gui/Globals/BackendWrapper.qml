@@ -81,6 +81,7 @@ QtObject {
     readonly property var sampleMaterials: activeBackend.sample.materials
     readonly property var sampleMaterialNames: activeBackend.sample.materialNames
 
+    readonly property int sampleCurrentMaterialIndex: activeBackend.sample.currentMaterialIndex
     function sampleSetCurrentMaterialIndex(value) { activeBackend.sample.setCurrentMaterialIndex(value) }
 
     function sampleSetCurrentMaterialName(value) { activeBackend.sample.setCurrentMaterialName(value) }
@@ -96,6 +97,7 @@ QtObject {
     readonly property var sampleModels: activeBackend.sample.models
     readonly property string sampleCurrentModelName: activeBackend.sample.currentModelName
 
+    readonly property int sampleCurrentModelIndex: activeBackend.sample.currentModelIndex
     function sampleSetCurrentModelIndex(value) { activeBackend.sample.setCurrentModelIndex(value) }
 
     function sampleSetCurrentModelName(value) { activeBackend.sample.setCurrentModelName(value) }
@@ -110,6 +112,7 @@ QtObject {
     readonly property string sampleCurrentAssemblyName: activeBackend.sample.currentAssemblyName
     readonly property string sampleCurrentAssemblyType: activeBackend.sample.currentAssemblyType
 
+    readonly property int sampleCurrentAssemblyIndex: activeBackend.sample.currentAssemblyIndex
     function sampleSetCurrentAssemblyIndex(value) { activeBackend.sample.setCurrentAssemblyIndex(value) }
 
     function sampleSetCurrentAssemblyName(value) { activeBackend.sample.setCurrentAssemblyName(value) }
@@ -130,6 +133,7 @@ QtObject {
     readonly property var sampleLayers: activeBackend.sample.layers
     readonly property string sampleCurrentLayerName: activeBackend.sample.currentLayerName
 
+    readonly property int sampleCurrentLayerIndex: activeBackend.sample.currentLayerIndex
     function sampleSetCurrentLayerIndex(value) { activeBackend.sample.setCurrentLayerIndex(value) }
 
     function sampleRemoveLayer(value) { activeBackend.sample.removeLayer(value) }

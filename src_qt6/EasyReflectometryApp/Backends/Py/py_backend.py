@@ -91,15 +91,17 @@ class PyBackend(QObject):
     def _connect_sample_page(self) -> None:
         self._sample.modelsIndexChanged.connect(self._relay_sample_page_models_index)
         self._sample.sampleChanged.connect(self._relay_sample_page_sample_changed)
+        self._sample.refreshPlot.connect(self._refresh_plots)
 
     def _connect_experiment_page(self) -> None:
         self._experiment.experimentChanged.connect(self._relay_experiment_page_experiment_changed)
+        self._experiment.experimentChanged.connect(self._refresh_plots)
 
     def _connect_analysis_page(self) -> None:
         self._analysis.minimizerChanged.connect(self._relay_analysis_page_minimizer_changed)
         self._analysis.calculatorChanged.connect(self._relay_analysis_page_calculator_changed)
-        self._analysis.parametersChanged.connect(self._relay_analysis_page_parameters_changed)
-        self._analysis.fittingChanged.connect(self._relay_analysis_page_fitting_changed)
+        self._analysis.parametersChanged.connect(self._refresh_plots)
+        self._analysis.fittingChanged.connect(self._refresh_plots)
 
     def _relay_project_page_name(self):
         self._status.statusChanged.emit()
@@ -116,15 +118,15 @@ class PyBackend(QObject):
         self._plotting.sldChartRangesChanged.emit()
         self._plotting.sampleChartRangesChanged.emit()
         self._analysis.parametersChanged.emit()
-        self._plotting.refreshSamplePage()
-        self._plotting.refreshAnalysisPage()
+        # self._plotting.refreshSamplePage()
+        # self._plotting.refreshAnalysisPage()
     
     def _relay_experiment_page_experiment_changed(self):
         self._status.statusChanged.emit()
         self._sample.sampleChanged.emit()
         self._analysis.experimentsChanged.emit()
-        self._plotting.refreshExperimentPage()
-        self._plotting.refreshAnalysisPage()
+#        self._plotting.refreshExperimentPage()
+#        self._plotting.refreshAnalysisPage()
 
     def _relay_analysis_page_minimizer_changed(self):
         self._status.statusChanged.emit()
@@ -132,10 +134,10 @@ class PyBackend(QObject):
     def _relay_analysis_page_calculator_changed(self):
         self._status.statusChanged.emit()
     
-    def _relay_analysis_page_parameters_changed(self):
-        self._plotting.refreshSamplePage()
-        self._plotting.refreshAnalysisPage()
+    # def _relay_analysis_page_parameters_changed(self):
+    #     self._plotting.refreshSamplePage()
+    #     self._plotting.refreshAnalysisPage()
     
-    def _relay_analysis_page_fitting_changed(self):
+    def _refresh_plots(self):
         self._plotting.refreshSamplePage()
         self._plotting.refreshAnalysisPage()
