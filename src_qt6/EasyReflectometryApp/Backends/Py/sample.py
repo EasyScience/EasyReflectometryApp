@@ -39,8 +39,6 @@ class Sample(QObject):
 
         self.connect_logic()
         
-#        self._project_lib.current_model_index = 0
-
     def connect_logic(self) -> None:
         self.assembliesIndexChanged.connect(self.layersConnectChanges)
         self.layersTableChanged.connect(self.layersConnectChanges)
