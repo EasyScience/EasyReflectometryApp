@@ -243,4 +243,6 @@ QtObject {
     readonly property var plottingAnalysisMaxY: activeBackend.plotting.sampleMaxY
 
     function plottingSetQtChartsSerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsSerieRef(value1, value2, value3) }
+    function plottingRefreshSample() { activeBackend.plotting.drawCalculatedOnSampleChart() }
+    function plottingRefreshSLD() { activeBackend.plotting.drawCalculatedOnSldChart() }
 }

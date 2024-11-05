@@ -215,6 +215,7 @@ class Plotting1d(QObject):
     def refreshAnalysisPage(self):
         self.drawCalculatedAndMeasuredOnAnalysisChart()
 
+    @Slot()
     def drawCalculatedOnSampleChart(self):
         if PLOT_BACKEND == 'QtCharts':
             self.qtchartsReplaceCalculatedOnSampleChartAndRedraw()
@@ -228,6 +229,7 @@ class Plotting1d(QObject):
             nr_points = nr_points + 1
         console.debug(IO.formatMsg('sub', 'Calc curve', f'{nr_points} points', 'on sample page', 'replaced'))
 
+    @Slot()
     def drawCalculatedOnSldChart(self):
         if PLOT_BACKEND == 'QtCharts':
             self.qtchartsReplaceCalculatedOnSldChartAndRedraw()

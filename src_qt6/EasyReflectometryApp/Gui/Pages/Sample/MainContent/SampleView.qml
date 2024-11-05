@@ -151,6 +151,7 @@ Rectangle {
             Globals.BackendWrapper.plottingSetQtChartsSerieRef('samplePage',
                                                                'sampleSerie',
                                                                chartView.calcSerie)
+            Globals.BackendWrapper.plottingRefreshSample()                                                              
         }
 
     }

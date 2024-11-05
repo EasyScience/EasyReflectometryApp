@@ -151,8 +151,8 @@ Rectangle {
             Globals.BackendWrapper.plottingSetQtChartsSerieRef('samplePage',
                                                                'sldSerie',
                                                                chartView.calcSerie)
+            Globals.BackendWrapper.plottingRefreshSLD()                                                              
         }
-
     }
 
     // Logic

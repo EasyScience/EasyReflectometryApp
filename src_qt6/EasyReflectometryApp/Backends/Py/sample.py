@@ -66,7 +66,7 @@ class Sample(QObject):
     @Slot(int)
     def setCurrentMaterialIndex(self, new_value: int) -> None:
         self._material_logic.index = new_value
-        self.materialIndexChanged.emit()#self._material_logic.index)
+        self.materialIndexChanged.emit()
 
     @Slot(str)
     def setCurrentMaterialName(self, new_value: str) -> None:
