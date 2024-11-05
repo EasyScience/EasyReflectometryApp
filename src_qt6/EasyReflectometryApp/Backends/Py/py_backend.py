@@ -132,4 +132,5 @@ class PyBackend(QObject):
     
     def _refresh_plots(self):
         self._plotting.refreshSamplePage()
+        self._plotting.refreshExperimentPage()
         self._plotting.refreshAnalysisPage()
