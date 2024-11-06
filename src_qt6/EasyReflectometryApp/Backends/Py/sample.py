@@ -10,8 +10,6 @@ from .logic.assemblies import Assemblies
 from .logic.layers import Layers
 
 class Sample(QObject):
-    sampleChanged = Signal()
-
     materialsChanged = Signal()
     materialIndexChanged = Signal()
 
@@ -27,7 +25,8 @@ class Sample(QObject):
     layersIndexChanged = Signal()
     layersTableChanged = Signal()
 
-    refreshPlot = Signal()
+    externalRefreshPlot = Signal()
+    externalSampleChanged = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
@@ -36,6 +35,8 @@ class Sample(QObject):
         self._models_logic = Models(project_lib)
         self._assemblies_logic = Assemblies(project_lib)
         self._layers_logic = Layers(project_lib)
+
+        self._chached_layers = None
 
         self.connect_logic()
         
@@ -77,29 +78,34 @@ class Sample(QObject):
     def setCurrentMaterialSld(self, new_value: float) -> None:
         if self._material_logic.set_sld_at_current_index(new_value):
             self.materialsChanged.emit()
-            self.refreshPlot.emit()
+            self.externalRefreshPlot.emit()
+            self.externalSampleChanged.emit()
 
     @Slot(float)
     def setCurrentMaterialISld(self, new_value: float) -> None:
         if self._material_logic.set_isld_at_current_index(new_value):
             self.materialsChanged.emit()
-            self.refreshPlot.emit()
+            self.externalRefreshPlot.emit()
+            self.externalSampleChanged.emit()
 
     # Actions
     @Slot(str)
     def removeMaterial(self, value: str) -> None:
         self._material_logic.remove_at_index(value)
         self.materialsChanged.emit()
+        self.externalSampleChanged.emit()
 
     @Slot()
     def addNewMaterial(self) -> None:
         self._material_logic.add_new()
         self.materialIndexChanged.emit()
+        self.externalSampleChanged.emit()
 
     @Slot()
     def duplicateSelectedMaterial(self) -> None:
         self._material_logic.duplicate_selected()
         self.materialIndexChanged.emit()
+        self.externalSampleChanged.emit()
 
     @Slot()
     def moveSelectedMaterialUp(self) -> None:
@@ -135,7 +141,7 @@ class Sample(QObject):
     def setCurrentModelIndex(self, new_value: int) -> None:
         self._project_lib.current_model_index = new_value
         self.modelsIndexChanged.emit()
-        self.refreshPlot.emit()
+        self.externalRefreshPlot.emit()
 
     @Slot(str)
     def setCurrentModelName(self, value: str) -> None:
@@ -198,7 +204,7 @@ class Sample(QObject):
     @Slot(int)
     def setCurrentAssemblyIndex(self, new_value: int) -> None:
         self._project_lib.current_assembly_index = new_value
-        self.layersTableChanged.emit()
+        self._clearCacheAndEmitLayersChanged() #self.layersTableChanged.emit()
         self.assembliesTableChanged.emit()
         self.assembliesIndexChanged.emit()
 
@@ -210,10 +216,11 @@ class Sample(QObject):
     @Slot(str)
     def setCurrentAssemblyType(self, new_value: str) -> None:
         self._assemblies_logic.set_type_at_current_index(new_value)
-        self.layersTableChanged.emit()
+        self._clearCacheAndEmitLayersChanged() #self.layersTableChanged.emit()
         self.assembliesTableChanged.emit()
         self.assembliesIndexChanged.emit()
-        self.refreshPlot.emit()
+        self.externalRefreshPlot.emit()
+        self.externalSampleChanged.emit()
     
     # Assembly specific
     @Property(str, notify=assembliesChange)
@@ -224,70 +231,77 @@ class Sample(QObject):
     def setCurrentAssemblyRepeatedLayerReptitions(self, new_value: int) -> None:
         if self._assemblies_logic.set_repeated_layer_reptitions(new_value):
             self.assembliesTableChanged.emit()
-            self.refreshPlot.emit()
+            self.externalRefreshPlot.emit()
 
     @Slot(bool)
     def setCurrentAssemblyConstrainAPM(self, new_value: bool) -> None:
         if self._assemblies_logic.set_constrain_apm(new_value):
             self.assembliesTableChanged.emit()
-            self.refreshPlot.emit()
+            self.externalRefreshPlot.emit()
+            self.externalSampleChanged.emit()
 
     @Slot(bool)
     def setCurrentAssemblyConformalRoughness(self, new_value: bool) -> None:
         if self._assemblies_logic.set_conformal_roughness(new_value):
             self.assembliesTableChanged.emit()
-            self.refreshPlot.emit()
+            self.externalRefreshPlot.emit()
+            self.externalSampleChanged.emit()
 
     # Actions
     @Slot(str)
     def removeAssembly(self, value: str) -> None:
         self._assemblies_logic.remove_at_index(value)
         self.assembliesTableChanged.emit()
-        self.refreshPlot.emit()
+        self.externalRefreshPlot.emit()
+        self.externalSampleChanged.emit()
 
     @Slot()
     def addNewAssembly(self) -> None:
         self._assemblies_logic.add_new()
         self.assembliesTableChanged.emit()
-        self.refreshPlot.emit()
+        self.externalRefreshPlot.emit()
+        self.externalSampleChanged.emit()
 
     @Slot()
     def duplicateSelectedAssembly(self) -> None:
         self._assemblies_logic.duplicate_selected()
         self.assembliesTableChanged.emit()
-        self.refreshPlot.emit()
+        self.externalRefreshPlot.emit()
+        self.externalSampleChanged.emit()
 
     @Slot()
     def moveSelectedAssemblyUp(self) -> None:
         self._assemblies_logic.move_selected_up()
         self.assembliesTableChanged.emit()
-        self.refreshPlot.emit()
+        self.externalRefreshPlot.emit()
 
     @Slot()
     def moveSelectedAssemblyDown(self)-> None:
         self._assemblies_logic.move_selected_down()
         self.assembliesTableChanged.emit()
-        self.refreshPlot.emit()
+        self.externalRefreshPlot.emit()
 
     # # #
     # Layers
     # # #
     def layersConnectChanges(self) -> None:
-        self.layersChange.emit()
+        self._clearCacheAndEmitLayersChanged()
 
     @Property('QVariantList', notify=layersChange)
     def layers(self) -> list[dict[str, str]]:
-        return self._layers_logic.layers
+        if self._chached_layers is None:
+            self._chached_layers = self._layers_logic.layers
+        return self._chached_layers
 
     @Property(int, notify=layersIndexChanged)
     def currentLayerIndex(self) -> int:
         return self._layers_logic.index
 
-    @Property('QVariantList', notify=layersTableChanged)
+    @Property('QVariantList', notify=layersChange)
     def layersNames(self) -> list[str]:
         return self._layers_logic.layers_names
 
-    @Property(str, notify=layersTableChanged)
+    @Property(str, notify=layersChange)
     def currentLayerName(self) -> str:
         return self._layers_logic.name_at_current_index
 
@@ -300,77 +314,91 @@ class Sample(QObject):
     @Slot(str)
     def setCurrentLayerName(self, new_value: str) -> None:
         if self._layers_logic.set_name_at_current_index(new_value):
-            self.layersTableChanged.emit()
+            self._clearCacheAndEmitLayersChanged()
 
     @Slot(int)
     def setCurrentLayerMaterial(self, new_value: int) -> None:
         if self._layers_logic.set_material_at_current_index(new_value):
-            self.layersTableChanged.emit()
-            self.refreshPlot.emit()
+            self._clearCacheAndEmitLayersChanged()
+            self.externalRefreshPlot.emit()
+            self.externalSampleChanged.emit()
 
     @Slot(int)
     def setCurrentLayerSolvent(self, new_value: int) -> None:
         if self._layers_logic.set_solvent_at_current_index(new_value):
-            self.layersTableChanged.emit()
-            self.refreshPlot.emit()
+            self._clearCacheAndEmitLayersChanged()
+            self.externalRefreshPlot.emit()
+            self.externalSampleChanged.emit()
 
     @Slot(float)
     def setCurrentLayerThickness(self, new_value: float) -> None:
         if self._layers_logic.set_thickness_at_current_index(new_value):
-            self.layersTableChanged.emit()
-            self.refreshPlot.emit()
+            self._clearCacheAndEmitLayersChanged()
+            self.externalRefreshPlot.emit()
+            self.externalSampleChanged.emit()
 
     @Slot(float)
     def setCurrentLayerRoughness(self, new_value: float) -> None:
         if self._layers_logic.set_roughness_at_current_index(new_value):
-            self.layersTableChanged.emit()
-            self.refreshPlot.emit()
+            self._clearCacheAndEmitLayersChanged()
+            self.externalRefreshPlot.emit()
+            self.externalSampleChanged.emit()
 
     @Slot(str)
     def setCurrentLayerFormula(self, new_value: str) -> None:
         if self._layers_logic.set_formula(new_value):
-            self.layersTableChanged.emit()
-            self.refreshPlot.emit()
+            self._clearCacheAndEmitLayersChanged()
+            self.externalRefreshPlot.emit()
+            self.externalSampleChanged.emit()
 
     @Slot(float)
     def setCurrentLayerAPM(self, new_value: float) -> None:
         if self._layers_logic.set_apm_at_current_index(new_value):
-            self.layersTableChanged.emit()
-            self.refreshPlot.emit()
+            self._clearCacheAndEmitLayersChanged()
+            self.externalRefreshPlot.emit()
+            self.externalSampleChanged.emit()
 
     @Slot(float)
     def setCurrentLayerSolvation(self, new_value: float) -> None:
         if self._layers_logic.set_solvation_at_current_index(new_value):
-            self.layersTableChanged.emit()
-            self.refreshPlot.emit()
+            self._clearCacheAndEmitLayersChanged()
+            self.externalRefreshPlot.emit()
+            self.externalSampleChanged.emit()
 
     # Actions
     @Slot(str)
     def removeLayer(self, value: str) -> None:
         self._layers_logic.remove_at_index(value)
-        self.layersTableChanged.emit()
-        self.refreshPlot.emit()
+        self._clearCacheAndEmitLayersChanged()
+        self.externalRefreshPlot.emit()
+        self.externalSampleChanged.emit()
 
     @Slot()
     def addNewLayer(self) -> None:
         self._layers_logic.add_new()
-        self.layersTableChanged.emit()
-        self.refreshPlot.emit()
+        self._clearCacheAndEmitLayersChanged()
+        self.externalRefreshPlot.emit()
+        self.externalSampleChanged.emit()
 
     @Slot()
     def duplicateSelectedLayer(self) -> None:
         self._layers_logic.duplicate_selected()
-        self.layersTableChanged.emit()
-        self.refreshPlot.emit()
+        self._clearCacheAndEmitLayersChanged()
+        self.externalRefreshPlot.emit()
+        self.externalSampleChanged.emit()
 
     @Slot()
     def moveSelectedLayerUp(self) -> None:
         self._layers_logic.move_selected_up()
-        self.layersTableChanged.emit()
-        self.refreshPlot.emit()
+        self._clearCacheAndEmitLayersChanged()
+        self.externalRefreshPlot.emit()
 
     @Slot()
     def moveSelectedLayerDown(self)-> None:
         self._layers_logic.move_selected_down()
-        self.layersTableChanged.emit()
-        self.refreshPlot.emit()
+        self._clearCacheAndEmitLayersChanged()
+        self.externalRefreshPlot.emit()
+
+    def _clearCacheAndEmitLayersChanged(self):
+        self._chached_layers = None
+        self.layersChange.emit()

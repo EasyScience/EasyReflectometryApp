@@ -19,6 +19,7 @@ class Analysis(QObject):
     calculatorChanged = Signal()
     experimentsChanged = Signal()
     parametersChanged = Signal()
+    parametersIndexChanged = Signal()
     fittingChanged = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
@@ -28,6 +29,7 @@ class Analysis(QObject):
         self._calculators_logic = CalculatorsLogic(project_lib)
         self._experiments_logic = ExperimentLogic(project_lib)
         self._minimizers_logic = MinimizersLogic(project_lib)
+        self._chached_paramters = None
 
     ########################
     ## Fitting
@@ -47,7 +49,7 @@ class Analysis(QObject):
     def fittingStartStop(self) -> None:
         self._fitting_logic.start_stop()
         self.fittingChanged.emit()
-        self.parametersChanged.emit()
+        self._clearCacheAndEmitParametersChanged()
 
     ########################
     ## Calculators
@@ -109,14 +111,16 @@ class Analysis(QObject):
     ## Parameters
     @Property('QVariantList', notify=parametersChanged)
     def fitableParameters(self) -> List[dict[str]]:
-        return self._paramters_logic.list_of_dicts()
-    @Property(int, notify=parametersChanged)
+        if self._chached_paramters is None:
+            self._chached_paramters = self._paramters_logic.parameters
+        return self._chached_paramters
+    @Property(int, notify=parametersIndexChanged)
     def currentParameterIndex(self) -> int:
         return self._paramters_logic.current_index()
     @Slot(int)
     def setCurrentParameterIndex(self, new_value: int) -> None:
         if self._paramters_logic.set_current_index(new_value):
-            self.parametersChanged.emit()
+            self.parametersIndexChanged.emit()
 
     @Property(int, notify=parametersChanged)
     def freeParametersCount(self) -> int:
@@ -137,19 +141,23 @@ class Analysis(QObject):
     @Slot(float)
     def setCurrentParameterValue(self, new_value: float) -> None:
         if self._paramters_logic.set_current_parameter_value(new_value):
-            self.parametersChanged.emit()
+            self._clearCacheAndEmitParametersChanged()
 
     @Slot(float)
     def setCurrentParameterMin(self, new_value: float) -> None:
         if self._paramters_logic.set_current_parameter_min(new_value):
-            self.parametersChanged.emit()
+            self._clearCacheAndEmitParametersChanged()
 
     @Slot(float)
     def setCurrentParameterMax(self, new_value: float) -> None:
         if self._paramters_logic.set_current_parameter_max(new_value):
-            self.parametersChanged.emit()
+            self._clearCacheAndEmitParametersChanged()
 
     @Slot(bool)
     def setCurrentParameterFit(self, new_value: bool) -> None:
         if self._paramters_logic.set_current_parameter_fit(new_value):
-            self.parametersChanged.emit()
+            self._clearCacheAndEmitParametersChanged()
+    
+    def _clearCacheAndEmitParametersChanged(self):
+        self._chached_paramters = None
+        self.parametersChanged.emit()

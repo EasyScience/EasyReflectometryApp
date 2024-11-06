@@ -12,7 +12,8 @@ class Parameters:
     def as_status_string(self) -> str:
         return f"{self.count_free_parameters() + self.count_fixed_parameters()} ({self.count_free_parameters()} free, {self.count_fixed_parameters()} fixed)"
 
-    def list_of_dicts(self) -> List[str]:
+    @property
+    def parameters(self) -> List[str]:
         return _from_parameters_to_list_of_dicts(self._project_lib.parameters)
 
     def current_index(self) -> int:
