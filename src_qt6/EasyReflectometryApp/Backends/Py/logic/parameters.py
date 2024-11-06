@@ -1,4 +1,6 @@
 from easyscience.Objects.new_variable import Parameter     
+from easyscience import global_object
+
 from easyreflectometry import Project as ProjectLib
 from typing import List
 
@@ -14,7 +16,7 @@ class Parameters:
 
     @property
     def parameters(self) -> List[str]:
-        return _from_parameters_to_list_of_dicts(self._project_lib.parameters)
+        return _from_parameters_to_list_of_dicts(self._project_lib.parameters, self._project_lib._models[self._project_lib.current_model_index].unique_name)
 
     def current_index(self) -> int:
         return self._current_index
@@ -78,12 +80,14 @@ class Parameters:
             return True
         return False
 
-def _from_parameters_to_list_of_dicts(parameters: List[Parameter]) -> list[dict[str, str]]:
+def _from_parameters_to_list_of_dicts(parameters: List[Parameter], model_unique_name: str) -> list[dict[str, str]]:
     parameter_list = []
     for parameter in parameters:
+        path = global_object.map.find_path(model_unique_name, parameter.unique_name)
+        name = f"{global_object.map.get_item_by_key(path[-2]).name} {global_object.map.get_item_by_key(path[-1]).name}" 
         parameter_list.append(
             {
-                'name': parameter.name,
+                'name': name,
                 'value': float(parameter.value),
                 'error': float(parameter.variance),
                 'max': float(parameter.max),
