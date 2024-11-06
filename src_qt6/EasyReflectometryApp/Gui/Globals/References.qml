@@ -9,6 +9,8 @@ import QtQuick
 
 QtObject {
 
+    property bool resetActive: false
+
     // Populated in ApplicationWindows.qml
     readonly property var applicationWindow: {
         'appBarCentralTabs': {

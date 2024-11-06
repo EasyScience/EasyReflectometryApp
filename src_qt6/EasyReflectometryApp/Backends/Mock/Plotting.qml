@@ -24,4 +24,13 @@ QtObject {
     function setQtChartsSerieRef(value1, value2, value3) {
         console.debug(`setQtChartsSerieRef ${value1}, ${value2}, ${value3}`)
     }
+
+    function drawCalculatedOnSampleChart(){
+        console.debug(`drawCalculatedOnSampleChart`)
+    }
+
+    function drawCalculatedOnSldChart(){
+        console.debug(`drawCalculatedOnSldChart`)
+    }
+
 }

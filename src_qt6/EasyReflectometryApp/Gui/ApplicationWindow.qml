@@ -26,10 +26,11 @@ EaComponents.ApplicationWindow {
         },
 
         EaElements.ToolButton {
-            enabled: Globals.BackendWrapper.projectCreated
+            enabled: Globals.References.resetActive
             fontIcon: "backspace"
             ToolTip.text: qsTr("Reset to initial state without project, models and data")
             onClicked: {
+                Globals.References.resetActive = false
                 Globals.BackendWrapper.projectReset()
                 Globals.References.applicationWindow.appBarCentralTabs.projectButton.toggle()
                 if (Globals.References.applicationWindow.appBarCentralTabs.sampleButton !== null) {
@@ -101,7 +102,7 @@ EaComponents.ApplicationWindow {
         // Experiment tab
         EaElements.AppBarTabButton {
             id: experimentTabButton
-            enabled: true
+            enabled: false
             fontIcon: "microscope"
             text: qsTr("Experiment")
             ToolTip.text: qsTr("Experimental settings and data page")
@@ -112,7 +113,7 @@ EaComponents.ApplicationWindow {
         // Analysis tab
         EaElements.AppBarTabButton {
             id: analysisTabButton
-            enabled: true
+            enabled: false
             fontIcon: "calculator"
             text: qsTr("Analysis")
             ToolTip.text: qsTr("Simulation and fitting page")
