@@ -117,8 +117,6 @@ class Plotting1d(QObject):
     def sldMinY(self):
         return self.sld_data.y.min()
  
-
-
     @Property('QVariant', notify=chartRefsChanged)
     def chartRefs(self):
         return self._chartRefs
