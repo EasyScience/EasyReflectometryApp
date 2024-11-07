@@ -150,6 +150,12 @@ QtObject {
     function sampleSetCurrentLayerAPM(value) { activeBackend.sample.setCurrentLayerAPM(value) }
     function sampleSetCurrentLayerSolvation(value) { activeBackend.sample.setCurrentLayerSolvation(value) }
 
+    // Constraints
+    readonly property var sampleParameterNames: activeBackend.sample.parameterNames
+    readonly property var sampleRelationOperators: activeBackend.sample.relationOperators
+    readonly property var sampleArithmicOperators: activeBackend.sample.arithmicOperators
+
+    function sampleAddConstraint(value1, value2, value3, value4, value5) { activeBackend.sample.addConstraint(value1, value2, value3, value4, value5) }
 
     //////////////////
     // Experiment page

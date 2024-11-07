@@ -4,7 +4,6 @@ import QtQuick.Controls 2.13
 import easyApp.Gui.Style as EaStyle
 import easyApp.Gui.Elements as EaElements
 import easyApp.Gui.Components as EaComponents
-import easyApp.Gui.Logic as EaLogic
 
 import Gui.Globals as Globals
 

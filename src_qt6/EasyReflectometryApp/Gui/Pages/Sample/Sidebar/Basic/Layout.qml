@@ -1,8 +1,6 @@
 import QtQuick 2.14
 import QtQuick.Controls 2.14
-//import QtQml.XmlListModel
 
-//import easyApp.Gui.Style 1.0 as EaStyle
 import easyApp.Gui.Components 1.0 as EaComponents
 
 import Gui.Globals as Globals
