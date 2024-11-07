@@ -157,6 +157,14 @@ QtObject {
 
     function sampleAddConstraint(value1, value2, value3, value4, value5) { activeBackend.sample.addConstraint(value1, value2, value3, value4, value5) }
 
+    // Q range
+    readonly property var sampleQMin: activeBackend.sample.q_min
+    function sampleSetQMin(value) { activeBackend.sample.setQMin(value) }
+    readonly property var sampleQMax: activeBackend.sample.q_max
+    function sampleSetQMax(value) { activeBackend.sample.setQMax(value) }
+    readonly property var sampleQResolution: activeBackend.sample.q_resolution
+    function sampleSetQElements(value) { activeBackend.sample.setQElements(value) }
+
     //////////////////
     // Experiment page
     //////////////////
@@ -168,12 +176,6 @@ QtObject {
     function experimentSetBackground(value) { activeBackend.experiment.setBackground(value) }
     readonly property var experimentResolution: activeBackend.experiment.resolution
     function experimentSetResolution(value) { activeBackend.experiment.setResolution(value) }
-    readonly property var experimentQMin: activeBackend.experiment.q_min
-    function experimentSetQMin(value) { activeBackend.experiment.setQMin(value) }
-    readonly property var experimentQMax: activeBackend.experiment.q_max
-    function experimentSetQMax(value) { activeBackend.experiment.setQMax(value) }
-    readonly property var experimentQResolution: activeBackend.experiment.q_resolution
-    function experimentSetQElements(value) { activeBackend.experiment.setQElements(value) }
 
     function experimentLoad(value) { activeBackend.experiment.load(value) }
 

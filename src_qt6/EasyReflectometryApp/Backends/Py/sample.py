@@ -4,10 +4,11 @@ from PySide6.QtCore import Slot
 from PySide6.QtCore import Property
 
 from easyreflectometry import Project as ProjectLib
-from .logic.material import Material
-from .logic.models import Models
-from .logic.assemblies import Assemblies
-from .logic.layers import Layers
+from .logic.material import Material as MaterialLogic
+from .logic.assemblies import Assemblies as AssembliesLogic
+from .logic.layers import Layers as LayersLogic
+from .logic.models import Models as ModelsLogic
+from .logic.project import Project as ProjectLogic
 
 class Sample(QObject):
     materialsChanged = Signal()
@@ -25,16 +26,19 @@ class Sample(QObject):
     layersIndexChanged = Signal()
     layersTableChanged = Signal()
 
+    qRangeChanged = Signal()
+
     externalRefreshPlot = Signal()
     externalSampleChanged = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
         self._project_lib = project_lib
-        self._material_logic = Material(project_lib)
-        self._models_logic = Models(project_lib)
-        self._assemblies_logic = Assemblies(project_lib)
-        self._layers_logic = Layers(project_lib)
+        self._material_logic = MaterialLogic(project_lib)
+        self._models_logic = ModelsLogic(project_lib)
+        self._assemblies_logic = AssembliesLogic(project_lib)
+        self._layers_logic = LayersLogic(project_lib)
+        self._project_logic = ProjectLogic(project_lib)
 
         self._chached_layers = None
 
@@ -402,3 +406,46 @@ class Sample(QObject):
     def _clearCacheAndEmitLayersChanged(self):
         self._chached_layers = None
         self.layersChange.emit()
+    
+    # # #
+    # Q Range
+    # # #
+
+    @Property(float, notify=qRangeChanged)
+    def q_min(self) -> float:
+        return self._project_logic.q_min
+
+    @Property(float, notify=qRangeChanged)
+    def q_max(self) -> float:
+        return self._project_logic.q_max
+
+    @Property(int, notify=qRangeChanged)
+    def q_resolution(self) -> int:
+        return self._project_logic.q_resolution
+
+    @Property(bool, notify=qRangeChanged)
+    def experimentalData(self) -> bool:
+        return self._project_logic.experimental_data_at_current_index
+
+    # Setters
+    @Slot(int)
+    def setModelIndex(self, value: int) -> None:
+        self._models_logic.index = value
+
+    @Slot(float)
+    def setQMin(self, new_value: float) -> None:
+        if self._project_logic.set_q_min(new_value):
+            self.qRangeChanged.emit()
+            self.externalRefreshPlot.emit()
+
+    @Slot(float)
+    def setQMax(self, new_value: float) -> None:
+        if self._project_logic.set_q_max(new_value):
+            self.qRangeChanged.emit()
+            self.externalRefreshPlot.emit()
+
+    @Slot(int)
+    def setQElements(self, new_value: float) -> None:
+        if self._project_logic.set_q_resolution(new_value):
+            self.qRangeChanged.emit()
+            self.externalRefreshPlot.emit()

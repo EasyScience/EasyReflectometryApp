@@ -21,8 +21,8 @@ EaElements.GroupBox {
         EaElements.Parameter {
             width: textFieldWidth()
             units: "Å<sup>-1</sup>"
-            text: Globals.BackendWrapper.experimentQMin.toFixed(3)
-            onEditingFinished: Globals.BackendWrapper.experimentSetQMin(text)
+            text: Globals.BackendWrapper.sampleQMin.toFixed(3)
+            onEditingFinished: Globals.BackendWrapper.sampleSetQMin(text)
         }
 
         EaComponents.TableViewLabel{
@@ -33,8 +33,8 @@ EaElements.GroupBox {
         EaElements.Parameter {
             width: textFieldWidth()
             units: "Å<sup>-1</sup>"
-            text: Globals.BackendWrapper.experimentQMax.toFixed(3)
-            onEditingFinished: Globals.BackendWrapper.experimentSetQMax(text)
+            text: Globals.BackendWrapper.sampleQMax.toFixed(3)
+            onEditingFinished: Globals.BackendWrapper.sampleSetQMax(text)
         }
 
         EaComponents.TableViewLabel{
@@ -44,8 +44,8 @@ EaElements.GroupBox {
         }
         EaElements.Parameter {
             width: textFieldWidth()
-            text: Globals.BackendWrapper.experimentQResolution
-            onEditingFinished: Globals.BackendWrapper.experimentSetQElements(text)
+            text: Globals.BackendWrapper.sampleQResolution
+            onEditingFinished: Globals.BackendWrapper.sampleSetQElements(text)
         }
     }
     

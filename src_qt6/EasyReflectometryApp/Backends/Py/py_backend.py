@@ -115,11 +115,13 @@ class PyBackend(QObject):
         self._status.statusChanged.emit()
     
     def _relay_experiment_page_experiment_changed(self):
-        self._status.statusChanged.emit()
+        self._analysis._clearCacheAndEmitParametersChanged()
         self._analysis.experimentsChanged.emit()
+        self._status.statusChanged.emit()
 
     def _relay_analysis_page(self):
         self._status.statusChanged.emit()
+        self._experiment.experimentChanged.emit()
     
     def _refresh_plots(self):
         self._plotting.sampleChartRangesChanged.emit()
