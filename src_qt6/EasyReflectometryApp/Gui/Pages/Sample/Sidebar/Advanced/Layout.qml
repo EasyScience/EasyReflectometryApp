@@ -1,16 +1,21 @@
-import QtQuick 2.13
-import QtQuick.Controls 2.13
-import QtQML.XmlListModel 2.13
+import QtQuick 2.14
+import QtQuick.Controls 2.14
+//import QtQml.XmlListModel
 
-import easyApp.Gui.Style 1.0 as EaStyle
-import easyApp.Gui.Elements 1.0 as EaElements
+//import easyApp.Gui.Style 1.0 as EaStyle
 import easyApp.Gui.Components 1.0 as EaComponents
 
-import Gui.Globals 1.0 as ExGlobals
-import Gui.Components 1.0 as ExComponents
+import Gui.Globals as Globals
+import "./Groups" as Groups
 
 EaComponents.SideBarColumn {
-
+    Groups.QRange{
+        enabled: Globals.BackendWrapper.analysisIsFitFinished
+    }
+    Groups.Constraints{
+        enabled: Globals.BackendWrapper.analysisIsFitFinished
+    }
+/*
     property int independentParCurrentIndex: 0
     property int dependentParCurrentIndex: 0
     property int dependentParCurrentIndex2: 0
@@ -271,4 +276,5 @@ EaComponents.SideBarColumn {
             onToggled: ExGlobals.Constants.proxy.simulation.setPlotRQ4()
         }
     }
+    */
 }
