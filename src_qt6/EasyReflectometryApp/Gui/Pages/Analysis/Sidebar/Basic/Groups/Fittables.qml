@@ -215,18 +215,12 @@ EaElements.GroupBox {
                 EaComponents.TableViewLabel {
                     width: EaStyle.Sizes.fontPixelSize * 5
                     text: Globals.BackendWrapper.analysisFitableParameters[index].name
-//                    textFormat: EaGlobals.Vars.paramNameFormat === EaGlobals.Vars.PlainShortWithLabels ||
-//                                EaGlobals.Vars.paramNameFormat === EaGlobals.Vars.PlainFullWithLabels ?
-//                                    Text.PlainText :
-//                                    Text.RichText
-//                    elide: Text.ElideMiddle  // NEED FIX: Doesn't work with textFormat: Text.RichText
                     ToolTip.text: textFormat === Text.PlainText ? text : ''
                 }
 
                 EaComponents.TableViewParameter {
                     id: valueColumn
                     selected: index === Globals.BackendWrapper.analysisCurrentParameterIndex
-//                    fit: Globals.BackendWrapper.analysisFitableParameters[index].fit
                     text: EaLogic.Utils.toDefaultPrecision(Globals.BackendWrapper.analysisFitableParameters[index].value)
                     onEditingFinished: {
                         focus = false
@@ -243,9 +237,7 @@ EaElements.GroupBox {
                 }
 
                 EaComponents.TableViewLabel {
-//                    elide: Text.ElideNone
                     text: EaLogic.Utils.toDefaultPrecision(Globals.BackendWrapper.analysisFitableParameters[index].error)
-                    //text: Number(Globals.BackendWrapper.analysisFitableParameters[index].error).toExponential(2)
                 }
 
                 EaComponents.TableViewParameter {
