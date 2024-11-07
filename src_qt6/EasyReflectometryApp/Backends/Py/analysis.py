@@ -22,6 +22,11 @@ class Analysis(QObject):
     parametersIndexChanged = Signal()
     fittingChanged = Signal()
 
+    externalMinimizerChanged = Signal()
+    externalParametersChanged = Signal()
+    externalCalculatorChanged = Signal()
+    externalFittingChanged = Signal()
+
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
         self._paramters_logic = ParametersLogic(project_lib)
@@ -50,6 +55,7 @@ class Analysis(QObject):
         self._fitting_logic.start_stop()
         self.fittingChanged.emit()
         self._clearCacheAndEmitParametersChanged()
+        self.externalFittingChanged.emit()
 
     ########################
     ## Calculators
@@ -63,6 +69,7 @@ class Analysis(QObject):
     def setCalculatorCurrentIndex(self, new_value: int) -> None:
         if self._calculators_logic.set_current_index(new_value):
             self.calculatorChanged.emit()
+            self.externalCalculatorChanged.emit()
 
     ########################
     ## Experiments
@@ -88,6 +95,7 @@ class Analysis(QObject):
     def setMinimizerCurrentIndex(self, new_value: int) -> None:
         if self._minimizers_logic.set_minimizer_current_index(new_value):
             self.minimizerChanged.emit()
+            self.externalMinimizerChanged.emit()
 
     @Property('QVariant', notify=minimizerChanged)
     def minimizerTolerance(self) -> Optional[float]:
@@ -142,6 +150,7 @@ class Analysis(QObject):
     def setCurrentParameterValue(self, new_value: float) -> None:
         if self._paramters_logic.set_current_parameter_value(new_value):
             self._clearCacheAndEmitParametersChanged()
+            self.externalParametersChanged.emit()
 
     @Slot(float)
     def setCurrentParameterMin(self, new_value: float) -> None:

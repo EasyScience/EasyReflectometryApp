@@ -67,9 +67,4 @@ QtObject {
             }
         }
     }
-
-//    // Populated in plotting/...
-//    readonly property var plotting: {
-//        'graph1d': null,
-//    }
 }
