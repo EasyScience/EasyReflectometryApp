@@ -14,8 +14,6 @@ from .helpers import IO
 PLOT_BACKEND = 'QtCharts'
 
 class Plotting1d(QObject):
-    currentLib1dChanged = Signal()
-    useAcceleration1dChanged = Signal()
     chartRefsChanged = Signal()
     sldChartRangesChanged = Signal()
     sampleChartRangesChanged = Signal()
@@ -118,79 +116,8 @@ class Plotting1d(QObject):
     @Property(float, notify=sldChartRangesChanged)
     def sldMinY(self):
         return self.sld_data.y.min()
-
-    # # Experiment
-    # @Property(float, notify=experimentChartRangesChanged)
-    # def experimentMaxX(self):
-    #     if len(self.experiment_data.x) == 0:
-    #         return None
-    #     return self.experiment_data.x.max()
-
-    # @Property(float, notify=experimentChartRangesChanged)
-    # def experimentMinX(self):
-    #     if len(self.experiment_data.x) == 0:
-    #         return None
-    #     return self.experiment_data.x.min()
-    
-    # @Property(float, notify=experimentChartRangesChanged)
-    # def experimentMaxY(self):
-    #     if len(self.experiment_data.y) == 0:
-    #         return None
-    #     return np.log10(self.experiment_data.y.max())
-
-    # @Property(float, notify=experimentChartRangesChanged)
-    # def experimentMinY(self):
-    #     if len(self.experiment_data.y) == 0:
-    #         return None
-    #     return np.log10(self.experiment_data.y.min())
-
-    # # Analysis
-    # @Property(float, notify=sampleChartRangesChanged)
-    # def analysisMaxX(self):
-    #     if self.experimentMaxX is None:
-    #         return self.sampleMaxX
-    #     return max(self.sampleMaxX, self.experimentMaxX)
-
-    # @Property(float, notify=sampleChartRangesChanged)
-    # def analysisMinX(self):
-    #     if self.experimentMinX is None:
-    #         return self.sampleMinX
-    #     return min(self.sampleMinX, self.experimentMinX)
-    
-    # @Property(float, notify=sampleChartRangesChanged)
-    # def analysisMaxY(self):
-    #     if self.experimentMaxY is None:
-    #         return self.sampleMaxY
-    #     return max(self.sampleMaxY, self.experimentMaxY)
-
-    # @Property(float, notify=sampleChartRangesChanged)
-    # def analysisMinY(self):
-    #     if self.experimentMinY is None:
-    #         return self.sampleMinY
-    #     return min(self.sampleMinY, self.experimentMinY)
  
-    # Other
-    @Property(str, notify=currentLib1dChanged)
-    def currentLib1d(self):
-        return self._currentLib1d
 
-    @currentLib1d.setter
-    def currentLib1d(self, newValue):
-        if self._currentLib1d == newValue:
-            return
-        self._currentLib1d = newValue
-        self.currentLib1dChanged.emit()
-
-    @Property(bool, notify=useAcceleration1dChanged)
-    def useAcceleration1d(self):
-        return self._useAcceleration1d
-
-    @useAcceleration1d.setter
-    def useAcceleration1d(self, newValue):
-        if self._useAcceleration1d == newValue:
-            return
-        self._useAcceleration1d = newValue
-        self.useAcceleration1dChanged.emit()
 
     @Property('QVariant', notify=chartRefsChanged)
     def chartRefs(self):

@@ -53,33 +53,33 @@ class Experiment(QObject):
 
     @Slot(float)
     def setScaling(self, new_value: float) -> None:
-        self._model_logic.set_scaling_at_current_index(new_value)
-        self.experimentChanged.emit()
+        if self._model_logic.set_scaling_at_current_index(new_value):
+            self.experimentChanged.emit()
 
     @Slot(float)
     def setBackground(self, new_value: float) -> None:
-        self._model_logic.set_background_at_current_index(new_value)
-        self.experimentChanged.emit()
+        if self._model_logic.set_background_at_current_index(new_value):
+            self.experimentChanged.emit()
 
     @Slot(float)
     def setResolution(self, new_value: float) -> None:
-        self._model_logic.set_resolution_at_current_index(new_value)
-        self.experimentChanged.emit()
+        if self._model_logic.set_resolution_at_current_index(new_value):
+            self.experimentChanged.emit()
 
     @Slot(float)
     def setQMin(self, new_value: float) -> None:
-        self._project_logic.set_q_min(new_value)
-        self.experimentChanged.emit()
+        if self._project_logic.set_q_min(new_value):
+            self.experimentChanged.emit()
 
     @Slot(float)
     def setQMax(self, new_value: float) -> None:
-        self._project_logic.set_q_max(new_value)
-        self.experimentChanged.emit()
+        if self._project_logic.set_q_max(new_value):
+            self.experimentChanged.emit()
 
     @Slot(int)
     def setQElements(self, new_value: float) -> None:
-        self._project_logic.set_q_resolution(new_value)
-        self.experimentChanged.emit()
+        if self._project_logic.set_q_resolution(new_value):
+            self.experimentChanged.emit()
 
     # Actions
     @Slot(str)

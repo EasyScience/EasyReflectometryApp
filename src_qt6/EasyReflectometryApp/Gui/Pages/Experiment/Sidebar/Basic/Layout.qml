@@ -11,12 +11,10 @@ EaComponents.SideBarColumn {
     Groups.ExperimentalData{
         enabled: Globals.BackendWrapper.analysisIsFitFinished
     }
-
-    Groups.InstrumentParameters{
+    Groups.QRange{
         enabled: Globals.BackendWrapper.analysisIsFitFinished
     }
-
-    Groups.QRange{
+    Groups.InstrumentParameters{
         enabled: Globals.BackendWrapper.analysisIsFitFinished
     }
 }

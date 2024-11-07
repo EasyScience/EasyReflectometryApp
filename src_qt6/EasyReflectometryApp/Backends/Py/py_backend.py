@@ -85,8 +85,8 @@ class PyBackend(QObject):
 
     ######### Forming connections between the backend parts
     def _connect_project_page(self) -> None:
-        self._project.nameChanged.connect(self._relay_project_page_name)
-        self._project.createdChanged.connect(self._relay_project_page_created)
+        self._project.externalNameChanged.connect(self._relay_project_page_name)
+        self._project.externalCreatedChanged.connect(self._relay_project_page_created)
 
     def _connect_sample_page(self) -> None:
         self._sample.externalSampleChanged.connect(self._relay_sample_page_sample_changed)
@@ -122,6 +122,9 @@ class PyBackend(QObject):
         self._status.statusChanged.emit()
     
     def _refresh_plots(self):
+        self._plotting.sampleChartRangesChanged.emit()
+        self._plotting.sldChartRangesChanged.emit()
+        self._plotting.experimentChartRangesChanged.emit()
         self._plotting.refreshSamplePage()
         self._plotting.refreshExperimentPage()
         self._plotting.refreshAnalysisPage()

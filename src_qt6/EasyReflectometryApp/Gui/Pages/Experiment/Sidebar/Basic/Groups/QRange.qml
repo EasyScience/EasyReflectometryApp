@@ -10,7 +10,7 @@ import Gui.Globals as Globals
 
 EaElements.GroupBox {
     title: qsTr("Q range of interest")
-    visible: Globals.BackendWrapper.experimentExperimentalData
+    collapsed: false
     Row {
         spacing: EaStyle.Sizes.fontPixelSize * 0.5
 
@@ -20,7 +20,6 @@ EaElements.GroupBox {
             width: labelWidth()
         }
         EaElements.Parameter {
-            enabled: Globals.BackendWrapper.experimentExperimentalData
             width: textFieldWidth()
             units: "Å<sup>-1</sup>"
             text: Globals.BackendWrapper.experimentQMin.toFixed(3)
@@ -33,7 +32,6 @@ EaElements.GroupBox {
             width: labelWidth()
         }
         EaElements.Parameter {
-            enabled: Globals.BackendWrapper.experimentExperimentalData
             width: textFieldWidth()
             units: "Å<sup>-1</sup>"
             text: Globals.BackendWrapper.experimentQMax.toFixed(3)
@@ -46,7 +44,6 @@ EaElements.GroupBox {
             width: labelWidth()
         }
         EaElements.Parameter {
-            enabled: Globals.BackendWrapper.experimentExperimentalData
             width: textFieldWidth()
             text: Globals.BackendWrapper.experimentQResolution
             onEditingFinished: Globals.BackendWrapper.experimentSetQElements(text)
