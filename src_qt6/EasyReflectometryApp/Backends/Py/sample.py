@@ -9,6 +9,7 @@ from .logic.assemblies import Assemblies as AssembliesLogic
 from .logic.layers import Layers as LayersLogic
 from .logic.models import Models as ModelsLogic
 from .logic.project import Project as ProjectLogic
+from .logic.parameters import Parameters as ParametersLogic
 
 class Sample(QObject):
     materialsChanged = Signal()
@@ -39,6 +40,7 @@ class Sample(QObject):
         self._assemblies_logic = AssembliesLogic(project_lib)
         self._layers_logic = LayersLogic(project_lib)
         self._project_logic = ProjectLogic(project_lib)
+        self._paramters_logic = ParametersLogic(project_lib)
 
         self._chached_layers = None
 
@@ -406,11 +408,35 @@ class Sample(QObject):
     def _clearCacheAndEmitLayersChanged(self):
         self._chached_layers = None
         self.layersChange.emit()
-    
+
+    # # #
+    # Constraints
+    # # #
+    @Property('QVariantList', notify=layersChange)
+    def parameterNames(self) -> list[dict[str, str]]:
+        return [parameter['name'] for parameter in self._paramters_logic.parameters]
+
+    @Property('QVariantList', notify=layersChange)
+    def relationOperators(self) -> list[str]:
+        return self._paramters_logic.constraint_relations()
+
+    @Property('QVariantList', notify=layersChange)
+    def arithmicOperators(self) -> list[str]:
+        return self._paramters_logic.constraint_arithmetic()
+
+    @Slot(str, str, str, str, str)
+    def addConstraint(self, value1: str, value2: str, value3: str, value4: str, value5: str) -> None:
+        self._paramters_logic.add_constraint(
+                dependent_idx=int(value1),
+                relational_operator=value2,
+                value=float(value3), 
+                arithmetic_operator=value4,
+                independent_idx=int(value5)
+        )
+
     # # #
     # Q Range
     # # #
-
     @Property(float, notify=qRangeChanged)
     def q_min(self) -> float:
         return self._project_logic.q_min

@@ -1,5 +1,7 @@
 from easyscience.Objects.new_variable import Parameter     
 from easyscience import global_object
+from easyscience.Constraints import ObjConstraint
+from easyscience.Constraints import NumericConstraint
 
 from easyreflectometry import Project as ProjectLib
 from typing import List
@@ -79,6 +81,46 @@ class Parameters:
             parameters[self._current_index].free = bool(new_value)
             return True
         return False
+
+    ### Constraints
+    def constraint_relations(self) -> List[str]:
+        return [ '=', '&lt', '&gt' ]
+
+    def constraint_arithmetic(self) -> List[str]:
+        return [ '', '*', '/', '+', '-']   
+
+    def add_constraint(
+            self,
+            dependent_idx: int,
+            relational_operator: str,
+            value: float, 
+            arithmetic_operator: str, 
+            independent_idx: int
+        ) -> None:
+
+        independent = self._project_lib.parameters[independent_idx]
+        dependent = self._project_lib.parameters[dependent_idx]
+
+        if arithmetic_operator != "" and independent_idx > -1:
+            constaint = ObjConstraint(
+                dependent_obj=dependent,
+                operator=str(float(value)) + arithmetic_operator,
+                independent_obj=independent
+            )
+        elif arithmetic_operator == "" and independent_idx == -1:
+            constaint = NumericConstraint(
+                dependent_obj=dependent,
+                operator=relational_operator.replace("=", "=="),
+                value=float(value)
+            )
+        else:
+            print("Failed to add constraint: Unsupported type")
+            return
+        # print(c)
+        independent.user_constraints[dependent.name] = constaint
+        constaint()
+
+        print(f"{dependent_idx}, {relational_operator}, {value}, {arithmetic_operator}, {independent_idx}")
 
 def _from_parameters_to_list_of_dicts(parameters: List[Parameter], model_unique_name: str) -> list[dict[str, str]]:
     parameter_list = []

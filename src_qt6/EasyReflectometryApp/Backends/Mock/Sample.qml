@@ -271,17 +271,8 @@ QtObject {
         'parameter 2',
         'parameter 3'
     ]
-    readonly property var relationOperators: [
-        '=',
-        '&lt',
-        '&gt'
-    ]
-    readonly property var arithmicOperators: [
-        '+',
-        '-',
-        '*',
-        '/'
-    ]
+    readonly property var relationOperators: ['=', '&lt', '&gt']
+    readonly property var arithmicOperators: ['', '*', '/', '+', '-']
 
     function addConstraint(value1, value2, value3, value4, value5) {
         console.debug(`addConstraint ${value1} ${value2} ${value3} ${value4} ${value5}`)

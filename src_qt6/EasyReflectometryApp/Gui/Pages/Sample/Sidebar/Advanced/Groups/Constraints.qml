@@ -14,16 +14,13 @@ EaElements.GroupBox {
     enabled: true
     last: false
 
-//    property int independentParCurrentIndex: 0
-//    property int dependentParCurrentIndex: 0
-
     Column {
         spacing: EaStyle.Sizes.fontPixelSize * 0.5
         Column {
 
             EaElements.Label {
                 enabled: false
-                text: qsTr("Parameter-Parameter Constraints")
+                text: qsTr("Numeric or Parameter-Parameter constraint")
             }
 
             Grid {
@@ -36,12 +33,13 @@ EaElements.GroupBox {
                     id: dependentPar
                     width: 359
                     currentIndex: -1
-                    displayText: currentIndex === -1 ? "Select parameter" : currentText
+                    displayText: currentIndex === -1 ? "Select dependent parameter" : currentText
                     model: Globals.BackendWrapper.sampleParameterNames
- //                   onCurrentIndexChanged: {
- //                       if (dependentPar.currentIndex === -1 && model.count > 0)
- //                           dependentPar.currentIndex = dependentParCurrentIndex
- //                   }
+                    onCurrentIndexChanged: {
+                        independentPar.model = Globals.BackendWrapper.sampleParameterNames
+                        independentPar.model[currentIndex] = 'Dependent parameter'
+                        independentPar.currentIndex = -1
+                    }
                 }
 
                 EaElements.ComboBox {
@@ -59,12 +57,20 @@ EaElements.GroupBox {
                     id: independentPar
                     width: dependentPar.width
                     currentIndex: -1
-                    displayText: currentIndex === -1 ? "Select parameter" : currentText
+                    displayText: currentIndex === -1 ? "Numeric constrain or select independent parameter" : currentText
                     model: Globals.BackendWrapper.sampleParameterNames
-//                    onCurrentIndexChanged: {
-//                        if (independentPar.currentIndex === -1 && model.count > 0)
-//                            independentPar.currentIndex = independentParCurrentIndex
-//                    }
+                    onCurrentIndexChanged: {
+                        dependentPar.model = Globals.BackendWrapper.sampleParameterNames
+                        if (currentIndex === -1){
+                            displayText: "Numeric constrain or select independent parameter"
+                            arithmeticOperator.model = Globals.BackendWrapper.sampleArithmicOperators.slice(0,1)  // no arithmetic operators
+                        }
+                        else{
+                            arithmeticOperator.model = Globals.BackendWrapper.sampleArithmicOperators.slice(1) // allow all arithmetic operators
+                            dependentPar.model[currentIndex] = 'Independent parameter'
+                        //arithmeticOperator.currentIndex = 0
+                        }
+                    }
                 }
 
                 EaElements.ComboBox {
@@ -72,7 +78,7 @@ EaElements.GroupBox {
                     width: relationalOperator.width
                     currentIndex: 0
                     font.family: EaStyle.Fonts.iconsFamily
-                    model: Globals.BackendWrapper.sampleArithmicOperators
+                    model: arithmeticOperator.model = Globals.BackendWrapper.sampleArithmicOperators.slice(0,1)
                 }
 
                 EaElements.TextField {
@@ -90,12 +96,16 @@ EaElements.GroupBox {
                     ToolTip.text: qsTr("Add constraint between two parameters")
                     onClicked: {
                         Globals.BackendWrapper.sampleAddConstraint(
-                                    dependentPar.currentIndex,
-                                    relationalOperator.currentText.replace("\uf52c", "=").replace("\uf531", ">").replace("\uf536", "<"),
-                                    value.text,
-                                    arithmeticOperator.currentText.replace("\uf00d", "*").replace("\uf529", "/").replace("\uf067", "+").replace("\uf068", "-"),
-                                    independentPar.currentIndex
-                                    )
+                            dependentPar.currentIndex,
+                            relationalOperator.currentText.replace("\uf52c", "=").replace("\uf531", ">").replace("\uf536", "<"),
+                            value.text,
+                            arithmeticOperator.currentText.replace("\uf00d", "*").replace("\uf529", "/").replace("\uf067", "+").replace("\uf068", "-"),
+                            independentPar.currentIndex
+                        )
+                        independentPar.currentIndex = -1
+                        dependentPar.currentIndex = -1
+                        relationalOperator.currentIndex = 0
+                        arithmeticOperator.currentIndex = 0
                     }
                 }
             }
