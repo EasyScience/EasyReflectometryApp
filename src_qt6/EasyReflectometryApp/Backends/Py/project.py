@@ -17,6 +17,7 @@ class Project(QObject):
 
     externalCreatedChanged = Signal()
     externalNameChanged = Signal()
+    externalProjectLoaded = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
@@ -84,8 +85,7 @@ class Project(QObject):
         self.nameChanged.emit()
         self.descriptionChanged.emit()
         self.locationChanged.emit()
-        self.externalCreatedChanged.emit()
-        self.externalNameChanged.emit()
+        self.externalProjectLoaded.emit()
 
     @Slot()
     def save(self) -> None:

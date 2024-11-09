@@ -93,7 +93,7 @@ class Project:
         self._project_lib.save_as_json()
 
     def save(self) -> None:
-        self._project_lib.save_as_json()
+        self._project_lib.save_as_json(overwrite=True)
 
     def load(self, path: str) -> None:
         self._project_lib.load_from_json(path)

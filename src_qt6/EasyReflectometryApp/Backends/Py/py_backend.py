@@ -87,14 +87,15 @@ class PyBackend(QObject):
     def _connect_project_page(self) -> None:
         self._project.externalNameChanged.connect(self._relay_project_page_name)
         self._project.externalCreatedChanged.connect(self._relay_project_page_created)
+        self._project.externalProjectLoaded.connect(self._relay_project_page_projec_loaded)
 
     def _connect_sample_page(self) -> None:
         self._sample.externalSampleChanged.connect(self._relay_sample_page_sample_changed)
         self._sample.externalRefreshPlot.connect(self._refresh_plots)
 
     def _connect_experiment_page(self) -> None:
-        self._experiment.experimentChanged.connect(self._relay_experiment_page_experiment_changed)
-        self._experiment.experimentChanged.connect(self._refresh_plots)
+        self._experiment.externalExperimentChanged.connect(self._relay_experiment_page_experiment_changed)
+        self._experiment.externalExperimentChanged.connect(self._refresh_plots)
 
     def _connect_analysis_page(self) -> None:
         self._analysis.externalMinimizerChanged.connect(self._relay_analysis_page)
@@ -110,13 +111,20 @@ class PyBackend(QObject):
     def _relay_project_page_created(self):
         self._report.createdChanged.emit()
 
+    def _relay_project_page_projec_loaded(self):
+        self._experiment.experimentChanged.emit()
+        self._analysis.experimentsChanged.emit()
+        self._analysis._clearCacheAndEmitParametersChanged()
+        self._status.statusChanged.emit()
+        self._refresh_plots()
+
     def _relay_sample_page_sample_changed(self):
         self._analysis._clearCacheAndEmitParametersChanged()
         self._status.statusChanged.emit()
     
     def _relay_experiment_page_experiment_changed(self):
-        self._analysis._clearCacheAndEmitParametersChanged()
         self._analysis.experimentsChanged.emit()
+        self._analysis._clearCacheAndEmitParametersChanged()
         self._status.statusChanged.emit()
 
     def _relay_analysis_page(self):
