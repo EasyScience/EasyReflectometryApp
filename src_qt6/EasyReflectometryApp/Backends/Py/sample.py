@@ -167,6 +167,7 @@ class Sample(QObject):
     def addNewModel(self) -> None:
         self._models_logic.add_new()
         self.modelsTableChanged.emit()
+#        self.externalRefreshPlot.emit()
 
     @Slot()
     def duplicateSelectedModel(self) -> None:

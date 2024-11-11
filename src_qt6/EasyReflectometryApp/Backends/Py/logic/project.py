@@ -77,7 +77,7 @@ class Project:
     def experimental_data_at_current_index(self) -> bool:
         experimental_data = False
         try:
-            self._project_lib.experimental_data_for_model_at_index()
+            self._project_lib.experimental_data_for_model_at_index(self._project_lib._current_model_index)
             experimental_data = True
         except IndexError:
             pass
@@ -99,7 +99,7 @@ class Project:
         self._project_lib.load_from_json(path)
 
     def load_experiment(self, path: str) -> None:
-        self._project_lib.load_experiment_for_model_at_index(path)
+        self._project_lib.load_experiment_for_model_at_index(path, self._project_lib._current_model_index)
 
     def reset(self) -> None:
         self._project_lib.reset()
