@@ -12,20 +12,21 @@ from .logic.project import Project as ProjectLogic
 from .logic.parameters import Parameters as ParametersLogic
 
 class Sample(QObject):
-    materialsChanged = Signal()
-    materialIndexChanged = Signal()
+    #materialsChanged = Signal()
+    materialsTableChanged = Signal()
+    materialsIndexChanged = Signal()
 
-    modelsChange = Signal()
+    #modelsChange = Signal()
     modelsTableChanged = Signal()
     modelsIndexChanged = Signal()
 
-    assembliesChange = Signal()
+#    assembliesChange = Signal()
     assembliesTableChanged = Signal()
     assembliesIndexChanged = Signal()
 
     layersChange = Signal()
     layersIndexChanged = Signal()
-    layersTableChanged = Signal()
+#    layersTableChanged = Signal()
 
     qRangeChanged = Signal()
 
@@ -40,7 +41,7 @@ class Sample(QObject):
         self._assemblies_logic = AssembliesLogic(project_lib)
         self._layers_logic = LayersLogic(project_lib)
         self._project_logic = ProjectLogic(project_lib)
-        self._paramters_logic = ParametersLogic(project_lib)
+        self._parameters_logic = ParametersLogic(project_lib)
 
         self._chached_layers = None
 
@@ -48,24 +49,24 @@ class Sample(QObject):
         
     def connect_logic(self) -> None:
         self.assembliesIndexChanged.connect(self.layersConnectChanges)
-        self.layersTableChanged.connect(self.layersConnectChanges)
+#        self.layersTableChanged.connect(self.layersConnectChanges)
 
     # # #
     # Materials
     # # #
-    @Property('QVariantList', notify=materialIndexChanged)
+    @Property('QVariantList', notify=materialsTableChanged)
     def materials(self) -> list[dict[str, str]]:
         return self._material_logic.materials
     
-    @Property(int, notify=materialIndexChanged)
+    @Property(int, notify=materialsIndexChanged)
     def currentMaterialIndex(self) -> int:
         return self._material_logic.index
     
-    @Property('QVariantList', notify=materialIndexChanged)
+    @Property('QVariantList', notify=materialsTableChanged)
     def materialNames(self) -> list[str]:
         return self._material_logic.material_names
 
-    @Property(str, notify=materialIndexChanged)
+    @Property(str, notify=materialsIndexChanged)
     def currentMaterialName(self) -> str:
         return self._material_logic.name_at_current_index
 
@@ -73,24 +74,24 @@ class Sample(QObject):
     @Slot(int)
     def setCurrentMaterialIndex(self, new_value: int) -> None:
         self._material_logic.index = new_value
-        self.materialIndexChanged.emit()
+        self.materialsIndexChanged.emit()
 
     @Slot(str)
     def setCurrentMaterialName(self, new_value: str) -> None:
         if self._material_logic.set_name_at_current_index(new_value):
-            self.materialsChanged.emit()
+            self.materialsTableChanged.emit()
 
     @Slot(float)
     def setCurrentMaterialSld(self, new_value: float) -> None:
         if self._material_logic.set_sld_at_current_index(new_value):
-            self.materialsChanged.emit()
+            self.materialsTableChanged.emit()
             self.externalRefreshPlot.emit()
             self.externalSampleChanged.emit()
 
     @Slot(float)
     def setCurrentMaterialISld(self, new_value: float) -> None:
         if self._material_logic.set_isld_at_current_index(new_value):
-            self.materialsChanged.emit()
+            self.materialsTableChanged.emit()
             self.externalRefreshPlot.emit()
             self.externalSampleChanged.emit()
 
@@ -98,43 +99,43 @@ class Sample(QObject):
     @Slot(str)
     def removeMaterial(self, value: str) -> None:
         self._material_logic.remove_at_index(value)
-        self.materialsChanged.emit()
+        self.materialsTableChanged.emit()
         self.externalSampleChanged.emit()
 
     @Slot()
     def addNewMaterial(self) -> None:
         self._material_logic.add_new()
-        self.materialIndexChanged.emit()
+        self.materialsTableChanged.emit()
         self.externalSampleChanged.emit()
 
     @Slot()
     def duplicateSelectedMaterial(self) -> None:
         self._material_logic.duplicate_selected()
-        self.materialIndexChanged.emit()
+        self.materialsTableChanged.emit()
         self.externalSampleChanged.emit()
 
     @Slot()
     def moveSelectedMaterialUp(self) -> None:
         self._material_logic.move_selected_up()
-        self.materialIndexChanged.emit()
+        self.materialsTableChanged.emit()
 
     @Slot()
     def moveSelectedMaterialDown(self) -> None:
         self._material_logic.move_selected_down()
-        self.materialIndexChanged.emit()
+        self.materialsTableChanged.emit()
 
     # # #
     # Models
     # # #
-    @Property('QVariantList', notify=modelsChange)
+    @Property('QVariantList', notify=modelsTableChanged)
     def models(self) -> list[dict[str, str]]:
         return self._models_logic.models
 
-    @Property(int, notify=modelsChange)
+    @Property(int, notify=modelsIndexChanged)
     def currentModelIndex(self) -> int:
         return self._models_logic.index
 
-    @Property('QVariantList', notify=modelsChange)
+    @Property('QVariantList', notify=modelsTableChanged)
     def modelslNames(self) -> list[str]:
         return self._models_logic.models_names
 
@@ -147,6 +148,8 @@ class Sample(QObject):
     def setCurrentModelIndex(self, new_value: int) -> None:
         self._project_lib.current_model_index = new_value
         self.modelsIndexChanged.emit()
+        self.assembliesTableChanged.emit()
+        self._clearCacheAndEmitLayersChanged()
         self.externalRefreshPlot.emit()
 
     @Slot(str)
@@ -183,8 +186,8 @@ class Sample(QObject):
     # # #
     # Assemblies
     # # #
-    def assembliesConnectChanges(self) -> None:
-        self.assembliesChange.emit()
+#    def assembliesConnectChanges(self) -> None:
+#        self.assembliesChange.emit()
 
     @Property('QVariantList', notify=assembliesTableChanged)
     def assemblies(self) -> list[dict[str, str]]:
@@ -210,7 +213,7 @@ class Sample(QObject):
     @Slot(int)
     def setCurrentAssemblyIndex(self, new_value: int) -> None:
         self._project_lib.current_assembly_index = new_value
-        self._clearCacheAndEmitLayersChanged() #self.layersTableChanged.emit()
+        self._clearCacheAndEmitLayersChanged()
         self.assembliesTableChanged.emit()
         self.assembliesIndexChanged.emit()
 
@@ -222,14 +225,14 @@ class Sample(QObject):
     @Slot(str)
     def setCurrentAssemblyType(self, new_value: str) -> None:
         self._assemblies_logic.set_type_at_current_index(new_value)
-        self._clearCacheAndEmitLayersChanged() #self.layersTableChanged.emit()
+        self._clearCacheAndEmitLayersChanged()
         self.assembliesTableChanged.emit()
         self.assembliesIndexChanged.emit()
         self.externalRefreshPlot.emit()
         self.externalSampleChanged.emit()
     
     # Assembly specific
-    @Property(str, notify=assembliesChange)
+    @Property(str, notify=assembliesTableChanged)
     def currentAssemblyRepeatedLayerReptitions(self) -> str:
         return self._assemblies_logic.repetitions_at_current_index
 
@@ -414,19 +417,19 @@ class Sample(QObject):
     # # #
     @Property('QVariantList', notify=layersChange)
     def parameterNames(self) -> list[dict[str, str]]:
-        return [parameter['name'] for parameter in self._paramters_logic.parameters]
+        return [parameter['name'] for parameter in self._parameters_logic.parameters]
 
     @Property('QVariantList', notify=layersChange)
     def relationOperators(self) -> list[str]:
-        return self._paramters_logic.constraint_relations()
+        return self._parameters_logic.constraint_relations()
 
     @Property('QVariantList', notify=layersChange)
     def arithmicOperators(self) -> list[str]:
-        return self._paramters_logic.constraint_arithmetic()
+        return self._parameters_logic.constraint_arithmetic()
 
     @Slot(str, str, str, str, str)
     def addConstraint(self, value1: str, value2: str, value3: str, value4: str, value5: str) -> None:
-        self._paramters_logic.add_constraint(
+        self._parameters_logic.add_constraint(
                 dependent_idx=int(value1),
                 relational_operator=value2,
                 value=float(value3), 

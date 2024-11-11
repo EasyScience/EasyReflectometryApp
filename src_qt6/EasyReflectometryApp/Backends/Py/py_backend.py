@@ -87,7 +87,7 @@ class PyBackend(QObject):
     def _connect_project_page(self) -> None:
         self._project.externalNameChanged.connect(self._relay_project_page_name)
         self._project.externalCreatedChanged.connect(self._relay_project_page_created)
-        self._project.externalProjectLoaded.connect(self._relay_project_page_projec_loaded)
+        self._project.externalProjectLoaded.connect(self._relay_project_page_project_loaded)
 
     def _connect_sample_page(self) -> None:
         self._sample.externalSampleChanged.connect(self._relay_sample_page_sample_changed)
@@ -111,7 +111,11 @@ class PyBackend(QObject):
     def _relay_project_page_created(self):
         self._report.createdChanged.emit()
 
-    def _relay_project_page_projec_loaded(self):
+    def _relay_project_page_project_loaded(self):
+        self._sample.materialsTableChanged.emit()
+        self._sample.modelsTableChanged.emit()
+        self._sample.assembliesTableChanged.emit()
+        self._sample._clearCacheAndEmitLayersChanged()
         self._experiment.experimentChanged.emit()
         self._analysis.experimentsChanged.emit()
         self._analysis._clearCacheAndEmitParametersChanged()

@@ -126,16 +126,17 @@ def _from_parameters_to_list_of_dicts(parameters: List[Parameter], model_unique_
     parameter_list = []
     for parameter in parameters:
         path = global_object.map.find_path(model_unique_name, parameter.unique_name)
-        name = f"{global_object.map.get_item_by_key(path[-2]).name} {global_object.map.get_item_by_key(path[-1]).name}" 
-        parameter_list.append(
-            {
-                'name': name,
-                'value': float(parameter.value),
-                'error': float(parameter.variance),
-                'max': float(parameter.max),
-                'min': float(parameter.min),
-                'units': parameter.unit,
-                'fit': parameter.free
-            }
-        )
+        if 0 < len(path):
+            name = f"{global_object.map.get_item_by_key(path[-2]).name} {global_object.map.get_item_by_key(path[-1]).name}" 
+            parameter_list.append(
+                {
+                    'name': name,
+                    'value': float(parameter.value),
+                    'error': float(parameter.variance),
+                    'max': float(parameter.max),
+                    'min': float(parameter.min),
+                    'units': parameter.unit,
+                    'fit': parameter.free
+                }
+            )
     return parameter_list

@@ -24,8 +24,6 @@ class Plotting1d(QObject):
         self._project_lib = project_lib
         self._proxy = parent
         self._currentLib1d = 'QtCharts'
-        self._useAcceleration1d = True
-        self._model_index = 0
         self._chartRefs = {
 
             'QtCharts': {
@@ -48,7 +46,7 @@ class Plotting1d(QObject):
     @property
     def sample_data(self) -> DataSet1D:
         try:
-            data = self._project_lib.sample_data_for_model_at_index()
+            data = self._project_lib.sample_data_for_model_at_index(self._project_lib.current_model_index)
         except IndexError:
             data = DataSet1D(
                 name='Sample Data empty',
@@ -60,7 +58,7 @@ class Plotting1d(QObject):
     @property
     def sld_data(self) -> DataSet1D:
         try:
-            data = self._project_lib.sld_data_for_model_at_index()
+            data = self._project_lib.sld_data_for_model_at_index(self._project_lib.current_model_index)
         except IndexError:
             data = DataSet1D(
                 name='SLD Data empty',
@@ -72,7 +70,7 @@ class Plotting1d(QObject):
     @property
     def experiment_data(self) -> DataSet1D:
         try:
-            data = self._project_lib.experimental_data_for_model_at_index()
+            data = self._project_lib.experimental_data_for_model_at_index(self._project_lib.current_model_index)
         except IndexError:
             data = DataSet1D(
                 name='Experiment Data empty',
@@ -120,10 +118,6 @@ class Plotting1d(QObject):
     @Property('QVariant', notify=chartRefsChanged)
     def chartRefs(self):
         return self._chartRefs
-
-    @Slot(int)
-    def setModelIndex(self, value: int) -> None:
-        self._model_index = value
 
     @Slot(str, str, 'QVariant')
     def setQtChartsSerieRef(self, page:str, serie:str, ref: QObject):

@@ -68,7 +68,7 @@ EaElements.GroupBox {
 
                 mouseArea.onPressed: {
                     if (Globals.BackendWrapper.sampleCurrentModelIndex !== index) {
-                        Globals.BackendWrapper.sampleSetCurrentModelIndex(0)
+                        Globals.BackendWrapper.sampleSetCurrentModelIndex(index)
                     }
                 }
             }
