@@ -44,6 +44,8 @@ class Assemblies:
     
     def add_new(self) -> None:
         self._assemblies.add_assembly()
+        index_si = self._get_index_si()
+        self._assemblies[-1].layers[0].material = self._project_lib._materials[index_si]
 
     def duplicate_selected(self) -> None:
         self._assemblies.duplicate_assembly(self.index)
@@ -69,15 +71,11 @@ class Assemblies:
             return False
 
         if new_value == 'Multi-layer':
-            if 'Si' not in [material.name for material in self._project_lib._materials]:
-                self._project_lib._materials.add_material('Si', 2.07, 0.0)
-            index_si = [material.name for material in self._project_lib._materials].index('Si')
+            index_si = self._get_index_si()
             new_assembly = Multilayer()
             new_assembly.layers[0].material = self._project_lib._materials[index_si]
         elif new_value == 'Repeating Multi-layer':
-            if 'Si' not in [material.name for material in self._project_lib._materials]:
-                self._project_lib._materials.add_material('Si', 2.07, 0.0)
-            index_si = [material.name for material in self._project_lib._materials].index('Si')
+            index_si = self._get_index_si()
             new_assembly = RepeatingMultilayer()
             new_assembly.layers[0].material = self._project_lib._materials[index_si]
         elif new_value == 'Surfactant Layer':
@@ -125,6 +123,11 @@ class Assemblies:
                 self._assemblies[self.index].conformal_roughness = new_value
                 return True
         return False
+    
+    def _get_index_si(self) -> int:
+        if 'Si' not in [material.name for material in self._project_lib._materials]:
+            self._project_lib._materials.add_material('Si', 2.07, 0.0)
+        return [material.name for material in self._project_lib._materials].index('Si')
 
 
 def _from_assemblies_collection_to_list_of_dicts(assemblies_collection: Sample) -> list[dict[str, str]]:
