@@ -75,11 +75,25 @@ class Models:
     
     def add_new(self) -> None:
         self._models.add_model()
-        if 'Si' not in [material.name for material in self._project_lib._materials]:
-            self._project_lib._materials.add_material('Si', 2.07, 0.0)
-        index_si = [material.name for material in self._project_lib._materials].index('Si')
-        self._models[-1].sample.data[1].layers.data[0].material = self._project_lib._materials[index_si]
-#        self._project_lib.current_model_index = len(self._models) - 1
+        self._models[-1].sample.add_assembly()
+        self._models[-1].sample._enable_changes_to_outermost_layers()
+
+        self._models[-1].sample.data[0].layers.data[0].material = self._project_lib._materials[self._project_lib.get_index_air()]
+        self._models[-1].sample.data[0].layers.data[0].thickness = 0.0
+        self._models[-1].sample.data[0].layers.data[0].roughness = 0.0
+        self._models[-1].sample.data[0].name = 'Superphase'
+
+        self._models[-1].sample.data[1].layers.data[0].material = self._project_lib._materials[self._project_lib.get_index_sio2()]
+        self._models[-1].sample.data[1].layers.data[0].thickness = 20.0
+        self._models[-1].sample.data[1].layers.data[0].roughness = 3.0
+        self._models[-1].sample.data[1].name = 'SiO2'
+
+        self._models[-1].sample.data[2].layers.data[0].material = self._project_lib._materials[self._project_lib.get_index_si()]
+        self._models[-1].sample.data[2].name = 'Substrate'
+        self._models[-1].sample.data[2].layers.data[0].thickness = 0.0
+        self._models[-1].sample.data[2].layers.data[0].roughness = 1.2
+        
+        self._models[-1].sample._disable_changes_to_outermost_layers()
 
     def duplicate_selected_model(self) -> None:
         self._models.duplicate_model(self.index)

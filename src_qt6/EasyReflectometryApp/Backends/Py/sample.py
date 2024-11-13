@@ -12,21 +12,17 @@ from .logic.project import Project as ProjectLogic
 from .logic.parameters import Parameters as ParametersLogic
 
 class Sample(QObject):
-    #materialsChanged = Signal()
     materialsTableChanged = Signal()
     materialsIndexChanged = Signal()
 
-    #modelsChange = Signal()
     modelsTableChanged = Signal()
     modelsIndexChanged = Signal()
 
-#    assembliesChange = Signal()
     assembliesTableChanged = Signal()
     assembliesIndexChanged = Signal()
 
     layersChange = Signal()
     layersIndexChanged = Signal()
-#    layersTableChanged = Signal()
 
     qRangeChanged = Signal()
 
@@ -49,7 +45,6 @@ class Sample(QObject):
         
     def connect_logic(self) -> None:
         self.assembliesIndexChanged.connect(self.layersConnectChanges)
-#        self.layersTableChanged.connect(self.layersConnectChanges)
 
     # # #
     # Materials
@@ -167,7 +162,7 @@ class Sample(QObject):
     def addNewModel(self) -> None:
         self._models_logic.add_new()
         self.modelsTableChanged.emit()
-#        self.externalRefreshPlot.emit()
+        self.materialsTableChanged.emit()
 
     @Slot()
     def duplicateSelectedModel(self) -> None:
@@ -187,9 +182,6 @@ class Sample(QObject):
     # # #
     # Assemblies
     # # #
-#    def assembliesConnectChanges(self) -> None:
-#        self.assembliesChange.emit()
-
     @Property('QVariantList', notify=assembliesTableChanged)
     def assemblies(self) -> list[dict[str, str]]:
         return self._assemblies_logic.assemblies

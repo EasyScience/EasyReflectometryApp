@@ -44,7 +44,7 @@ class Assemblies:
     
     def add_new(self) -> None:
         self._assemblies.add_assembly()
-        index_si = self._get_index_si()
+        index_si = self._project_lib.get_index_si()
         self._assemblies[-1].layers[0].material = self._project_lib._materials[index_si]
 
     def duplicate_selected(self) -> None:
@@ -71,20 +71,14 @@ class Assemblies:
             return False
 
         if new_value == 'Multi-layer':
-            index_si = self._get_index_si()
             new_assembly = Multilayer()
-            new_assembly.layers[0].material = self._project_lib._materials[index_si]
+            new_assembly.layers[0].material = self._assemblies[self.index].layers.data[0].material
         elif new_value == 'Repeating Multi-layer':
-            index_si = self._get_index_si()
             new_assembly = RepeatingMultilayer()
-            new_assembly.layers[0].material = self._project_lib._materials[index_si]
+            new_assembly.layers[0].material = self._assemblies[self.index].layers.data[0].material
         elif new_value == 'Surfactant Layer':
-            if 'Air' not in [material.name for material in self._project_lib._materials]:
-                self._project_lib._materials.add_material('Air', 0.0, 0.0)
-            if 'D2O' not in [material.name for material in self._project_lib._materials]:
-                self._project_lib._materials.add_material('D2O', 6.36, 0.0)
-            index_air = [material.name for material in self._project_lib._materials].index('Air')
-            index_d2o = [material.name for material in self._project_lib._materials].index('D2O')
+            index_air = self._project_lib.get_index_air()
+            index_d2o = self._project_lib.get_index_d2o()
             new_assembly = SurfactantLayer()
             new_assembly.layers[0].solvent = self._project_lib._materials[index_air]
             new_assembly.layers[1].solvent = self._project_lib._materials[index_d2o]
@@ -123,11 +117,6 @@ class Assemblies:
                 self._assemblies[self.index].conformal_roughness = new_value
                 return True
         return False
-    
-    def _get_index_si(self) -> int:
-        if 'Si' not in [material.name for material in self._project_lib._materials]:
-            self._project_lib._materials.add_material('Si', 2.07, 0.0)
-        return [material.name for material in self._project_lib._materials].index('Si')
 
 
 def _from_assemblies_collection_to_list_of_dicts(assemblies_collection: Sample) -> list[dict[str, str]]:
