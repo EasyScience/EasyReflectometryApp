@@ -8,7 +8,6 @@ import QtQuick.Dialogs
 import QtCore
 
 import EasyApp.Gui.Style as EaStyle
-import EasyApp.Gui.Globals as EaGlobals
 import EasyApp.Gui.Elements as EaElements
 import EasyApp.Gui.Logic as EaLogic
 
@@ -41,19 +40,14 @@ Column {
                 text: qsTr('Name')
             }
         }
-        // Name field
 
-        // Format selector
         EaElements.ComboBox {
             id: formatField
             topInset: formatLabel.height
             topPadding: topInset + padding
             width: EaStyle.Sizes.fontPixelSize * 10
-            textRole: 'text'
-            valueRole: 'value'
-            model: [
-                { value: 'html', text: qsTr('HTML') }
-            ]
+            model: Globals.BackendWrapper.summaryExportFormats// [
+
             EaElements.Label {
                 id: formatLabel
                 text: qsTr('Format')
@@ -86,10 +80,9 @@ Column {
             showBackground: false
             fontIcon: 'folder-open'
             ToolTip.text: qsTr('Choose report parent directory')
-            onClicked: reportParentDirDialog.open()
+            onClicked: summaryParentDirDialog.open()
         }
     }
-    // Location field
 
     // Save button
     EaElements.SideBarButton {
@@ -97,7 +90,23 @@ Column {
         wide: true
         fontIcon: 'download'
         text: qsTr('Save')
+        onClicked: {
+           if (formatField.currentValue === 'HTML') {
+               Globals.BackendWrapper.summarySaveAsHtml()
+           } else if (formatField.currentValue === 'PDF') {
+               Globals.BackendWrapper.summarySaveAsPdf()
+           }
+       }
     }
-    // Save button
+
+    // Save directory dialog
+    FolderDialog {
+        id: summaryParentDirDialog
+        title: qsTr("Choose report parent directory")
+    }
+
+    onProjectLocationChanged: {
+        summaryParentDirDialog.currentFolder = Globals.BackendWrapper.helpersLocalFileToUrl(projectLocation)
+    }
 
 }

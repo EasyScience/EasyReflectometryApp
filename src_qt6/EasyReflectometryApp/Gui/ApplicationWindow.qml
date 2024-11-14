@@ -127,7 +127,7 @@ EaComponents.ApplicationWindow {
         // Summary page
         EaElements.AppBarTabButton {
             id: summaryButton
-            enabled: false
+            enabled: true
             fontIcon: "clipboard-list"
             text: qsTr("Summary")
             ToolTip.text: qsTr("Summary of the work done")
@@ -149,7 +149,7 @@ EaComponents.ApplicationWindow {
         Loader { source: 'Pages/Sample/Layout.qml' },
         Loader { source: 'Pages/Experiment/Layout.qml' },
 //        Loader { source: 'Pages/Analysis/Layout.qml' },
-        Loader { source: 'Pages/Report/Layout.qml' }
+        Loader { source: 'Pages/Summary/Layout.qml' }
     ]
 
     /////////////

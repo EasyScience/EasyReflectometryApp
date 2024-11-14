@@ -2,10 +2,21 @@ import numpy as np
 from uncertainties import ufloat
 
 from PySide6.QtWidgets import QApplication
+from PySide6.QtCore import QUrl
+from PySide6.QtCore import Slot
+
+
+class GUI:
+    @Slot(str, result=str)
+    @staticmethod
+    def localFileToUrl(fpath: str):
+        url = QUrl.fromLocalFile(fpath).toString()
+        return url
 
 
 class IO:
 
+    
     @staticmethod
     def generalizePath(fpath: str) -> str:
         """
@@ -62,24 +73,24 @@ class IO:
         value_with_std_dev_str = f'{ufloat(value, std_dev):{fmt}S}'
         return value_str, std_dev_str, value_with_std_dev_str
 
-    def value_with_error_WEB(val, err, precision=2):
-        """String with value and error in parenthesis with the number of digits given by precision."""
-        # Number of digits in the error
-        err_decimals = precision - int(np.floor(np.log10(err) + 1))
-        # Output error with a "precision" number of significant digits
-        err_out = round(err, err_decimals)
-        # Removes leading zeros for fractional errors
-        if err_out < 1:
-            err_out = int(round(err_out * 10**err_decimals))
-            err_format = 0
-        else:
-            err_format = int(np.clip(err_decimals, 0, np.inf))
+    # def value_with_error_WEB(val, err, precision=2):
+    #     """String with value and error in parenthesis with the number of digits given by precision."""
+    #     # Number of digits in the error
+    #     err_decimals = precision - int(np.floor(np.log10(err) + 1))
+    #     # Output error with a "precision" number of significant digits
+    #     err_out = round(err, err_decimals)
+    #     # Removes leading zeros for fractional errors
+    #     if err_out < 1:
+    #         err_out = int(round(err_out * 10**err_decimals))
+    #         err_format = 0
+    #     else:
+    #         err_format = int(np.clip(err_decimals, 0, np.inf))
 
-        # Format the value to have the same significant digits as the error
-        val_out = round(val, err_decimals)
-        val_format = int(np.clip(err_decimals, 0, np.inf))
+    #     # Format the value to have the same significant digits as the error
+    #     val_out = round(val, err_decimals)
+    #     val_format = int(np.clip(err_decimals, 0, np.inf))
 
-        return f'{val_out:.{val_format}f}({err_out:.{err_format}f})'
+    #     return f'{val_out:.{val_format}f}({err_out:.{err_format}f})'
 
 
 class Application(QApplication):  # QGuiApplication crashes when using in combination with QtCharts

@@ -3,7 +3,9 @@ pragma Singleton
 import QtQuick
 
 QtObject {
-    property bool created: true
+    readonly property bool created: true
+
+    readonly property var exportFormats: ["HTML", "PDF"]
 
     readonly property string asHtml: '
 <!DOCTYPE html>
@@ -74,5 +76,14 @@ th, td { padding-right: 18px; }
 </body>
 </html>
 '
+    function saveAsHtml() {
+        console.debug(`Saving HTML summary`)
+    }
+
+    function saveAsPdf() {
+        console.debug(`Saving PDF summary`)
+    }
+
+
 
 }

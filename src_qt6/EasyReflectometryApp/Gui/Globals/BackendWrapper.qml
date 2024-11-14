@@ -167,6 +167,7 @@ QtObject {
 
     function experimentLoad(value) { activeBackend.experiment.load(value) }
 
+
     ///////////////
     // Analysis page
     ///////////////
@@ -176,8 +177,13 @@ QtObject {
     ///////////////
     // Summary page
     ///////////////
-    readonly property bool summaryCreated: activeBackend.report.created
-    readonly property string summaryAsHtml: activeBackend.report.asHtml
+    readonly property bool summaryCreated: activeBackend.summary.created
+    readonly property string summaryAsHtml: activeBackend.summary.asHtml
+    readonly property var summaryExportFormats: activeBackend.summary.exportFormats
+
+    function summarySaveAsHtml() { activeBackend.summary.saveAsHtml() }
+    function summarySaveAsPdf() { activeBackend.summary.saveAsPdf() }
+
 
     ///////////////
     // Plotting
@@ -198,4 +204,11 @@ QtObject {
     readonly property var plottingExperimentMaxY: activeBackend.plotting.sampleMaxY
 
     function plottingSetQtChartsSerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsSerieRef(value1, value2, value3) }
+
+
+    ///////////////
+    // Helpers
+    ///////////////
+
+    function helpersLocalFileToUrl(value) { return activeBackend.helpers.localFileToUrl(value) }
 }
