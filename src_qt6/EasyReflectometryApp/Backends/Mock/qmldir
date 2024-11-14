@@ -8,4 +8,3 @@ singleton Summary Summary.qml
 singleton Sample Sample.qml
 singleton Status Status.qml
 singleton Plotting Plotting.qml
-singleton Helpers Helpers.qml

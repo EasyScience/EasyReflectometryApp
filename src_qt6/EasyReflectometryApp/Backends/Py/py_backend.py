@@ -11,7 +11,7 @@ from .project import Project
 from .sample import Sample
 from .status import Status
 from .summary import Summary
-from .helpers import GUI as GUI_Helpers
+#from .helpers import GUI as GUI_Helpers
 
 
 class PyBackend(QObject):
@@ -33,7 +33,7 @@ class PyBackend(QObject):
         # Plotting backend part
         self._plotting = Plotting1d(self._project_lib)
 
-        self._gui_helpers = GUI_Helpers()
+#        self._gui_helpers = GUI_Helpers()
 
         self._logger = LoggerLevelHandler(self)
 
@@ -79,9 +79,9 @@ class PyBackend(QObject):
     def logger(self):
         return self._logger
 
-    @Property('QVariant', constant=True)
-    def helpers(self):
-        return self._gui_helpers
+    # @Property('QVariant', constant=True)
+    # def helpers(self):
+    #     return self._gui_helpers
 
     ######### Connections to relay info between the backend parts
     def _connect_backend_parts(self) -> None:

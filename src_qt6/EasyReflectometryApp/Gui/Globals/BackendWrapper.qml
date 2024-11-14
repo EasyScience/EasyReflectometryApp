@@ -179,8 +179,12 @@ QtObject {
     ///////////////
     readonly property bool summaryCreated: activeBackend.summary.created
     readonly property string summaryAsHtml: activeBackend.summary.asHtml
+    readonly property string summaryFileName: activeBackend.summary.fileName
+    readonly property string summaryFilePath: activeBackend.summary.filePath
+    readonly property string summaryFileUrl: activeBackend.summary.fileUrl
     readonly property var summaryExportFormats: activeBackend.summary.exportFormats
 
+    function summarySetFileName(value) { activeBackend.summary.setFileName(value) }
     function summarySaveAsHtml() { activeBackend.summary.saveAsHtml() }
     function summarySaveAsPdf() { activeBackend.summary.saveAsPdf() }
 
@@ -204,11 +208,4 @@ QtObject {
     readonly property var plottingExperimentMaxY: activeBackend.plotting.sampleMaxY
 
     function plottingSetQtChartsSerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsSerieRef(value1, value2, value3) }
-
-
-    ///////////////
-    // Helpers
-    ///////////////
-
-    function helpersLocalFileToUrl(value) { return activeBackend.helpers.localFileToUrl(value) }
 }

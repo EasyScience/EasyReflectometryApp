@@ -1,20 +1,40 @@
-pragma Singleton
+from easyreflectometry import Project as ProjectLib
+from pathlib import Path
 
-import QtQuick
+class Summary:
+    def __init__(self, project_lib: ProjectLib):
+        self._project_lib = project_lib
+        self._created = True
+        self._file_name = "summary"
 
-QtObject {
-    readonly property bool created: true
+    @property
+    def created(self) -> bool:
+        return self._created
 
-    readonly property var exportFormats: ["HTML", "PDF"]
+    @property
+    def file_name(self) -> str:
+        return self._file_name
+    
+    @file_name.setter
+    def file_name(self, value: str) -> None:
+        self._file_name = value
 
-    readonly property string fileName: "summary"
+    @property
+    def file_path(self) -> Path:
+        return self._project_lib.path / self._file_name
 
-    readonly property string filePath: '/Users/andpe/ExampleProject/summary'
+    @property
+    def as_html(self) -> str:
+        return _PY_HTML
 
-    readonly property string fileUrl: 'file:///Users/andpe/ExampleProject/summary'
+    def save_as_html(self) -> None:
+        print("Saving as HTML")
 
-    readonly property string asHtml: '
-<!DOCTYPE html>
+    def save_as_pdf(self) -> None:
+        print("Saving as PDF")
+
+
+_PY_HTML = """<!DOCTYPE html>
 <html>
 <style>
 th, td { padding-right: 18px; }
@@ -24,7 +44,7 @@ th, td { padding-right: 18px; }
     <table>
     <tr></tr>
     <tr>
-        <td><h1>Summary</h1></td>
+        <td><h1>Py Summary</h1></td>
     </tr>
     <tr></tr>
     <tr>
@@ -81,17 +101,4 @@ th, td { padding-right: 18px; }
     </table>
 </body>
 </html>
-'
-    function saveAsHtml() {
-        console.debug(`Saving HTML summary`)
-    }
-
-    function saveAsPdf() {
-        console.debug(`Saving PDF summary`)
-    }
-
-    function setFileName(value) {
-        console.debug(`setFileName ${value}`)
-    }
-
-}
+"""

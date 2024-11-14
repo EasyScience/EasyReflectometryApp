@@ -1,22 +1,16 @@
 import numpy as np
+import os
+import sys
 from uncertainties import ufloat
+from urllib.parse import urlparse
 
 from PySide6.QtWidgets import QApplication
 from PySide6.QtCore import QUrl
-from PySide6.QtCore import Slot
-
-
-class GUI:
-    @Slot(str, result=str)
-    @staticmethod
-    def localFileToUrl(fpath: str):
-        url = QUrl.fromLocalFile(fpath).toString()
-        return url
+#from PySide6.QtCore import Slot
+#from PySide6.QtCore import QObject
 
 
 class IO:
-
-    
     @staticmethod
     def generalizePath(fpath: str) -> str:
         """
@@ -25,13 +19,19 @@ class IO:
         :param URI rcfPath: URI to the file
         :return URI filename: platform specific URI
         """
-        return fpath  # NEED FIX: Check on different platforms
-        # filename = urlparse(fpath).path
-        # if not sys.platform.startswith("win"):
-        #     return filename
-        # if filename[0] == '/':
-        #     filename = filename[1:].replace('/', os.path.sep)
-        # return filename
+        filename = urlparse(fpath).path
+        if not sys.platform.startswith("win"):
+            return filename
+        if filename[0] == '/':
+            filename = filename[1:].replace('/', os.path.sep)
+        return filename
+
+    @staticmethod
+    def localFileToUrl(fpath: str) -> str:
+        if not sys.platform.startswith("win"):
+            return QUrl.fromLocalFile(fpath).toString()
+        url = QUrl.fromLocalFile(fpath.split(':')[-1]).toString()
+        return url
 
     @staticmethod
     def formatMsg(type, *args):

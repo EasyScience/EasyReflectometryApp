@@ -15,10 +15,9 @@ import Gui.Globals as Globals
 
 
 Column {
-
-    property string projectLocation: Globals.BackendWrapper.projectLocation +
-                                     EaLogic.Utils.osPathSep() +
-                                     'summary'
+//    property string summaryLocation: Globals.BackendWrapper.projectLocation +
+//                                     EaLogic.Utils.osPathSep() +
+//                                     Globals.BackendWrapper.summaryFileName
 
     spacing: EaStyle.Sizes.fontPixelSize
 
@@ -34,7 +33,8 @@ Column {
             topPadding: topInset + padding
             horizontalAlignment: TextInput.AlignLeft
             placeholderText: qsTr('Enter summary file name here')
-            Component.onCompleted: text = 'summary'
+            Component.onCompleted: text = Globals.BackendWrapper.summaryFileName
+            onEditingFinished: Globals.BackendWrapper.summarySetFileName(text)
             EaElements.Label {
                 id: nameLabel
                 text: qsTr('Name')
@@ -46,8 +46,7 @@ Column {
             topInset: formatLabel.height
             topPadding: topInset + padding
             width: EaStyle.Sizes.fontPixelSize * 10
-            model: Globals.BackendWrapper.summaryExportFormats// [
-
+            model: Globals.BackendWrapper.summaryExportFormats
             EaElements.Label {
                 id: formatLabel
                 text: qsTr('Format')
@@ -65,9 +64,8 @@ Column {
         topPadding: topInset + padding
         rightPadding: chooseButton.width
         horizontalAlignment: TextInput.AlignLeft
-        placeholderText: qsTr('Enter report location here')
-        Component.onCompleted: text = projectLocation
-
+//        placeholderText: qsTr('Enter report location here')
+        Component.onCompleted: text = Globals.BackendWrapper.summaryFilePath
         EaElements.Label {
             id: locationLabel
             text: qsTr('Location')
@@ -79,7 +77,7 @@ Column {
             topPadding: parent.topPadding
             showBackground: false
             fontIcon: 'folder-open'
-            ToolTip.text: qsTr('Choose report parent directory')
+            ToolTip.text: qsTr('Choose summary parent directory')
             onClicked: summaryParentDirDialog.open()
         }
     }
@@ -103,10 +101,11 @@ Column {
     FolderDialog {
         id: summaryParentDirDialog
         title: qsTr("Choose report parent directory")
+        currentFolder: Globals.BackendWrapper.summaryFileUrl
     }
 
-    onProjectLocationChanged: {
-        summaryParentDirDialog.currentFolder = Globals.BackendWrapper.helpersLocalFileToUrl(projectLocation)
-    }
+//    onSummaryLocationChanged: {
+//        summaryParentDirDialog.currentFolder = Globals.BackendWrapper.helpersLocalFileToUrl(summaryLocation)
+//    }
 
 }

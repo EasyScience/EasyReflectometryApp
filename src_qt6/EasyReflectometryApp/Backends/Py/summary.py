@@ -5,107 +5,53 @@
 from PySide6.QtCore import QObject
 from PySide6.QtCore import Signal
 from PySide6.QtCore import Property
+from PySide6.QtCore import Slot
 
 from easyreflectometry import Project as ProjectLib
-
-_PY_HTML = """<!DOCTYPE html>
-<html>
-<style>
-th, td { padding-right: 18px; }
-    th { text-align: left; }
-</style>
-<body>
-    <table>
-    <tr></tr>
-    <tr>
-        <td><h1>Py Summary</h1></td>
-    </tr>
-    <tr></tr>
-    <tr>
-        <td><h3>Project information</h3></td>
-    </tr>
-    <tr></tr>
-    <tr>
-        <th>Title</th>
-        <th>La0.5Ba0.5CoO3</th>
-    </tr>
-    <tr>
-        <td>Description</td>
-        <td>neutrons, powder, constant wavelength</td>
-    </tr>
-    <tr>
-        <td>No. of phases</td>
-        <td>1</td>
-    </tr>
-    <tr>
-        <td>No. of experiments</td>
-        <td>1</td>
-    </tr>
-    <tr></tr>
-        <tr>
-            <td><h3>Crystal data</h3></td>
-        </tr>
-        <tr></tr>
-    <tr>
-        <th>Phase datablock</th>
-        <th>lbco</th>
-    </tr>
-    <tr>
-        <td>Crystal system, space group</td>
-        <td>cubic,&nbsp;&nbsp;<i>P m -3 m</i></td>
-    </tr>
-    <tr></tr>
-        <tr>
-            <td><h3>Data collection</h3></td>
-        </tr>
-        <tr></tr>
-    <tr>
-        <th>Experiment datablock</th>
-        <th>hrpt</th>
-    </tr>
-    <tr>
-        <td>Radiation probe</td>
-        <td>neutron</td>
-    </tr>
-    <tr>
-        <td>Measured range: min, max, inc (&deg;)</td>
-        <td>10.0,&nbsp;&nbsp;164.85,&nbsp;&nbsp;0.05</td>
-    </tr>
-    <tr></tr>
-    </table>
-</body>
-</html>
-"""
-
+from .logic.summary import Summary as SummaryLogic
+from .helpers import IO
 
 class Summary(QObject):
     createdChanged = Signal()
-    asHtmlChanged = Signal()
+    fileNameChanged = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
-#        self._logic = ReportLogic(project_lib)
-        self._created = True
-        self._asHtml = _PY_HTML
+        self._logic = SummaryLogic(project_lib)
 
     @Property(bool, notify=createdChanged)
     def created(self):
-        return self._created
+        return self._logic.created
 
-    @created.setter
-    def created(self, newValue):
-        if self._created == newValue:
-            return
-        self._created = newValue
-        self.createdChanged.emit()
+    @Property(str, notify=fileNameChanged)
+    def fileName(self):
+        return self._logic.file_name
 
-    @Property(str, notify=asHtmlChanged)
+    @Slot(str)
+    def setFileName(self, value: str) -> None:
+        self._logic.file_name = value
+        self.fileNameChanged.emit()
+
+    @Property(str, notify=fileNameChanged)
+    def filePath(self) -> str:
+        return str(self._logic.file_path)
+
+    @Property(str, notify=fileNameChanged)
+    def fileUrl(self) -> str:
+        return IO.localFileToUrl(str(self._logic.file_path))
+
+    @Property(str, notify=createdChanged)
     def asHtml(self):
-        return self._asHtml
+        return self._logic.as_html
 
-    @asHtml.setter
-    def asHtml(self, newValue):
-        if self._asHtml == newValue:
-            return
-        self._asHtml = newValue
-        self.asHtmlChanged.emit
+    @Property('QVariant')
+    def exportFormats(self):
+        return ['HTML', 'PDF']
+    
+    @Slot()
+    def saveAsHtml(self) -> None:
+        self._logic.save_as_html()
+
+    @Slot()
+    def saveAsPdf(self) -> None:
+        self._logic.save_as_pdf()

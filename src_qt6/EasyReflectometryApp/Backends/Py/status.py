@@ -40,7 +40,7 @@ class Status(QObject):
 
     @Property(str, notify=minimizerChanged)
     def minimizer(self):
-        return self._logic.minimizer
+        return 'self._logic.minimizer'
 
     @Property(str, notify=variablesChanged)
     def variables(self):
