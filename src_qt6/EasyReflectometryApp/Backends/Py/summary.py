@@ -78,7 +78,7 @@ th, td { padding-right: 18px; }
 """
 
 
-class Report(QObject):
+class Summary(QObject):
     createdChanged = Signal()
     asHtmlChanged = Signal()
 
