@@ -16,7 +16,7 @@ EaElements.GroupBox {
 
         EaElements.SideBarButton {
             enabled: true
-
+            wide: true
             fontIcon: "upload"
             text: qsTr("Import data from local drive")
 
@@ -28,12 +28,6 @@ EaElements.GroupBox {
             Loader {
                 source: '../Popups/OpenExperimentFile.qml'
             }
-        }
-
-        EaElements.SideBarButton {
-            fontIcon: "arrow-circle-right"
-            text: qsTr("Continue without experiment data")
-            Component.onCompleted: Globals.Variables.continueWithoutExperimentDataButton = this
         }
     }
 

@@ -26,10 +26,11 @@ EaComponents.ApplicationWindow {
         },
 
         EaElements.ToolButton {
-            enabled: Globals.BackendWrapper.projectCreated
+            enabled: Globals.References.resetActive
             fontIcon: "backspace"
             ToolTip.text: qsTr("Reset to initial state without project, models and data")
             onClicked: {
+                Globals.References.resetActive = false
                 Globals.BackendWrapper.projectReset()
                 Globals.References.applicationWindow.appBarCentralTabs.projectButton.toggle()
                 if (Globals.References.applicationWindow.appBarCentralTabs.sampleButton !== null) {
@@ -73,7 +74,6 @@ EaComponents.ApplicationWindow {
                 Globals.References.applicationWindow.appBarCentralTabs.homeButton = homeButton
             }
         },
-        // Home page
 
         // Project page
         EaElements.AppBarTabButton {
@@ -86,7 +86,6 @@ EaComponents.ApplicationWindow {
                 Globals.References.applicationWindow.appBarCentralTabs.projectButton = projectButton
             }
         },
-        // Project page
 
         // Sample page
         EaElements.AppBarTabButton {
@@ -99,7 +98,6 @@ EaComponents.ApplicationWindow {
                 Globals.References.applicationWindow.appBarCentralTabs.sampleButton = sampleButton
             }
         },
-        // Sample page
 
         // Experiment tab
         EaElements.AppBarTabButton {
@@ -111,19 +109,17 @@ EaComponents.ApplicationWindow {
             Component.onCompleted:Globals.References.applicationWindow.appBarCentralTabs.experimentButton = experimentTabButton
         },
 
-/*
+
         // Analysis tab
         EaElements.AppBarTabButton {
             id: analysisTabButton
-            enabled: false //ExGlobals.Variables.samplePageEnabled &&
-                     //(ExGlobals.Constants.proxy.data.experimentSkipped ||
-                     // ExGlobals.Constants.proxy.data.experimentLoaded)
+            enabled: false
             fontIcon: "calculator"
             text: qsTr("Analysis")
             ToolTip.text: qsTr("Simulation and fitting page")
             Component.onCompleted: Globals.References.applicationWindow.appBarCentralTabs.analysisButton = analysisTabButton
         },
-*/
+
         // Summary page
         EaElements.AppBarTabButton {
             id: summaryButton
@@ -135,7 +131,6 @@ EaComponents.ApplicationWindow {
                 Globals.References.applicationWindow.appBarCentralTabs.summaryButton = summaryButton
             }
         }
-        // Summary page
     ]
 
     //////////////////////////////////

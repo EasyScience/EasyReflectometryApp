@@ -107,10 +107,11 @@ EaElements.GroupColumn {
                     currentIndex = indexOfValue(Globals.BackendWrapper.sampleLayers[index].solvent)
                 }
             }
-        }
-
-        onCurrentIndexChanged: {
-            Globals.BackendWrapper.sampleSetCurrentLayerIndex(surfactantView.currentIndex)
+            mouseArea.onPressed: {
+                if (Globals.BackendWrapper.samplCurrentLayerIndex !== index) {
+                    Globals.BackendWrapper.sampleSetCurrentLayerIndex(index)
+                }
+            }
         }
     }
     Row {

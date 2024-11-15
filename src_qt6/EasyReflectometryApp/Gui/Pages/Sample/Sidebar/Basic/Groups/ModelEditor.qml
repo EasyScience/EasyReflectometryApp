@@ -79,16 +79,17 @@ EaElements.GroupBox {
                     fontIcon: "minus-circle"
                     ToolTip.text: qsTr("Remove this assembly")
                     enabled: assembliesView.model > 1
-                    onClicked: Globals.BackendWrapper.sampleRemoveAssembly(assembliesView.currentIndex)
+                    onClicked: Globals.BackendWrapper.sampleRemoveAssembly(index)
+                }
+
+                mouseArea.onPressed: {
+                    if (Globals.BackendWrapper.sampleCurrentAssemblyIndex !== index) {
+                        Globals.BackendWrapper.sampleSetCurrentAssemblyIndex(index)
+                    }
                 }
 
             }
-
-            onCurrentIndexChanged: {
-                Globals.BackendWrapper.sampleSetCurrentAssemblyIndex(assembliesView.currentIndex)
-            }
-
-            onModelChanged: currentIndex = 0
+//            onModelChanged: Globals.BackendWrapper.sampleSetCurrentAssemblyIndex(0)
 
         }
         // Control buttons below table
@@ -104,7 +105,7 @@ EaElements.GroupBox {
             }
 
             EaElements.SideBarButton {
-                enabled: (assembliesView.currentIndex > 0) ? true : false//When item is selected
+                enabled: Globals.BackendWrapper.sampleAssemblies.length //(assembliesView.currentIndex > 0) ? true : false//When item is selected
                 width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 fontIcon: "clone"
                 text: qsTr("Duplicate assembly")
@@ -112,7 +113,7 @@ EaElements.GroupBox {
             }
 
             EaElements.SideBarButton {
-                enabled: (assembliesView.currentIndex !== 0 && Globals.BackendWrapper.sampleAssemblies.length > 0 ) ? true : false//When item is selected
+                enabled: (Globals.BackendWrapper.sampleCurrentAssemblyIndex !== 0 && Globals.BackendWrapper.sampleAssemblies.length > 0 ) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-up"
                 ToolTip.text: qsTr("Move assembly up")
@@ -120,7 +121,7 @@ EaElements.GroupBox {
             }
 
             EaElements.SideBarButton {
-                enabled: (assembliesView.currentIndex + 1 !== Globals.BackendWrapper.sampleAssemblies.length && Globals.BackendWrapper.sampleAssemblies.length > 0 ) ? true : false//When item is selected
+                enabled: (Globals.BackendWrapper.sampleCurrentAssemblyIndex + 1 !== Globals.BackendWrapper.sampleAssemblies.length && Globals.BackendWrapper.sampleAssemblies.length > 0 ) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-down"
                 ToolTip.text: qsTr("Move assembly down")

@@ -94,10 +94,12 @@ EaElements.GroupColumn {
                 enabled: layersView !== null && layersView.model > 1
                 onClicked: Globals.BackendWrapper.sampleRemoveLayer(index)
             }
-        }
 
-        onCurrentIndexChanged: {
-            Globals.BackendWrapper.sampleSetCurrentLayerIndex(layersView.currentIndex)
+            mouseArea.onPressed: {
+                if (Globals.BackendWrapper.sampleCurrentLayerIndex !== index) {
+                    Globals.BackendWrapper.sampleSetCurrentLayerIndex(index)
+                }
+            }
         }
     }
     // Control buttons below table
@@ -114,7 +116,7 @@ EaElements.GroupColumn {
 
         EaElements.SideBarButton {
             width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
-            enabled: (layersView.currentIndex > 0) ? true : false //when item is selected
+            enabled: Globals.BackendWrapper.sampleLayers.length//(layersView.currentIndex > 0) ? true : false //when item is selected
             fontIcon: "clone"
             text: qsTr("Duplicate layer")
             onClicked: Globals.BackendWrapper.sampleDuplicateSelectedLayer()
@@ -122,7 +124,7 @@ EaElements.GroupColumn {
 
         EaElements.SideBarButton {
             width: EaStyle.Sizes.tableRowHeight
-            enabled: (layersView.currentIndex !== 0 && Globals.BackendWrapper.sampleLayers.length > 0 ) ? true : false//When item is selected
+            enabled: (Globals.BackendWrapper.sampleCurrentLayerIndex !== 0 && Globals.BackendWrapper.sampleLayers.length > 0 ) ? true : false//When item is selected
             fontIcon: "arrow-up"
             ToolTip.text: qsTr("Move layer up")
             onClicked: Globals.BackendWrapper.sampleMoveSelectedLayerUp()
@@ -130,7 +132,7 @@ EaElements.GroupColumn {
 
         EaElements.SideBarButton {
             width: EaStyle.Sizes.tableRowHeight
-            enabled: (layersView.currentIndex + 1 !== Globals.BackendWrapper.sampleLayers.length && Globals.BackendWrapper.sampleLayers.length > 0 ) ? true : false
+            enabled: (Globals.BackendWrapper.sampleCurrentLayerIndex + 1 !== Globals.BackendWrapper.sampleLayers.length && Globals.BackendWrapper.sampleLayers.length > 0 ) ? true : false
             fontIcon: "arrow-down"
             ToolTip.text: qsTr("Move layer down")
             onClicked: Globals.BackendWrapper.sampleMoveSelectedLayerDown()

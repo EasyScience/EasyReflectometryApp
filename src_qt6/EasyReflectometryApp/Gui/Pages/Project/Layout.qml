@@ -34,9 +34,7 @@ EaComponents.ContentPage {
             Loader { source: 'Sidebar/Basic/Layout.qml' }
         ]
 
-        continueButton.text: Globals.BackendWrapper.projectCreated ?
-                                 qsTr('Continue') :
-                                 qsTr('Continue without project')
+        continueButton.text: qsTr('Continue')
 
         continueButton.onClicked: {            
             console.debug(`Clicking '${continueButton.text}' button ::: ${this}`)

@@ -8,5 +8,7 @@ import QtQuick
 // whose id is stored here can be accessed from any other qml file.
 
 QtObject {
+    property bool showLegendOnSamplePage: false
     property bool showLegendOnExperimentPage: false
+    property bool showLegendOnAnalysisPage: false
 }

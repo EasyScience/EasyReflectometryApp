@@ -80,11 +80,14 @@ EaElements.GroupBox {
                     enabled: materialsView !== null && materialsView.model > 1
                     fontIcon: "minus-circle"
                     ToolTip.text: qsTr("Remove this material")
-                    onClicked: Globals.BackendWrapper.sampleRemoveMaterial(materialsView.currentIndex)
+                    onClicked: Globals.BackendWrapper.sampleRemoveMaterial(index)
                 }
-            }
-            onCurrentIndexChanged: {
-                Globals.BackendWrapper.sampleSetCurrentMaterialIndex(materialsView.currentIndex)
+
+                mouseArea.onPressed: {
+                    if (Globals.BackendWrapper.sampleCurrentMaterialIndex !== index) {
+                        Globals.BackendWrapper.sampleSetCurrentMaterialIndex(index)
+                    }
+                }
             }
         }
 
@@ -101,7 +104,7 @@ EaElements.GroupBox {
             }
 
             EaElements.SideBarButton {
-                enabled: (materialsView.currentIndex > 0) ? true : false //When material is selected
+                enabled: Globals.BackendWrapper.sampleMaterials.length// (Globals.BackendWrapper.sampleCurrentMaterialIndex > 0) ? true : false //When material is selected
                 width: (EaStyle.Sizes.sideBarContentWidth - (2 * (EaStyle.Sizes.tableRowHeight + EaStyle.Sizes.fontPixelSize)) - EaStyle.Sizes.fontPixelSize) / 2
                 fontIcon: "clone"
                 text: qsTr("Duplicate material")
@@ -109,7 +112,7 @@ EaElements.GroupBox {
             }
 
             EaElements.SideBarButton {
-                enabled: (materialsView.currentIndex !== 0 && Globals.BackendWrapper.sampleMaterials.length > 0) ? true : false//When item is selected
+                enabled: (Globals.BackendWrapper.sampleCurrentMaterialIndex !== 0 && Globals.BackendWrapper.sampleMaterials.length > 0) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-up"
                 ToolTip.text: qsTr("Move material up")
@@ -117,7 +120,7 @@ EaElements.GroupBox {
             }
 
             EaElements.SideBarButton {
-                enabled: (materialsView.currentIndex + 1 !== Globals.BackendWrapper.sampleMaterials.length && Globals.BackendWrapper.sampleMaterials.length > 0) ? true : false//When item is selected
+                enabled: (Globals.BackendWrapper.sampleCurrentMaterialIndex + 1 !== Globals.BackendWrapper.sampleMaterials.length && Globals.BackendWrapper.sampleMaterials.length > 0) ? true : false//When item is selected
                 width: EaStyle.Sizes.tableRowHeight
                 fontIcon: "arrow-down"
                 ToolTip.text: qsTr("Move material down")

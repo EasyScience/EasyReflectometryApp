@@ -10,7 +10,7 @@ import Gui.Globals as Globals
 EaElements.GroupBox {
     title: qsTr("Instrumental parameters")
     visible: Globals.BackendWrapper.experimentExperimentalData
-    collapsed: true
+    collapsed: false
     Row {
         spacing: EaStyle.Sizes.fontPixelSize
 
