@@ -80,37 +80,65 @@ class PyBackend(QObject):
     def _connect_backend_parts(self) -> None:
         self._connect_project_page()
         self._connect_sample_page()
-        self._connect_example_page()
+        self._connect_experiment_page()
+        self._connect_analysis_page()
 
-    ######### Project
+    ######### Forming connections between the backend parts
     def _connect_project_page(self) -> None:
-        self._project.nameChanged.connect(self._relay_project_page_name)
-        self._project.createdChanged.connect(self._relay_project_page_created)
+        self._project.externalNameChanged.connect(self._relay_project_page_name)
+        self._project.externalCreatedChanged.connect(self._relay_project_page_created)
+        self._project.externalProjectLoaded.connect(self._relay_project_page_project_loaded)
 
     def _connect_sample_page(self) -> None:
-        self._sample.modelsIndexChanged.connect(self._relay_sample_page_models_index)
-        self._sample.sampleChanged.connect(self._relay_sample_page_sample_changed)
+        self._sample.externalSampleChanged.connect(self._relay_sample_page_sample_changed)
+        self._sample.externalRefreshPlot.connect(self._refresh_plots)
 
-    def _connect_example_page(self) -> None:
-        self._experiment.experimentChanged.connect(self._relay_experiment_page_experiment_changed)
+    def _connect_experiment_page(self) -> None:
+        self._experiment.externalExperimentChanged.connect(self._relay_experiment_page_experiment_changed)
+        self._experiment.externalExperimentChanged.connect(self._refresh_plots)
+
+    def _connect_analysis_page(self) -> None:
+        self._analysis.externalMinimizerChanged.connect(self._relay_analysis_page)
+        self._analysis.externalCalculatorChanged.connect(self._relay_analysis_page)
+        self._analysis.externalParametersChanged.connect(self._relay_analysis_page)
+        self._analysis.externalParametersChanged.connect(self._refresh_plots)
+        self._analysis.externalFittingChanged.connect(self._refresh_plots)
 
     def _relay_project_page_name(self):
-        self._status.projectChanged.emit()
+        self._status.statusChanged.emit()
         self._report.asHtmlChanged.emit()
  
     def _relay_project_page_created(self):
         self._report.createdChanged.emit()
 
-    def _relay_sample_page_models_index(self, index: int):
-        self._plotting.setModelIndex(index)
-        self._experiment.setModelIndex(index)
+    def _relay_project_page_project_loaded(self):
+        self._sample.materialsTableChanged.emit()
+        self._sample.modelsTableChanged.emit()
+        self._sample.assembliesTableChanged.emit()
+        self._sample._clearCacheAndEmitLayersChanged()
+        self._experiment.experimentChanged.emit()
+        self._analysis.experimentsChanged.emit()
+        self._analysis._clearCacheAndEmitParametersChanged()
+        self._status.statusChanged.emit()
+        self._refresh_plots()
 
     def _relay_sample_page_sample_changed(self):
-        self._plotting.sldChartRangesChanged.emit()
-        self._plotting.sampleChartRangesChanged.emit()
-        self._plotting.refreshSamplePage()
+        self._analysis._clearCacheAndEmitParametersChanged()
+        self._status.statusChanged.emit()
     
     def _relay_experiment_page_experiment_changed(self):
+        self._analysis.experimentsChanged.emit()
+        self._analysis._clearCacheAndEmitParametersChanged()
+        self._status.statusChanged.emit()
+
+    def _relay_analysis_page(self):
+        self._status.statusChanged.emit()
+        self._experiment.experimentChanged.emit()
+    
+    def _refresh_plots(self):
+        self._plotting.sampleChartRangesChanged.emit()
+        self._plotting.sldChartRangesChanged.emit()
+        self._plotting.experimentChartRangesChanged.emit()
+        self._plotting.refreshSamplePage()
         self._plotting.refreshExperimentPage()
-        self._status.experimentsCountChanged.emit()
-        self._sample.sampleChanged.emit()
+        self._plotting.refreshAnalysisPage()

@@ -4,13 +4,12 @@ import QtQuick.Controls 2.13
 import easyApp.Gui.Style as EaStyle
 import easyApp.Gui.Elements as EaElements
 import easyApp.Gui.Components as EaComponents
-import easyApp.Gui.Logic as EaLogic
 
 import Gui.Globals as Globals
 
 EaElements.GroupBox {
     title: qsTr("Q range of interest")
-    visible: Globals.BackendWrapper.experimentExperimentalData
+    collapsed: false
     Row {
         spacing: EaStyle.Sizes.fontPixelSize * 0.5
 
@@ -20,11 +19,10 @@ EaElements.GroupBox {
             width: labelWidth()
         }
         EaElements.Parameter {
-            enabled: Globals.BackendWrapper.experimentExperimentalData
             width: textFieldWidth()
             units: "Å<sup>-1</sup>"
-            text: Globals.BackendWrapper.experimentQMin.toFixed(3)
-            onEditingFinished: Globals.BackendWrapper.experimentSetQMin(text)
+            text: Globals.BackendWrapper.sampleQMin.toFixed(3)
+            onEditingFinished: Globals.BackendWrapper.sampleSetQMin(text)
         }
 
         EaComponents.TableViewLabel{
@@ -33,11 +31,10 @@ EaElements.GroupBox {
             width: labelWidth()
         }
         EaElements.Parameter {
-            enabled: Globals.BackendWrapper.experimentExperimentalData
             width: textFieldWidth()
             units: "Å<sup>-1</sup>"
-            text: Globals.BackendWrapper.experimentQMax.toFixed(3)
-            onEditingFinished: Globals.BackendWrapper.experimentSetQMax(text)
+            text: Globals.BackendWrapper.sampleQMax.toFixed(3)
+            onEditingFinished: Globals.BackendWrapper.sampleSetQMax(text)
         }
 
         EaComponents.TableViewLabel{
@@ -46,10 +43,9 @@ EaElements.GroupBox {
             width: labelWidth()
         }
         EaElements.Parameter {
-            enabled: Globals.BackendWrapper.experimentExperimentalData
             width: textFieldWidth()
-            text: Globals.BackendWrapper.experimentQResolution
-            onEditingFinished: Globals.BackendWrapper.experimentSetQElements(text)
+            text: Globals.BackendWrapper.sampleQResolution
+            onEditingFinished: Globals.BackendWrapper.sampleSetQElements(text)
         }
     }
     

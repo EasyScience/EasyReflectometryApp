@@ -10,30 +10,26 @@ from easyreflectometry.sample import SurfactantLayer
 class Assemblies:
     def __init__(self, project_lib: ProjectLib):
         self._project_lib = project_lib
-        self._model_index = 0
-        self._assembly_index = 0
-        self._assemblies: Sample = project_lib._models[self._model_index].sample  # Sample is a collection of assemblies
 
-    def set_model_index(self, new_value: int) -> None:
-        self._model_index = new_value
-        self._assembly_index = 0
-        self._assemblies = self._project_lib._models[self._model_index].sample
+    @property
+    def _assemblies(self) -> Sample:
+        return self._project_lib._models[self._project_lib.current_model_index].sample # Sample is a collection of assemblies
 
     @property
     def index(self) -> int:
-        return self._assembly_index
+        return self._project_lib.current_assembly_index
     
     @index.setter
     def index(self, new_value: Union[int, str]) -> None:
-        self._assembly_index = int(new_value)
+        self._project_lib.current_assembly_index = int(new_value)
 
     @property
     def name_at_current_index(self) -> str:
-        return self._assemblies[self._assembly_index].name
+        return self._assemblies[self.index].name
     
     @property
     def type_at_current_index(self) -> str:
-        return self._assemblies[self._assembly_index].type
+        return self._assemblies[self.index].type
     
     @property
     def assemblies(self) -> list[dict[str, str]]:
@@ -48,74 +44,79 @@ class Assemblies:
     
     def add_new(self) -> None:
         self._assemblies.add_assembly()
+        index_si = self._project_lib.get_index_si()
+        self._assemblies[-1].layers[0].material = self._project_lib._materials[index_si]
 
     def duplicate_selected(self) -> None:
-        self._assemblies.duplicate_assembly(self._assembly_index)
+        self._assemblies.duplicate_assembly(self.index)
 
     def move_selected_up(self) -> None:
-        if self._assembly_index > 0:
-            self._assemblies.move_up(self._assembly_index)
-            self._assembly_index = self._assembly_index - 1
+        if self.index > 0:
+            self._assemblies.move_up(self.index)
+            self.index = self.index - 1
     
     def move_selected_down(self) -> None:
-        if self._assembly_index < len(self._assemblies) - 1:
-            self._assemblies.move_down(self._assembly_index)
-            self._assembly_index = self._assembly_index + 1
+        if self.index < len(self._assemblies) - 1:
+            self._assemblies.move_down(self.index)
+            self.index = self.index + 1
 
     def set_name_at_current_index(self, new_value: str) -> None:
-        self._assemblies[self._assembly_index].name = new_value
+        if self._assemblies[self.index].name != new_value:
+            self._assemblies[self.index].name = new_value
+            return True
+        return False
 
-    def set_type_at_current_index(self, new_value: str) -> None:
-        if new_value == self._assemblies[self._assembly_index].type:
-            return
+    def set_type_at_current_index(self, new_value: str) -> bool:
+        if new_value == self._assemblies[self.index].type:
+            return False
 
         if new_value == 'Multi-layer':
-            if 'Si' not in [material.name for material in self._project_lib._materials]:
-                self._project_lib._materials.add_material('Si', 2.07, 0.0)
-            index_si = [material.name for material in self._project_lib._materials].index('Si')
             new_assembly = Multilayer()
-            new_assembly.layers[0].material = self._project_lib._materials[index_si]
+            new_assembly.layers[0].material = self._assemblies[self.index].layers.data[0].material
         elif new_value == 'Repeating Multi-layer':
-            if 'Si' not in [material.name for material in self._project_lib._materials]:
-                self._project_lib._materials.add_material('Si', 2.07, 0.0)
-            index_si = [material.name for material in self._project_lib._materials].index('Si')
             new_assembly = RepeatingMultilayer()
-            new_assembly.layers[0].material = self._project_lib._materials[index_si]
+            new_assembly.layers[0].material = self._assemblies[self.index].layers.data[0].material
         elif new_value == 'Surfactant Layer':
-            if 'Air' not in [material.name for material in self._project_lib._materials]:
-                self._project_lib._materials.add_material('Air', 0.0, 0.0)
-            if 'D2O' not in [material.name for material in self._project_lib._materials]:
-                self._project_lib._materials.add_material('D2O', 6.36, 0.0)
-            index_air = [material.name for material in self._project_lib._materials].index('Air')
-            index_d2o = [material.name for material in self._project_lib._materials].index('D2O')
+            index_air = self._project_lib.get_index_air()
+            index_d2o = self._project_lib.get_index_d2o()
             new_assembly = SurfactantLayer()
             new_assembly.layers[0].solvent = self._project_lib._materials[index_air]
             new_assembly.layers[1].solvent = self._project_lib._materials[index_d2o]
 
-        new_assembly.name = self._assemblies[self._assembly_index].name
+        new_assembly.name = self._assemblies[self.index].name
 
-        self._assemblies[self._assembly_index] = new_assembly
-        self._project_lib._models[self._model_index].sample._disable_changes_to_outermost_layers()
+        self._assemblies[self.index] = new_assembly
+        self._project_lib._models[self._project_lib.current_model_index].sample._disable_changes_to_outermost_layers()
+        return True
 
     # Only for repeating multilayer
     @property
     def repetitions_at_current_index(self) -> str:
-        if isinstance(self._assemblies[self._assembly_index], RepeatingMultilayer):
-            return str(int(self._assemblies[self._assembly_index].repetitions.value))
+        if isinstance(self._assemblies[self.index], RepeatingMultilayer):
+            return str(int(self._assemblies[self.index].repetitions.value))
         return '1'
 
-    def set_repeated_layer_reptitions(self, new_value: int) -> None:
-        if isinstance(self._assemblies[self._assembly_index], RepeatingMultilayer):
-            self._assemblies[self._assembly_index].repetitions.value = new_value
-
+    def set_repeated_layer_reptitions(self, new_value: int) -> bool:
+        if isinstance(self._assemblies[self.index], RepeatingMultilayer):
+            if new_value != self._assemblies[self.index].repetitions.value:
+                self._assemblies[self.index].repetitions.value = new_value
+                return True
+        return False
+    
     # # Only for surfactant layer
-    def set_constrain_apm(self, new_value: str) -> None:
-        if isinstance(self._assemblies[self._assembly_index], SurfactantLayer):
-            self._assemblies[self._assembly_index].constrain_area_per_molecule = new_value
-
-    def set_conformal_roughness(self, new_value: str) -> None:
-        if isinstance(self._assemblies[self._assembly_index], SurfactantLayer):
-            self._assemblies[self._assembly_index].conformal_roughness = new_value
+    def set_constrain_apm(self, new_value: str) -> bool:
+        if isinstance(self._assemblies[self.index], SurfactantLayer):
+            if self._assemblies[self.index].constrain_area_per_molecule != new_value:
+                self._assemblies[self.index].constrain_area_per_molecule = new_value
+                return True
+        return False
+    
+    def set_conformal_roughness(self, new_value: str) -> bool:
+        if isinstance(self._assemblies[self.index], SurfactantLayer):
+            if self._assemblies[self.index].conformal_roughness != new_value:
+                self._assemblies[self.index].conformal_roughness = new_value
+                return True
+        return False
 
 
 def _from_assemblies_collection_to_list_of_dicts(assemblies_collection: Sample) -> list[dict[str, str]]:

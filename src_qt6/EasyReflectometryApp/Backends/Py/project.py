@@ -15,6 +15,10 @@ class Project(QObject):
     descriptionChanged = Signal()
     locationChanged = Signal()
 
+    externalCreatedChanged = Signal()
+    externalNameChanged = Signal()
+    externalProjectLoaded = Signal()
+
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
         self._logic = ProjectLogic(project_lib)
@@ -44,6 +48,7 @@ class Project(QObject):
         if self._logic.name != new_value:
             self._logic.name = new_value
             self.nameChanged.emit()
+            self.externalNameChanged.emit()
 
     @Property(str, notify=descriptionChanged)
     def description(self) -> str:
@@ -71,6 +76,7 @@ class Project(QObject):
     def create(self) -> None:
         self._logic.create()
         self.createdChanged.emit()
+        self.externalCreatedChanged.emit()
 
     @Slot(str)
     def load(self, path: str) -> None:
@@ -79,6 +85,7 @@ class Project(QObject):
         self.nameChanged.emit()
         self.descriptionChanged.emit()
         self.locationChanged.emit()
+        self.externalProjectLoaded.emit()
 
     @Slot()
     def save(self) -> None:
@@ -91,3 +98,5 @@ class Project(QObject):
         self.nameChanged.emit()
         self.descriptionChanged.emit()
         self.locationChanged.emit()
+        self.externalCreatedChanged.emit()
+        self.externalNameChanged.emit()

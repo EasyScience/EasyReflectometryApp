@@ -81,6 +81,7 @@ QtObject {
     readonly property var sampleMaterials: activeBackend.sample.materials
     readonly property var sampleMaterialNames: activeBackend.sample.materialNames
 
+    readonly property int sampleCurrentMaterialIndex: activeBackend.sample.currentMaterialIndex
     function sampleSetCurrentMaterialIndex(value) { activeBackend.sample.setCurrentMaterialIndex(value) }
 
     function sampleSetCurrentMaterialName(value) { activeBackend.sample.setCurrentMaterialName(value) }
@@ -96,6 +97,7 @@ QtObject {
     readonly property var sampleModels: activeBackend.sample.models
     readonly property string sampleCurrentModelName: activeBackend.sample.currentModelName
 
+    readonly property int sampleCurrentModelIndex: activeBackend.sample.currentModelIndex
     function sampleSetCurrentModelIndex(value) { activeBackend.sample.setCurrentModelIndex(value) }
 
     function sampleSetCurrentModelName(value) { activeBackend.sample.setCurrentModelName(value) }
@@ -110,6 +112,7 @@ QtObject {
     readonly property string sampleCurrentAssemblyName: activeBackend.sample.currentAssemblyName
     readonly property string sampleCurrentAssemblyType: activeBackend.sample.currentAssemblyType
 
+    readonly property int sampleCurrentAssemblyIndex: activeBackend.sample.currentAssemblyIndex
     function sampleSetCurrentAssemblyIndex(value) { activeBackend.sample.setCurrentAssemblyIndex(value) }
 
     function sampleSetCurrentAssemblyName(value) { activeBackend.sample.setCurrentAssemblyName(value) }
@@ -130,6 +133,7 @@ QtObject {
     readonly property var sampleLayers: activeBackend.sample.layers
     readonly property string sampleCurrentLayerName: activeBackend.sample.currentLayerName
 
+    readonly property int sampleCurrentLayerIndex: activeBackend.sample.currentLayerIndex
     function sampleSetCurrentLayerIndex(value) { activeBackend.sample.setCurrentLayerIndex(value) }
 
     function sampleRemoveLayer(value) { activeBackend.sample.removeLayer(value) }
@@ -146,6 +150,20 @@ QtObject {
     function sampleSetCurrentLayerAPM(value) { activeBackend.sample.setCurrentLayerAPM(value) }
     function sampleSetCurrentLayerSolvation(value) { activeBackend.sample.setCurrentLayerSolvation(value) }
 
+    // Constraints
+    readonly property var sampleParameterNames: activeBackend.sample.parameterNames
+    readonly property var sampleRelationOperators: activeBackend.sample.relationOperators
+    readonly property var sampleArithmicOperators: activeBackend.sample.arithmicOperators
+
+    function sampleAddConstraint(value1, value2, value3, value4, value5) { activeBackend.sample.addConstraint(value1, value2, value3, value4, value5) }
+
+    // Q range
+    readonly property var sampleQMin: activeBackend.sample.q_min
+    function sampleSetQMin(value) { activeBackend.sample.setQMin(value) }
+    readonly property var sampleQMax: activeBackend.sample.q_max
+    function sampleSetQMax(value) { activeBackend.sample.setQMax(value) }
+    readonly property var sampleQResolution: activeBackend.sample.q_resolution
+    function sampleSetQElements(value) { activeBackend.sample.setQElements(value) }
 
     //////////////////
     // Experiment page
@@ -158,20 +176,50 @@ QtObject {
     function experimentSetBackground(value) { activeBackend.experiment.setBackground(value) }
     readonly property var experimentResolution: activeBackend.experiment.resolution
     function experimentSetResolution(value) { activeBackend.experiment.setResolution(value) }
-    readonly property var experimentQMin: activeBackend.experiment.q_min
-    function experimentSetQMin(value) { activeBackend.experiment.setQMin(value) }
-    readonly property var experimentQMax: activeBackend.experiment.q_max
-    function experimentSetQMax(value) { activeBackend.experiment.setQMax(value) }
-    readonly property var experimentQResolution: activeBackend.experiment.q_resolution
-    function experimentSetQElements(value) { activeBackend.experiment.setQElements(value) }
 
     function experimentLoad(value) { activeBackend.experiment.load(value) }
 
     ///////////////
     // Analysis page
     ///////////////
-    readonly property bool analysisIsFitFinished: activeBackend.analysis.isFitFinished
+    readonly property var analysisExperimentsAvailable: activeBackend.analysis.experimentsAvailable
+    readonly property int analysisExperimentsCurrentIndex: activeBackend.analysis.experimentCurrentIndex
+    function analysisSetExperimentsCurrentIndex(value) { activeBackend.analysis.setExperimentCurrentIndex(value) }
+    
+    readonly property var analysisCalculatorsAvailable: activeBackend.analysis.calculatorsAvailable
+    readonly property int analysisCalculatorCurrentIndex: activeBackend.analysis.calculatorCurrentIndex
+    function analysisSetCalculatorCurrentIndex(value) { activeBackend.analysis.setCalculatorCurrentIndex(value) }
 
+    readonly property var analysisMinimizersAvailable: activeBackend.analysis.minimizersAvailable
+    readonly property int analysisMinimizerCurrentIndex: activeBackend.analysis.minimizerCurrentIndex
+    function analysisSetMinimizerCurrentIndex(value) { activeBackend.analysis.setMinimizerCurrentIndex(value) }
+
+    readonly property var analysisFitableParameters: activeBackend.analysis.fitableParameters 
+    readonly property int analysisCurrentParameterIndex: activeBackend.analysis.currentParameterIndex
+    function analysisSetCurrentParameterIndex(value) { activeBackend.analysis.setCurrentParameterIndex(value) }
+
+    // Minimizer
+    readonly property var analysisMinimizerTolerance: activeBackend.analysis.minimizerTolerance
+    function analysisSetMinimizerTolerance(value) { activeBackend.analysis.setMinimizerTolerance(value) }
+    readonly property var analysisMinimizerMaxIterations: activeBackend.analysis.minimizerMaxIterations
+    function analysisSetMinimizerMaxIterations(value) { activeBackend.analysis.setMinimizerMaxIterations(value) }
+
+    // Fitting
+    readonly property string analysisFittingStatus: activeBackend.analysis.fittingStatus
+    readonly property bool analysisFittingRunning: activeBackend.analysis.fittingRunning
+    readonly property bool analysisIsFitFinished: activeBackend.analysis.isFitFinished
+    function analysisFittingStartStop() { activeBackend.analysis.fittingStartStop() }
+
+    // Parameters
+    readonly property int analysisFreeParametersCount: activeBackend.analysis.freeParametersCount
+    readonly property int analysisFixedParametersCount: activeBackend.analysis.fixedParametersCount
+    readonly property int analysisModelParametersCount: activeBackend.analysis.modelParametersCount
+    readonly property int analysisExperimentParametersCount: activeBackend.analysis.experimentParametersCount
+
+    function analysisSetCurrentParameterValue(value) { activeBackend.analysis.setCurrentParameterValue(value) }
+    function analysisSetCurrentParameterMin(value) { activeBackend.analysis.setCurrentParameterMin(value) }
+    function analysisSetCurrentParameterMax(value) { activeBackend.analysis.setCurrentParameterMax(value) }
+    function analysisSetCurrentParameterFit(value) { activeBackend.analysis.setCurrentParameterFit(value) }
 
     ///////////////
     // Summary page
@@ -197,5 +245,12 @@ QtObject {
     readonly property var plottingExperimentMinY: activeBackend.plotting.sampleMinY
     readonly property var plottingExperimentMaxY: activeBackend.plotting.sampleMaxY
 
+    readonly property var plottingAnalysisMinX: activeBackend.plotting.sampleMinX
+    readonly property var plottingAnalysisMaxX: activeBackend.plotting.sampleMaxX
+    readonly property var plottingAnalysisMinY: activeBackend.plotting.sampleMinY
+    readonly property var plottingAnalysisMaxY: activeBackend.plotting.sampleMaxY
+
     function plottingSetQtChartsSerieRef(value1, value2, value3) { activeBackend.plotting.setQtChartsSerieRef(value1, value2, value3) }
+    function plottingRefreshSample() { activeBackend.plotting.drawCalculatedOnSampleChart() }
+    function plottingRefreshSLD() { activeBackend.plotting.drawCalculatedOnSldChart() }
 }

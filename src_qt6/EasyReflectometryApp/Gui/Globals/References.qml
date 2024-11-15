@@ -9,6 +9,8 @@ import QtQuick
 
 QtObject {
 
+    property bool resetActive: false
+
     // Populated in ApplicationWindows.qml
     readonly property var applicationWindow: {
         'appBarCentralTabs': {
@@ -50,11 +52,19 @@ QtObject {
                     }
                 }
             }
+        },
+        'analysis': {
+            'mainContent': {
+                'analysisView': null,
+            },
+            'sidebar': {
+                'basic': {
+                    'popups': {
+                        'startFittingButton': null,
+                        'fitStatusDialogOkButton': null
+                    }
+                }
+            }
         }
     }
-
-//    // Populated in plotting/...
-//    readonly property var plotting: {
-//        'graph1d': null,
-//    }
 }

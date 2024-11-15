@@ -4,7 +4,7 @@ import QtQuick
 
 QtObject {
     // MATERIALS
-    property int currentMaterialIndex: -1
+    readonly property int currentMaterialIndex: -1
 
     // Getters
     readonly property var materials: [
@@ -263,5 +263,34 @@ QtObject {
     }
     function moveSelectedLayerDown() {
         console.debug(`moveSelectedLayerDown ${currentLayerIndex}`)
+    }
+
+    // Constraints
+    readonly property var parameterNames: [
+        'parameter 1',
+        'parameter 2',
+        'parameter 3'
+    ]
+    readonly property var relationOperators: ['=', '&lt', '&gt']
+    readonly property var arithmicOperators: ['', '*', '/', '+', '-']
+
+    function addConstraint(value1, value2, value3, value4, value5) {
+        console.debug(`addConstraint ${value1} ${value2} ${value3} ${value4} ${value5}`)
+    }
+
+    // Q Range
+    property double q_min: 4.
+    property double q_max: 5.
+    property int q_resolution: 6
+
+    // Setters
+    function setQMin(value) {
+        console.debug(`setQMin ${value}`)
+    }
+    function setQMax(value) {
+        console.debug(`setQMax ${value}`)
+    }
+    function setQElements(value) {
+        console.debug(`setQElements ${value}`)
     }
 }

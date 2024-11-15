@@ -8,44 +8,36 @@ from PySide6.QtCore import Property
 
 from easyreflectometry import Project as ProjectLib
 from .logic.status import Status as StatusLogic
+from .logic.parameters import Parameters as ParametersLogic
 
 class Status(QObject):
-    projectChanged = Signal()
-    phaseCountChanged = Signal()
-    experimentsCountChanged = Signal()
-    calculatorChanged = Signal()
-    minimizerChanged = Signal()
-    variablesChanged = Signal()
+    statusChanged = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
-        self._logic = StatusLogic(project_lib)
+        self._status_logic = StatusLogic(project_lib)
+        self._parameters_logic = ParametersLogic(project_lib)
 
-    @Property(str, notify=projectChanged)
+    @Property(str, notify=statusChanged)
     def project(self):
-        return self._logic.project
-    
-    def setProject(self, new_value: str):
-        if self._logic.project != new_value:
-            self._logic.project = new_value
-            self.projectChanged.emit()
+        return self._status_logic.project
 
-    @Property(str, notify=experimentsCountChanged)
+    @Property(str, notify=statusChanged)
     def experimentsCount(self):
-        return self._logic.experiments_count
+        return self._status_logic.experiments_count
 
-    @Property(str, notify=calculatorChanged)
+    @Property(str, notify=statusChanged)
     def calculator(self):
-        return self._logic.calculator
+        return self._status_logic.calculator
 
-    @Property(str, notify=minimizerChanged)
+    @Property(str, notify=statusChanged)
     def minimizer(self):
-        return self._logic.minimizer
+        return self._status_logic.minimizer
 
-    @Property(str, notify=variablesChanged)
+    @Property(str, notify=statusChanged)
     def variables(self):
-        return self._logic.variables
+        return self._parameters_logic.as_status_string
 
-    @Property(str, notify=phaseCountChanged)
+    @Property(str, notify=statusChanged)
     def phaseCount(self):
         return None
