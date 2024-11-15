@@ -4,6 +4,9 @@ from easyscience.Constraints import ObjConstraint
 from easyscience.Constraints import NumericConstraint
 
 from easyreflectometry import Project as ProjectLib
+from easyreflectometry.utils import count_fixed_parameters
+from easyreflectometry.utils import count_free_parameters
+
 from typing import List
 
 
@@ -30,20 +33,10 @@ class Parameters:
         return False
 
     def count_free_parameters(self) -> int:
-        count = 0
-        parameters = self._project_lib.parameters
-        for parameter in parameters:
-            if parameter.free:
-                count = count + 1
-        return count
+        return count_free_parameters(self._project_lib)
 
     def count_fixed_parameters(self) -> int:
-        count = 0
-        parameters = self._project_lib.parameters
-        for parameter in parameters:
-            if not parameter.free:
-                count = count + 1
-        return count
+        return count_fixed_parameters(self._project_lib)
 
     def set_current_parameter_value(self, new_value: str) -> bool:
         parameters = self._project_lib.parameters
