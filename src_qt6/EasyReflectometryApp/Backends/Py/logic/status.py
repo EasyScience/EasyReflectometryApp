@@ -10,7 +10,7 @@ class Status:
     
     @property
     def minimizer(self):
-        return self._project_lib._fitter.easy_science_multi_fitter.minimizer.name
+        return self._project_lib.minimizer.name
     
     @property
     def calculator(self):
