@@ -143,7 +143,7 @@ EaComponents.ApplicationWindow {
         Loader { source: 'Pages/Project/Layout.qml' },
         Loader { source: 'Pages/Sample/Layout.qml' },
         Loader { source: 'Pages/Experiment/Layout.qml' },
-//        Loader { source: 'Pages/Analysis/Layout.qml' },
+        Loader { source: 'Pages/Analysis/Layout.qml' },
         Loader { source: 'Pages/Summary/Layout.qml' }
     ]
 

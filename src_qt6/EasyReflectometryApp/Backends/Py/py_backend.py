@@ -10,7 +10,7 @@ from .plotting_1d import Plotting1d
 from .project import Project
 from .sample import Sample
 from .status import Status
-from .report import Report
+from .summary import Summary
 
 
 class PyBackend(QObject):
@@ -26,7 +26,7 @@ class PyBackend(QObject):
         self._sample = Sample(self._project_lib)
         self._experiment = Experiment(self._project_lib)
         self._analysis = Analysis(self._project_lib)
-        self._report = Report(self._project_lib)
+        self._summary = Summary(self._project_lib)
         self._status = Status(self._project_lib)
 
         # Plotting backend part
@@ -60,8 +60,8 @@ class PyBackend(QObject):
         return self._analysis
 
     @Property('QVariant', constant=True)
-    def report(self) -> Report:
-        return self._report
+    def summary(self) -> Summary:
+        return self._summary
 
     # Other elements
     @Property('QVariant', constant=True)
@@ -106,10 +106,10 @@ class PyBackend(QObject):
 
     def _relay_project_page_name(self):
         self._status.statusChanged.emit()
-        self._report.asHtmlChanged.emit()
+#        self._summary.asHtmlChanged.emit()
  
     def _relay_project_page_created(self):
-        self._report.createdChanged.emit()
+        self._summary.createdChanged.emit()
 
     def _relay_project_page_project_loaded(self):
         self._sample.materialsTableChanged.emit()
