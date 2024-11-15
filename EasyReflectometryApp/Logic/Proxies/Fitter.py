@@ -8,7 +8,7 @@ from PySide2.QtCore import Slot
 
 from easyscience import global_object
 
-from easyreflectometry.fitting import Fitter as easyFitter
+from easyreflectometry.fitting import MultiFitter as easyFitter
 
 
 class Fitter(QThread):
