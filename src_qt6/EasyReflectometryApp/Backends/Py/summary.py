@@ -14,6 +14,7 @@ from .helpers import IO
 class Summary(QObject):
     createdChanged = Signal()
     fileNameChanged = Signal()
+    summaryChanged = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
@@ -40,7 +41,7 @@ class Summary(QObject):
     def fileUrl(self) -> str:
         return IO.localFileToUrl(str(self._logic.file_path))
 
-    @Property(str, notify=createdChanged)
+    @Property(str, notify=summaryChanged)
     def asHtml(self):
         return self._logic.as_html
 

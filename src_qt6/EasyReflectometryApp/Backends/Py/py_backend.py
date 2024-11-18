@@ -110,6 +110,7 @@ class PyBackend(QObject):
  
     def _relay_project_page_created(self):
         self._summary.createdChanged.emit()
+        self._summary.summaryChanged.emit()
 
     def _relay_project_page_project_loaded(self):
         self._sample.materialsTableChanged.emit()
@@ -120,20 +121,24 @@ class PyBackend(QObject):
         self._analysis.experimentsChanged.emit()
         self._analysis._clearCacheAndEmitParametersChanged()
         self._status.statusChanged.emit()
+        self._summary.summaryChanged.emit()
         self._refresh_plots()
 
     def _relay_sample_page_sample_changed(self):
         self._analysis._clearCacheAndEmitParametersChanged()
         self._status.statusChanged.emit()
+        self._summary.summaryChanged.emit()
     
     def _relay_experiment_page_experiment_changed(self):
         self._analysis.experimentsChanged.emit()
         self._analysis._clearCacheAndEmitParametersChanged()
         self._status.statusChanged.emit()
+        self._summary.summaryChanged.emit()
 
     def _relay_analysis_page(self):
         self._status.statusChanged.emit()
         self._experiment.experimentChanged.emit()
+        self._summary.summaryChanged.emit()
     
     def _refresh_plots(self):
         self._plotting.sampleChartRangesChanged.emit()
