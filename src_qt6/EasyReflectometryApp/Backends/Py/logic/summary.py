@@ -32,7 +32,11 @@ class Summary:
         return self._summary.compile_html_summary()
 
     def save_as_html(self) -> None:
+        if not self._project_lib.path.exists():
+            self._project_lib.path.mkdir(parents=True, exist_ok=True)
         self._summary.save_html_summary(self.file_path.with_suffix('.html'))
 
     def save_as_pdf(self) -> None:
-        print("Saving as PDF")
+        if not self._project_lib.path.exists():
+            self._project_lib.path.mkdir(parents=True, exist_ok=True)
+        self._summary.save_pdf_summary(self.file_path.with_suffix('.pdf'))
