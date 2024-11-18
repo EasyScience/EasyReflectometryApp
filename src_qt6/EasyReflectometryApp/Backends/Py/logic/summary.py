@@ -32,7 +32,7 @@ class Summary:
         return self._summary.compile_html_summary()
 
     def save_as_html(self) -> None:
-        print("Saving as HTML")
+        self._summary.save_html_summary(self.file_path.with_suffix('.html'))
 
     def save_as_pdf(self) -> None:
         print("Saving as PDF")

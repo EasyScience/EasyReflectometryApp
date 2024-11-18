@@ -45,9 +45,9 @@ EaElements.GroupBox {
         }
         EaElements.Parameter {
             width: (EaStyle.Sizes.sideBarContentWidth - 5 * EaStyle.Sizes.fontPixelSize) / 6
-            units: "%"
-            text: Globals.BackendWrapper.experimentResolution
-            enabled: Globals.BackendWrapper.experimentExperimentalData && Globals.BackendWrapper.experimentResolution !== "-"
+            units: Globals.BackendWrapper.experimentResolution !== "-" ? "%" : ""
+            text: Globals.BackendWrapper.experimentResolution !== "-" ? Globals.BackendWrapper.experimentResolution : "Spline"
+            enabled: Globals.BackendWrapper.experimentResolution !== "-" && Globals.BackendWrapper.experimentExperimentalData
             onEditingFinished: Globals.BackendWrapper.experimentSetResolution(text)
         }
     }
