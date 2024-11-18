@@ -90,10 +90,13 @@ EaElements.GroupBox {
 
                 EaElements.SideBarButton {
                     id: addConstraint
-                    enabled: ( dependentPar.currentIndex !== -1 && independentPar.currentIndex !== -1 && independentPar.currentIndex !== dependentPar.currentIndex )
+                    enabled: ( 
+                         ( dependentPar.currentIndex !== -1 && independentPar.currentIndex !== -1 && independentPar.currentIndex !== dependentPar.currentIndex ) ||
+                         ( dependentPar.currentIndex !== -1 && independentPar.currentIndex === -1 )
+                    )
                     width: 35
                     fontIcon: "plus-circle"
-                    ToolTip.text: qsTr("Add constraint between two parameters")
+                    ToolTip.text: qsTr("Add Numeric or Parameter-Parameter constraint")
                     onClicked: {
                         Globals.BackendWrapper.sampleAddConstraint(
                             dependentPar.currentIndex,

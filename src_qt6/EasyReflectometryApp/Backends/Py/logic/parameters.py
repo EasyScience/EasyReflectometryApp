@@ -101,9 +101,12 @@ class Parameters:
                 independent_obj=independent
             )
         elif arithmetic_operator == "" and independent_idx == -1:
+            relational_operator = relational_operator.replace("=", "==")
+            relational_operator = relational_operator.replace("&lt", ">")
+            relational_operator = relational_operator.replace("&gt", "<")
             constaint = NumericConstraint(
                 dependent_obj=dependent,
-                operator=relational_operator.replace("=", "=="),
+                operator=relational_operator,
                 value=float(value)
             )
         else:
