@@ -34,8 +34,6 @@ dependencies = [
   'PySide6==6.6',
   'toml',
 ]
-# pip install easyscience@git+https://github.com/EasyScience/EasyScience.git@81-to-increase-usability-of-minimizer-it-should-be-possible-to-set-the-tolerance-and-the-max-number-of-iteration
-
 
 [project.urls]
 homepage = 'https://easyreflectometry.org'
