@@ -30,9 +30,6 @@ EaComponents.ApplicationWindow {
             fontIcon: "backspace"
             ToolTip.text: qsTr("Reset to initial state without project, models and data")
             onClicked: {
-                Globals.References.resetActive = false
-                Globals.BackendWrapper.projectReset()
-                Globals.References.applicationWindow.appBarCentralTabs.projectButton.toggle()
                 if (Globals.References.applicationWindow.appBarCentralTabs.sampleButton !== null) {
                     Globals.References.applicationWindow.appBarCentralTabs.sampleButton.enabled = false
                 }
@@ -45,6 +42,10 @@ EaComponents.ApplicationWindow {
                 if (Globals.References.applicationWindow.appBarCentralTabs.summaryButton !== null) {
                     Globals.References.applicationWindow.appBarCentralTabs.summaryButton.enabled = false
                 }
+
+                Globals.BackendWrapper.projectReset()
+                Globals.References.applicationWindow.appBarCentralTabs.projectButton.toggle()
+                Globals.References.resetActive = false
             }
         }
     ]
