@@ -38,6 +38,7 @@ EaComponents.ContentPage {
 
         continueButton.onClicked: {            
             console.debug(`Clicking '${continueButton.text}' button ::: ${this}`)
+            Globals.References.resetActive = true
             Globals.References.applicationWindow.appBarCentralTabs.sampleButton.enabled = true
             Globals.References.applicationWindow.appBarCentralTabs.sampleButton.toggle()
         }

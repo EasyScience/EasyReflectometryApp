@@ -43,7 +43,6 @@ EaComponents.ContentPage {
         continueButton.text: qsTr('Continue') 
         continueButton.onClicked: {            
             console.debug(`Clicking '${continueButton.text}' button ::: ${this}`)
-            Globals.References.resetActive = true
             Globals.References.applicationWindow.appBarCentralTabs.experimentButton.enabled = true
             Globals.References.applicationWindow.appBarCentralTabs.experimentButton.toggle()
         }

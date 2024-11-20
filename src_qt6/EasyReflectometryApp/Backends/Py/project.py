@@ -18,6 +18,7 @@ class Project(QObject):
     externalCreatedChanged = Signal()
     externalNameChanged = Signal()
     externalProjectLoaded = Signal()
+    externalProjectReset = Signal()
 
     def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
@@ -100,3 +101,4 @@ class Project(QObject):
         self.locationChanged.emit()
         self.externalCreatedChanged.emit()
         self.externalNameChanged.emit()
+        self.externalProjectReset.emit()
