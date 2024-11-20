@@ -123,7 +123,7 @@ EaComponents.ApplicationWindow {
         // Summary page
         EaElements.AppBarTabButton {
             id: summaryButton
-            enabled: true
+            enabled: false
             fontIcon: "clipboard-list"
             text: qsTr("Summary")
             ToolTip.text: qsTr("Summary of the work done")
