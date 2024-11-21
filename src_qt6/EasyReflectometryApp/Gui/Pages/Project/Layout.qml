@@ -13,7 +13,7 @@ EaComponents.ContentPage {
 
     defaultInfo: Globals.BackendWrapper.projectCreated ?
                      '' :
-                     qsTr('Using default project')
+                     qsTr('Using default project\n' + Globals.BackendWrapper.projectName)
 
     mainView: EaComponents.MainContent {
         tabs: [

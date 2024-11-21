@@ -15,10 +15,6 @@ import Gui.Globals as Globals
 
 
 Column {
-//    property string summaryLocation: Globals.BackendWrapper.projectLocation +
-//                                     EaLogic.Utils.osPathSep() +
-//                                     Globals.BackendWrapper.summaryFileName
-
     spacing: EaStyle.Sizes.fontPixelSize
 
     // Name field + format selector
@@ -64,7 +60,6 @@ Column {
         topPadding: topInset + padding
         rightPadding: chooseButton.width
         horizontalAlignment: TextInput.AlignLeft
-//        placeholderText: qsTr('Enter report location here')
         Component.onCompleted: text = Globals.BackendWrapper.summaryFilePath
         EaElements.Label {
             id: locationLabel
@@ -103,9 +98,5 @@ Column {
         title: qsTr("Choose report parent directory")
         currentFolder: Globals.BackendWrapper.summaryFileUrl
     }
-
-//    onSummaryLocationChanged: {
-//        summaryParentDirDialog.currentFolder = Globals.BackendWrapper.helpersLocalFileToUrl(summaryLocation)
-//    }
 
 }
