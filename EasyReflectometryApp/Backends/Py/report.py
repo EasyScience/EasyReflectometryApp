@@ -2,8 +2,11 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # © 2024 Contributors to the EasyApp project <https://github.com/easyscience/EasyApp>
 
-from PySide6.QtCore import QObject, Signal, Property
+from PySide6.QtCore import QObject
+from PySide6.QtCore import Signal
+from PySide6.QtCore import Property
 
+from easyreflectometry import Project as ProjectLib
 
 _PY_HTML = """<!DOCTYPE html>
 <html>
@@ -79,8 +82,9 @@ class Report(QObject):
     createdChanged = Signal()
     asHtmlChanged = Signal()
 
-    def __init__(self, parent=None):
+    def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
+#        self._logic = ReportLogic(project_lib)
         self._created = True
         self._asHtml = _PY_HTML
 

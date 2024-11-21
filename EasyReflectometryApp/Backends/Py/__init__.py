@@ -1,3 +1,3 @@
 from .py_backend import PyBackend
 
-__all__ = ['PyBackend']
+__all__ = [PyBackend]

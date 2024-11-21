@@ -16,11 +16,11 @@ FileDialog{
     nameFilters: [ 'JSON files (*.json)']
 
     onAccepted: {
-        Globals.References.applicationWindow.appBarCentralTabs.summaryButton.enabled = true
+        Globals.References.applicationWindow.appBarCentralTabs.sampleButton.enabled = true
+        Globals.BackendWrapper.projectLoad(selectedFile)
     }
 
     Component.onCompleted: {
-        Globals.References.pages.project.sidebar.basic.popups.openJsonFile = openJsonFileDialog
+        Globals.References.pages.project.sidebar.basic.popups.openJsonFileDialog = openJsonFileDialog
     }
-
 }

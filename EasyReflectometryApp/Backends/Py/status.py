@@ -2,88 +2,42 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # © 2024 Contributors to the EasyApp project <https://github.com/easyscience/EasyApp>
 
-from PySide6.QtCore import QObject, Signal, Property
+from PySide6.QtCore import QObject
+from PySide6.QtCore import Signal
+from PySide6.QtCore import Property
 
+from easyreflectometry import Project as ProjectLib
+from .logic.status import Status as StatusLogic
+from .logic.parameters import Parameters as ParametersLogic
 
 class Status(QObject):
-    projectChanged = Signal()
-    phaseCountChanged = Signal()
-    experimentsCountChanged = Signal()
-    calculatorChanged = Signal()
-    minimizerChanged = Signal()
-    variablesChanged = Signal()
+    statusChanged = Signal()
 
-    def __init__(self, parent=None):
+    def __init__(self, project_lib: ProjectLib, parent=None):
         super().__init__(parent)
-        self._project = 'Py backend'
-        self._phaseCount = '1'
-        self._experimentsCount = '1'
-        self._calculator = 'CrysPy'
-        self._minimizer = 'Lmfit (leastsq)'
-        self._variables = '31 (3 free, 28 fixed)'
+        self._status_logic = StatusLogic(project_lib)
+        self._parameters_logic = ParametersLogic(project_lib)
 
-    @Property(str, notify=projectChanged)
+    @Property(str, notify=statusChanged)
     def project(self):
-        return self._project
+        return self._status_logic.project
 
-    @project.setter
-    def project(self, newValue):
-        if self._project == newValue:
-            return
-        self._project = newValue
-        self.projectChanged.emit()
-
-    @Property(str, notify=phaseCountChanged)
-    def phaseCount(self):
-        return self._phaseCount
-
-    @phaseCount.setter
-    def phaseCount(self, newValue):
-        if self._phaseCount == newValue:
-            return
-        self._phaseCount = newValue
-        self.phaseCountChanged.emit()
-
-    @Property(str, notify=experimentsCountChanged)
+    @Property(str, notify=statusChanged)
     def experimentsCount(self):
-        return self._experimentsCount
+        return self._status_logic.experiments_count
 
-    @experimentsCount.setter
-    def experimentsCount(self, newValue):
-        if self._experimentsCount == newValue:
-            return
-        self._experimentsCount = newValue
-        self.experimentsCountChanged.emit()
-
-    @Property(str, notify=calculatorChanged)
+    @Property(str, notify=statusChanged)
     def calculator(self):
-        return self._calculator
+        return self._status_logic.calculator
 
-    @calculator.setter
-    def calculator(self, newValue):
-        if self._calculator == newValue:
-            return
-        self._calculator = newValue
-        self.calculatorChanged.emit()
-
-    @Property(str, notify=minimizerChanged)
+    @Property(str, notify=statusChanged)
     def minimizer(self):
-        return self._minimizer
+        return self._status_logic.minimizer
 
-    @minimizer.setter
-    def minimizer(self, newValue):
-        if self._minimizer == newValue:
-            return
-        self._minimizer = newValue
-        self.minimizerChanged.emit()
-
-    @Property(str, notify=variablesChanged)
+    @Property(str, notify=statusChanged)
     def variables(self):
-        return self._variables
+        return self._parameters_logic.as_status_string
 
-    @variables.setter
-    def variables(self, newValue):
-        if self._variables == newValue:
-            return
-        self._variables = newValue
-        self.variablesChanged.emit()
+    @Property(str, notify=statusChanged)
+    def phaseCount(self):
+        return None

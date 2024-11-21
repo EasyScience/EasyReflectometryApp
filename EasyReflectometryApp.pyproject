@@ -35,10 +35,14 @@
         "EasyReflectometryApp/Backends/Mock/Report.qml",
         "EasyReflectometryApp/Backends/Mock/Status.qml",
         "EasyReflectometryApp/Backends/Py/py_backend.py",
+        "EasyReflectometryApp/Backends/Py/home.py",
         "EasyReflectometryApp/Backends/Py/project.py",
+        "EasyReflectometryApp/Backends/Py/sample.py",
+        "EasyReflectometryApp/Backends/Py/analysis.py",
         "EasyReflectometryApp/Backends/Py/report.py",
         "EasyReflectometryApp/Backends/Py/status.py",
         "EasyReflectometryApp/Backends/Py/logic/helpers.py",
-        "EasyReflectometryApp/Backends/Py/logic/project.py"
+        "EasyReflectometryApp/Backends/Py/logic/project.py",
+        "EasyReflectometryApp/Backends/Py/logic/sample.py"
     ]
 }

@@ -3,7 +3,7 @@ from PySide6.QtCore import  Property
 
 import toml
 
-PATH_PYPROJECT = 'src_qt6/pyproject.toml'
+PATH_PYPROJECT = 'pyproject.toml'
 PYPROJECT = toml.load(PATH_PYPROJECT)
 
 class Home(QObject):

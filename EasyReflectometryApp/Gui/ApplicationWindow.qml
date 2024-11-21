@@ -20,19 +20,41 @@ EaComponents.ApplicationWindow {
         EaElements.ToolButton {
             enabled: Globals.BackendWrapper.projectCreated
             highlighted: true
-            fontIcon: 'save'
-            ToolTip.text: qsTr('Save current state of the project')
+            fontIcon: "save"
+            ToolTip.text: qsTr("Save current state of the project")
             onClicked: Globals.BackendWrapper.projectSave()
-        }
+        },
 
+        EaElements.ToolButton {
+            enabled: Globals.References.resetActive
+            fontIcon: "backspace"
+            ToolTip.text: qsTr("Reset to initial state without project, models and data")
+            onClicked: {
+                Globals.References.resetActive = false
+                Globals.BackendWrapper.projectReset()
+                Globals.References.applicationWindow.appBarCentralTabs.projectButton.toggle()
+                if (Globals.References.applicationWindow.appBarCentralTabs.sampleButton !== null) {
+                    Globals.References.applicationWindow.appBarCentralTabs.sampleButton.enabled = false
+                }
+                if (Globals.References.applicationWindow.appBarCentralTabs.experimentButton !== null) {
+                    Globals.References.applicationWindow.appBarCentralTabs.experimentButton.enabled = false
+                }
+                if (Globals.References.applicationWindow.appBarCentralTabs.analysisButton !== null) {
+                    Globals.References.applicationWindow.appBarCentralTabs.analysisButton.enabled = false
+                }
+                if (Globals.References.applicationWindow.appBarCentralTabs.summaryButton !== null) {
+                    Globals.References.applicationWindow.appBarCentralTabs.summaryButton.enabled = false
+                }
+            }
+        }
     ]
 
     // Right group of application bar tool buttons
     appBarRightButtons: [
 
         EaElements.ToolButton {
-            fontIcon: 'cog'
-            ToolTip.text: qsTr('Application preferences')
+            fontIcon: "cog"
+            ToolTip.text: qsTr("Application preferences")
             onClicked: EaGlobals.Vars.showAppPreferencesDialog = true
         }
 
@@ -45,41 +67,70 @@ EaComponents.ApplicationWindow {
         // Home page
         EaElements.AppBarTabButton {
             id: homeButton
-            objectName: 'applicationWindow.appBarCentralTabs.homeButton'
-            fontIcon: 'home'
-            text: qsTr('Home')
-            ToolTip.text: qsTr('Home')
-            //Component.onCompleted: {
-            //    Globals.References.applicationWindow.appBarCentralTabs.homeButton = homeButton
-            //}
+            fontIcon: "home"
+            text: qsTr("Home")
+            ToolTip.text: qsTr("Home")
+            Component.onCompleted: {
+                Globals.References.applicationWindow.appBarCentralTabs.homeButton = homeButton
+            }
         },
-        // Home page
 
         // Project page
         EaElements.AppBarTabButton {
             id: projectButton
             enabled: false
-            fontIcon: 'archive'
-            text: qsTr('Project')
-            ToolTip.text: qsTr('Project description page')
+            fontIcon: "archive"
+            text: qsTr("Project")
+            ToolTip.text: qsTr("Project description page")
             Component.onCompleted: {
                 Globals.References.applicationWindow.appBarCentralTabs.projectButton = projectButton
             }
         },
-        // Project page
+
+        // Sample page
+        EaElements.AppBarTabButton {
+            id: sampleButton
+            enabled: false
+            fontIcon: "layer-group"
+            text: qsTr("Sample")
+            ToolTip.text: qsTr("Sample description page")
+            Component.onCompleted: {
+                Globals.References.applicationWindow.appBarCentralTabs.sampleButton = sampleButton
+            }
+        },
+
+        // Experiment tab
+        EaElements.AppBarTabButton {
+            id: experimentTabButton
+            enabled: false
+            fontIcon: "microscope"
+            text: qsTr("Experiment")
+            ToolTip.text: qsTr("Experimental settings and data page")
+            Component.onCompleted:Globals.References.applicationWindow.appBarCentralTabs.experimentButton = experimentTabButton
+        },
+
+
+        // Analysis tab
+        EaElements.AppBarTabButton {
+            id: analysisTabButton
+            enabled: false
+            fontIcon: "calculator"
+            text: qsTr("Analysis")
+            ToolTip.text: qsTr("Simulation and fitting page")
+            Component.onCompleted: Globals.References.applicationWindow.appBarCentralTabs.analysisButton = analysisTabButton
+        },
 
         // Summary page
         EaElements.AppBarTabButton {
             id: summaryButton
             enabled: false
-            fontIcon: 'clipboard-list'
-            text: qsTr('Summary')
-            ToolTip.text: qsTr('Summary of the work done')
+            fontIcon: "clipboard-list"
+            text: qsTr("Summary")
+            ToolTip.text: qsTr("Summary of the work done")
             Component.onCompleted: {
                 Globals.References.applicationWindow.appBarCentralTabs.summaryButton = summaryButton
             }
         }
-        // Summary page
     ]
 
     //////////////////////////////////
@@ -90,7 +141,10 @@ EaComponents.ApplicationWindow {
     contentArea: [
         Loader { source: 'Pages/Home/Layout.qml' },
         Loader { source: 'Pages/Project/Layout.qml' },
-        Loader { source: 'Pages/Report/Layout.qml' }
+        Loader { source: 'Pages/Sample/Layout.qml' },
+        Loader { source: 'Pages/Experiment/Layout.qml' },
+        Loader { source: 'Pages/Analysis/Layout.qml' },
+        Loader { source: 'Pages/Summary/Layout.qml' }
     ]
 
     /////////////
