@@ -1,4 +1,5 @@
 module Globals
 
-singleton Constants 1.0 Constants.qml
-singleton Variables 1.0 Variables.qml
+singleton ApplicationInfo ApplicationInfo.qml
+singleton BackendWrapper BackendWrapper.qml
+singleton References References.qml
