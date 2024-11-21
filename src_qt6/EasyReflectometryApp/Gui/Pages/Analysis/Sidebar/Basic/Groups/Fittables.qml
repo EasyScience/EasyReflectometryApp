@@ -161,7 +161,7 @@ EaElements.GroupBox {
                 }
 
                 EaComponents.TableViewLabel {
-                    width: EaStyle.Sizes.fontPixelSize * 2.0
+                    width: EaStyle.Sizes.fontPixelSize * 3.0
                     horizontalAlignment: Text.AlignLeft
                     //text: qsTr("units")
                 }
@@ -232,7 +232,7 @@ EaElements.GroupBox {
                 }
 
                 EaComponents.TableViewLabel {
-                    text: Globals.BackendWrapper.analysisFitableParameters[index].units
+                    text: Globals.BackendWrapper.analysisFitableParameters[index].units !== 'dimensionless' ? Globals.BackendWrapper.analysisFitableParameters[index].units : "" 
                     color: EaStyle.Colors.themeForegroundMinor
                 }
 

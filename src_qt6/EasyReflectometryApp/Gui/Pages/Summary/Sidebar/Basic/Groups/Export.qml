@@ -8,7 +8,6 @@ import QtQuick.Dialogs
 import QtCore
 
 import EasyApp.Gui.Style as EaStyle
-import EasyApp.Gui.Globals as EaGlobals
 import EasyApp.Gui.Elements as EaElements
 import EasyApp.Gui.Logic as EaLogic
 
@@ -16,11 +15,6 @@ import Gui.Globals as Globals
 
 
 Column {
-
-    property string projectLocation: Globals.BackendWrapper.projectLocation +
-                                     EaLogic.Utils.osPathSep() +
-                                     'summary'
-
     spacing: EaStyle.Sizes.fontPixelSize
 
     // Name field + format selector
@@ -35,25 +29,20 @@ Column {
             topPadding: topInset + padding
             horizontalAlignment: TextInput.AlignLeft
             placeholderText: qsTr('Enter summary file name here')
-            Component.onCompleted: text = 'summary'
+            Component.onCompleted: text = Globals.BackendWrapper.summaryFileName
+            onEditingFinished: Globals.BackendWrapper.summarySetFileName(text)
             EaElements.Label {
                 id: nameLabel
                 text: qsTr('Name')
             }
         }
-        // Name field
 
-        // Format selector
         EaElements.ComboBox {
             id: formatField
             topInset: formatLabel.height
             topPadding: topInset + padding
             width: EaStyle.Sizes.fontPixelSize * 10
-            textRole: 'text'
-            valueRole: 'value'
-            model: [
-                { value: 'html', text: qsTr('HTML') }
-            ]
+            model: Globals.BackendWrapper.summaryExportFormats
             EaElements.Label {
                 id: formatLabel
                 text: qsTr('Format')
@@ -71,9 +60,7 @@ Column {
         topPadding: topInset + padding
         rightPadding: chooseButton.width
         horizontalAlignment: TextInput.AlignLeft
-        placeholderText: qsTr('Enter report location here')
-        Component.onCompleted: text = projectLocation
-
+        Component.onCompleted: text = Globals.BackendWrapper.summaryFilePath
         EaElements.Label {
             id: locationLabel
             text: qsTr('Location')
@@ -85,11 +72,10 @@ Column {
             topPadding: parent.topPadding
             showBackground: false
             fontIcon: 'folder-open'
-            ToolTip.text: qsTr('Choose report parent directory')
-            onClicked: reportParentDirDialog.open()
+            ToolTip.text: qsTr('Choose summary parent directory')
+            onClicked: summaryParentDirDialog.open()
         }
     }
-    // Location field
 
     // Save button
     EaElements.SideBarButton {
@@ -97,7 +83,20 @@ Column {
         wide: true
         fontIcon: 'download'
         text: qsTr('Save')
+        onClicked: {
+           if (formatField.currentValue === 'HTML') {
+               Globals.BackendWrapper.summarySaveAsHtml()
+           } else if (formatField.currentValue === 'PDF') {
+               Globals.BackendWrapper.summarySaveAsPdf()
+           }
+       }
     }
-    // Save button
+
+    // Save directory dialog
+    FolderDialog {
+        id: summaryParentDirDialog
+        title: qsTr("Choose report parent directory")
+        currentFolder: Globals.BackendWrapper.summaryFileUrl
+    }
 
 }

@@ -103,3 +103,4 @@ class Project:
 
     def reset(self) -> None:
         self._project_lib.reset()
+        self._project_lib.default_model()

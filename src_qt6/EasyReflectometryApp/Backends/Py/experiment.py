@@ -3,9 +3,10 @@ from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
 from PySide6.QtCore import Property
 
-from EasyApp.Logic.Utils.Utils import generalizePath
+#from EasyApp.Logic.Utils.Utils import generalizePath
 from easyreflectometry import Project as ProjectLib
 
+from .helpers import IO
 from .logic.models import Models as ModelsLogic
 from .logic.project import Project as ProjectLogic
 
@@ -55,6 +56,6 @@ class Experiment(QObject):
     # Actions
     @Slot(str)
     def load(self, path: str) -> None:
-        self._project_logic.load_experiment(generalizePath(path))
+        self._project_logic.load_experiment(IO.generalizePath(path))
         self.experimentChanged.emit()
         self.externalExperimentChanged.emit()

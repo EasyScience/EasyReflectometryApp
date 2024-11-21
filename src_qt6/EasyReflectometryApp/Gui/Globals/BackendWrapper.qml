@@ -179,6 +179,7 @@ QtObject {
 
     function experimentLoad(value) { activeBackend.experiment.load(value) }
 
+
     ///////////////
     // Analysis page
     ///////////////
@@ -224,8 +225,17 @@ QtObject {
     ///////////////
     // Summary page
     ///////////////
-    readonly property bool summaryCreated: activeBackend.report.created
-    readonly property string summaryAsHtml: activeBackend.report.asHtml
+    readonly property bool summaryCreated: activeBackend.summary.created
+    readonly property string summaryAsHtml: activeBackend.summary.asHtml
+    readonly property string summaryFileName: activeBackend.summary.fileName
+    readonly property string summaryFilePath: activeBackend.summary.filePath
+    readonly property string summaryFileUrl: activeBackend.summary.fileUrl
+    readonly property var summaryExportFormats: activeBackend.summary.exportFormats
+
+    function summarySetFileName(value) { activeBackend.summary.setFileName(value) }
+    function summarySaveAsHtml() { activeBackend.summary.saveAsHtml() }
+    function summarySaveAsPdf() { activeBackend.summary.saveAsPdf() }
+
 
     ///////////////
     // Plotting

@@ -4,7 +4,7 @@ singleton Analysis Analysis.qml
 singleton Experiment Experiment.qml
 singleton Home Home.qml
 singleton Project Project.qml
-singleton Report Report.qml
+singleton Summary Summary.qml
 singleton Sample Sample.qml
 singleton Status Status.qml
 singleton Plotting Plotting.qml

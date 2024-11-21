@@ -13,7 +13,7 @@ EaComponents.ContentPage {
 
     defaultInfo: Globals.BackendWrapper.projectCreated ?
                      '' :
-                     qsTr('No project defined')
+                     qsTr('Using default project\n' + Globals.BackendWrapper.projectName)
 
     mainView: EaComponents.MainContent {
         tabs: [
@@ -38,6 +38,7 @@ EaComponents.ContentPage {
 
         continueButton.onClicked: {            
             console.debug(`Clicking '${continueButton.text}' button ::: ${this}`)
+            Globals.References.resetActive = true
             Globals.References.applicationWindow.appBarCentralTabs.sampleButton.enabled = true
             Globals.References.applicationWindow.appBarCentralTabs.sampleButton.toggle()
         }

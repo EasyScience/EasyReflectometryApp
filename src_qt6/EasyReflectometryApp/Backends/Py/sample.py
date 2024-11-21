@@ -429,6 +429,7 @@ class Sample(QObject):
                 arithmetic_operator=value4,
                 independent_idx=int(value5)
         )
+        self.externalSampleChanged.emit()
 
     # # #
     # Q Range
