@@ -13,7 +13,7 @@ import Gui.Globals as Globals
 EaComponents.SideBarColumn {
 
     EaElements.GroupBox {
-        enabled: false
+        enabled: Globals.BackendWrapper.summaryCreated
         title: qsTr('Export summary')
         icon: 'download'
         collapsed: false

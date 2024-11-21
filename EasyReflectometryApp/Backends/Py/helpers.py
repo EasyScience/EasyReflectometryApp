@@ -1,11 +1,16 @@
 import numpy as np
+import os
+import sys
 from uncertainties import ufloat
+from urllib.parse import urlparse
 
 from PySide6.QtWidgets import QApplication
+from PySide6.QtCore import QUrl
+#from PySide6.QtCore import Slot
+#from PySide6.QtCore import QObject
 
 
 class IO:
-
     @staticmethod
     def generalizePath(fpath: str) -> str:
         """
@@ -14,13 +19,19 @@ class IO:
         :param URI rcfPath: URI to the file
         :return URI filename: platform specific URI
         """
-        return fpath  # NEED FIX: Check on different platforms
-        # filename = urlparse(fpath).path
-        # if not sys.platform.startswith("win"):
-        #     return filename
-        # if filename[0] == '/':
-        #     filename = filename[1:].replace('/', os.path.sep)
-        # return filename
+        filename = urlparse(fpath).path
+        if not sys.platform.startswith("win"):
+            return filename
+        if filename[0] == '/':
+            filename = filename[1:].replace('/', os.path.sep)
+        return filename
+
+    @staticmethod
+    def localFileToUrl(fpath: str) -> str:
+        if not sys.platform.startswith("win"):
+            return QUrl.fromLocalFile(fpath).toString()
+        url = QUrl.fromLocalFile(fpath.split(':')[-1]).toString()
+        return url
 
     @staticmethod
     def formatMsg(type, *args):
@@ -62,24 +73,24 @@ class IO:
         value_with_std_dev_str = f'{ufloat(value, std_dev):{fmt}S}'
         return value_str, std_dev_str, value_with_std_dev_str
 
-    def value_with_error_WEB(val, err, precision=2):
-        """String with value and error in parenthesis with the number of digits given by precision."""
-        # Number of digits in the error
-        err_decimals = precision - int(np.floor(np.log10(err) + 1))
-        # Output error with a "precision" number of significant digits
-        err_out = round(err, err_decimals)
-        # Removes leading zeros for fractional errors
-        if err_out < 1:
-            err_out = int(round(err_out * 10**err_decimals))
-            err_format = 0
-        else:
-            err_format = int(np.clip(err_decimals, 0, np.inf))
+    # def value_with_error_WEB(val, err, precision=2):
+    #     """String with value and error in parenthesis with the number of digits given by precision."""
+    #     # Number of digits in the error
+    #     err_decimals = precision - int(np.floor(np.log10(err) + 1))
+    #     # Output error with a "precision" number of significant digits
+    #     err_out = round(err, err_decimals)
+    #     # Removes leading zeros for fractional errors
+    #     if err_out < 1:
+    #         err_out = int(round(err_out * 10**err_decimals))
+    #         err_format = 0
+    #     else:
+    #         err_format = int(np.clip(err_decimals, 0, np.inf))
 
-        # Format the value to have the same significant digits as the error
-        val_out = round(val, err_decimals)
-        val_format = int(np.clip(err_decimals, 0, np.inf))
+    #     # Format the value to have the same significant digits as the error
+    #     val_out = round(val, err_decimals)
+    #     val_format = int(np.clip(err_decimals, 0, np.inf))
 
-        return f'{val_out:.{val_format}f}({err_out:.{err_format}f})'
+    #     return f'{val_out:.{val_format}f}({err_out:.{err_format}f})'
 
 
 class Application(QApplication):  # QGuiApplication crashes when using in combination with QtCharts
