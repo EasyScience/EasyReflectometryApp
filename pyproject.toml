@@ -98,6 +98,9 @@ force-single-line = true
 
 [ci.project.subdirs]
 scripts = 'tools/Scripts'
+download = 'ci/download'
+build = 'ci/build'
+distribution = 'ci/distribution'
 # docs = { src = 'docs', dest = 'Documentation' }
 
 [ci.qtifw.setup]
