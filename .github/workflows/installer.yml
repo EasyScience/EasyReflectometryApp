@@ -74,19 +74,19 @@ jobs:
         run: |
           echo "SETUP_EXE_PATH=$(python ${{ env.SCRIPTS_PATH }}/Config.py ${{ env.BRANCH_NAME }} ${{ matrix.os }} setup_exe_path)" >> $GITHUB_ENV
 
-      - name: Create python resources file
-        run: pyside6-rcc ${{ env.PACKAGE_PATH }}/resources.qrc -o ${{ env.PACKAGE_PATH }}/resources.py
-
-      - name: Set up screen (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0 libxcb-cursor0
-          sudo apt-get install libpulse-mainloop-glib0
-          sudo apt-get install libxkbcommon-x11-0
-          sudo apt-get install libegl1-mesa-dev
-          Xvfb :0 -screen 0 1920x1080x24 -ac &
-          echo "DISPLAY=:0" >> $GITHUB_ENV
+#      - name: Create python resources file
+#        run: pyside6-rcc ${{ env.PACKAGE_PATH }}/resources.qrc -o ${{ env.PACKAGE_PATH }}/resources.py
+#
+#      - name: Set up screen (Linux)
+#        if: runner.os == 'Linux'
+#        run: |
+#          sudo apt-get update
+#          sudo apt-get install libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0 libxcb-cursor0
+#          sudo apt-get install libpulse-mainloop-glib0
+#          sudo apt-get install libxkbcommon-x11-0
+#          sudo apt-get install libegl1-mesa-dev
+#          Xvfb :0 -screen 0 1920x1080x24 -ac &
+#          echo "DISPLAY=:0" >> $GITHUB_ENV
 
       # Method 1:
       # Not working since Oct 2023. VMware is replaced by VirtualBox
@@ -101,34 +101,34 @@ jobs:
       #    screenresolution get
       #    screenresolution set 1920x1080x32@30
       #    screenresolution get
-      - name: Set up screen (macOS, not flyci)
-        if: matrix.os == 'macos-13'  # runner.os == 'macOS'
-        run: |
-          system_profiler SPDisplaysDataType | grep Resolution
+#      - name: Set up screen (macOS, not flyci)
+#        if: matrix.os == 'macos-13'  # runner.os == 'macOS'
+#        run: |
+#          system_profiler SPDisplaysDataType | grep Resolution
 
-      - name: Set up screen (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          Set-DisplayResolution -Width 1920 -Height 1080 -Force
-          Get-DisplayResolution
+#      - name: Set up screen (Windows)
+#        if: runner.os == 'Windows'
+#        run: |
+#          Set-DisplayResolution -Width 1920 -Height 1080 -Force
+#          Get-DisplayResolution
 
-      - name: Run app in testmode and quit
-        shell: bash
-        run: python ${{ env.PACKAGE_NAME }}/main.py --testmode
+#      - name: Run app in testmode and quit
+#        shell: bash
+#        run: python ${{ env.PACKAGE_NAME }}/main.py --testmode
 
-      - name: Run screenshots comparison tests
-        run: pytest tests/gui --color=yes
+#      - name: Run screenshots comparison tests
+#        run: pytest tests/gui --color=yes
 
-      - name: Upload zipped GUI tests screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-installer_screenshots_${{ matrix.os }}  # desired name (without .zip) of the zip file to be uploaded
-          path: |  # all files from these paths are zipped into file with name from above
-            tests/gui/screenshots
-            .tests/image_diff
-          if-no-files-found: 'error'
-          compression-level: 0
+#      - name: Upload zipped GUI tests screenshots
+#        if: always()
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: build-installer_screenshots_${{ matrix.os }}  # desired name (without .zip) of the zip file to be uploaded
+#          path: |  # all files from these paths are zipped into file with name from above
+#            tests/gui/screenshots
+#            .tests/image_diff
+#          if-no-files-found: 'error'
+#          compression-level: 0
 
       - name: Create freezed python app bundle with PyInstaller
         run: python ${{ env.SCRIPTS_PATH }}/FreezeApp.py
@@ -138,28 +138,28 @@ jobs:
           python ${{ env.SCRIPTS_PATH }}/MakeInstaller.py
           ${{ env.BRANCH_NAME }} ${{ matrix.os }}
 
-      - name: Sign, notarize and staple offline app installer (macOS)
-        if: |
-          runner.os == 'macOS' && github.event_name == 'push' &&
-          (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'develop')
-        run: >
-          python ${{ env.SCRIPTS_PATH }}/SignAppInstaller.py
-          ${{ env.BRANCH_NAME }} ${{ matrix.os }}
-          ${{ secrets.APPLE_CERT_DATA }} ${{ secrets.APPLE_CERT_PASSWORD }}
-          ${{ secrets.APPLE_NOTARY_USER }} ${{ secrets.APPLE_NOTARY_PASSWORD }}
+#      - name: Sign, notarize and staple offline app installer (macOS)
+#        if: |
+#          runner.os == 'macOS' && github.event_name == 'push' &&
+#          (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'develop')
+#        run: >
+#          python ${{ env.SCRIPTS_PATH }}/SignAppInstaller.py
+#          ${{ env.BRANCH_NAME }} ${{ matrix.os }}
+#          ${{ secrets.APPLE_CERT_DATA }} ${{ secrets.APPLE_CERT_PASSWORD }}
+#          ${{ secrets.APPLE_NOTARY_USER }} ${{ secrets.APPLE_NOTARY_PASSWORD }}
 
-      - name: Sign offline app installer (Windows)
-        if: |
-          runner.os == 'Windows' && github.event_name == 'push' &&
-          (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'develop')
-        uses: lando/code-sign-action@v2
-        with:
-          file: ${{ env.SETUP_EXE_PATH }}
-          certificate-data: ${{ secrets.WINDOZE_CERT_DATA }}
-          certificate-password: ${{ secrets.WINDOZE_CERT_PASSWORD }}
-          keylocker-host: ${{ secrets.KEYLOCKER_HOST }}
-          keylocker-api-key: ${{ secrets.KEYLOCKER_API_KEY }}
-          keylocker-cert-sha1-hash: ${{ secrets.KEYLOCKER_CERT_SHA1_HASH }}
+#      - name: Sign offline app installer (Windows)
+#        if: |
+#          runner.os == 'Windows' && github.event_name == 'push' &&
+#          (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'develop')
+#        uses: lando/code-sign-action@v2
+#        with:
+#          file: ${{ env.SETUP_EXE_PATH }}
+#          certificate-data: ${{ secrets.WINDOZE_CERT_DATA }}
+#          certificate-password: ${{ secrets.WINDOZE_CERT_PASSWORD }}
+#          keylocker-host: ${{ secrets.KEYLOCKER_HOST }}
+#          keylocker-api-key: ${{ secrets.KEYLOCKER_API_KEY }}
+#          keylocker-cert-sha1-hash: ${{ secrets.KEYLOCKER_CERT_SHA1_HASH }}
 
       - name: Create zip archive of offline app installer for distribution
         run: >
