@@ -43,6 +43,15 @@ ci = [
 #  'dephell_licenses'
 ]
 
+[release]
+app_name = 'EasyReflectometry'
+family_name = 'EasyScience'
+tag_template = 'v{VERSION}'
+title_template = 'Version {VERSION} ({DATE})'
+# description_file = 'RELEASE.md'
+# changelog_file = 'CHANGELOG.md'
+homepage = 'https://easyreflectometry.org'
+
 [project.urls]
 homepage = 'https://easyreflectometry.org'
 issues = 'https://github.com/EasyScience/EasyReflectometryApp/issues'

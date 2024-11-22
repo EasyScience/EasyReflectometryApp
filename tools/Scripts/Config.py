@@ -2,16 +2,17 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # © 2021-2023 Contributors to the easyDiffraction project <https://github.com/easyScience/easyDiffractionApp>
 
-__author__ = "github.com/AndrewSazonov"
+__author__ = 'github.com/AndrewSazonov'
 __version__ = '0.0.1'
 
-import os, sys
+import os
 import pathlib
-import datetime
+import sys
+
 import Functions
 
 
-class Config():
+class Config:
     def __init__(self, branch_name=None, matrix_os=None):
         # Main
         self.__dict__ = Functions.config()
@@ -40,7 +41,7 @@ class Config():
         # Application setup
         self.setup_os = self.__dict__['ci']['app']['setup']['os'][self.os]
         self.setup_arch = self.__dict__['ci']['app']['setup']['arch'][self.os]
-        #self.setup_name_suffix = f'_{self.setup_os}_{self.setup_arch}_v{self.app_version}'
+        # self.setup_name_suffix = f'_{self.setup_os}_{self.setup_arch}_v{self.app_version}'
         self.setup_name_suffix = f'_v{self.app_version}_{self.setup_os}'
         if self.matrix_os is not None:
             self.setup_name_suffix = f'_v{self.app_version}_{self.matrix_os}'
@@ -70,11 +71,11 @@ class Config():
         return self.__dict__[key]
 
     def matrixOs(self, matrix_os):
-        #if matrix_os is None:
+        # if matrix_os is None:
         #    return None
-        #if 'ubuntu-24.04' in matrix_os:
+        # if 'ubuntu-24.04' in matrix_os:
         #    matrix_os = 'ubuntu-22.04'  # NEED FIX: Temporary solution to test the 22.04 build on 24.04
-        #elif 'flyci' in matrix_os:
+        # elif 'flyci' in matrix_os:
         #    matrix_os = matrix_os.removeprefix('flyci-')  # Simplify the default flyci name
         #    matrix_os = matrix_os.removesuffix('-m2')  # Simplify the default flyci name
         return matrix_os
@@ -85,17 +86,14 @@ class Config():
             'macos': {
                 '@HomeDir@': str(pathlib.Path.home()),
                 '@ApplicationsDir@': '/Applications',
-                '@ApplicationsDirUser@': str(pathlib.Path.home().joinpath('Applications'))
+                '@ApplicationsDirUser@': str(pathlib.Path.home().joinpath('Applications')),
             },
-            'ubuntu': {
-                '@HomeDir@': str(pathlib.Path.home()),
-                '@ApplicationsDir@': '/opt'
-            },
+            'ubuntu': {'@HomeDir@': str(pathlib.Path.home()), '@ApplicationsDir@': '/opt'},
             'windows': {
                 '@HomeDir@': str(pathlib.Path.home()),
                 '@ApplicationsDir@': os.getenv('ProgramFiles'),
-                '@ApplicationsDirX86@': os.getenv('ProgramFiles(x86)')
-            }
+                '@ApplicationsDirX86@': os.getenv('ProgramFiles(x86)'),
+            },
         }
         dir_shortcut = self.__dict__['ci']['app']['setup']['installation_dir_shortcut'][self.os]
         dir = os.path.join(dirs[self.os][dir_shortcut], self.app_name)
@@ -133,6 +131,7 @@ class Config():
 
 ### Main
 
+
 def main():
     if len(sys.argv) != 4:
         return
@@ -145,6 +144,7 @@ def main():
     property_value = getattr(config, property_name)
 
     print(property_value)
+
 
 if __name__ == '__main__':
     main()
