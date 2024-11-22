@@ -1,11 +1,12 @@
-# This pipeline 
-# - build executeable for Ubuntu Linux
-# - for main branch executeable is deployed to snapcraft stable
-# - for develop branch executeable is deployed to snapcraft beta
+name: Build Snap Image
 
-name: Build Snap Image for Ubuntu Linux 
-
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
 
 jobs:
   build_snap:
@@ -14,7 +15,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: snapcore/action-build@v1
       id: snapcraft
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v3
       with:
         name: snap
         path: ${{ steps.snapcraft.outputs.snap }}
@@ -23,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_snap
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v3
         with:
           name: snap
           path: .
@@ -41,40 +42,41 @@ jobs:
           echo "DISPLAY=:0" >> $GITHUB_ENV
       - name: Run snap
         run: |
-            snap run easyreflectometry &
+            snap run easydiffraction &
             sleep 60
 
   upload_snap:
     runs-on: ubuntu-latest
     needs: install_test
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v3
         with:
           name: snap
           path: .
-      
+
       - name: Get branch names
         id: branch-name
-        uses: tj-actions/branch-names@v8
-      
+        uses: tj-actions/branch-names@v6
+
       - name: Get snap filename
         run: |
           echo "SNAP_FILENAME=$(ls *.snap)" >> $GITHUB_ENV
-  
+
       - name: Publish Develop Branch to snapcraft beta
-        if: steps.branch-name.outputs.current_branch == 'develop'
+        #  if: steps.branch-name.outputs.current_branch == 'develop'
+        if: steps.branch-name.outputs.current_branch == 'master' # temporarily master will produce beta
         uses: snapcore/action-publish@v1
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
         with:
           snap: ${{ env.SNAP_FILENAME }}
           release: beta
-          
-      - name: Publish Main Branch to snapcraft stable
-        if: steps.branch-name.outputs.current_branch == 'master'
-        uses: snapcore/action-publish@v1
-        env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
-        with:
-          snap: ${{ env.SNAP_FILENAME }}
-          release: stable
+
+      #- name: Publish Master Branch to snapcraft stable
+      #  if: steps.branch-name.outputs.current_branch == 'master'
+      #  uses: snapcore/action-publish@v1
+      #  env:
+      #    SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+      #  with:
+      #    snap: ${{ env.SNAP_FILENAME }}
+      #    release: stable
