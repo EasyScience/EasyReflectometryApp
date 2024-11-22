@@ -74,8 +74,8 @@ jobs:
         run: |
           echo "SETUP_EXE_PATH=$(python ${{ env.SCRIPTS_PATH }}/Config.py ${{ env.BRANCH_NAME }} ${{ matrix.os }} setup_exe_path)" >> $GITHUB_ENV
 
-      - name: Create python resources file
-        run: pyside6-rcc ${{ env.PACKAGE_PATH }}/resources.qrc -o ${{ env.PACKAGE_PATH }}/resources.py
+#      - name: Create python resources file
+#        run: pyside6-rcc ${{ env.PACKAGE_PATH }}/resources.qrc -o ${{ env.PACKAGE_PATH }}/resources.py
 #
 #      - name: Set up screen (Linux)
 #        if: runner.os == 'Linux'
