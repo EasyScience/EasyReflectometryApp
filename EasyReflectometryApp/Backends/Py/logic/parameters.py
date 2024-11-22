@@ -16,7 +16,7 @@ class Parameters:
 
     @property
     def as_status_string(self) -> str:
-        return f'{self.count_free_parameters() + self.count_fixed_parameters()} ({self.count_free_parameters()} free, {self.count_fixed_parameters()} fixed)'
+        return f'{self.count_free_parameters() + self.count_fixed_parameters()} ({self.count_free_parameters()} free, {self.count_fixed_parameters()} fixed)'  # noqa: E501
 
     @property
     def parameters(self) -> List[str]:
