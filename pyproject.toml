@@ -91,3 +91,12 @@ force-single-line = true
 [ci.project.subdirs]
 scripts = 'tools/Scripts'
 # docs = { src = 'docs', dest = 'Documentation' }
+
+[ci.qtifw.setup]
+version = '4.7.0'
+https_mirrors = ['qt.mirror.constant.com', 'ftp.fau.de/qtproject', 'mirrors.dotsrc.org/qtproject']
+base_path = 'official_releases/qt-installer-framework'
+file_name_base = 'QtInstallerFramework'
+file_platform = { macos = 'macOS-x64', ubuntu = 'linux-x64', windows = 'windows-x64' }
+file_ext = { macos = 'dmg', ubuntu = 'run', windows = 'exe' }
+installation_path = { macOS = '/Users/runner/Qt', Linux = '/home/runner/Qt', Windows = 'C:\Qt' }
