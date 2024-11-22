@@ -1,15 +1,16 @@
+from easyreflectometry import Project as ProjectLib
+from PySide6.QtCore import Property
 from PySide6.QtCore import QObject
 from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
-from PySide6.QtCore import Property
 
-from easyreflectometry import Project as ProjectLib
-from .logic.material import Material as MaterialLogic
 from .logic.assemblies import Assemblies as AssembliesLogic
 from .logic.layers import Layers as LayersLogic
+from .logic.material import Material as MaterialLogic
 from .logic.models import Models as ModelsLogic
-from .logic.project import Project as ProjectLogic
 from .logic.parameters import Parameters as ParametersLogic
+from .logic.project import Project as ProjectLogic
+
 
 class Sample(QObject):
     materialsTableChanged = Signal()
@@ -42,7 +43,7 @@ class Sample(QObject):
         self._chached_layers = None
 
         self.connect_logic()
-        
+
     def connect_logic(self) -> None:
         self.assembliesIndexChanged.connect(self.layersConnectChanges)
 
@@ -52,11 +53,11 @@ class Sample(QObject):
     @Property('QVariantList', notify=materialsTableChanged)
     def materials(self) -> list[dict[str, str]]:
         return self._material_logic.materials
-    
+
     @Property(int, notify=materialsIndexChanged)
     def currentMaterialIndex(self) -> int:
         return self._material_logic.index
-    
+
     @Property('QVariantList', notify=materialsTableChanged)
     def materialNames(self) -> list[str]:
         return self._material_logic.material_names
@@ -175,7 +176,7 @@ class Sample(QObject):
         self.modelsTableChanged.emit()
 
     @Slot()
-    def moveSelectedModelDown(self)-> None:
+    def moveSelectedModelDown(self) -> None:
         self._models_logic.move_selected_down()
         self.modelsTableChanged.emit()
 
@@ -223,7 +224,7 @@ class Sample(QObject):
         self.assembliesIndexChanged.emit()
         self.externalRefreshPlot.emit()
         self.externalSampleChanged.emit()
-    
+
     # Assembly specific
     @Property(str, notify=assembliesTableChanged)
     def currentAssemblyRepeatedLayerReptitions(self) -> str:
@@ -278,7 +279,7 @@ class Sample(QObject):
         self.externalRefreshPlot.emit()
 
     @Slot()
-    def moveSelectedAssemblyDown(self)-> None:
+    def moveSelectedAssemblyDown(self) -> None:
         self._assemblies_logic.move_selected_down()
         self.assembliesTableChanged.emit()
         self.externalRefreshPlot.emit()
@@ -396,7 +397,7 @@ class Sample(QObject):
         self.externalRefreshPlot.emit()
 
     @Slot()
-    def moveSelectedLayerDown(self)-> None:
+    def moveSelectedLayerDown(self) -> None:
         self._layers_logic.move_selected_down()
         self._clearCacheAndEmitLayersChanged()
         self.externalRefreshPlot.emit()
@@ -423,11 +424,11 @@ class Sample(QObject):
     @Slot(str, str, str, str, str)
     def addConstraint(self, value1: str, value2: str, value3: str, value4: str, value5: str) -> None:
         self._parameters_logic.add_constraint(
-                dependent_idx=int(value1),
-                relational_operator=value2,
-                value=float(value3), 
-                arithmetic_operator=value4,
-                independent_idx=int(value5)
+            dependent_idx=int(value1),
+            relational_operator=value2,
+            value=float(value3),
+            arithmetic_operator=value4,
+            independent_idx=int(value5),
         )
         self.externalSampleChanged.emit()
 

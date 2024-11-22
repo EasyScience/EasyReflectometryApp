@@ -1,10 +1,9 @@
+from EasyApp.Logic.Utils.Utils import generalizePath
+from easyreflectometry import Project as ProjectLib
+from PySide6.QtCore import Property
 from PySide6.QtCore import QObject
 from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
-from PySide6.QtCore import Property
-
-from EasyApp.Logic.Utils.Utils import generalizePath
-from easyreflectometry import Project as ProjectLib
 
 from .logic.project import Project as ProjectLogic
 
@@ -25,7 +24,7 @@ class Project(QObject):
         self._logic = ProjectLogic(project_lib)
 
     # Properties
-    
+
     @Property(bool, notify=createdChanged)
     def created(self) -> bool:
         return self._logic.created
@@ -39,7 +38,7 @@ class Project(QObject):
         return self._logic.path
 
     # Properties with setters
-    
+
     @Property(str, notify=nameChanged)
     def name(self) -> str:
         return self._logic.name

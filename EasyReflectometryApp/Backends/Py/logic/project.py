@@ -3,6 +3,7 @@ from pathlib import Path
 
 from easyreflectometry import Project as ProjectLib
 
+
 class Project:
     def __init__(self, project_lib: ProjectLib):
         self._project_lib = project_lib
@@ -14,7 +15,7 @@ class Project:
     @property
     def path(self) -> str:
         return str(self._project_lib.path)
-    
+
     @property
     def root_path(self) -> str:
         return str(self._project_lib.path.parent)
@@ -26,7 +27,7 @@ class Project:
     @property
     def name(self) -> str:
         return self._project_lib._info['name']
-    
+
     @name.setter
     def name(self, new_value: str) -> None:
         self._project_lib._info['name'] = new_value
@@ -34,7 +35,7 @@ class Project:
     @property
     def description(self) -> str:
         return self._project_lib._info['short_description']
-    
+
     @description.setter
     def description(self, new_value: str) -> None:
         self._project_lib._info['short_description'] = new_value
@@ -46,7 +47,7 @@ class Project:
     @property
     def q_min(self) -> float:
         return self._project_lib.q_min
-    
+
     def set_q_min(self, new_value: str) -> None:
         if float(new_value) != self._project_lib.q_min:
             self._project_lib.q_min = float(new_value)
@@ -62,7 +63,7 @@ class Project:
             self._project_lib.q_max = float(new_value)
             return True
         return False
-    
+
     @property
     def q_resolution(self) -> int:
         return self._project_lib.q_resolution
@@ -87,7 +88,7 @@ class Project:
         info = copy(self._project_lib._info)
         info['location'] = self._project_lib.path
         return info
-    
+
     def create(self) -> None:
         self._project_lib.create()
         self._project_lib.save_as_json()

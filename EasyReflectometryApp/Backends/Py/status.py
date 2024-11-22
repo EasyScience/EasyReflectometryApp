@@ -2,13 +2,14 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # © 2024 Contributors to the EasyApp project <https://github.com/easyscience/EasyApp>
 
+from easyreflectometry import Project as ProjectLib
+from PySide6.QtCore import Property
 from PySide6.QtCore import QObject
 from PySide6.QtCore import Signal
-from PySide6.QtCore import Property
 
-from easyreflectometry import Project as ProjectLib
-from .logic.status import Status as StatusLogic
 from .logic.parameters import Parameters as ParametersLogic
+from .logic.status import Status as StatusLogic
+
 
 class Status(QObject):
     statusChanged = Signal()

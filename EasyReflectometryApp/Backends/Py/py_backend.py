@@ -1,9 +1,9 @@
-from PySide6.QtCore import QObject
-from PySide6.QtCore import Property
-
 from EasyApp.Logic.Logging import LoggerLevelHandler
 from easyreflectometry import Project as ProjectLib
-from. analysis import Analysis
+from PySide6.QtCore import Property
+from PySide6.QtCore import QObject
+
+from .analysis import Analysis
 from .experiment import Experiment
 from .home import Home
 from .plotting_1d import Plotting1d
@@ -20,7 +20,7 @@ class PyBackend(QObject):
         self._project_lib = ProjectLib()
         self._project_lib.default_model()
 
-        # Page and Status bar backend parts 
+        # Page and Status bar backend parts
         self._home = Home()
         self._project = Project(self._project_lib)
         self._sample = Sample(self._project_lib)
@@ -54,7 +54,7 @@ class PyBackend(QObject):
     @Property('QVariant', constant=True)
     def experiment(self) -> Experiment:
         return self._experiment
-    
+
     @Property('QVariant', constant=True)
     def analysis(self) -> Analysis:
         return self._analysis
@@ -71,7 +71,7 @@ class PyBackend(QObject):
     @Property('QVariant', constant=True)
     def plotting(self) -> Plotting1d:
         return self._plotting
-    
+
     @Property('QVariant', constant=True)
     def logger(self):
         return self._logger
@@ -107,8 +107,9 @@ class PyBackend(QObject):
 
     def _relay_project_page_name(self):
         self._status.statusChanged.emit()
-#        self._summary.asHtmlChanged.emit()
- 
+
+    #        self._summary.asHtmlChanged.emit()
+
     def _relay_project_page_created(self):
         self._summary.createdChanged.emit()
         self._summary.summaryChanged.emit()
@@ -129,7 +130,7 @@ class PyBackend(QObject):
         self._analysis._clearCacheAndEmitParametersChanged()
         self._status.statusChanged.emit()
         self._summary.summaryChanged.emit()
-    
+
     def _relay_experiment_page_experiment_changed(self):
         self._analysis.experimentsChanged.emit()
         self._analysis._clearCacheAndEmitParametersChanged()
@@ -140,7 +141,7 @@ class PyBackend(QObject):
         self._status.statusChanged.emit()
         self._experiment.experimentChanged.emit()
         self._summary.summaryChanged.emit()
-    
+
     def _refresh_plots(self):
         self._plotting.sampleChartRangesChanged.emit()
         self._plotting.sldChartRangesChanged.emit()

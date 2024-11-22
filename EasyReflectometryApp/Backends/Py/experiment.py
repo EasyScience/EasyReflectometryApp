@@ -1,10 +1,8 @@
+from easyreflectometry import Project as ProjectLib
+from PySide6.QtCore import Property
 from PySide6.QtCore import QObject
 from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
-from PySide6.QtCore import Property
-
-#from EasyApp.Logic.Utils.Utils import generalizePath
-from easyreflectometry import Project as ProjectLib
 
 from .helpers import IO
 from .logic.models import Models as ModelsLogic

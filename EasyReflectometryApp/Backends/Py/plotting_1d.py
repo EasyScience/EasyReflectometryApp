@@ -1,17 +1,16 @@
 import numpy as np
+from EasyApp.Logic.Logging import console
+from easyreflectometry import Project as ProjectLib
+from easyreflectometry.data import DataSet1D
+from PySide6.QtCore import Property
 from PySide6.QtCore import QObject
 from PySide6.QtCore import Signal
 from PySide6.QtCore import Slot
-from PySide6.QtCore import Property
 
-from EasyApp.Logic.Logging import console
-
-from easyreflectometry import Project as ProjectLib
-from easyreflectometry.data import DataSet1D
-
-from .helpers import IO 
+from .helpers import IO
 
 PLOT_BACKEND = 'QtCharts'
+
 
 class Plotting1d(QObject):
     chartRefsChanged = Signal()
@@ -25,7 +24,6 @@ class Plotting1d(QObject):
         self._proxy = parent
         self._currentLib1d = 'QtCharts'
         self._chartRefs = {
-
             'QtCharts': {
                 'samplePage': {
                     'sampleSerie': None,
@@ -50,8 +48,8 @@ class Plotting1d(QObject):
         except IndexError:
             data = DataSet1D(
                 name='Sample Data empty',
-                    x=np.empty(0),
-                    y=np.empty(0),
+                x=np.empty(0),
+                y=np.empty(0),
             )
         return data
 
@@ -62,8 +60,8 @@ class Plotting1d(QObject):
         except IndexError:
             data = DataSet1D(
                 name='SLD Data empty',
-                    x=np.empty(0),
-                    y=np.empty(0),
+                x=np.empty(0),
+                y=np.empty(0),
             )
         return data
 
@@ -74,10 +72,10 @@ class Plotting1d(QObject):
         except IndexError:
             data = DataSet1D(
                 name='Experiment Data empty',
-                    x=np.empty(0),
-                    y=np.empty(0),
-                    ye=np.empty(0),
-                    xe=np.empty(0),
+                x=np.empty(0),
+                y=np.empty(0),
+                ye=np.empty(0),
+                xe=np.empty(0),
             )
         return data
 
@@ -89,7 +87,7 @@ class Plotting1d(QObject):
     @Property(float, notify=sampleChartRangesChanged)
     def sampleMinX(self):
         return self.sample_data.x.min()
-    
+
     @Property(float, notify=sampleChartRangesChanged)
     def sampleMaxY(self):
         return np.log10(self.sample_data.y.max())
@@ -97,7 +95,7 @@ class Plotting1d(QObject):
     @Property(float, notify=sampleChartRangesChanged)
     def sampleMinY(self):
         return np.log10(self.sample_data.y.min())
-    
+
     # SLD
     @Property(float, notify=sldChartRangesChanged)
     def sldMaxX(self):
@@ -106,7 +104,7 @@ class Plotting1d(QObject):
     @Property(float, notify=sldChartRangesChanged)
     def sldMinX(self):
         return self.sld_data.x.min()
-    
+
     @Property(float, notify=sldChartRangesChanged)
     def sldMaxY(self):
         return self.sld_data.y.max()
@@ -114,13 +112,13 @@ class Plotting1d(QObject):
     @Property(float, notify=sldChartRangesChanged)
     def sldMinY(self):
         return self.sld_data.y.min()
- 
+
     @Property('QVariant', notify=chartRefsChanged)
     def chartRefs(self):
         return self._chartRefs
 
     @Slot(str, str, 'QVariant')
-    def setQtChartsSerieRef(self, page:str, serie:str, ref: QObject):
+    def setQtChartsSerieRef(self, page: str, serie: str, ref: QObject):
         self._chartRefs['QtCharts'][page][serie] = ref
         console.debug(IO.formatMsg('sub', f'{serie} on {page}: {ref}'))
 

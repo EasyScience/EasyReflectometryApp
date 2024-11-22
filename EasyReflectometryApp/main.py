@@ -3,21 +3,18 @@
 # © 2024 Contributors to the EasyReflectometryApp project <https://github.com/easyscience/EasyReflectometryApp>
 
 import sys
-
 from pathlib import Path
 
+from Backends.Py import PyBackend
+from Backends.Py.helpers import Application
+from EasyApp.Logic.Logging import console
 from PySide6.QtCore import qInstallMessageHandler
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQml import qmlRegisterSingletonType
 
-from EasyApp.Logic.Logging import console
-
-from Backends.Py import PyBackend
-from Backends.Py.helpers import Application
-
-CURRENT_DIR = Path(__file__).parent                                 # path to qml components of the current project
-EASYAPP_DIR = CURRENT_DIR / '..' / '..' / 'EasyApp' / 'src'         # path to qml components of the easyapp module
-MAIN_QML = CURRENT_DIR / 'main.qml'                                 # path to the root qml file
+CURRENT_DIR = Path(__file__).parent  # path to qml components of the current project
+EASYAPP_DIR = CURRENT_DIR / '..' / '..' / 'EasyApp' / 'src'  # path to qml components of the easyapp module
+MAIN_QML = CURRENT_DIR / 'main.qml'  # path to the root qml file
 
 
 if __name__ == '__main__':

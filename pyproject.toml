@@ -48,3 +48,42 @@ packages = ['src/EasyReflectometryApp']
 # To allow dependencies residing in git 
 [tool.hatch.metadata]
 allow-direct-references = true
+
+[tool.ruff]
+line-length = 127
+exclude = [
+    "docs",
+]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint.per-file-ignores]
+# allow asserts in test files
+"*test_*.py" = ["S101"]
+
+[tool.ruff.lint]
+ignore-init-module-imports = true
+select = [
+    # flake8 settings from existing CI setup
+    "E9", "F63", "F7", "F82",
+    # Code should be polished to fulfill all cases below
+    # https://docs.astral.sh/ruff/rules/
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+#    "UP",
+    # flake8-bugbear
+#    "B",
+    # flake8-simplify
+#    "SIM",
+    # isort
+    "I",
+    # flake8-bandit
+    "S",
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true

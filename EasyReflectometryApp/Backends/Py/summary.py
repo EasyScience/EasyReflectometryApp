@@ -2,14 +2,15 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # © 2024 Contributors to the EasyApp project <https://github.com/easyscience/EasyApp>
 
+from easyreflectometry import Project as ProjectLib
+from PySide6.QtCore import Property
 from PySide6.QtCore import QObject
 from PySide6.QtCore import Signal
-from PySide6.QtCore import Property
 from PySide6.QtCore import Slot
 
-from easyreflectometry import Project as ProjectLib
-from .logic.summary import Summary as SummaryLogic
 from .helpers import IO
+from .logic.summary import Summary as SummaryLogic
+
 
 class Summary(QObject):
     createdChanged = Signal()
@@ -48,7 +49,7 @@ class Summary(QObject):
     @Property('QVariant')
     def exportFormats(self):
         return ['HTML', 'PDF']
-    
+
     @Slot()
     def saveAsHtml(self) -> None:
         self._logic.save_as_html()

@@ -13,7 +13,7 @@ class Models:
     @property
     def index(self) -> int:
         return self._project_lib.current_model_index
-    
+
     @index.setter
     def index(self, new_value: Union[int, str]) -> None:
         self._project_lib.current_model_index = int(new_value)
@@ -29,14 +29,14 @@ class Models:
     @property
     def background_at_current_index(self) -> float:
         return self._models[self.index].background.value
-    
+
     @property
     def resolution_at_current_index(self) -> str:
         if isinstance(self._models[self.index].resolution_function, PercentageFhwm):
             return str(self._models[self.index].resolution_function.constant)
         else:
             return '-'
-    
+
     @property
     def models(self) -> list[dict[str, str]]:
         return _from_models_collection_to_list_of_dicts(self._models)
@@ -62,7 +62,7 @@ class Models:
             self._models[self.index].background.value = float(new_value)
             return True
         return False
-    
+
     def set_resolution_at_current_index(self, new_value: str) -> bool:
         if isinstance(self._models[self.index].resolution_function, PercentageFhwm):
             if self._models[self.index].resolution_function.constant != float(new_value):
@@ -72,27 +72,33 @@ class Models:
 
     def remove_at_index(self, value: str) -> None:
         self._models.pop(int(value))
-    
+
     def add_new(self) -> None:
         self._models.add_model()
         self._models[-1].sample.add_assembly()
         self._models[-1].sample._enable_changes_to_outermost_layers()
 
-        self._models[-1].sample.data[0].layers.data[0].material = self._project_lib._materials[self._project_lib.get_index_air()]
+        self._models[-1].sample.data[0].layers.data[0].material = self._project_lib._materials[
+            self._project_lib.get_index_air()
+        ]
         self._models[-1].sample.data[0].layers.data[0].thickness = 0.0
         self._models[-1].sample.data[0].layers.data[0].roughness = 0.0
         self._models[-1].sample.data[0].name = 'Superphase'
 
-        self._models[-1].sample.data[1].layers.data[0].material = self._project_lib._materials[self._project_lib.get_index_sio2()]
+        self._models[-1].sample.data[1].layers.data[0].material = self._project_lib._materials[
+            self._project_lib.get_index_sio2()
+        ]
         self._models[-1].sample.data[1].layers.data[0].thickness = 20.0
         self._models[-1].sample.data[1].layers.data[0].roughness = 3.0
         self._models[-1].sample.data[1].name = 'SiO2'
 
-        self._models[-1].sample.data[2].layers.data[0].material = self._project_lib._materials[self._project_lib.get_index_si()]
+        self._models[-1].sample.data[2].layers.data[0].material = self._project_lib._materials[
+            self._project_lib.get_index_si()
+        ]
         self._models[-1].sample.data[2].name = 'Substrate'
         self._models[-1].sample.data[2].layers.data[0].thickness = 0.0
         self._models[-1].sample.data[2].layers.data[0].roughness = 1.2
-        
+
         self._models[-1].sample._disable_changes_to_outermost_layers()
 
     def duplicate_selected_model(self) -> None:
@@ -102,7 +108,7 @@ class Models:
         if self.index > 0:
             self._models.move_up(self.index)
             self.index = self.index - 1
-    
+
     def move_selected_down(self) -> None:
         if self.index < len(self._models) - 1:
             self._models.move_down(self.index)

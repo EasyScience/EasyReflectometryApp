@@ -1,9 +1,9 @@
 from typing import Union
 
 from easyreflectometry import Project as ProjectLib
-from easyreflectometry.sample import Sample
 from easyreflectometry.sample import Multilayer
 from easyreflectometry.sample import RepeatingMultilayer
+from easyreflectometry.sample import Sample
 from easyreflectometry.sample import SurfactantLayer
 
 
@@ -13,12 +13,12 @@ class Assemblies:
 
     @property
     def _assemblies(self) -> Sample:
-        return self._project_lib._models[self._project_lib.current_model_index].sample # Sample is a collection of assemblies
+        return self._project_lib._models[self._project_lib.current_model_index].sample  # Sample is a collection of assemblies
 
     @property
     def index(self) -> int:
         return self._project_lib.current_assembly_index
-    
+
     @index.setter
     def index(self, new_value: Union[int, str]) -> None:
         self._project_lib.current_assembly_index = int(new_value)
@@ -26,11 +26,11 @@ class Assemblies:
     @property
     def name_at_current_index(self) -> str:
         return self._assemblies[self.index].name
-    
+
     @property
     def type_at_current_index(self) -> str:
         return self._assemblies[self.index].type
-    
+
     @property
     def assemblies(self) -> list[dict[str, str]]:
         return _from_assemblies_collection_to_list_of_dicts(self._assemblies)
@@ -38,10 +38,10 @@ class Assemblies:
     @property
     def assemblies_names(self) -> list[str]:
         return [element['label'] for element in self.assemblies]
-    
+
     def remove_at_index(self, value: str) -> None:
         self._assemblies.remove_assembly(int(value))
-    
+
     def add_new(self) -> None:
         self._assemblies.add_assembly()
         index_si = self._project_lib.get_index_si()
@@ -54,7 +54,7 @@ class Assemblies:
         if self.index > 0:
             self._assemblies.move_up(self.index)
             self.index = self.index - 1
-    
+
     def move_selected_down(self) -> None:
         if self.index < len(self._assemblies) - 1:
             self._assemblies.move_down(self.index)
@@ -102,7 +102,7 @@ class Assemblies:
                 self._assemblies[self.index].repetitions.value = new_value
                 return True
         return False
-    
+
     # # Only for surfactant layer
     def set_constrain_apm(self, new_value: str) -> bool:
         if isinstance(self._assemblies[self.index], SurfactantLayer):
@@ -110,7 +110,7 @@ class Assemblies:
                 self._assemblies[self.index].constrain_area_per_molecule = new_value
                 return True
         return False
-    
+
     def set_conformal_roughness(self, new_value: str) -> bool:
         if isinstance(self._assemblies[self.index], SurfactantLayer):
             if self._assemblies[self.index].conformal_roughness != new_value:
@@ -128,14 +128,14 @@ def _from_assemblies_collection_to_list_of_dicts(assemblies_collection: Sample) 
                 'type': assembly.type,
                 'repetetions': 1,
                 'constrain_apm': 'False',
-                'conformal_roughness': 'False',   
+                'conformal_roughness': 'False',
             }
         )
         if isinstance(assembly, RepeatingMultilayer):
             assemblies_list[-1]['repetetions'] = assembly.repetitions
 
         if isinstance(assembly, SurfactantLayer):
-            assemblies_list[-1]['constrain_apm'] = assembly.constrain_area_per_molecule 
+            assemblies_list[-1]['constrain_apm'] = assembly.constrain_area_per_molecule
             assemblies_list[-1]['conformal_roughness'] = assembly.conformal_roughness
 
     return assemblies_list

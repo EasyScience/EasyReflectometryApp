@@ -1,13 +1,11 @@
-import numpy as np
 import os
 import sys
-from uncertainties import ufloat
 from urllib.parse import urlparse
 
-from PySide6.QtWidgets import QApplication
+import numpy as np
 from PySide6.QtCore import QUrl
-#from PySide6.QtCore import Slot
-#from PySide6.QtCore import QObject
+from PySide6.QtWidgets import QApplication
+from uncertainties import ufloat
 
 
 class IO:
@@ -20,7 +18,7 @@ class IO:
         :return URI filename: platform specific URI
         """
         filename = urlparse(fpath).path
-        if not sys.platform.startswith("win"):
+        if not sys.platform.startswith('win'):
             return filename
         if filename[0] == '/':
             filename = filename[1:].replace('/', os.path.sep)
@@ -28,7 +26,7 @@ class IO:
 
     @staticmethod
     def localFileToUrl(fpath: str) -> str:
-        if not sys.platform.startswith("win"):
+        if not sys.platform.startswith('win'):
             return QUrl.fromLocalFile(fpath).toString()
         url = QUrl.fromLocalFile(fpath.split(':')[-1]).toString()
         return url
@@ -37,7 +35,7 @@ class IO:
     def formatMsg(type, *args):
         types = {'main': '*', 'sub': '  -'}
         mark = types[type]
-        widths = [22,21,20,10]
+        widths = [22, 21, 20, 10]
         widths[0] -= len(mark)
         msgs = []
         for idx, arg in enumerate(args):

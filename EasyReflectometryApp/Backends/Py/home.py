@@ -1,10 +1,10 @@
-from PySide6.QtCore import QObject
-from PySide6.QtCore import  Property
-
 import toml
+from PySide6.QtCore import Property
+from PySide6.QtCore import QObject
 
 PATH_PYPROJECT = 'pyproject.toml'
 PYPROJECT = toml.load(PATH_PYPROJECT)
+
 
 class Home(QObject):
     def __init__(self, parent=None):

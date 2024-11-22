@@ -1,4 +1,3 @@
-# from easyscience import AvailableMinimizers
 from easyreflectometry import Project as ProjectLib
 from easyscience.fitting import FitResults
 
@@ -20,11 +19,11 @@ class Fitting:
     @property
     def running(self) -> bool:
         return self._running
-    
+
     @property
     def fit_finished(self) -> bool:
         return self._finished
-    
+
     def start_stop(self) -> None:
         if self._running:
             # Stop running the fitting
