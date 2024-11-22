@@ -35,6 +35,14 @@ dependencies = [
   'toml',
 ]
 
+[project.optional-dependencies]
+ci = [
+  'pyinstaller'
+#  'requests',
+#  'licensename',
+#  'dephell_licenses'
+]
+
 [project.urls]
 homepage = 'https://easyreflectometry.org'
 issues = 'https://github.com/EasyScience/EasyReflectometryApp/issues'
