@@ -105,6 +105,12 @@ select = [
 [tool.ruff.lint.isort]
 force-single-line = true
 
+##########################################################
+##########################################################
+############## CI CONFIGURATION INFORMATION ##############
+##########################################################
+##########################################################
+
 [ci.project]
 license_file = 'LICENSE.md' # how to combine this with tool.poetry.license???
 
