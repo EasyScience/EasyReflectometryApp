@@ -20,22 +20,15 @@ def appExePath():
     }
     return d[CONFIG.os]
 
-def runApp():
-    Functions.printNeutralMessage(f'Installed application exe path: {appExePath()}')
-    try:
-        message = f'run {CONFIG.app_name}'
-        if len(sys.argv) == 1:
-            Functions.run(appExePath())
-        else:
-            #if 'test' in sys.argv[1:]:
-            #    Functions.createDir(CONFIG.screenshots_dir)
-            Functions.run(appExePath(), *sys.argv[1:])
-    except Exception as exception:
-        Functions.printFailMessage(message, exception)
-        sys.exit(1)
-    else:
+def checkAppExists():
+    Functions.printNeutralMessage(f'Check if application exe file exists: {appExePath()}')
+    message = f'find {appExePath()}'
+    exists = pathlib.Path(appExePath()).is_file()
+    if exists:
         Functions.printSuccessMessage(message)
-
+    else:
+        Functions.printFailMessage(message)
+        sys.exit(1)
 
 if __name__ == "__main__":
-    runApp()
+    checkAppExists()
