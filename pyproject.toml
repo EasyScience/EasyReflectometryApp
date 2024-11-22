@@ -37,8 +37,8 @@ dependencies = [
 
 [project.optional-dependencies]
 ci = [
-  'pyinstaller'
-  'requests',
+  'pyinstaller',
+#  'requests',
   'licensename',
   'dephell_licenses'
 ]
