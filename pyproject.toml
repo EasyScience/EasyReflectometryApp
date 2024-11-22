@@ -44,8 +44,8 @@ ci = [
 ]
 
 [release]
-app_name = 'EasyReflectometry'
-family_name = 'EasyReflectometry'
+app_name = 'EasyReflectometryApp'
+family_name = 'EasyReflectometryApp'
 tag_template = 'v{VERSION}'
 title_template = 'Version {VERSION} ({DATE})'
 description_file = 'RELEASE.md'
