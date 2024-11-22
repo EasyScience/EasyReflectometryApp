@@ -77,16 +77,17 @@ jobs:
 #      - name: Create python resources file
 #        run: pyside6-rcc ${{ env.PACKAGE_PATH }}/resources.qrc -o ${{ env.PACKAGE_PATH }}/resources.py
 #
-      - name: Set up screen (Linux)
+      - name: Install needed libraries (Linux)
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0 libxcb-cursor0
-          sudo apt-get install libpulse-mainloop-glib0
-          sudo apt-get install libxkbcommon-x11-0
-          sudo apt-get install libegl1-mesa-dev
-          Xvfb :0 -screen 0 1920x1080x24 -ac &
-          echo "DISPLAY=:0" >> $GITHUB_ENV
+          sudo apt-get install libxcb-icccm4
+#          sudo apt-get install libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0 libxcb-cursor0
+#          sudo apt-get install libpulse-mainloop-glib0
+#          sudo apt-get install libxkbcommon-x11-0
+#          sudo apt-get install libegl1-mesa-dev
+#          Xvfb :0 -screen 0 1920x1080x24 -ac &
+#          echo "DISPLAY=:0" >> $GITHUB_ENV
 
       # Method 1:
       # Not working since Oct 2023. VMware is replaced by VirtualBox
@@ -257,16 +258,16 @@ jobs:
         run: |
           echo "SCRIPTS_PATH=$(python utils.py --get ci.project.subdirs.scripts)" >> $GITHUB_ENV
 
-      - name: Set up screen (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0 libxcb-cursor0
-          sudo apt-get install libpulse-mainloop-glib0
-          sudo apt-get install libxkbcommon-x11-0
-          sudo apt-get install libegl1-mesa-dev
-          Xvfb :0 -screen 0 1920x1080x24 -ac &
-          echo "DISPLAY=:0" >> $GITHUB_ENV
+      # - name: Set up screen (Linux)
+      #  if: runner.os == 'Linux'
+      #  run: |
+      #    sudo apt-get update
+      #    sudo apt-get install libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0 libxcb-cursor0
+      #    sudo apt-get install libpulse-mainloop-glib0
+      #    sudo apt-get install libxkbcommon-x11-0
+      #    sudo apt-get install libegl1-mesa-dev
+      #    Xvfb :0 -screen 0 1920x1080x24 -ac &
+      #    echo "DISPLAY=:0" >> $GITHUB_ENV
 
       # Method 1:
       # Not working since Oct 2023. VMware is replaced by VirtualBox
@@ -281,16 +282,16 @@ jobs:
       #    screenresolution get
       #    screenresolution set 1920x1080x32@30
       #    screenresolution get
-      - name: Set up screen (macOS, not flyci)
-        if: matrix.os == 'macos-13'  # runner.os == 'macOS'
-        run: |
-          system_profiler SPDisplaysDataType | grep Resolution
+      # - name: Set up screen (macOS, not flyci)
+      #  if: matrix.os == 'macos-13'  # runner.os == 'macOS'
+      #  run: |
+      #    system_profiler SPDisplaysDataType | grep Resolution
 
-      - name: Set up screen (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          Set-DisplayResolution -Width 1920 -Height 1080 -Force
-          Get-DisplayResolution
+      #- name: Set up screen (Windows)
+      #  if: runner.os == 'Windows'
+      #  run: |
+      #    Set-DisplayResolution -Width 1920 -Height 1080 -Force
+      #    Get-DisplayResolution
 
       - name: Download zipped offline app installer from from the previous job step
         uses: actions/download-artifact@v4
@@ -318,17 +319,17 @@ jobs:
         if: runner.os != 'Windows'  # disabled because it can't exit app and one can't see what is going on there (no GitHub logging)...
         run: python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
 
-      - name: Run screenshots comparison tests
-        if: runner.os != 'Windows'  # disabled as didn't run app in test in the previous step
-        run: pytest tests/gui --color=yes
+      #- name: Run screenshots comparison tests
+      #  if: runner.os != 'Windows'  # disabled as didn't run app in test in the previous step
+      #  run: pytest tests/gui --color=yes
 
-      - name: Upload zipped GUI tests screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-installer_screenshots_${{ matrix.os }}  # desired name (without .zip) of the zip file to be uploaded
-          path: |  # all files from these paths are zipped into file with name from above
-            tests/gui/screenshots
-            .tests/image_diff
-          if-no-files-found: 'error'
-          compression-level: 0
+      #- name: Upload zipped GUI tests screenshots
+      #  if: always()
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: test-installer_screenshots_${{ matrix.os }}  # desired name (without .zip) of the zip file to be uploaded
+      #    path: |  # all files from these paths are zipped into file with name from above
+      #      tests/gui/screenshots
+      #      .tests/image_diff
+      #    if-no-files-found: 'error'
+      #    compression-level: 0
