@@ -87,3 +87,7 @@ select = [
 
 [tool.ruff.lint.isort]
 force-single-line = true
+
+[ci.project.subdirs]
+scripts = 'tools/Scripts'
+# docs = { src = 'docs', dest = 'Documentation' }
