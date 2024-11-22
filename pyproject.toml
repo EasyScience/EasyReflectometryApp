@@ -186,15 +186,3 @@ port = 21
 user = 'u652432322.ci'
 prefix = 'download'
 repo_subdir = 'onlineRepository'
-[ci.cache]
-python_packages_path = "C:/Users/andpe/.conda/envs/era_ci/Lib/site-packages"
-
-[ci.app.info]
-build_date = "22 Nov 2024"
-date_for_qtifw = "2024-11-22"
-release_tag = "v1.0.0"
-release_title = "Version 1.0.0 (22 Nov 2024)"
-branch_name = ""
-branch_url = "//tree/"
-commit_sha_short = ""
-commit_url = "//commit/"
