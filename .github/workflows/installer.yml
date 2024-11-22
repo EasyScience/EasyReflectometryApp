@@ -258,23 +258,16 @@ jobs:
         run: |
           echo "SCRIPTS_PATH=$(python utils.py --get ci.project.subdirs.scripts)" >> $GITHUB_ENV
 
-      - name: Install needed libraries (Linux)
+      - name: Set up screen (Linux)
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
+          sudo apt-get install libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0 libxcb-cursor0
+          sudo apt-get install libpulse-mainloop-glib0
           sudo apt-get install libxkbcommon-x11-0
-      #    sudo apt-get install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0 libxcb-cursor0
-
-      # - name: Set up screen (Linux)
-      #  if: runner.os == 'Linux'
-      #  run: |
-      #    sudo apt-get update
-      #    sudo apt-get install libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0 libxcb-cursor0
-      #    sudo apt-get install libpulse-mainloop-glib0
-      #    sudo apt-get install libxkbcommon-x11-0
-      #    sudo apt-get install libegl1-mesa-dev
-      #    Xvfb :0 -screen 0 1920x1080x24 -ac &
-      #    echo "DISPLAY=:0" >> $GITHUB_ENV
+          sudo apt-get install libegl1-mesa-dev
+          Xvfb :0 -screen 0 1920x1080x24 -ac &
+          echo "DISPLAY=:0" >> $GITHUB_ENV
 
       # Method 1:
       # Not working since Oct 2023. VMware is replaced by VirtualBox
