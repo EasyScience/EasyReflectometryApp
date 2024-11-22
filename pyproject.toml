@@ -60,7 +60,7 @@ documentation = 'https://easyscience.github.io/EasyReflectometryApp/'
 dependencies = 'https://github.com/EasyScience/EasyReflectometryApp/blob/master/DEPENDENCIES.md'
 
 [tool.hatch.build.targets.wheel]
-packages = ['src/EasyReflectometryApp']
+packages = ['EasyReflectometryApp']
 
 # To allow dependencies residing in git 
 [tool.hatch.metadata]
@@ -145,6 +145,24 @@ maintenance_tool_suffix = 'MaintenanceTool'
 maintenance_file = 'signedmaintenancetool.exe'
 installation_dir_shortcut = { macos = '@ApplicationsDir@', ubuntu = '@HomeDir@', windows = '@ApplicationsDirX86@' }
 
+[ci.app.setup.build]
+# config
+config_dir = 'config'
+config_xml = 'config.xml'
+# packages
+packages_dir = 'packages'
+data_subsubdir = 'data'
+meta_subsubdir = 'meta'
+package_xml = 'package.xml'
+# package: app
+app_package_subdir = 'app'
+# package: docs
+#docs_package_subdir = 'docs'
+#docs_package_subdir = 'docs'
+#docs_package_name = 'Documentation'
+#docs_package_description = 'Documentation: User manual, text and video tutorials'
+#docs_package_version = '2020.7.11'
+
 [ci.pyinstaller]
 separator = { macos = ':', ubuntu = ':', windows = ';' }
 dir_suffix = { macos = '.app', ubuntu = '', windows = '' }
@@ -161,3 +179,10 @@ auto_exclude = { macos = ['_tkinter'], ubuntu = ['_tkinter'], windows = [''], al
 manual_exclude = [ 'mfc*', 'msvcp*', 'VCRUNTIME*', '*Qt*Bluetooth*', '*Qt*Bodymovin*', '*Qt*Gamepad*', '*Qt*Location*',
                    '*Qt*Nfc*', '*Qt*Purchasing*', '*Qt*QuickParticles*', '*Qt*QuickShapes*', '*Qt*RemoteObjects*',
                    '*Qt*Scxml*', '*Qt*Sensors*', '*Qt*Sql*', '*Qt*VirtualKeyboard*', '*Qt*Wayland*' ]
+
+[ci.app.setup.ftp]
+host = 'ftp.easydiffraction.org'
+port = 21
+user = 'u652432322.ci'
+prefix = 'download'
+repo_subdir = 'onlineRepository'
