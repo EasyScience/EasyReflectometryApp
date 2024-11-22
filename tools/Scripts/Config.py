@@ -33,8 +33,8 @@ class Config:
         self.build_dir = os.path.normpath(self.__dict__['ci']['project']['subdirs']['build'])
         self.dist_dir = os.path.normpath(self.__dict__['ci']['project']['subdirs']['distribution'])
         self.download_dir = os.path.normpath(self.__dict__['ci']['project']['subdirs']['download'])
-        self.screenshots_dir = os.path.normpath(self.__dict__['ci']['project']['subdirs']['screenshots'])
-        self.tutorials_dir = os.path.normpath(self.__dict__['ci']['project']['subdirs']['tutorials'])
+        # self.screenshots_dir = os.path.normpath(self.__dict__['ci']['project']['subdirs']['screenshots'])
+        # self.tutorials_dir = os.path.normpath(self.__dict__['ci']['project']['subdirs']['tutorials'])
         self.installation_dir = self.installationDir()
         self.installation_dir_for_qtifw = self.installationDirForQtifw()
 
@@ -58,7 +58,7 @@ class Config:
         # Artifacts
         self.setup_zip_path_short = self.setupZipPathShort()
         self.setup_zip_path = self.setupZipPath()
-        self.video_tutorial_path = self.videoTutorialPath()
+        # self.video_tutorial_path = self.videoTutorialPath()
 
         # Application repository
         self.repository_dir_suffix = self.__dict__['ci']['app']['setup']['repository_dir_suffix']
@@ -122,11 +122,11 @@ class Config:
         setup_zip_path = os.path.join(self.dist_dir, setup_zip_name)
         return setup_zip_path
 
-    def videoTutorialPath(self):
-        file_suffix = self.artifactsFileSuffix()
-        video_tutorial_name = f'tutorial_{self.setup_name}{file_suffix}.mp4'
-        video_tutorial_path = os.path.join(self.dist_dir, video_tutorial_name)
-        return video_tutorial_path
+    # def videoTutorialPath(self):
+    #     file_suffix = self.artifactsFileSuffix()
+    #     video_tutorial_name = f'tutorial_{self.setup_name}{file_suffix}.mp4'
+    #     video_tutorial_path = os.path.join(self.dist_dir, video_tutorial_name)
+    #     return video_tutorial_path
 
 
 ### Main
