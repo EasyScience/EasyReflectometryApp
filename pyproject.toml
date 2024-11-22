@@ -17,7 +17,7 @@ maintainers = [
     {name = "Andrew R. McCluskey", email = "andrew.mccluskey@ess.eu"},
     {name = "Andreas Pedersen", email = "andreas.pedersen@ess.eu"}
 ]
-license = {file = 'LICENSE'}
+license = {file = 'LICENSE.md'}
 classifiers = [
   'Development Status :: 4 - Beta',
   'License :: OSI Approved :: BSD License',
@@ -105,6 +105,15 @@ select = [
 [tool.ruff.lint.isort]
 force-single-line = true
 
+[ci.project]
+license_file = 'LICENSE.md' # how to combine this with tool.poetry.license???
+
+[ci.scripts]
+silent_install = 'SilentInstall.js'
+package_install = 'InstallerInstallScript.js'
+config_control = 'InstallerControlScript.js'
+config_style = 'style.qss'
+
 [ci.project.subdirs]
 scripts = 'tools/Scripts'
 download = 'ci/download'
@@ -120,3 +129,18 @@ file_name_base = 'QtInstallerFramework'
 file_platform = { macos = 'macOS-x64', ubuntu = 'linux-x64', windows = 'windows-x64' }
 file_ext = { macos = 'dmg', ubuntu = 'run', windows = 'exe' }
 installation_path = { macOS = '/Users/runner/Qt', Linux = '/home/runner/Qt', Windows = 'C:\Qt' }
+
+[ci.app.icon]
+dir = ['Gui', 'Resources', 'Logo']
+file_name = 'App'
+file_ext = { macos = '.icns', ubuntu = '.png', windows = '.ico' }
+
+[ci.app.setup]
+build_dir_suffix = 'Setup'
+repository_dir_suffix = 'Repos'
+os = { macos = 'macOS', ubuntu = 'Linux', windows = 'Windows' }  # Should be the same as GH actions ${{ runner.os }}
+arch = { macos = 'x64', ubuntu = 'x64', windows = 'x64' }
+file_ext = { macos = '.app', ubuntu = '', windows = '.exe' }
+maintenance_tool_suffix = 'MaintenanceTool'
+maintenance_file = 'signedmaintenancetool.exe'
+installation_dir_shortcut = { macos = '@ApplicationsDir@', ubuntu = '@HomeDir@', windows = '@ApplicationsDirX86@' }
