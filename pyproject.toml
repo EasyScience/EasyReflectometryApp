@@ -39,8 +39,8 @@ dependencies = [
 ci = [
   'pyinstaller'
 #  'requests',
-#  'licensename',
-#  'dephell_licenses'
+  'licensename',
+  'dephell_licenses'
 ]
 
 [release]
