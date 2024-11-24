@@ -154,7 +154,8 @@ def runPyInstaller():
                 #'--target-architecture', 'universal2', # Target architecture (macOS only; valid values: x86_64, arm64, universal2). Error: _multiarray_tests.cpython-311-darwin.so is not a fat binary! (i.e. not multi-architecture)
                 #'--specpath', workDirPath(),           # Folder to store the generated spec file (default: current directory)
                 '--distpath',
-                '--collect-all reportlab.graphics.barcode',
+                '--collect-all',
+                'reportlab.graphics.barcode',
                 # Needed for reportlab
                 -CONFIG.dist_dir,  # Where to put the bundled app (default: ./dist)
                 '--workpath',
