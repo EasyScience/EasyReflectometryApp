@@ -10,16 +10,15 @@ from PySide6.QtCore import qInstallMessageHandler
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQml import qmlRegisterSingletonType
 
+from EasyReflectometryApp.Backends.Py import PyBackend
+from EasyReflectometryApp.Backends.Py.helpers import Application
+
 CURRENT_DIR = Path(__file__).parent  # path to qml components of the current project
 EASYAPP_DIR = CURRENT_DIR / '..' / '..' / 'EasyApp' / 'src'  # path to qml components of the easyapp module
 MAIN_QML = CURRENT_DIR / 'main.qml'  # path to the root qml file
 
 
 if __name__ == '__main__':
-    # Importing the backend class here to satisfy the PyInstaller
-    from Backends.Py import PyBackend
-    from Backends.Py.helpers import Application
-
     qInstallMessageHandler(console.qmlMessageHandler)
     console.debug('Custom Qt message handler defined')
 
