@@ -1,8 +1,10 @@
+from pathlib import Path
+
 import toml
 from PySide6.QtCore import Property
 from PySide6.QtCore import QObject
 
-PATH_PYPROJECT = 'pyproject.toml'
+PATH_PYPROJECT = Path(__file__).parents[3] / 'pyproject.toml'
 PYPROJECT = toml.load(PATH_PYPROJECT)
 
 

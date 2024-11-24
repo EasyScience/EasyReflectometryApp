@@ -10,8 +10,12 @@ from PySide6.QtCore import qInstallMessageHandler
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQml import qmlRegisterSingletonType
 
-from EasyReflectometryApp.Backends.Py import PyBackend
-from EasyReflectometryApp.Backends.Py.helpers import Application
+try:  # Needed by installer
+    from EasyReflectometryApp.Backends.Py import PyBackend
+    from EasyReflectometryApp.Backends.Py.helpers import Application
+except ImportError:  # Running locally
+    from Backends.Py import PyBackend
+    from Backends.Py.helpers import Application
 
 CURRENT_DIR = Path(__file__).parent  # path to qml components of the current project
 EASYAPP_DIR = CURRENT_DIR / '..' / '..' / 'EasyApp' / 'src'  # path to qml components of the easyapp module
