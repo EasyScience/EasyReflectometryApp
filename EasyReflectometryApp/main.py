@@ -23,8 +23,6 @@ except ImportError:  # Running locally
     INSTALLER = False
 
 CURRENT_DIR = Path(__file__).parent  # path to qml components of the current project
-EASYAPP_DIR = CURRENT_DIR / '..' / '..' / 'EasyApp' / 'src'  # path to qml components of the easyapp module
-# MAIN_QML = CURRENT_DIR / 'main.qml'  # path to the root qml file
 
 
 if __name__ == '__main__':
@@ -43,12 +41,12 @@ if __name__ == '__main__':
     if INSTALLER:
         path_main_qml = QUrl.fromLocalFile(CURRENT_DIR / 'EasyReflectometryApp' / 'Gui' / 'ApplicationWindow.qml')
         engine.addImportPath(QUrl.fromLocalFile(CURRENT_DIR / 'EasyReflectometryApp').toString())
-        engine.addImportPath(QUrl.fromLocalFile(EASYAPP_DIR).toString())
+        engine.addImportPath(QUrl.fromLocalFile(CURRENT_DIR / '..' / 'EasyApp' / 'src').toString())
         console.debug('Paths added where QML searches for components')
     else:
         path_main_qml = path_main_qml = CURRENT_DIR / 'Gui' / 'ApplicationWindow.qml'  # Running locally
         engine.addImportPath(CURRENT_DIR)
-        engine.addImportPath(EASYAPP_DIR)
+        engine.addImportPath(CURRENT_DIR / '..' / '..' / 'EasyApp' / 'src')
         console.debug('Paths added where QML searches for components')
 
     engine.load(path_main_qml)
