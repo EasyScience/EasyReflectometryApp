@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     path_main_qml = path_main_qml = CURRENT_DIR / 'main.qml'  # Running locally
     if not path_main_qml.exists():
-        path_main_qml = QUrl.fromLocalFile(CURRENT_DIR / 'main.qml')  # Running from installer
+        path_main_qml = QUrl.fromLocalFile(CURRENT_DIR / 'EasyReflectometryApp' / 'main.qml')  # Running from installer
 
     engine.load(path_main_qml)
     console.debug('Main QML component loaded')
