@@ -44,9 +44,9 @@ if __name__ == '__main__':
         files_2 = os.listdir(CURRENT_DIR / 'EasyApp')
         files_3 = os.listdir('.')
 
-        console.debug(files_1)
-        console.debug(files_2)
-        console.debug(files_3)
+        console.debug(str(files_1))
+        console.debug(str(files_2))
+        console.debug(str(files_3))
 
         console.debug('Paths added where QML searches for components')
 
