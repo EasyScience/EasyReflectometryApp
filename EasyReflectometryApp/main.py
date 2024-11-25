@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # © 2024 Contributors to the EasyReflectometryApp project <https://github.com/easyscience/EasyReflectometryApp>
 
-import os
 import sys
 from pathlib import Path
 
@@ -11,7 +10,7 @@ from PySide6.QtCore import qInstallMessageHandler
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQml import qmlRegisterSingletonType
 
-try:  # Needed by installer
+try:  # Running from installer
     from EasyReflectometryApp.Backends.Py import PyBackend
     from EasyReflectometryApp.Backends.Py.helpers import Application
 except ImportError:  # Running locally
@@ -40,11 +39,9 @@ if __name__ == '__main__':
     engine.addImportPath(CURRENT_DIR)
     console.debug('Paths added where QML searches for components')
 
-    dirs = os.listdir('.')
-    console.debug(f'{dirs}')
-    path_main_qml = Path('main.qml')
+    path_main_qml = path_main_qml = CURRENT_DIR / 'main.qml'  # Running locally
     if not path_main_qml.exists():
-        path_main_qml = CURRENT_DIR / path_main_qml
+        path_main_qml = Path('.') / 'EasyReflectometryApp ' / 'main.qml'  # Running from installer
 
     engine.load(path_main_qml)
     console.debug('Main QML component loaded')
