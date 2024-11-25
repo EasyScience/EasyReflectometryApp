@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # © 2024 Contributors to the EasyReflectometryApp project <https://github.com/easyscience/EasyReflectometryApp>
 
+import os
 import sys
 from pathlib import Path
 
@@ -19,7 +20,7 @@ except ImportError:  # Running locally
 
 CURRENT_DIR = Path(__file__).parent  # path to qml components of the current project
 EASYAPP_DIR = CURRENT_DIR / '..' / '..' / 'EasyApp' / 'src'  # path to qml components of the easyapp module
-MAIN_QML = CURRENT_DIR / 'main.qml'  # path to the root qml file
+# MAIN_QML = CURRENT_DIR / 'main.qml'  # path to the root qml file
 
 
 if __name__ == '__main__':
@@ -39,7 +40,13 @@ if __name__ == '__main__':
     engine.addImportPath(CURRENT_DIR)
     console.debug('Paths added where QML searches for components')
 
-    engine.load(MAIN_QML)
+    dirs = os.listdir('.')
+    console.debug(f'{dirs}')
+    path_main_qml = Path('main.qml')
+    if not path_main_qml.exists():
+        path_main_qml = CURRENT_DIR / path_main_qml
+
+    engine.load(path_main_qml)
     console.debug('Main QML component loaded')
 
     console.debug('Application event loop is about to start')
