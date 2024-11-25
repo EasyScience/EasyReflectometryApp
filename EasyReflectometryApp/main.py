@@ -41,10 +41,8 @@ if __name__ == '__main__':
     console.debug('Backend class is registered to be accessible from QML via the name PyBackend')
 
     if INSTALLER:
-        path_main_qml = QUrl.fromLocalFile(
-            CURRENT_DIR / 'EasyReflectometryApp' / 'Gui' / 'ApplicationWindow.qml'
-        )  # Running from installer
-        engine.addImportPath(QUrl.fromLocalFile(CURRENT_DIR).toString())
+        path_main_qml = QUrl.fromLocalFile(CURRENT_DIR / 'EasyReflectometryApp' / 'Gui' / 'ApplicationWindow.qml')
+        engine.addImportPath(QUrl.fromLocalFile(CURRENT_DIR / 'EasyReflectometryApp').toString())
         console.debug('Paths added where QML searches for components')
     else:
         path_main_qml = path_main_qml = CURRENT_DIR / 'Gui' / 'ApplicationWindow.qml'  # Running locally
