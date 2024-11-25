@@ -1,7 +1,8 @@
 from pathlib import Path
 
 from easyreflectometry import Project as ProjectLib
-from easyreflectometry.summary import Summary as SummaryLib
+
+# from easyreflectometry.summary import Summary as SummaryLib
 
 
 class Summary:
@@ -9,7 +10,7 @@ class Summary:
         self._created = True
 
         self._project_lib = project_lib
-        self._summary = SummaryLib(project_lib)
+        #        self._summary = SummaryLib(project_lib)
         self._file_name = 'summary'
 
     @property
@@ -30,14 +31,18 @@ class Summary:
 
     @property
     def as_html(self) -> str:
-        return self._summary.compile_html_summary()
+        #        return self._summary.compile_html_summary()
+        return ''
 
     def save_as_html(self) -> None:
         if not self._project_lib.path.exists():
             self._project_lib.path.mkdir(parents=True, exist_ok=True)
-        self._summary.save_html_summary(self.file_path.with_suffix('.html'))
+
+    #        self._summary.save_html_summary(self.file_path.with_suffix('.html'))
 
     def save_as_pdf(self) -> None:
         if not self._project_lib.path.exists():
             self._project_lib.path.mkdir(parents=True, exist_ok=True)
-        self._summary.save_pdf_summary(self.file_path.with_suffix('.pdf'))
+
+
+#        self._summary.save_pdf_summary(self.file_path.with_suffix('.pdf'))
