@@ -158,8 +158,8 @@ def runPyInstaller():
                 CONFIG.dist_dir,  # Where to put the bundled app (default: ./dist)
                 '--workpath',
                 CONFIG.build_dir,  # Where to put all the temporary work files, .log, .pyz and etc. (default: ./build)
-                #                '--collect-all',
-                #                'reportlab.graphics.barcode',
+                '--collect-all',
+                'reportlab.graphics.barcode',
                 *excludedModules(),  # Exclude modules
                 *addedData(),  # Add data
                 appIcon(),  # Application icon
