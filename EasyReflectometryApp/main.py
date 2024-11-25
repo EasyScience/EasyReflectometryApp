@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 from EasyApp.Logic.Logging import console
+from PySide6.QtCore import QUrl
 from PySide6.QtCore import qInstallMessageHandler
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQml import qmlRegisterSingletonType
@@ -41,7 +42,7 @@ if __name__ == '__main__':
 
     path_main_qml = path_main_qml = CURRENT_DIR / 'main.qml'  # Running locally
     if not path_main_qml.exists():
-        path_main_qml = Path('.') / 'EasyReflectometryApp ' / 'main.qml'  # Running from installer
+        path_main_qml = QUrl.fromLocalFile(CURRENT_DIR / 'main.qml')  # Running from installer
 
     engine.load(path_main_qml)
     console.debug('Main QML component loaded')
