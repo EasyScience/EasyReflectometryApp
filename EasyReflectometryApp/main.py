@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
         path_main_qml = QUrl.fromLocalFile(CURRENT_DIR / 'EasyReflectometryApp' / 'Gui' / 'ApplicationWindow.qml')
         engine.addImportPath(QUrl.fromLocalFile(CURRENT_DIR / 'EasyReflectometryApp').toString())
-        engine.addImportPath(QUrl.fromLocalFile(CURRENT_DIR / 'EasyApp' / 'src').toString())
+        engine.addImportPath(QUrl.fromLocalFile(CURRENT_DIR / 'EasyApp').toString())
         console.debug('Paths added where QML searches for components')
     else:
         path_main_qml = path_main_qml = CURRENT_DIR / 'Gui' / 'ApplicationWindow.qml'  # Running locally
