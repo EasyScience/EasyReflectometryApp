@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # © 2024 Contributors to the EasyReflectometryApp project <https://github.com/easyscience/EasyReflectometryApp>
 
+import os
 import sys
 from pathlib import Path
 
@@ -39,6 +40,16 @@ if __name__ == '__main__':
     console.debug('Backend class is registered to be accessible from QML via the name PyBackend')
 
     if INSTALLER:
+        files_1 = os.listdir(CURRENT_DIR)
+        files_2 = os.listdir(CURRENT_DIR / 'EasyApp')
+        files_3 = os.listdir('.')
+
+        console.debug(files_1)
+        console.debug(files_2)
+        console.debug(files_3)
+
+        console.debug('Paths added where QML searches for components')
+
         path_main_qml = QUrl.fromLocalFile(CURRENT_DIR / 'EasyReflectometryApp' / 'Gui' / 'ApplicationWindow.qml')
         engine.addImportPath(QUrl.fromLocalFile(CURRENT_DIR / 'EasyReflectometryApp').toString())
         engine.addImportPath(QUrl.fromLocalFile(CURRENT_DIR / 'EasyApp' / 'src').toString())
