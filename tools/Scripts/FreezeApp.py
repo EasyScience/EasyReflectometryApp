@@ -147,8 +147,6 @@ def runPyInstaller():
                 f'--name={CONFIG.app_name}',  # Name to assign to the bundled app and spec file (default: first script’s basename)
                 '--log-level',
                 'WARN',  # LEVEL may be one of DEBUG, INFO, WARN, ERROR, CRITICAL (default: INFO).
-                '--collect-all',
-                'reportlab.graphics.barcode',
                 # Needed for reportlab
                 '--noconfirm',  # Replace output directory (default: SPECPATH/dist/SPECNAME) without asking for confirmation
                 '--clean',  # Clean PyInstaller cache and remove temporary files before building

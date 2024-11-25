@@ -2,6 +2,11 @@ from pathlib import Path
 
 from easyreflectometry import Project as ProjectLib
 from easyreflectometry.summary import Summary as SummaryLib
+from reportlab.graphics.barcode import code39  # noqa: F401 Neeeded for reportlab to work with PyInstaller
+from reportlab.graphics.barcode import code93  # noqa: F401 Neeeded for reportlab to work with PyInstaller
+from reportlab.graphics.barcode import ecc200datamatrix  # noqa: F401 Neeeded for reportlab to work with PyInstaller
+from reportlab.graphics.barcode import usps  # noqa: F401 Neeeded for reportlab to work with PyInstaller
+from reportlab.graphics.barcode import usps4s  # noqa: F401 Neeeded for reportlab to work with PyInstaller
 
 
 class Summary:
