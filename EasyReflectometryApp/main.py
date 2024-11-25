@@ -14,9 +14,13 @@ from PySide6.QtQml import qmlRegisterSingletonType
 try:  # Running from installer
     from EasyReflectometryApp.Backends.Py import PyBackend
     from EasyReflectometryApp.Backends.Py.helpers import Application
+
+    INSTALLER = True
 except ImportError:  # Running locally
     from Backends.Py import PyBackend
     from Backends.Py.helpers import Application
+
+    INSTALLER = False
 
 CURRENT_DIR = Path(__file__).parent  # path to qml components of the current project
 EASYAPP_DIR = CURRENT_DIR / '..' / '..' / 'EasyApp' / 'src'  # path to qml components of the easyapp module
@@ -36,13 +40,15 @@ if __name__ == '__main__':
     qmlRegisterSingletonType(PyBackend, 'Backends', 1, 0, 'PyBackend')
     console.debug('Backend class is registered to be accessible from QML via the name PyBackend')
 
-    engine.addImportPath(EASYAPP_DIR)
-    engine.addImportPath(CURRENT_DIR)
-    console.debug('Paths added where QML searches for components')
-
-    path_main_qml = path_main_qml = CURRENT_DIR / 'main.qml'  # Running locally
-    if not path_main_qml.exists():
+    if INSTALLER:
         path_main_qml = QUrl.fromLocalFile(CURRENT_DIR / 'EasyReflectometryApp' / 'main.qml')  # Running from installer
+        engine.addImportPath(QUrl.fromLocalFile(CURRENT_DIR / 'EasyReflectometryApp'))
+        console.debug('Paths added where QML searches for components')
+    else:
+        path_main_qml = path_main_qml = CURRENT_DIR / 'main.qml'  # Running locally
+        engine.addImportPath(EASYAPP_DIR)
+        engine.addImportPath(CURRENT_DIR)
+        console.debug('Paths added where QML searches for components')
 
     engine.load(path_main_qml)
     console.debug('Main QML component loaded')
