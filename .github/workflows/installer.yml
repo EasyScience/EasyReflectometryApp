@@ -317,7 +317,7 @@ jobs:
         run: python ${{ env.SCRIPTS_PATH }}/CheckAppExists.py
 
       - name: Run app in testmode and quit (macOS & Linux)
-        if: runner.os != 'Windows'  # disabled because it can't exit app and one can't see what is going on there (no GitHub logging)...
+      #  if: runner.os != 'Windows'  # disabled because it can't exit app and one can't see what is going on there (no GitHub logging)...
         run: python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
 
       #- name: Run screenshots comparison tests
