@@ -177,26 +177,27 @@ class SimulationProxy(QObject):
             self.parent._plotting_1d_proxy.setPureData(x, self.parent._model_proxy.getPureModelReflectometry(x))
         sld_profile = self.parent._model_proxy._pure.interface.sld_profile(self.parent._model_proxy._pure.unique_name)
         self.parent._plotting_1d_proxy.setSampleSldData(*sld_profile)
-        
-        to_use = self.parent._model_proxy._model[self.parent._model_proxy.currentModelIndex]
-        if self.parent._data_proxy.experimentLoaded:
-            exp = self.parent._data_proxy._data.experiments[self.parent._data_proxy.currentDataIndex]
-            x = exp.x
-            to_use = self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].model
 
-        y = self.parent._interface.fit_func(x, to_use.unique_name)
-        if self._plot_rq4:
-            y *= (x ** 4)
-        sld_profile = self.parent._interface.sld_profile(to_use.unique_name)
+        if self.parent._model_proxy.currentModelIndex < len(self.parent._model_proxy._model):
+            to_use = self.parent._model_proxy._model[self.parent._model_proxy.currentModelIndex]
+            if self.parent._data_proxy.experimentLoaded:
+                exp = self.parent._data_proxy._data.experiments[self.parent._data_proxy.currentDataIndex]
+                x = exp.x
+                to_use = self.parent._data_proxy._data[self.parent._data_proxy.currentDataIndex].model
 
-        self.parent._plotting_1d_proxy.setCalculatedData(x, y)
-        bkg = np.empty(x.size)
-        bkg.fill(to_use.background.value)
-        self.parent._plotting_1d_proxy.setBackgroundData(x, bkg)
-        scale = np.empty(x.size)
-        scale.fill(to_use.scale.value)
-        self.parent._plotting_1d_proxy.setScaleData(x, scale)
-        self.parent._plotting_1d_proxy.setAnalysisSldData(*sld_profile)
+            y = self.parent._interface.fit_func(x, to_use.unique_name)
+            if self._plot_rq4:
+                y *= (x ** 4)
+            sld_profile = self.parent._interface.sld_profile(to_use.unique_name)
+
+            self.parent._plotting_1d_proxy.setCalculatedData(x, y)
+            bkg = np.empty(x.size)
+            bkg.fill(to_use.background.value)
+            self.parent._plotting_1d_proxy.setBackgroundData(x, bkg)
+            scale = np.empty(x.size)
+            scale.fill(to_use.scale.value)
+            self.parent._plotting_1d_proxy.setScaleData(x, scale)
+            self.parent._plotting_1d_proxy.setAnalysisSldData(*sld_profile)
 
     def resetSimulation(self):
         self._background_as_obj = self._defaultBackground()

@@ -32,7 +32,7 @@ class MinimizerProxy(QObject):
 
     @Property(int, notify=currentMinimizerChanged)
     def currentMinimizerIndex(self):
-        current_name = self.parent._fitter_proxy.eFitter.easy_f.minimizer.name
+        current_name = self.parent._fitter_proxy.eFitter.easy_science_multi_fitter.minimizer.name
         return self.minimizerNames.index(current_name)
 
     @currentMinimizerIndex.setter
@@ -41,7 +41,7 @@ class MinimizerProxy(QObject):
         if self.currentMinimizerIndex == new_index:
             return
         new_name = self.minimizerNames[new_index]
-        self.parent._fitter_proxy.eFitter.easy_f.switch_minimizer(new_name)
+        self.parent._fitter_proxy.eFitter.easy_science_multi_fitter.switch_minimizer(new_name)
         self.currentMinimizerChanged.emit()
 
     @Property(int, notify=currentMinimizerMethodChanged)

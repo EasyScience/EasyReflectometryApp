@@ -12,7 +12,7 @@ import numpy as np
 from easyApp.Logic.Utils.Utils import generalizePath
 
 from easyreflectometry.data import load
-from easyreflectometry.experiment import PercentageFhwm
+from easyreflectometry.model import PercentageFhwm
 
 from ..DataStore import DataSet1D
 from ..DataStore import DataStore

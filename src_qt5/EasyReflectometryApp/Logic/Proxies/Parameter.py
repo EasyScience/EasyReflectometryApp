@@ -303,7 +303,7 @@ class ParameterProxy(QObject):
         self.parent.sampleChanged.emit()
 
     def removeAllConstraints(self):
-        for _ in range(len(self.eFitter.easy_f.fit_constraints())):
+        for _ in range(len(self.eFitter.easy_science_multi_fitter.fit_constraints())):
             self.removeConstraintByIndex(0)
         self.constraintsRemoved.emit()
         self.sampleChanged.emit()

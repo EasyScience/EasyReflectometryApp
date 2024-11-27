@@ -8,7 +8,7 @@ from PySide2.QtCore import Slot
 
 from easyscience import global_object
 
-from easyreflectometry.fitting import Fitter as easyFitter
+from easyreflectometry.fitting import MultiFitter as easyFitter
 
 
 class Fitter(QThread):
@@ -148,7 +148,7 @@ class FitterProxy(QObject):
         weights = [1 / i.ye for i in exp_data]
         method = self.parent.minimizer._current_minimizer.method
 
-        res = self.eFitter.easy_f.fit(x, y, weights=weights, method=method)
+        res = self.eFitter.easy_science_multi_fitter.fit(x, y, weights=weights, method=method)
         self._setFitResults(res)
 
     # def threaded_fit(self):
