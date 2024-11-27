@@ -1,6 +1,6 @@
-# SPDX-FileCopyrightText: 2023 easyDiffraction contributors <support@easydiffraction.org>
+# SPDX-FileCopyrightText: 2023 EasyReflectometry contributors <support@easyreflectometry.org>
 # SPDX-License-Identifier: BSD-3-Clause
-# © 2021-2023 Contributors to the easyDiffraction project <https://github.com/easyScience/easyDiffractionApp>
+# © 2021-2023 Contributors to the EasyReflectometry project <https://github.com/easyScience/EasyReflectometryApp>
 
 import glob
 import os

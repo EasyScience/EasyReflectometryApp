@@ -1,33 +1,33 @@
-# SPDX-FileCopyrightText: 2023 easyDiffraction contributors <support@easydiffraction.org>
+# SPDX-FileCopyrightText: 2023 EasyReflectometry contributors <support@easyreflectometry.org>
 # SPDX-License-Identifier: BSD-3-Clause
-# © 2021-2023 Contributors to the easyDiffraction project <https://github.com/easyScience/easyDiffractionApp>
+# © 2021-2023 Contributors to the EasyReflectometry project <https://github.com/easyScience/EasyReflectometryApp>
 
-__author__ = "github.com/AndrewSazonov"
+__author__ = 'github.com/AndrewSazonov'
 __version__ = '0.0.1'
 
-import os, sys
-import Functions, Config
+import os
+import sys
+
+import Config
+import Functions
 
 CONFIG = Config.Config(sys.argv[1], sys.argv[2])
 
 
 def setupExePath():
     d = {
-        'macos':   os.path.join(CONFIG.setup_full_name, 'Contents', 'MacOS', CONFIG.setup_name),
-        'ubuntu':  CONFIG.setup_full_name,
-        'windows': CONFIG.setup_full_name
+        'macos': os.path.join(CONFIG.setup_full_name, 'Contents', 'MacOS', CONFIG.setup_name),
+        'ubuntu': CONFIG.setup_full_name,
+        'windows': CONFIG.setup_full_name,
     }
     return os.path.join(CONFIG.dist_dir, d[CONFIG.os])
+
 
 def fixPermissions():
     if CONFIG.os == 'macos' or 'ubuntu':
         try:
             message = f'fixing permissions for os {CONFIG.os}'
-            Functions.run(
-                'chmod',
-                '+x',
-                setupExePath()
-            )
+            Functions.run('chmod', '+x', setupExePath())
         except Exception as exception:
             Functions.printFailMessage(message, exception)
             sys.exit(1)
@@ -36,17 +36,11 @@ def fixPermissions():
     else:
         Functions.printNeutralMessage(f'No fixing permissions needed for os {CONFIG.os}')
 
+
 def runInstallerSilently():
     try:
         message = f'install {CONFIG.app_name}'
-        Functions.run(
-            setupExePath(),
-            'install',
-            '--verbose',
-            '--confirm-command',
-            '--default-answer',
-            '--accept-licenses'
-        )
+        Functions.run(setupExePath(), 'install', '--verbose', '--confirm-command', '--default-answer', '--accept-licenses')
     except Exception as exception:
         Functions.printFailMessage(message, exception)
         sys.exit(1)
@@ -54,6 +48,6 @@ def runInstallerSilently():
         Functions.printSuccessMessage(message)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     fixPermissions()
     runInstallerSilently()
