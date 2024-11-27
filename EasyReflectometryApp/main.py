@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # © 2024 Contributors to the EasyReflectometryApp project <https://github.com/easyscience/EasyReflectometryApp>
 import argparse
-import os
 import sys
 from pathlib import Path
 
@@ -45,23 +44,13 @@ if __name__ == '__main__':
     qmlRegisterSingletonType(PyBackend, 'Backends', 1, 0, 'PyBackend')
     console.debug('Backend class is registered to be accessible from QML via the name PyBackend')
 
-    if INSTALLER:
-        files_1 = os.listdir(CURRENT_DIR)
-        files_2 = os.listdir(CURRENT_DIR / 'EasyApp')
-        files_3 = os.listdir(CURRENT_DIR / 'EasyApp' / 'Gui')
-
-        console.debug(str(files_1))
-        console.debug(str(files_2))
-        console.debug(str(files_3))
-
-        console.debug('Paths added where QML searches for components')
-
+    if INSTALLER:  # Running from installer
         path_main_qml = QUrl.fromLocalFile(CURRENT_DIR / 'EasyReflectometryApp' / 'Gui' / 'ApplicationWindow.qml')
         engine.addImportPath(CURRENT_DIR / 'EasyReflectometryApp')
         engine.addImportPath(CURRENT_DIR)
         console.debug('Paths added where QML searches for components')
-    else:
-        path_main_qml = path_main_qml = CURRENT_DIR / 'Gui' / 'ApplicationWindow.qml'  # Running locally
+    else:  # Running locally
+        path_main_qml = path_main_qml = CURRENT_DIR / 'Gui' / 'ApplicationWindow.qml'
         engine.addImportPath(CURRENT_DIR)
         engine.addImportPath(CURRENT_DIR / '..' / '..' / 'EasyApp' / 'src')
         console.debug('Paths added where QML searches for components')
