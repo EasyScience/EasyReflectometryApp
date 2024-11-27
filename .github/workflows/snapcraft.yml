@@ -63,8 +63,7 @@ jobs:
           echo "SNAP_FILENAME=$(ls *.snap)" >> $GITHUB_ENV
 
       - name: Publish Develop Branch to snapcraft beta
-        #  if: steps.branch-name.outputs.current_branch == 'develop'
-        if: steps.branch-name.outputs.current_branch == 'master' # temporarily master will produce beta
+        if: steps.branch-name.outputs.current_branch == 'develop'
         uses: snapcore/action-publish@v1
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
