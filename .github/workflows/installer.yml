@@ -74,62 +74,11 @@ jobs:
         run: |
           echo "SETUP_EXE_PATH=$(python ${{ env.SCRIPTS_PATH }}/Config.py ${{ env.BRANCH_NAME }} ${{ matrix.os }} setup_exe_path)" >> $GITHUB_ENV
 
-#      - name: Create python resources file
-#        run: pyside6-rcc ${{ env.PACKAGE_PATH }}/resources.qrc -o ${{ env.PACKAGE_PATH }}/resources.py
-#
       - name: Install needed libraries (Linux)
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0 libxcb-cursor0
-#          sudo apt-get install libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0 libxcb-cursor0
-#          sudo apt-get install libpulse-mainloop-glib0
-#          sudo apt-get install libxkbcommon-x11-0
-#          sudo apt-get install libegl1-mesa-dev
-#          Xvfb :0 -screen 0 1920x1080x24 -ac &
-#          echo "DISPLAY=:0" >> $GITHUB_ENV
-
-      # Method 1:
-      # Not working since Oct 2023. VMware is replaced by VirtualBox
-      #   "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
-      #   system_profiler SPDisplaysDataType | grep Resolution
-      # Method 2:
-      # Worked on macOS 12.6.9, but the default resolution already was 1920x1080: https://github.com/easyScience/EasyDiffractionBeta/actions/runs/6575129372/job/17861583655
-      # Fails on macOS 12.7, where default resolution is 1176x885: https://github.com/easyScience/EasyDiffractionBeta/actions/runs/6576347514/job/17865526935
-      # Works on macOS 13.6, where default resolution is again 1920x1080: https://github.com/easyScience/EasyDiffractionBeta/actions/runs/6576486407/job/17866007760
-      #    brew install screenresolution
-      #    screenresolution list
-      #    screenresolution get
-      #    screenresolution set 1920x1080x32@30
-      #    screenresolution get
-#      - name: Set up screen (macOS, not flyci)
-#        if: matrix.os == 'macos-13'  # runner.os == 'macOS'
-#        run: |
-#          system_profiler SPDisplaysDataType | grep Resolution
-
-#      - name: Set up screen (Windows)
-#        if: runner.os == 'Windows'
-#        run: |
-#          Set-DisplayResolution -Width 1920 -Height 1080 -Force
-#          Get-DisplayResolution
-
-#      - name: Run app in testmode and quit
-#        shell: bash
-#        run: python ${{ env.PACKAGE_NAME }}/main.py --testmode
-
-#      - name: Run screenshots comparison tests
-#        run: pytest tests/gui --color=yes
-
-#      - name: Upload zipped GUI tests screenshots
-#        if: always()
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: build-installer_screenshots_${{ matrix.os }}  # desired name (without .zip) of the zip file to be uploaded
-#          path: |  # all files from these paths are zipped into file with name from above
-#            tests/gui/screenshots
-#            .tests/image_diff
-#          if-no-files-found: 'error'
-#          compression-level: 0
 
       - name: Create freezed python app bundle with PyInstaller
         run: python ${{ env.SCRIPTS_PATH }}/FreezeApp.py
@@ -204,12 +153,6 @@ jobs:
           name: ${{ env.RELEASE_TITLE }}
           bodyFile: "RELEASE.md"
 
-      #- name: Upload online app installer to repository via FTP (master branch)
-      #  if: github.event_name == 'push' && env.BRANCH_NAME == 'master'
-      #  run: >
-      #    python ${{ env.SCRIPTS_PATH }}/UploadToFtp.py
-      #    ${{ env.BRANCH_NAME }} ${{ matrix.os }}
-      #    ${{ secrets.APP_REPO_FTP_PASSWORD }}
 
   test-installer:
     needs: build-installer
@@ -239,7 +182,6 @@ jobs:
         run: |
           python -m pip install toml
           python -m pip install requests
-#          flit install --only-deps  # Install the dependencies, but not the EasyDiffractionApp package itself
 
       - name: Declare env variables on push only
         if: github.event_name == 'push'
@@ -270,30 +212,6 @@ jobs:
           Xvfb :0 -screen 0 1920x1080x24 -ac &
           echo "DISPLAY=:0" >> $GITHUB_ENV
 
-      # Method 1:
-      # Not working since Oct 2023. VMware is replaced by VirtualBox
-      #   "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080
-      #   system_profiler SPDisplaysDataType | grep Resolution
-      # Method 2:
-      # Worked on macOS 12.6.9, but the default resolution already was 1920x1080: https://github.com/easyScience/EasyDiffractionBeta/actions/runs/6575129372/job/17861583655
-      # Fails on macOS 12.7, where default resolution is 1176x885: https://github.com/easyScience/EasyDiffractionBeta/actions/runs/6576347514/job/17865526935
-      # Works on macOS 13.6, where default resolution is again 1920x1080: https://github.com/easyScience/EasyDiffractionBeta/actions/runs/6576486407/job/17866007760
-      #    brew install screenresolution
-      #    screenresolution list
-      #    screenresolution get
-      #    screenresolution set 1920x1080x32@30
-      #    screenresolution get
-      # - name: Set up screen (macOS, not flyci)
-      #  if: matrix.os == 'macos-13'  # runner.os == 'macOS'
-      #  run: |
-      #    system_profiler SPDisplaysDataType | grep Resolution
-
-      #- name: Set up screen (Windows)
-      #  if: runner.os == 'Windows'
-      #  run: |
-      #    Set-DisplayResolution -Width 1920 -Height 1080 -Force
-      #    Get-DisplayResolution
-
       - name: Download zipped offline app installer from from the previous job step
         uses: actions/download-artifact@v4
         with:
@@ -313,24 +231,9 @@ jobs:
           python ${{ env.SCRIPTS_PATH }}/InstallApp.py
           ${{ env.BRANCH_NAME }} ${{ matrix.os }}
 
-      - name: Check app istallation is done
+      - name: Check app installation is done
         run: python ${{ env.SCRIPTS_PATH }}/CheckAppExists.py
 
       - name: Run app in testmode and quit (macOS & Linux)
-      #  if: runner.os != 'Windows'  # disabled because it can't exit app and one can't see what is going on there (no GitHub logging)...
+        if: runner.os != 'Windows'  # disabled because it can't exit app and one can't see what is going on there (no GitHub logging)...
         run: python ${{ env.SCRIPTS_PATH }}/RunApp.py --testmode
-
-      #- name: Run screenshots comparison tests
-      #  if: runner.os != 'Windows'  # disabled as didn't run app in test in the previous step
-      #  run: pytest tests/gui --color=yes
-
-      #- name: Upload zipped GUI tests screenshots
-      #  if: always()
-      #  uses: actions/upload-artifact@v4
-      #  with:
-      #    name: test-installer_screenshots_${{ matrix.os }}  # desired name (without .zip) of the zip file to be uploaded
-      #    path: |  # all files from these paths are zipped into file with name from above
-      #      tests/gui/screenshots
-      #      .tests/image_diff
-      #    if-no-files-found: 'error'
-      #    compression-level: 0
