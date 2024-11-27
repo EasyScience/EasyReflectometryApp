@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2024 EasyReflectometryApp contributors
 # SPDX-License-Identifier: BSD-3-Clause
 # © 2024 Contributors to the EasyReflectometryApp project <https://github.com/easyscience/EasyReflectometryApp>
-
+import argparse
 import os
 import sys
 from pathlib import Path
@@ -27,6 +27,10 @@ CURRENT_DIR = Path(__file__).parent  # path to qml components of the current pro
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-t', '--testmode', action='store_true', help='run the application in test mode')
+    args = parser.parse_args()
+
     qInstallMessageHandler(console.qmlMessageHandler)
     console.debug('Custom Qt message handler defined')
 
@@ -35,6 +39,8 @@ if __name__ == '__main__':
 
     engine = QQmlApplicationEngine()
     console.debug(f'QML application engine created {engine}')
+
+    engine.rootContext().setContextProperty('isTestMode', args.testmode)
 
     qmlRegisterSingletonType(PyBackend, 'Backends', 1, 0, 'PyBackend')
     console.debug('Backend class is registered to be accessible from QML via the name PyBackend')

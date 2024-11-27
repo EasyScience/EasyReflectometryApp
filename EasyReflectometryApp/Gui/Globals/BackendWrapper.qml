@@ -30,6 +30,13 @@ QtObject {
             return Backends.PyBackend
         }
     }
+    readonly property bool testMode: {
+        if (typeof isTestMode == 'undefined') {
+            return false
+        } else{ 
+            return isTestMode
+        }
+    }
 
     /////////////
     // Status bar

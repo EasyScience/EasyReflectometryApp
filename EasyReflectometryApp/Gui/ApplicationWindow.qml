@@ -10,6 +10,17 @@ import Gui.Globals as Globals
 
 EaComponents.ApplicationWindow {
 
+    // Timer for Creating delay
+    Timer {
+        id: timer
+    }
+    function delay(delayTime, cb) {
+        timer.interval = delayTime;
+        timer.repeat = false;
+        timer.triggered.connect(cb);
+        timer.start();
+    }
+
     ///////////////////
     // APPLICATION BAR
     ///////////////////
@@ -160,7 +171,19 @@ EaComponents.ApplicationWindow {
 
     onClosing: Qt.quit()
 
-    Component.onCompleted: console.debug(`Application window loaded ::: ${this}`)
-    Component.onDestruction: console.debug(`Application window destroyed ::: ${this}`)
+    Component.onCompleted: {
+        console.debug(`Application window loaded ::: ${this}`)
+        if (Globals.BackendWrapper.testMode) {
 
+            // To ensure that Qt starts up there is a delay before the it is shut down again.
+            // When testing the application it should stay alive longer than the delay.
+            console.debug('*** TEST MODE START ***')
+            delay(30000, function() {
+                console.debug('*** TEST MODE 30 s DELAYED END ***')
+                Qt.quit()
+            })
+        }
+    }
+    Component.onDestruction: console.debug(`Application window destroyed ::: ${this}`)
 }
+
