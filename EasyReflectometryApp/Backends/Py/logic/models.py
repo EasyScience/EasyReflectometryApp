@@ -2,7 +2,7 @@ from typing import Union
 
 from easyreflectometry import Project as ProjectLib
 from easyreflectometry.model import ModelCollection
-from easyreflectometry.model.resolution_functions import PercentageFhwm
+from easyreflectometry.model.resolution_functions import PercentageFwhm
 
 
 class Models:
@@ -32,7 +32,7 @@ class Models:
 
     @property
     def resolution_at_current_index(self) -> str:
-        if isinstance(self._models[self.index].resolution_function, PercentageFhwm):
+        if isinstance(self._models[self.index].resolution_function, PercentageFwhm):
             return str(self._models[self.index].resolution_function.constant)
         else:
             return '-'
@@ -64,7 +64,7 @@ class Models:
         return False
 
     def set_resolution_at_current_index(self, new_value: str) -> bool:
-        if isinstance(self._models[self.index].resolution_function, PercentageFhwm):
+        if isinstance(self._models[self.index].resolution_function, PercentageFwhm):
             if self._models[self.index].resolution_function.constant != float(new_value):
                 self._models[self.index].resolution_function.constant = float(new_value)
                 return True
