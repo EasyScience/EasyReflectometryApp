@@ -186,7 +186,7 @@ manual_exclude = [ 'mfc*', 'msvcp*', 'VCRUNTIME*', '*Qt*Bluetooth*', '*Qt*Bodymo
                    '*Qt*Scxml*', '*Qt*Sensors*', '*Qt*Sql*', '*Qt*VirtualKeyboard*', '*Qt*Wayland*' ]
 
 [ci.app.setup.ftp]
-host = 'ftp.easydiffraction.org'
+host = 'ftp.easyreflectometry.org'
 port = 21
 user = 'u652432322.ci'
 prefix = 'download'

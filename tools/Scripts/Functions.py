@@ -1,21 +1,23 @@
-# SPDX-FileCopyrightText: 2023 easyDiffraction contributors <support@easydiffraction.org>
+# SPDX-FileCopyrightText: 2023 EasyReflectometry contributors <support@easyreflectometry.org>
 # SPDX-License-Identifier: BSD-3-Clause
-# © 2021-2023 Contributors to the easyDiffraction project <https://github.com/easyScience/easyDiffractionApp>
+# © 2021-2023 Contributors to the EasyReflectometry project <https://github.com/easyScience/EasyReflectometryApp>
 
-__author__ = "github.com/AndrewSazonov"
+__author__ = 'github.com/AndrewSazonov'
 __version__ = '0.0.1'
 
-import os, sys
-import toml
-import zipfile
-import subprocess
-import requests
-import shutil
+import os
 import platform
+import shutil
+import subprocess
+import sys
+import zipfile
 from distutils import dir_util
 
+import requests
+import toml
 
 # FUNCTIONS
+
 
 def coloredText(message='', style='1', background_color='49m', text_color='39'):
     # http://ozzmaker.com/add-colour-to-text-in-python/
@@ -157,7 +159,7 @@ def createFile(path, content):
         return
     try:
         message = f'create file {path}'
-        with open(path, "w") as file:
+        with open(path, 'w') as file:
             file.write(content)
     except Exception as exception:
         printFailMessage(message, exception)
@@ -256,7 +258,7 @@ def dict2xml(d, root_node=None, add_xml_version=True):
             elif key[0] == '@':
                 attr = attr + ' ' + key[1::] + '="' + str(value) + '"'
             else:
-                xml = '<' + key + ">" + str(value) + '</' + key + '>'
+                xml = '<' + key + '>' + str(value) + '</' + key + '>'
                 children.append(xml)
 
     elif isinstance(d, list):
@@ -264,7 +266,7 @@ def dict2xml(d, root_node=None, add_xml_version=True):
             children.append(dict2xml(value, root_node=root, add_xml_version=False))
 
     else:
-        raise TypeError(f"Type {type(d)} is not supported")
+        raise TypeError(f'Type {type(d)} is not supported')
 
     end_tag = '>' if children else '/>'
 
@@ -272,7 +274,7 @@ def dict2xml(d, root_node=None, add_xml_version=True):
         xml = '<' + root + attr + end_tag
 
     if children:
-        xml += "".join(children)
+        xml += ''.join(children)
 
         if wrap:
             xml += '</' + root + '>'
@@ -324,7 +326,7 @@ def zip(source, destination):
                         arcpath = os.path.join(rootdirname, parentpath)
                         zf.write(filepath, arcpath)
             else:
-                printFailMessage(message + ": It is a special file (socket, FIFO, device file)")
+                printFailMessage(message + ': It is a special file (socket, FIFO, device file)')
                 sys.exit()
     except Exception as exception:
         printFailMessage(message, exception)

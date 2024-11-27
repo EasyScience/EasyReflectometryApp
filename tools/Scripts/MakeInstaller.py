@@ -1,6 +1,6 @@
-# SPDX-FileCopyrightText: 2023 easyDiffraction contributors <support@easydiffraction.org>
+# SPDX-FileCopyrightText: 2023 EasyReflectometry contributors <support@easyreflectometry.org>
 # SPDX-License-Identifier: BSD-3-Clause
-# © 2021-2023 Contributors to the easyDiffraction project <https://github.com/easyScience/easyDiffractionApp>
+# © 2021-2023 Contributors to the EasyReflectometry project <https://github.com/easyScience/EasyReflectometryApp>
 
 import os
 import sys
@@ -112,7 +112,7 @@ def onlineRepositoryUrl():
     prefix = CONFIG['ci']['app']['setup']['ftp']['prefix']
     repo_subdir = CONFIG['ci']['app']['setup']['ftp']['repo_subdir']
     # return f'https://{prefix}.{host}/{repo_subdir}/{CONFIG.setup_os}'
-    return f'ftp://u652432322.repo:easyDiffraction123@download.easydiffraction.org/{CONFIG.setup_os}'
+    return f'ftp://u652432322.repo:EasyReflectometry123@download.easyreflectometry.org/{CONFIG.setup_os}'
 
 
 def installerConfigXml():
