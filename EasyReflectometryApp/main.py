@@ -42,7 +42,7 @@ if __name__ == '__main__':
     if INSTALLER:
         files_1 = os.listdir(CURRENT_DIR)
         files_2 = os.listdir(CURRENT_DIR / 'EasyApp')
-        files_3 = os.listdir('.')
+        files_3 = os.listdir(CURRENT_DIR / 'EasyApp' / 'Gui')
 
         console.debug(str(files_1))
         console.debug(str(files_2))
