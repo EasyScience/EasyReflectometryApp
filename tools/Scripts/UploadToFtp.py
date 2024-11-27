@@ -1,9 +1,19 @@
+# SPDX-FileCopyrightText: 2023 easyDiffraction contributors <support@easydiffraction.org>
+# SPDX-License-Identifier: BSD-3-Clause
+# © 2021-2023 Contributors to the easyDiffraction project <https://github.com/easyScience/easyDiffractionApp>
+
+__author__ = "github.com/AndrewSazonov"
+__version__ = '0.0.1'
+
 import os, sys
 import ftplib
+import pathlib
 import Functions, Config
 
 
-CONFIG = Config.Config()
+CONFIG = Config.Config(sys.argv[1], sys.argv[2])
+
+FTP_PASSWORD = sys.argv[3]
 
 def connect(ftp, host, port):
     try:
@@ -125,26 +135,24 @@ def removeDir(ftp, path):
         Functions.printSuccessMessage(message)
 
 def deploy():
-    branch = sys.argv[1]
-    if branch != 'master':
-        Functions.printNeutralMessage(f'No ftp upload for branch {branch}')
-        return
-
-    password = sys.argv[2]
-    host = CONFIG['ci']['ftp']['host']
-    port = CONFIG['ci']['ftp']['port']
-    user = CONFIG['ci']['ftp']['user']
-    prefix = CONFIG['ci']['ftp']['prefix']
-    repo_subdir = CONFIG['ci']['ftp']['repo_subdir']
+    host = CONFIG['ci']['app']['setup']['ftp']['host']
+    port = CONFIG['ci']['app']['setup']['ftp']['port']
+    user = CONFIG['ci']['app']['setup']['ftp']['user']
+    prefix = CONFIG['ci']['app']['setup']['ftp']['prefix']
+    repo_subdir = CONFIG['ci']['app']['setup']['ftp']['repo_subdir']
 
     local_repository_dir_name = f'{CONFIG.app_name}{CONFIG.repository_dir_suffix}'
     local_repository_dir_path = os.path.join(CONFIG.dist_dir, local_repository_dir_name, CONFIG.setup_os)
     online_repository_subdir_path = f'{prefix}/{repo_subdir}'
     online_repository_dir_path = f'{online_repository_subdir_path}/{CONFIG.setup_os}'
 
+    #Functions.printNeutralMessage(f'local_repository_dir_path {local_repository_dir_path}')
+    #Functions.printNeutralMessage(f'online_repository_dir_path {online_repository_dir_path}')
+    #Functions.printNeutralMessage(f'host:port {host}:{port}')
+
     ftp = ftplib.FTP()
     connect(ftp, host, port)
-    login(ftp, user, password)
+    login(ftp, user, FTP_PASSWORD)
     removeDir(ftp, online_repository_dir_path)
     makeDir(ftp, online_repository_dir_path)
     upload(ftp, local_repository_dir_path, online_repository_subdir_path)

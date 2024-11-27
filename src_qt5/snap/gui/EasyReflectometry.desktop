@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=EasyReflectometry
+GenericName=Python application
+Comment=Making reflectometry data analysis and modelling easy.
+Exec=easyreflectometry
+Icon=${SNAP}/meta/gui/er_logo.svg
+Terminal=false
+Type=Application
+Categories=Education;
+StartupNotify=true

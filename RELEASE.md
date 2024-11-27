@@ -1,4 +1,3 @@
-### Changes
+This is the graphical version of the EasyReflectometry software.
 
-- Change name from 'easyReflectometry' to 'EasyReflectometry'
-- A bug fix to enable multithreaded fitting to work on Windows and Linux
+Experienced users might also consider to use the more feature rich command line interface. The can be found on PyPi: easyreflectometry.   
