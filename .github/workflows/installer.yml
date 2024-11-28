@@ -34,7 +34,7 @@ jobs:
       - name: Install Python dependences
         run: |
           python -m pip install flit
-          flit install --only-deps  # Install the dependencies, but not the EasyDiffractionApp package itself
+          flit install --only-deps  # Install the dependencies, but not the EasyReflectometryApp package itself
 
       - name: Add extra info to pyproject.toml
         run: python utils.py --update

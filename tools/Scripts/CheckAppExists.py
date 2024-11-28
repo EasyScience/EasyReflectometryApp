@@ -1,24 +1,28 @@
-# SPDX-FileCopyrightText: 2023 easyDiffraction contributors <support@easydiffraction.org>
+# SPDX-FileCopyrightText: 2023 EasyReflectometry contributors <support@easyreflectometry.org>
 # SPDX-License-Identifier: BSD-3-Clause
-# © 2021-2023 Contributors to the easyDiffraction project <https://github.com/easyScience/easyDiffractionApp>
+# © 2021-2023 Contributors to the EasyReflectometry project <https://github.com/easyScience/EasyReflectometryApp>
 
-__author__ = "github.com/AndrewSazonov"
+__author__ = 'github.com/AndrewSazonov'
 __version__ = '0.0.1'
 
-import os, sys
+import os
 import pathlib
-import Functions, Config
+import sys
 
+import Config
+import Functions
 
 CONFIG = Config.Config()
+
 
 def appExePath():
     d = {
         'macos': os.path.join(CONFIG.installation_dir, CONFIG.app_full_name, 'Contents', 'MacOS', CONFIG.app_name),
         'ubuntu': os.path.join(CONFIG.installation_dir, CONFIG.app_name, CONFIG.app_full_name),
-        'windows': os.path.join(CONFIG.installation_dir, CONFIG.app_name, CONFIG.app_full_name)
+        'windows': os.path.join(CONFIG.installation_dir, CONFIG.app_name, CONFIG.app_full_name),
     }
     return d[CONFIG.os]
+
 
 def checkAppExists():
     Functions.printNeutralMessage(f'Check if application exe file exists: {appExePath()}')
@@ -30,5 +34,6 @@ def checkAppExists():
         Functions.printFailMessage(message)
         sys.exit(1)
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     checkAppExists()
